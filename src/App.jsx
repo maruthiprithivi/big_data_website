@@ -77,9 +77,9 @@ const BigDataArchitectureExplorer = () => {
         'Potential data inconsistencies during merging'
       ],
       learningResources: [
-        { title: 'Designing Data-Intensive Applications by Martin Kleppmann', url: 'https://dataintensive.net/' },
-        { title: 'Big Data: Principles and Best Practices by Nathan Marz', url: 'https://www.manning.com/books/big-data' },
-        { title: 'Questioning the Lambda Architecture by Jay Kreps', url: 'https://www.oreilly.com/radar/questioning-the-lambda-architecture/' }
+        { title: 'Microsoft Learn: Big Data Architectures Guide', url: 'https://learn.microsoft.com/en-us/azure/architecture/databases/guide/big-data-architectures' },
+        { title: 'AWS Blog: Build Lambda Architecture for Batch and Real-time Analytics', url: 'https://aws.amazon.com/blogs/big-data/build-a-big-data-lambda-architecture-for-batch-and-real-time-analytics-using-amazon-redshift/' },
+        { title: 'Confluent: Apache Flink Complete Introduction (Free Course)', url: 'https://developer.confluent.io/courses/apache-flink/intro/' }
       ],
       components: [
         { id: 'source', name: 'Data Sources', shape: 'database', description: 'Multiple database sources', details: 'Operational databases, data lakes, and external APIs generating continuous data streams.', technologies: ['PostgreSQL', 'MongoDB', 'S3', 'APIs'] },
@@ -135,9 +135,9 @@ const BigDataArchitectureExplorer = () => {
         'State management complexity'
       ],
       learningResources: [
-        { title: 'Kafka: The Definitive Guide, 2nd Edition', url: 'https://www.oreilly.com/library/view/kafka-the-definitive/9781492043072/' },
-        { title: 'Streaming Systems by Tyler Akidau', url: 'https://www.oreilly.com/library/view/streaming-systems/9781491983867/' },
-        { title: 'Questioning the Lambda Architecture by Jay Kreps', url: 'https://www.oreilly.com/radar/questioning-the-lambda-architecture/' }
+        { title: 'Medium: Free Apache Kafka Resources for Beginners 2024', url: 'https://medium.com/confluent/7-more-free-awesome-apache-kafka-resources-for-beginners-2024-6f7581e9a613' },
+        { title: 'RisingWave: Hands-On Tutorial for Apache Kafka Stream Processing', url: 'https://risingwave.com/blog/hands-on-tutorial-for-apache-kafka-stream-processing/' },
+        { title: 'Official Apache Flink Documentation: Learn Flink', url: 'https://nightlies.apache.org/flink/flink-docs-stable/docs/learn-flink/overview/' }
       ],
       components: [
         { id: 'event-log', name: 'Event Log', shape: 'log', description: 'Immutable log', details: 'Append-only event log with infinite retention.', technologies: ['Kafka', 'Pulsar'] },
@@ -186,9 +186,9 @@ const BigDataArchitectureExplorer = () => {
         'Testing and debugging difficulty'
       ],
       learningResources: [
-        { title: 'Stream Processing with Apache Flink', url: 'https://www.oreilly.com/library/view/stream-processing-with/9781491974285/' },
-        { title: 'Kafka Streams in Action, 2nd Edition', url: 'https://www.manning.com/books/kafka-streams-in-action-second-edition' },
-        { title: 'Designing Event-Driven Systems by Ben Stopford', url: 'https://www.confluent.io/resources/ebook/designing-event-driven-systems/' }
+        { title: 'Ververica: Stream Processing with Apache Flink Beginner Guide 2025', url: 'https://www.ververica.com/stream-processing-with-apache-flink-beginners-guide' },
+        { title: 'DataCamp: Kafka Streams Tutorial for Real-Time Data Processing', url: 'https://www.datacamp.com/tutorial/kafka-streams-tutorial' },
+        { title: 'InfoQ: Event-Driven Architecture (Free Resources)', url: 'https://www.infoq.com/eventdrivenarchitecture/' }
       ],
       components: [
         { id: 'producers', name: 'Event Producers', shape: 'database', description: 'Event sources', details: 'Microservices and IoT devices emitting events.', technologies: ['Microservices', 'IoT', 'APIs'] },
@@ -238,9 +238,9 @@ const BigDataArchitectureExplorer = () => {
         'Limited real-time capabilities'
       ],
       learningResources: [
-        { title: 'The Data Warehouse Toolkit, 3rd Edition by Ralph Kimball', url: 'https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/books/data-warehouse-dw-toolkit/' },
-        { title: 'Building a Scalable Data Warehouse with Data Vault 2.0', url: 'https://www.oreilly.com/library/view/building-a-scalable/9780128026489/' },
-        { title: 'Fundamentals of Data Engineering by Joe Reis & Matt Housley', url: 'https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/' }
+        { title: 'GitHub: Awesome Apache Spark (Curated Learning Resources)', url: 'https://github.com/awesome-spark/awesome-spark' },
+        { title: 'Spark By Examples: Comprehensive Tutorials with Code', url: 'https://sparkbyexamples.com/' },
+        { title: 'AWS: Batch Processing Gateway on EMR (Practical Example)', url: 'https://github.com/aws-samples/batch-processing-gateway-on-emr-on-eks' }
       ],
       components: [
         { id: 'sources', name: 'Source Systems', shape: 'database', description: 'OLTP databases', details: 'Operational databases and business systems.', technologies: ['PostgreSQL', 'MySQL', 'Oracle'] },
@@ -280,9 +280,12 @@ const BigDataArchitectureExplorer = () => {
           padding: '20px',
           minWidth: '180px',
           maxWidth: '180px',
+          minHeight: '180px',
+          maxHeight: '180px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          justifyContent: 'center',
           gap: '16px',
           cursor: 'pointer',
           transition: 'all 0.3s',
@@ -328,7 +331,7 @@ const BigDataArchitectureExplorer = () => {
     const color = connectionColors[type] || '#60a5fa';
 
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 8px', minWidth: '80px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 8px', minWidth: '80px', height: '180px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color }}>
           <div style={{
             width: '60px',
@@ -362,8 +365,8 @@ const BigDataArchitectureExplorer = () => {
     const rotation = direction === 'down' ? 'rotate(90deg)' : 'rotate(-90deg)';
 
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 0', minHeight: '80px', transform: rotation }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 0', minHeight: '80px', width: '180px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color, transform: rotation }}>
           <div style={{
             width: '60px',
             height: '2px',
@@ -406,7 +409,7 @@ const BigDataArchitectureExplorer = () => {
         {/* Top Row - Batch Layer */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ width: '180px' }}></div>
-          <div style={{ width: '80px', minWidth: '80px' }}></div>
+          <div style={{ width: '96px', minWidth: '96px' }}></div>
           <ComponentCard component={batch} onClick={setSelectedComponent} />
           <ConnectionArrow type="batch" />
           <ComponentCard component={batchStorage} onClick={setSelectedComponent} />
@@ -415,14 +418,10 @@ const BigDataArchitectureExplorer = () => {
         {/* Vertical connectors: Message Queue to Batch, Batch Views to Serving */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ width: '180px' }}></div>
-          <div style={{ width: '80px', minWidth: '80px' }}></div>
-          <div style={{ width: '180px', display: 'flex', justifyContent: 'center' }}>
-            <VerticalConnectionArrow type="batch" direction="up" />
-          </div>
-          <div style={{ width: '80px', minWidth: '80px' }}></div>
-          <div style={{ width: '180px', display: 'flex', justifyContent: 'center' }}>
-            <VerticalConnectionArrow type="query" direction="down" />
-          </div>
+          <div style={{ width: '96px', minWidth: '96px' }}></div>
+          <VerticalConnectionArrow type="batch" direction="up" />
+          <div style={{ width: '96px', minWidth: '96px' }}></div>
+          <VerticalConnectionArrow type="query" direction="down" />
         </div>
 
         {/* Middle Row - Source & Ingestion & Serving */}
@@ -430,27 +429,23 @@ const BigDataArchitectureExplorer = () => {
           <ComponentCard component={source} onClick={setSelectedComponent} />
           <ConnectionArrow type="stream" />
           <ComponentCard component={ingestion} onClick={setSelectedComponent} />
-          <div style={{ width: '80px', minWidth: '80px' }}></div>
+          <div style={{ width: '96px', minWidth: '96px' }}></div>
           <ComponentCard component={serving} onClick={setSelectedComponent} />
         </div>
 
         {/* Vertical connectors: Message Queue to Speed, Real-time Views to Serving */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ width: '180px' }}></div>
-          <div style={{ width: '80px', minWidth: '80px' }}></div>
-          <div style={{ width: '180px', display: 'flex', justifyContent: 'center' }}>
-            <VerticalConnectionArrow type="stream" direction="down" />
-          </div>
-          <div style={{ width: '80px', minWidth: '80px' }}></div>
-          <div style={{ width: '180px', display: 'flex', justifyContent: 'center' }}>
-            <VerticalConnectionArrow type="query" direction="up" />
-          </div>
+          <div style={{ width: '96px', minWidth: '96px' }}></div>
+          <VerticalConnectionArrow type="stream" direction="down" />
+          <div style={{ width: '96px', minWidth: '96px' }}></div>
+          <VerticalConnectionArrow type="query" direction="up" />
         </div>
 
         {/* Bottom Row - Speed Layer */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ width: '180px' }}></div>
-          <div style={{ width: '80px', minWidth: '80px' }}></div>
+          <div style={{ width: '96px', minWidth: '96px' }}></div>
           <ComponentCard component={speed} onClick={setSelectedComponent} />
           <ConnectionArrow type="stream" />
           <ComponentCard component={speedStorage} onClick={setSelectedComponent} />
@@ -784,9 +779,8 @@ const BigDataArchitectureExplorer = () => {
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {currentArch.learningResources.map((resource, idx) => (
-                  <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                  <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <div style={{
-                      marginTop: '6px',
                       width: '20px',
                       height: '20px',
                       borderRadius: '4px',
