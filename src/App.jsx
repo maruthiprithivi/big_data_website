@@ -1,18 +1,80 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   Database, Inbox, Cpu, Activity, HardDrive, Zap,
   Globe, Cloud, GitMerge, LayoutDashboard, ScrollText,
-  ChevronRight, Check, Sparkles, Info, ChevronDown, ChevronUp
+  ChevronRight, Check, Sparkles, Info, ChevronDown, ChevronUp, X
 } from 'lucide-react';
 import { ReactFlow, Background, useNodesState, useEdgesState, Handle, Position, useReactFlow } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import dagre from '@dagrejs/dagre';
+
+// Custom hook for responsive diagram scaling
+const useResponsiveScale = (layoutType, containerRef) => {
+  const [scale, setScale] = useState(1);
+  const [showWarning, setShowWarning] = useState(false);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    // Define minimum widths for each layout type
+    const MIN_WIDTHS = {
+      lambda: 852,
+      blockchain: 1340,
+      kappa: 1080,
+      streaming: 1080,
+      batch: 1340
+    };
+
+    // Absolute minimum before showing warning
+    const ABSOLUTE_MIN = 600;
+
+    const updateScale = () => {
+      const containerWidth = containerRef.current.offsetWidth;
+      const minRequired = MIN_WIDTHS[layoutType] || 1080;
+
+      if (containerWidth < ABSOLUTE_MIN) {
+        setShowWarning(true);
+        setScale(ABSOLUTE_MIN / minRequired);
+      } else {
+        setShowWarning(false);
+        if (containerWidth < minRequired) {
+          // Scale down to fit
+          setScale(containerWidth / minRequired);
+        } else {
+          // No scaling needed
+          setScale(1);
+        }
+      }
+    };
+
+    const resizeObserver = new ResizeObserver(updateScale);
+    resizeObserver.observe(containerRef.current);
+    updateScale(); // Initial calculation
+
+    return () => resizeObserver.disconnect();
+  }, [layoutType, containerRef]);
+
+  return { scale, showWarning };
+};
 
 const BigDataArchitectureExplorer = () => {
   const [activeArchitecture, setActiveArchitecture] = useState('lambda');
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [showDataFlow, setShowDataFlow] = useState(true);
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
+  const [showHandsOn, setShowHandsOn] = useState(false);
+  const [showBanner, setShowBanner] = useState(() => {
+    const bannerDismissed = localStorage.getItem('bannerDismissed');
+    return !bannerDismissed;
+  });
+
+  // Responsive diagram scaling
+  const diagramContainerRef = useRef(null);
+  const { scale, showWarning } = useResponsiveScale(activeArchitecture, diagramContainerRef);
+
+  // Hands On section responsive scaling
+  const handsOnDiagramRef = useRef(null);
+  const { scale: handsOnScale, showWarning: handsOnShowWarning } = useResponsiveScale('blockchain', handsOnDiagramRef);
 
   // Technology URL mapping
   const technologyUrls = {
@@ -87,6 +149,19 @@ const BigDataArchitectureExplorer = () => {
     document.head.appendChild(style);
     return () => document.head.removeChild(style);
   }, []);
+
+  // Safeguard: Reset to lambda if blockchain is selected but hands-on is not showing
+  useEffect(() => {
+    if (activeArchitecture === 'blockchain' && !showHandsOn) {
+      setActiveArchitecture('lambda');
+    }
+  }, [activeArchitecture, showHandsOn]);
+
+  // Handle banner dismissal
+  const handleDismissBanner = () => {
+    setShowBanner(false);
+    localStorage.setItem('bannerDismissed', 'true');
+  };
 
   const iconComponents = {
     database: Database,
@@ -337,6 +412,73 @@ const BigDataArchitectureExplorer = () => {
         { from: 'etl', to: 'warehouse', type: 'batch' },
         { from: 'warehouse', to: 'bi', type: 'query' }
       ]
+    },
+    blockchain: {
+      name: 'Blockchain Data Pipeline',
+      difficulty: 'Intermediate',
+      tagline: 'Real-Time Blockchain Analytics',
+      description: 'Containerized pipeline for ingesting and analyzing blockchain data from multiple chains with real-time monitoring.',
+      layout: 'blockchain',
+      overview: {
+        text: 'A modern data pipeline architecture for collecting, storing, and analyzing blockchain data from Bitcoin and Solana networks.',
+        scenario: 'Blockchain Analytics Platform',
+        scenarioDescription: 'An educational system for ingesting blockchain data from Bitcoin and Solana into ClickHouse, featuring real-time monitoring via Streamlit. External blockchain APIs continuously stream block and transaction data to a FastAPI collector service with separate Bitcoin and Solana collectors, which persist the data in a columnar ClickHouse database with dedicated tables. The Streamlit dashboard provides real-time visualization, collection controls, and SQL query capabilities for analyzing blockchain metrics, transaction patterns, and network performance.',
+        components: [
+          { name: 'Bitcoin API', metric: 'REST API from blockstream.info providing block and transaction data' },
+          { name: 'Solana RPC', metric: 'JSON-RPC from mainnet-beta.solana.com with slot and transaction streams' },
+          { name: 'Bitcoin Collector', metric: 'Dedicated collector for Bitcoin blockchain data' },
+          { name: 'Solana Collector', metric: 'Dedicated collector for Solana blockchain data' },
+          { name: 'FastAPI Service', metric: 'Asynchronous Python service orchestrating data collection' },
+          { name: 'ClickHouse Database', metric: 'Columnar OLAP storage with optimized compression for blockchain analytics' },
+          { name: 'Bitcoin Tables', metric: 'bitcoin_blocks and bitcoin_transactions tables' },
+          { name: 'Solana Tables', metric: 'solana_blocks and solana_transactions tables' },
+          { name: 'Streamlit Dashboard', metric: 'Interactive web UI for monitoring collection and querying blockchain metrics' },
+          { name: 'Web Browser', metric: 'User interface at localhost:8501 for controlling and visualizing data' }
+        ]
+      },
+      useCases: [
+        'Blockchain data analysis and research',
+        'Real-time cryptocurrency monitoring',
+        'Cross-chain transaction comparison',
+        'Educational blockchain data engineering'
+      ],
+      advantages: [
+        'Multi-blockchain support (Bitcoin & Solana)',
+        'Fully containerized with Docker Compose',
+        'Real-time collection with safety limits',
+        'Columnar storage optimized for analytics'
+      ],
+      challenges: [
+        'Public RPC endpoint rate limits',
+        'Managing high-volume blockchain data',
+        'Different blockchain data models',
+        'Storage requirements for historical data'
+      ],
+      learningResources: [
+        { title: 'GitHub Repository: Blockchain Data Ingestion Lab', url: 'https://github.com/maruthiprithivi/big_data_architecture' },
+        { title: 'ClickHouse: Official Documentation', url: 'https://clickhouse.com/docs' },
+        { title: 'FastAPI: Modern Python API Framework', url: 'https://fastapi.tiangolo.com/' }
+      ],
+      components: [
+        { id: 'bitcoin-api', name: 'Bitcoin API', shape: 'database', description: 'External blockchain RPC', details: 'REST API providing Bitcoin block and transaction data from blockstream.info.', technologies: ['blockstream.info', 'REST API'] },
+        { id: 'solana-rpc', name: 'Solana RPC', shape: 'database', description: 'External blockchain RPC', details: 'JSON-RPC endpoint for Solana slot and transaction data from mainnet-beta.', technologies: ['Solana RPC', 'JSON-RPC'] },
+        { id: 'bitcoin-collector', name: 'Bitcoin Collector', shape: 'stream', description: 'Bitcoin ingestion', details: 'Dedicated collector for Bitcoin blockchain data within FastAPI service.', technologies: ['Python', 'asyncio'] },
+        { id: 'solana-collector', name: 'Solana Collector', shape: 'stream', description: 'Solana ingestion', details: 'Dedicated collector for Solana blockchain data within FastAPI service.', technologies: ['Python', 'asyncio'] },
+        { id: 'fastapi', name: 'FastAPI Service', shape: 'api', description: 'Collector orchestration', details: 'Asynchronous service orchestrating Bitcoin and Solana collectors at port 8000.', technologies: ['FastAPI', 'Python', 'Docker'] },
+        { id: 'clickhouse', name: 'ClickHouse DB', shape: 'warehouse', description: 'Columnar database', details: 'OLAP database with automatic schema and compression at port 8123.', technologies: ['ClickHouse', 'SQL'] },
+        { id: 'bitcoin-tables', name: 'Bitcoin Tables', shape: 'log', description: 'Bitcoin data storage', details: 'Tables: bitcoin_blocks, bitcoin_transactions storing Bitcoin chain data.', technologies: ['ClickHouse Schema'] },
+        { id: 'solana-tables', name: 'Solana Tables', shape: 'log', description: 'Solana data storage', details: 'Tables: solana_blocks, solana_transactions storing Solana chain data.', technologies: ['ClickHouse Schema'] },
+        { id: 'dashboard', name: 'Streamlit Dashboard', shape: 'dashboard', description: 'Monitoring UI', details: 'Real-time visualization and collection control interface at port 8501.', technologies: ['Streamlit', 'Python', 'Docker'] },
+        { id: 'browser', name: 'Web Browser', shape: 'cloud', description: 'User interface', details: 'Browser-based access to dashboard at localhost:8501.', technologies: ['HTTP', 'localhost:8501'] }
+      ],
+      connections: [
+        { from: 'bitcoin-api', to: 'bitcoin-collector', type: 'stream' },
+        { from: 'solana-rpc', to: 'solana-collector', type: 'stream' },
+        { from: 'bitcoin-collector', to: 'clickhouse', type: 'batch' },
+        { from: 'solana-collector', to: 'clickhouse', type: 'batch' },
+        { from: 'clickhouse', to: 'dashboard', type: 'query' },
+        { from: 'dashboard', to: 'browser', type: 'query' }
+      ]
     }
   };
 
@@ -538,7 +680,7 @@ const BigDataArchitectureExplorer = () => {
 
   const renderLinearLayout = () => {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: '8px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'nowrap', gap: '8px' }}>
         {currentArch.components.map((comp, idx) => (
           <React.Fragment key={comp.id}>
             <ComponentCard component={comp} onClick={setSelectedComponent} />
@@ -547,6 +689,264 @@ const BigDataArchitectureExplorer = () => {
             )}
           </React.Fragment>
         ))}
+      </div>
+    );
+  };
+
+  const LBendArrow = ({ type, direction }) => {
+    const color = connectionColors[type] || '#60a5fa';
+    const isCenter = direction === 'center';
+    const isDown = direction === 'down';
+
+    // Keep the arrow *center-aligned* to the source card (y=90), and end at the ClickHouse-aligned bend height.
+    // Two bends total: right -> up/down -> right.
+    //
+    // We "nudge" the arrow end slightly into the ClickHouse rounded corner so it visually touches the border,
+    // without obviously overshooting into the card.
+    const SVG_W = 360;
+    const SVG_H = 180;
+    const CHEVRON_SIZE = 18; // match ConnectionArrow chevron size
+    const CHEVRON_GAP = 1; // tighter line -> chevron spacing
+    const TARGET_GAP = 1; // tighter chevron -> target spacing (still no overlap)
+    const CHEVRON_Y_OFFSET = 0; // prefer true center alignment; baseline issues handled via display:block
+
+    const startY = 90;
+    const bendX = 70;
+    // For the merged single-arrow variant, we go straight into ClickHouse center (y=90).
+    // Otherwise we offset up/down around the center.
+    const TARGET_CENTER_OFFSET = 15;
+    const bendY = isCenter ? startY : startY + (isDown ? TARGET_CENTER_OFFSET : -TARGET_CENTER_OFFSET);
+    // Make the chevron tip stop short of the target by TARGET_GAP, same visual as ConnectionArrow.
+    const chevronLeft = SVG_W - TARGET_GAP - CHEVRON_SIZE;
+    const endX = chevronLeft - CHEVRON_GAP;
+
+    // If merged: single straight line at center. Otherwise: two bends only (right -> up/down -> right).
+    const pathD = isCenter
+      ? `M 0 ${startY} L ${endX} ${startY}`
+      : `M 0 ${startY} L ${bendX} ${startY} L ${bendX} ${bendY} L ${endX} ${bendY}`;
+
+    return (
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        padding: '0',
+        minWidth: `${SVG_W}px`,
+        height: `${SVG_H}px`,
+        position: 'relative',
+        marginRight: '0px',
+        overflow: 'visible'
+      }}>
+        <svg width={SVG_W} height={SVG_H} style={{ overflow: 'hidden' }}>
+          {/* Main L-shaped path */}
+          <path
+            d={pathD}
+            stroke={color}
+            strokeWidth="2"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          {/* Animated dataflow dots */}
+          {showDataFlow && (
+            <>
+              <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
+                <animateMotion dur="1.5s" repeatCount="indefinite">
+                  <mpath href={`#lbend-path-${type}-${direction}`} />
+                </animateMotion>
+              </circle>
+            </>
+          )}
+
+          {/* Hidden path for animation reference */}
+          <path id={`lbend-path-${type}-${direction}`} d={pathD} stroke="none" fill="none" />
+        </svg>
+
+        {/* Use the SAME chevron icon as `ConnectionArrow` (reference chevron style). */}
+        <div
+          style={{
+            position: 'absolute',
+            left: `${chevronLeft}px`,
+            top: `${bendY + CHEVRON_Y_OFFSET}px`,
+            transform: 'translateY(-50%)',
+            color,
+            pointerEvents: 'none'
+          }}
+        >
+          <ChevronRight size={CHEVRON_SIZE} strokeWidth={2} style={{ display: 'block' }} />
+        </div>
+      </div>
+    );
+  };
+
+  // Two sources -> one target: draw two lines from the two collector centers,
+  // merge them, then continue as a single centered line into ClickHouse.
+  const MergeToCenterArrow = ({ type }) => {
+    const color = connectionColors[type] || '#60a5fa';
+
+    // This arrow column sits between the stacked collectors (180 + 100 + 180 = 460).
+    const SVG_W = 120;
+    const SVG_H = 460;
+    const STROKE_W = 2;
+
+    const CHEVRON_SIZE = 18;
+    const CHEVRON_GAP = 1;
+    const TARGET_GAP = 1;
+
+    // Collector centers inside this 460px column.
+    const TOP_Y = 90; // first card center
+    const BOTTOM_Y = 370; // second card center (180 + 100 + 90)
+    const MERGE_Y = 230; // column vertical center (align to ClickHouse center)
+
+    const MERGE_X = 70;
+    const chevronLeft = SVG_W - TARGET_GAP - CHEVRON_SIZE;
+    const endX = chevronLeft - CHEVRON_GAP;
+
+    const topPath = `M 0 ${TOP_Y} L ${MERGE_X} ${TOP_Y} L ${MERGE_X} ${MERGE_Y}`;
+    const bottomPath = `M 0 ${BOTTOM_Y} L ${MERGE_X} ${BOTTOM_Y} L ${MERGE_X} ${MERGE_Y}`;
+    const mainPath = `M ${MERGE_X} ${MERGE_Y} L ${endX} ${MERGE_Y}`;
+
+    return (
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          padding: '0',
+          minWidth: `${SVG_W}px`,
+          height: `${SVG_H}px`,
+          position: 'relative',
+          overflow: 'visible'
+        }}
+      >
+        <svg width={SVG_W} height={SVG_H} style={{ overflow: 'hidden' }}>
+          <defs>
+            {/* Hidden paths for animation motion */}
+            <path id={`merge-top-path-${type}`} d={topPath} stroke="none" fill="none" />
+            <path id={`merge-bottom-path-${type}`} d={bottomPath} stroke="none" fill="none" />
+            <path id={`merge-main-path-${type}`} d={mainPath} stroke="none" fill="none" />
+          </defs>
+
+          {/* Branches from both sources */}
+          <path
+            d={topPath}
+            stroke={color}
+            strokeWidth={STROKE_W}
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d={bottomPath}
+            stroke={color}
+            strokeWidth={STROKE_W}
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          {/* Merged single line to ClickHouse center */}
+          <path
+            d={mainPath}
+            stroke={color}
+            strokeWidth={STROKE_W}
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          {/* Animated dataflow dots (match other arrows) */}
+          {showDataFlow && (
+            <>
+              {/* Top branch dot */}
+              <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
+                <animateMotion dur="1.5s" repeatCount="indefinite">
+                  <mpath href={`#merge-top-path-${type}`} />
+                </animateMotion>
+              </circle>
+
+              {/* Bottom branch dot */}
+              <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
+                <animateMotion dur="1.5s" repeatCount="indefinite">
+                  <mpath href={`#merge-bottom-path-${type}`} />
+                </animateMotion>
+              </circle>
+
+              {/* Merged line dot (slight delay so it feels like it continues after merge) */}
+              <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
+                <animateMotion begin="0.6s" dur="1.5s" repeatCount="indefinite">
+                  <mpath href={`#merge-main-path-${type}`} />
+                </animateMotion>
+              </circle>
+            </>
+          )}
+
+          {/* Visual merge node */}
+          <circle cx={MERGE_X} cy={MERGE_Y} r="3" fill={color} />
+
+          {/* Chevron at the target end (same style as ConnectionArrow) */}
+          <g
+            transform={`translate(${chevronLeft}, ${MERGE_Y})`}
+            style={{ color }}
+          >
+            <g transform="translate(0, -9)">
+              <ChevronRight size={CHEVRON_SIZE} strokeWidth={2} style={{ display: 'block' }} />
+            </g>
+          </g>
+        </svg>
+      </div>
+    );
+  };
+
+  const renderBlockchainLayout = () => {
+    const bitcoinApi = currentArch.components.find(c => c.id === 'bitcoin-api');
+    const solanaRpc = currentArch.components.find(c => c.id === 'solana-rpc');
+    const bitcoinCollector = currentArch.components.find(c => c.id === 'bitcoin-collector');
+    const solanaCollector = currentArch.components.find(c => c.id === 'solana-collector');
+    const clickhouse = currentArch.components.find(c => c.id === 'clickhouse');
+    const dashboard = currentArch.components.find(c => c.id === 'dashboard');
+    const browser = currentArch.components.find(c => c.id === 'browser');
+
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px', padding: '40px' }}>
+        {/* Column 1: External APIs stacked */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '100px' }}>
+          <ComponentCard component={bitcoinApi} onClick={setSelectedComponent} />
+          <ComponentCard component={solanaRpc} onClick={setSelectedComponent} />
+        </div>
+
+        {/* Arrows from APIs to Collectors */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '100px' }}>
+          <ConnectionArrow type="stream" />
+          <ConnectionArrow type="stream" />
+        </div>
+
+        {/* Column 2: Collectors stacked */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '100px' }}>
+          <ComponentCard component={bitcoinCollector} onClick={setSelectedComponent} />
+          <ComponentCard component={solanaCollector} onClick={setSelectedComponent} />
+        </div>
+
+        {/* Two sources -> one target (merge into a single centered arrow to ClickHouse) */}
+        <MergeToCenterArrow type="batch" />
+
+        {/* Column 3: ClickHouse centered */}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <ComponentCard component={clickhouse} onClick={setSelectedComponent} />
+        </div>
+
+        {/* Arrow from ClickHouse to Dashboard */}
+        <ConnectionArrow type="query" />
+
+        {/* Column 4: Dashboard */}
+        <ComponentCard component={dashboard} onClick={setSelectedComponent} />
+
+        {/* Arrow from Dashboard to Browser */}
+        <ConnectionArrow type="query" />
+
+        {/* Column 5: Browser */}
+        <ComponentCard component={browser} onClick={setSelectedComponent} />
       </div>
     );
   };
@@ -989,10 +1389,74 @@ const BigDataArchitectureExplorer = () => {
           90% { opacity: 1; }
           100% { left: calc(100% - 10px); opacity: 0; }
         }
+        @keyframes flowDown {
+          0% { top: 0; opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { top: calc(100% - 10px); opacity: 0; }
+        }
+        @keyframes flowUp {
+          0% { top: calc(100% - 10px); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { top: 0; opacity: 0; }
+        }
       `}</style>
 
       <div style={{ padding: '32px' }}>
         <div style={{ maxWidth: '1600px', margin: '0 auto' }}>
+          {showBanner && (
+            <div
+              style={{
+                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%)',
+                border: '1px solid rgba(59, 130, 246, 0.3)',
+                borderRadius: '12px',
+                padding: '16px 20px',
+                marginBottom: '24px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '16px',
+                backdropFilter: 'blur(10px)',
+                boxShadow: '0 4px 12px rgba(59, 130, 246, 0.1)'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
+                <Info size={20} style={{ color: '#60a5fa', flexShrink: 0 }} />
+                <p style={{ color: '#e2e8f0', fontSize: '14px', lineHeight: '1.6', margin: 0 }}>
+                  <strong style={{ color: '#ffffff' }}>Work in Progress:</strong> This project is actively evolving and will be updated regularly. The content is provided as-is for educational and reference purposes. Feel free to explore and learn from the architecture patterns presented here.
+                </p>
+              </div>
+              <button
+                onClick={handleDismissBanner}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#94a3b8',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '6px',
+                  transition: 'all 0.2s',
+                  flexShrink: 0
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(148, 163, 184, 0.1)';
+                  e.currentTarget.style.color = '#e2e8f0';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.color = '#94a3b8';
+                }}
+                aria-label="Dismiss banner"
+              >
+                <X size={20} />
+              </button>
+            </div>
+          )}
+
           <div style={{ marginBottom: '32px' }}>
             <h1 style={{ fontSize: '36px', fontWeight: 'bold', marginBottom: '8px' }}>
               Big Data Architecture Explorer
@@ -1003,20 +1467,22 @@ const BigDataArchitectureExplorer = () => {
           </div>
 
           <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', flexWrap: 'wrap' }}>
-            {Object.keys(architectures).map(key => (
+            {Object.keys(architectures).filter(key => key !== 'blockchain').map(key => (
               <button
                 key={key}
                 onClick={() => {
                   setActiveArchitecture(key);
                   setSelectedComponent(null);
                   setShowAdditionalInfo(false);
+                  setShowHandsOn(false);
                 }}
                 style={{
                   padding: '12px 24px',
-                  background: (activeArchitecture === key && !showAdditionalInfo)
+                  minWidth: '180px',
+                  background: (activeArchitecture === key && !showAdditionalInfo && !showHandsOn)
                     ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'
                     : 'rgba(30, 41, 59, 0.6)',
-                  border: (activeArchitecture === key && !showAdditionalInfo) ? '2px solid #60a5fa' : '1px solid rgba(71, 85, 105, 0.3)',
+                  border: (activeArchitecture === key && !showAdditionalInfo && !showHandsOn) ? '2px solid #60a5fa' : '1px solid rgba(71, 85, 105, 0.3)',
                   borderRadius: '8px',
                   color: '#ffffff',
                   fontSize: '14px',
@@ -1026,12 +1492,12 @@ const BigDataArchitectureExplorer = () => {
                   backdropFilter: 'blur(10px)'
                 }}
                 onMouseEnter={(e) => {
-                  if (!(activeArchitecture === key && !showAdditionalInfo)) {
+                  if (!(activeArchitecture === key && !showAdditionalInfo && !showHandsOn)) {
                     e.currentTarget.style.background = 'rgba(30, 41, 59, 0.8)';
                   }
                 }}
                 onMouseLeave={(e) => {
-                  if (!(activeArchitecture === key && !showAdditionalInfo)) {
+                  if (!(activeArchitecture === key && !showAdditionalInfo && !showHandsOn)) {
                     e.currentTarget.style.background = 'rgba(30, 41, 59, 0.6)';
                   }
                 }}
@@ -1042,6 +1508,7 @@ const BigDataArchitectureExplorer = () => {
             <button
               onClick={() => {
                 setShowAdditionalInfo(!showAdditionalInfo);
+                setShowHandsOn(false);
                 if (!showAdditionalInfo) {
                   setTimeout(() => {
                     const additionalInfoSection = document.getElementById('additional-info');
@@ -1053,6 +1520,7 @@ const BigDataArchitectureExplorer = () => {
               }}
               style={{
                 padding: '12px 24px',
+                minWidth: '180px',
                 background: showAdditionalInfo
                   ? 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)'
                   : 'linear-gradient(135deg, rgba(167, 139, 250, 0.2) 0%, rgba(124, 58, 237, 0.15) 100%)',
@@ -1083,9 +1551,55 @@ const BigDataArchitectureExplorer = () => {
             >
               Additional Info
             </button>
+            <button
+              onClick={() => {
+                setShowHandsOn(!showHandsOn);
+                setShowAdditionalInfo(false);
+                if (!showHandsOn) {
+                  setTimeout(() => {
+                    const handsOnSection = document.getElementById('hands-on');
+                    if (handsOnSection) {
+                      handsOnSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }, 100);
+                }
+              }}
+              style={{
+                padding: '12px 24px',
+                minWidth: '180px',
+                background: showHandsOn
+                  ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                  : 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.15) 100%)',
+                border: showHandsOn ? '2px solid #10b981' : '2px solid rgba(16, 185, 129, 0.5)',
+                borderRadius: '8px',
+                color: '#ffffff',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s',
+                backdropFilter: 'blur(10px)',
+                boxShadow: showHandsOn
+                  ? '0 0 20px rgba(16, 185, 129, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3)'
+                  : '0 0 15px rgba(16, 185, 129, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)'
+              }}
+              onMouseEnter={(e) => {
+                if (!showHandsOn) {
+                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.2) 100%)';
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.4), 0 4px 10px rgba(0, 0, 0, 0.25)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!showHandsOn) {
+                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.15) 100%)';
+                  e.currentTarget.style.boxShadow = '0 0 15px rgba(16, 185, 129, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)';
+                }
+              }}
+            >
+              Hands-on
+            </button>
           </div>
 
-          {!showAdditionalInfo && (
+          {!showAdditionalInfo && !showHandsOn && (
           <>
           <div
             style={{
@@ -1183,7 +1697,34 @@ const BigDataArchitectureExplorer = () => {
             </div>
           </div>
 
+          {showWarning && (
+            <div
+              style={{
+                background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.15) 100%)',
+                border: '2px solid rgba(245, 158, 11, 0.6)',
+                borderRadius: '12px',
+                padding: '16px 24px',
+                marginBottom: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                color: '#fbbf24',
+                fontSize: '14px',
+                fontWeight: '600',
+                backdropFilter: 'blur(10px)',
+                boxShadow: '0 0 20px rgba(245, 158, 11, 0.3)'
+              }}
+            >
+              <Info size={20} />
+              <span>
+                Screen width is too small for optimal viewing.
+                Please view on a larger screen or rotate your device.
+              </span>
+            </div>
+          )}
+
           <div
+            ref={diagramContainerRef}
             style={{
               background: 'rgba(15, 23, 42, 0.4)',
               backdropFilter: 'blur(10px)',
@@ -1191,10 +1732,23 @@ const BigDataArchitectureExplorer = () => {
               borderRadius: '12px',
               padding: '60px 40px',
               marginBottom: '24px',
-              minHeight: '500px'
+              minHeight: '500px',
+              overflow: 'hidden',
+              position: 'relative'
             }}
           >
-            {currentArch.layout === 'lambda' ? renderLambdaLayout() : renderLinearLayout()}
+            <div
+              style={{
+                transform: `scale(${scale})`,
+                transformOrigin: 'top center',
+                transition: 'transform 0.3s ease-out',
+                minHeight: scale < 1 ? `${500 / scale}px` : '500px'
+              }}
+            >
+              {currentArch.layout === 'lambda' ? renderLambdaLayout() :
+               currentArch.layout === 'blockchain' ? renderBlockchainLayout() :
+               renderLinearLayout()}
+            </div>
 
             <div style={{
               display: 'flex',
@@ -1625,6 +2179,394 @@ const BigDataArchitectureExplorer = () => {
               </ReactFlow>
             </div>
           </div>
+            </>
+          )}
+
+          {showHandsOn && (
+            <>
+              <div
+                id="hands-on"
+                style={{
+                  background: 'rgba(15, 23, 42, 0.8)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  borderRadius: '12px',
+                  padding: '24px',
+                  marginBottom: '24px'
+                }}
+              >
+                <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px', color: '#10b981' }}>
+                  Hands-on Lab: Blockchain Data Ingestion Pipeline
+                </h3>
+
+                <div style={{ marginBottom: '24px' }}>
+                  <p style={{ color: '#94a3b8', fontSize: '16px', marginBottom: '12px' }}>
+                    Build a real-time blockchain data pipeline that demonstrates big data architecture patterns through practical implementation.
+                  </p>
+                </div>
+
+                <div style={{
+                  background: 'rgba(139, 92, 246, 0.1)',
+                  border: '1px solid rgba(139, 92, 246, 0.3)',
+                  borderRadius: '12px',
+                  padding: '24px',
+                  marginBottom: '24px',
+                  backdropFilter: 'blur(10px)'
+                }}>
+                  <h4 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '16px', color: '#a78bfa' }}>
+                    Understanding Blockchain Data Pipelines
+                  </h4>
+
+                  <div style={{ marginBottom: '20px' }}>
+                    <p style={{ color: '#cbd5e1', fontSize: '15px', marginBottom: '12px', lineHeight: '1.6' }}>
+                      {architectures.blockchain.overview.text}
+                    </p>
+                    <p style={{ color: '#94a3b8', fontSize: '14px', fontStyle: 'italic', lineHeight: '1.6' }}>
+                      {architectures.blockchain.overview.scenarioDescription}
+                    </p>
+                  </div>
+
+                  <div style={{ marginBottom: '20px' }}>
+                    <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '10px', color: '#c4b5fd' }}>
+                      Use Cases in Production
+                    </h5>
+                    <ul style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px' }}>
+                      {architectures.blockchain.useCases.map((useCase, index) => (
+                        <li key={index} style={{ marginBottom: '4px' }}>{useCase}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+                    <div>
+                      <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '10px', color: '#c4b5fd' }}>
+                        Advantages
+                      </h5>
+                      <ul style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px' }}>
+                        {architectures.blockchain.advantages.map((advantage, index) => (
+                          <li key={index} style={{ marginBottom: '4px' }}>{advantage}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '10px', color: '#c4b5fd' }}>
+                        Challenges
+                      </h5>
+                      <ul style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px' }}>
+                        {architectures.blockchain.challenges.map((challenge, index) => (
+                          <li key={index} style={{ marginBottom: '4px' }}>{challenge}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '10px', color: '#c4b5fd' }}>
+                      Learning Resources
+                    </h5>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {architectures.blockchain.learningResources.map((resource, index) => (
+                        <a
+                          key={index}
+                          href={resource.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            color: '#a78bfa',
+                            fontSize: '14px',
+                            textDecoration: 'none',
+                            transition: 'color 0.2s'
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.color = '#c4b5fd'}
+                          onMouseLeave={(e) => e.currentTarget.style.color = '#a78bfa'}
+                        >
+                          {resource.title} →
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {handsOnShowWarning && (
+                  <div
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.15) 100%)',
+                      border: '2px solid rgba(245, 158, 11, 0.6)',
+                      borderRadius: '12px',
+                      padding: '16px 24px',
+                      marginBottom: '16px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      color: '#fbbf24',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      backdropFilter: 'blur(10px)',
+                      boxShadow: '0 0 20px rgba(245, 158, 11, 0.3)'
+                    }}
+                  >
+                    <Info size={20} />
+                    <span>
+                      Screen width is too small for optimal viewing.
+                      Please view on a larger screen or rotate your device.
+                    </span>
+                  </div>
+                )}
+
+                <div
+                  ref={handsOnDiagramRef}
+                  style={{
+                    background: 'rgba(15, 23, 42, 0.8)',
+                    backdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(71, 85, 105, 0.3)',
+                    borderRadius: '12px',
+                    marginBottom: '32px',
+                    overflow: 'hidden',
+                    position: 'relative'
+                  }}
+                >
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '24px', paddingTop: '24px', color: '#10b981', textAlign: 'center' }}>
+                    System Architecture
+                  </h4>
+                  {(() => {
+                    const arch = architectures.blockchain;
+                    const bitcoinApi = arch.components.find(c => c.id === 'bitcoin-api');
+                    const solanaRpc = arch.components.find(c => c.id === 'solana-rpc');
+                    const bitcoinCollector = arch.components.find(c => c.id === 'bitcoin-collector');
+                    const solanaCollector = arch.components.find(c => c.id === 'solana-collector');
+                    const clickhouse = arch.components.find(c => c.id === 'clickhouse');
+                    const dashboard = arch.components.find(c => c.id === 'dashboard');
+                    const browser = arch.components.find(c => c.id === 'browser');
+
+                    return (
+                      <div
+                        style={{
+                          transform: `scale(${handsOnScale})`,
+                          transformOrigin: 'top center',
+                          transition: 'transform 0.3s ease-out',
+                          padding: '0 20px 20px'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px' }}>
+                        {/* Column 1: External APIs stacked */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '100px' }}>
+                          <ComponentCard component={bitcoinApi} onClick={(comp) => setSelectedComponent(comp)} />
+                          <ComponentCard component={solanaRpc} onClick={(comp) => setSelectedComponent(comp)} />
+                        </div>
+
+                        {/* Arrows from APIs to Collectors */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '100px' }}>
+                          <ConnectionArrow type="stream" />
+                          <ConnectionArrow type="stream" />
+                        </div>
+
+                        {/* Column 2: Collectors stacked */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '100px' }}>
+                          <ComponentCard component={bitcoinCollector} onClick={(comp) => setSelectedComponent(comp)} />
+                          <ComponentCard component={solanaCollector} onClick={(comp) => setSelectedComponent(comp)} />
+                        </div>
+
+                        {/* Two sources -> one target (merge into a single centered arrow to ClickHouse) */}
+                        <MergeToCenterArrow type="batch" />
+
+                        {/* Column 3: ClickHouse centered */}
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <ComponentCard component={clickhouse} onClick={(comp) => setSelectedComponent(comp)} />
+                        </div>
+
+                        {/* Arrow from ClickHouse to Dashboard */}
+                        <ConnectionArrow type="query" />
+
+                        {/* Column 4: Dashboard */}
+                        <ComponentCard component={dashboard} onClick={(comp) => setSelectedComponent(comp)} />
+
+                        {/* Arrow from Dashboard to Browser */}
+                        <ConnectionArrow type="query" />
+
+                        {/* Column 5: Browser */}
+                        <ComponentCard component={browser} onClick={(comp) => setSelectedComponent(comp)} />
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+
+                <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#10b981' }}>
+                    What You'll Learn
+                  </h4>
+                  <ul style={{ color: '#cbd5e1', fontSize: '14px', marginLeft: '20px', lineHeight: '1.8' }}>
+                    <li>Design and implement real-time data ingestion pipelines</li>
+                    <li>Work with multi-blockchain architectures (Bitcoin & Solana)</li>
+                    <li>Use ClickHouse columnar database for analytical queries</li>
+                    <li>Build asynchronous APIs with FastAPI</li>
+                    <li>Orchestrate microservices using Docker Compose</li>
+                    <li>Understand the 5Vs of Big Data through practical examples</li>
+                  </ul>
+                </div>
+
+                <div style={{ background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#60a5fa' }}>
+                    The 5Vs of Big Data in This Lab
+                  </h4>
+                  <div style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.8' }}>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#60a5fa' }}>Volume:</strong> Solana generates 20,000+ transactions per block, demonstrating massive data scale</p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#60a5fa' }}>Velocity:</strong> Real-time collection with Solana's ~400ms block times vs Bitcoin's ~10 minutes</p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#60a5fa' }}>Variety:</strong> Handle heterogeneous blockchain architectures (UTXO vs account-based models)</p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#60a5fa' }}>Veracity:</strong> Data validation through blockchain consensus mechanisms</p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#60a5fa' }}>Value:</strong> Extract insights on network congestion and adoption patterns</p>
+                  </div>
+                </div>
+
+                <div style={{ background: 'rgba(139, 92, 246, 0.1)', border: '1px solid rgba(139, 92, 246, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#a78bfa' }}>
+                    Prerequisites
+                  </h4>
+                  <div style={{ color: '#cbd5e1', fontSize: '14px' }}>
+                    <p style={{ fontWeight: '600', marginBottom: '8px', color: '#e2e8f0' }}>Required:</p>
+                    <ul style={{ marginLeft: '20px', marginBottom: '12px', lineHeight: '1.8' }}>
+                      <li>Docker Desktop 20.10+</li>
+                      <li>10GB free disk space minimum</li>
+                      <li>Internet connectivity</li>
+                      <li>Basic command-line knowledge</li>
+                    </ul>
+                    <p style={{ fontWeight: '600', marginBottom: '8px', color: '#e2e8f0' }}>Recommended:</p>
+                    <ul style={{ marginLeft: '20px', marginBottom: '12px', lineHeight: '1.8' }}>
+                      <li>SQL knowledge (SELECT, WHERE, GROUP BY)</li>
+                      <li>Basic REST API familiarity</li>
+                      <li>8GB RAM minimum (16GB recommended)</li>
+                    </ul>
+                    <p style={{ fontWeight: '600', marginBottom: '8px', color: '#e2e8f0' }}>Time Estimate:</p>
+                    <ul style={{ marginLeft: '20px', lineHeight: '1.8' }}>
+                      <li>Exercises 1-6: 1.5-2 hours</li>
+                      <li>Exercises 7-9: 1-1.5 hours</li>
+                      <li>Extensions: 2-3 hours</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#f59e0b' }}>
+                    Quick Start Guide
+                  </h4>
+                  <div style={{ color: '#cbd5e1', fontSize: '14px' }}>
+                    <ol style={{ marginLeft: '20px', lineHeight: '1.8' }}>
+                      <li style={{ marginBottom: '8px' }}>
+                        <strong style={{ color: '#f59e0b' }}>Clone the repository:</strong>
+                        <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
+                          <code>git clone https://github.com/maruthiprithivi/big_data_architecture.git{'\n'}cd big_data_architecture</code>
+                        </pre>
+                      </li>
+                      <li style={{ marginBottom: '8px' }}>
+                        <strong style={{ color: '#f59e0b' }}>Configure environment (optional):</strong>
+                        <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
+                          <code>cp .env.example .env</code>
+                        </pre>
+                        <span style={{ fontSize: '13px', color: '#94a3b8' }}>Note: Default settings work for first-time users</span>
+                      </li>
+                      <li style={{ marginBottom: '8px' }}>
+                        <strong style={{ color: '#f59e0b' }}>Start services:</strong>
+                        <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
+                          <code>./start.sh</code>
+                        </pre>
+                        <span style={{ fontSize: '13px', color: '#94a3b8' }}>Initial setup: 15-20 minutes (Docker downloads), subsequent starts: 30-60 seconds</span>
+                      </li>
+                      <li style={{ marginBottom: '8px' }}>
+                        <strong style={{ color: '#f59e0b' }}>Access dashboard:</strong> Open{' '}
+                        <a href="http://localhost:8501" target="_blank" rel="noopener noreferrer" style={{ color: '#10b981', textDecoration: 'underline' }}>
+                          http://localhost:8501
+                        </a> in your browser
+                      </li>
+                      <li>
+                        <strong style={{ color: '#f59e0b' }}>Shutdown:</strong>
+                        <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
+                          <code>docker compose down     # Stop services{'\n'}docker compose down -v  # Remove all data</code>
+                        </pre>
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+
+                <div style={{ background: 'rgba(20, 184, 166, 0.1)', border: '1px solid rgba(20, 184, 166, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#14b8a6' }}>
+                    Exercises Structure
+                  </h4>
+                  <div style={{ color: '#cbd5e1', fontSize: '14px' }}>
+                    <div style={{ marginBottom: '16px' }}>
+                      <p style={{ fontWeight: '600', color: '#14b8a6', marginBottom: '8px' }}>Getting Started (Exercises 1-3)</p>
+                      <ul style={{ marginLeft: '20px', lineHeight: '1.8' }}>
+                        <li>System verification and service health checks</li>
+                        <li>Starting your first data collection</li>
+                        <li>Exploring the Streamlit dashboard</li>
+                      </ul>
+                    </div>
+                    <div style={{ marginBottom: '16px' }}>
+                      <p style={{ fontWeight: '600', color: '#14b8a6', marginBottom: '8px' }}>SQL Exploration (Exercises 4-6)</p>
+                      <ul style={{ marginLeft: '20px', lineHeight: '1.8' }}>
+                        <li>Basic block queries and blockchain structure</li>
+                        <li>Transaction analysis and fee calculations</li>
+                        <li>Cross-chain comparisons using SQL</li>
+                      </ul>
+                    </div>
+                    <div style={{ marginBottom: '16px' }}>
+                      <p style={{ fontWeight: '600', color: '#14b8a6', marginBottom: '8px' }}>Data Analysis (Exercises 7-9)</p>
+                      <ul style={{ marginLeft: '20px', lineHeight: '1.8' }}>
+                        <li>Time-series analysis and trend identification</li>
+                        <li>Storage and compression optimization</li>
+                        <li>Performance metrics and bottleneck analysis</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <p style={{ fontWeight: '600', color: '#14b8a6', marginBottom: '8px' }}>Extension Challenges (Optional)</p>
+                      <ul style={{ marginLeft: '20px', lineHeight: '1.8' }}>
+                        <li>Add custom metrics to the collector</li>
+                        <li>Create advanced analytical queries</li>
+                        <li>Experiment with collection parameters</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#ef4444' }}>
+                    Common Issues & Troubleshooting
+                  </h4>
+                  <div style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.8' }}>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>Container startup failures:</strong> Check logs with <code style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '2px 6px', borderRadius: '3px' }}>docker compose logs [service]</code></p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>RPC connection errors:</strong> Public endpoints have rate limits. Reduce COLLECTION_INTERVAL_SECONDS or use dedicated providers</p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>Database connection issues:</strong> Restart collector after ClickHouse initialization: <code style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '2px 6px', borderRadius: '3px' }}>docker compose restart collector</code></p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>Dashboard shows no data:</strong> Verify collection started via dashboard button, then check collector logs</p>
+                  </div>
+                </div>
+
+                <div style={{ background: 'rgba(99, 102, 241, 0.1)', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: '8px', padding: '16px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#6366f1' }}>
+                    Additional Resources
+                  </h4>
+                  <div style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.8' }}>
+                    <p style={{ marginBottom: '8px' }}>
+                      <strong style={{ color: '#6366f1' }}>GitHub Repository:</strong>{' '}
+                      <a
+                        href="https://github.com/maruthiprithivi/big_data_architecture"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: '#10b981', textDecoration: 'underline' }}
+                      >
+                        maruthiprithivi/big_data_architecture
+                      </a>
+                    </p>
+                    <p style={{ marginBottom: '8px' }}>
+                      <strong style={{ color: '#6366f1' }}>EXERCISES.md:</strong> Complete exercise instructions with step-by-step guidance
+                    </p>
+                    <p style={{ marginBottom: '8px' }}>
+                      <strong style={{ color: '#6366f1' }}>SAMPLE_QUERIES.md:</strong> SQL query examples for blockchain data analysis
+                    </p>
+                    <p style={{ marginBottom: '8px' }}>
+                      <strong style={{ color: '#6366f1' }}>GLOSSARY.md:</strong> Blockchain terminology and concepts reference
+                    </p>
+                  </div>
+                </div>
+              </div>
             </>
           )}
         </div>
