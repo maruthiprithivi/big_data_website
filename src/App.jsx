@@ -422,7 +422,7 @@ const BigDataArchitectureExplorer = () => {
       overview: {
         text: 'A modern data pipeline architecture for collecting, storing, and analyzing blockchain data from Bitcoin and Solana networks.',
         scenario: 'Blockchain Analytics Platform',
-        scenarioDescription: 'An educational system for ingesting blockchain data from Bitcoin and Solana into ClickHouse, featuring real-time monitoring via Streamlit. External blockchain APIs continuously stream block and transaction data to a FastAPI collector service with separate Bitcoin and Solana collectors, which persist the data in a columnar ClickHouse database with dedicated tables. The Streamlit dashboard provides real-time visualization, collection controls, and SQL query capabilities for analyzing blockchain metrics, transaction patterns, and network performance.',
+        scenarioDescription: 'An educational system for ingesting blockchain data from Bitcoin and Solana into ClickHouse, featuring real-time monitoring via Next.js. External blockchain APIs continuously stream block and transaction data to a FastAPI collector service with separate Bitcoin and Solana collectors, which persist the data in a columnar ClickHouse database with dedicated tables. The Next.js dashboard provides real-time visualization with ingestion rate metrics, countdown timer, and data preview tables, along with collection controls and SQL query capabilities for analyzing blockchain metrics, transaction patterns, and network performance.',
         components: [
           { name: 'Bitcoin API', metric: 'REST API from blockstream.info providing block and transaction data' },
           { name: 'Solana RPC', metric: 'JSON-RPC from mainnet-beta.solana.com with slot and transaction streams' },
@@ -432,8 +432,8 @@ const BigDataArchitectureExplorer = () => {
           { name: 'ClickHouse Database', metric: 'Columnar OLAP storage with optimized compression for blockchain analytics' },
           { name: 'Bitcoin Tables', metric: 'bitcoin_blocks and bitcoin_transactions tables' },
           { name: 'Solana Tables', metric: 'solana_blocks and solana_transactions tables' },
-          { name: 'Streamlit Dashboard', metric: 'Interactive web UI for monitoring collection and querying blockchain metrics' },
-          { name: 'Web Browser', metric: 'User interface at localhost:8501 for controlling and visualizing data' }
+          { name: 'Next.js Dashboard', metric: 'Real-time monitoring UI with ingestion rate metrics and automatic shutdown timer' },
+          { name: 'Web Browser', metric: 'User interface at localhost:3001 for controlling and visualizing data' }
         ]
       },
       useCases: [
@@ -446,7 +446,9 @@ const BigDataArchitectureExplorer = () => {
         'Multi-blockchain support (Bitcoin & Solana)',
         'Fully containerized with Docker Compose',
         'Real-time collection with safety limits',
-        'Columnar storage optimized for analytics'
+        'Columnar storage optimized for analytics',
+        'Real-time dashboard with ingestion rate metrics',
+        'Built-in safety controls and monitoring'
       ],
       challenges: [
         'Public RPC endpoint rate limits',
@@ -468,8 +470,8 @@ const BigDataArchitectureExplorer = () => {
         { id: 'clickhouse', name: 'ClickHouse DB', shape: 'warehouse', description: 'Columnar database', details: 'OLAP database with automatic schema and compression at port 8123.', technologies: ['ClickHouse', 'SQL'] },
         { id: 'bitcoin-tables', name: 'Bitcoin Tables', shape: 'log', description: 'Bitcoin data storage', details: 'Tables: bitcoin_blocks, bitcoin_transactions storing Bitcoin chain data.', technologies: ['ClickHouse Schema'] },
         { id: 'solana-tables', name: 'Solana Tables', shape: 'log', description: 'Solana data storage', details: 'Tables: solana_blocks, solana_transactions storing Solana chain data.', technologies: ['ClickHouse Schema'] },
-        { id: 'dashboard', name: 'Streamlit Dashboard', shape: 'dashboard', description: 'Monitoring UI', details: 'Real-time visualization and collection control interface at port 8501.', technologies: ['Streamlit', 'Python', 'Docker'] },
-        { id: 'browser', name: 'Web Browser', shape: 'cloud', description: 'User interface', details: 'Browser-based access to dashboard at localhost:8501.', technologies: ['HTTP', 'localhost:8501'] }
+        { id: 'dashboard', name: 'Next.js Dashboard', shape: 'dashboard', description: 'Monitoring UI', details: 'Real-time visualization with ingestion rate metrics, countdown timer, and data preview tables at port 3001. Built with Next.js 16 and Turbopack.', technologies: ['Next.js 16', 'Turbopack', 'React', 'Docker'] },
+        { id: 'browser', name: 'Web Browser', shape: 'cloud', description: 'User interface', details: 'Browser-based access to dashboard at localhost:3001.', technologies: ['HTTP', 'localhost:3001'] }
       ],
       connections: [
         { from: 'bitcoin-api', to: 'bitcoin-collector', type: 'stream' },
@@ -2401,6 +2403,7 @@ const BigDataArchitectureExplorer = () => {
                     <li>Use ClickHouse columnar database for analytical queries</li>
                     <li>Build asynchronous APIs with FastAPI</li>
                     <li>Orchestrate microservices using Docker Compose</li>
+                    <li>Build real-time dashboards with Next.js 16 and Turbopack</li>
                     <li>Understand the 5Vs of Big Data through practical examples</li>
                   </ul>
                 </div>
@@ -2467,14 +2470,14 @@ const BigDataArchitectureExplorer = () => {
                       <li style={{ marginBottom: '8px' }}>
                         <strong style={{ color: '#f59e0b' }}>Start services:</strong>
                         <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
-                          <code>./start.sh</code>
+                          <code>./scripts/start.sh</code>
                         </pre>
                         <span style={{ fontSize: '13px', color: '#94a3b8' }}>Initial setup: 15-20 minutes (Docker downloads), subsequent starts: 30-60 seconds</span>
                       </li>
                       <li style={{ marginBottom: '8px' }}>
                         <strong style={{ color: '#f59e0b' }}>Access dashboard:</strong> Open{' '}
-                        <a href="http://localhost:8501" target="_blank" rel="noopener noreferrer" style={{ color: '#10b981', textDecoration: 'underline' }}>
-                          http://localhost:8501
+                        <a href="http://localhost:3001" target="_blank" rel="noopener noreferrer" style={{ color: '#10b981', textDecoration: 'underline' }}>
+                          http://localhost:3001
                         </a> in your browser
                       </li>
                       <li>
@@ -2497,7 +2500,7 @@ const BigDataArchitectureExplorer = () => {
                       <ul style={{ marginLeft: '20px', lineHeight: '1.8' }}>
                         <li>System verification and service health checks</li>
                         <li>Starting your first data collection</li>
-                        <li>Exploring the Streamlit dashboard</li>
+                        <li>Exploring the Next.js dashboard (ingestion rate, countdown timer, data preview)</li>
                       </ul>
                     </div>
                     <div style={{ marginBottom: '16px' }}>
@@ -2556,13 +2559,48 @@ const BigDataArchitectureExplorer = () => {
                       </a>
                     </p>
                     <p style={{ marginBottom: '8px' }}>
-                      <strong style={{ color: '#6366f1' }}>EXERCISES.md:</strong> Complete exercise instructions with step-by-step guidance
+                      <strong style={{ color: '#6366f1' }}>EXERCISES.md:</strong>{' '}
+                      <a
+                        href="https://github.com/maruthiprithivi/big_data_architecture/blob/main/docs/EXERCISES.md"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: '#10b981', textDecoration: 'underline' }}
+                      >
+                        Complete exercise instructions
+                      </a>
                     </p>
                     <p style={{ marginBottom: '8px' }}>
-                      <strong style={{ color: '#6366f1' }}>SAMPLE_QUERIES.md:</strong> SQL query examples for blockchain data analysis
+                      <strong style={{ color: '#6366f1' }}>SAMPLE_QUERIES.md:</strong>{' '}
+                      <a
+                        href="https://github.com/maruthiprithivi/big_data_architecture/blob/main/docs/SAMPLE_QUERIES.md"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: '#10b981', textDecoration: 'underline' }}
+                      >
+                        SQL query examples
+                      </a>
                     </p>
                     <p style={{ marginBottom: '8px' }}>
-                      <strong style={{ color: '#6366f1' }}>GLOSSARY.md:</strong> Blockchain terminology and concepts reference
+                      <strong style={{ color: '#6366f1' }}>GLOSSARY.md:</strong>{' '}
+                      <a
+                        href="https://github.com/maruthiprithivi/big_data_architecture/blob/main/docs/GLOSSARY.md"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: '#10b981', textDecoration: 'underline' }}
+                      >
+                        Blockchain terminology reference
+                      </a>
+                    </p>
+                    <p style={{ marginBottom: '8px' }}>
+                      <strong style={{ color: '#6366f1' }}>API Documentation:</strong>{' '}
+                      <a
+                        href="http://localhost:8000/docs"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: '#10b981', textDecoration: 'underline' }}
+                      >
+                        Interactive Swagger UI at localhost:8000/docs
+                      </a>
                     </p>
                   </div>
                 </div>
