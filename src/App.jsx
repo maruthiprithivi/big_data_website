@@ -72,6 +72,9 @@ const BigDataArchitectureExplorer = () => {
   const [showCurriculum, setShowCurriculum] = useState(false);
   const [activePhase, setActivePhase] = useState(1);
   const [selectedLevel, setSelectedLevel] = useState(null);
+
+  // Case Studies section state
+  const [showCaseStudies, setShowCaseStudies] = useState(false);
   const [completedLevels, setCompletedLevels] = useState(() => {
     const saved = localStorage.getItem('curriculumCompletedLevels');
     return saved ? JSON.parse(saved) : [];
@@ -249,10 +252,10 @@ const BigDataArchitectureExplorer = () => {
       name: 'Lambda Architecture',
       difficulty: 'Advanced',
       tagline: 'Hybrid Batch + Stream Processing',
-      description: 'Lambda Architecture decomposes the problem into three layers: batch layer for accuracy, speed layer for low latency, and serving layer for queries.',
+      description: 'Lambda Architecture, introduced by Nathan Marz (creator of Apache Storm), decomposes data processing into three distinct layers: a batch layer that recomputes complete views from the master dataset for accuracy, a speed layer that processes recent data in real-time for low latency, and a serving layer that merges both views to answer queries. This hybrid approach provides both accurate historical analysis and real-time responsiveness.',
       layout: 'lambda',
       overview: {
-        text: 'Lambda Architecture decomposes the problem into three layers: batch layer for accuracy, speed layer for low latency, and serving layer for queries.',
+        text: 'Lambda Architecture solves the challenge of building robust, fault-tolerant data systems that need both real-time processing and accurate historical analysis. The batch layer processes the complete dataset periodically (typically nightly), producing accurate "batch views" that account for all data. The speed layer compensates for the batch layer\'s high latency by processing only recent data in real-time, producing "real-time views." The serving layer indexes and exposes both views, merging them at query time to provide comprehensive, up-to-date results. This architecture is ideal when you need guaranteed accuracy (via batch recomputation) alongside real-time responsiveness.',
         scenario: 'E-Commerce Platform - Amazon-Scale',
         scenarioDescription: 'A global e-commerce platform processes millions of customer interactions daily. User clickstreams, product views, purchases, and reviews flow continuously through data sources. The batch layer recalculates personalized product recommendations overnight using complete purchase history, while the speed layer updates trending products in real-time. The serving layer merges both views to show accurate historical trends alongside live flash sale metrics on customer dashboards.',
         components: [
@@ -311,10 +314,10 @@ const BigDataArchitectureExplorer = () => {
       name: 'Kappa Architecture',
       difficulty: 'Intermediate',
       tagline: 'Stream-First Simplicity',
-      description: 'Kappa Architecture simplifies Lambda by using only a stream processing layer with a replayable event log.',
+      description: 'Kappa Architecture, proposed by Jay Kreps (co-creator of Apache Kafka), simplifies Lambda by treating all data as a stream and using only stream processing. Instead of maintaining separate batch and speed layers, Kappa uses a replayable event log (like Kafka) as the source of truth. When logic changes or reprocessing is needed, you simply replay the log through updated stream processors. This "stream-first" approach reduces complexity while maintaining the ability to recompute historical views.',
       layout: 'linear',
       overview: {
-        text: 'Kappa Architecture simplifies Lambda by using only a stream processing layer with a replayable event log, eliminating the batch layer complexity.',
+        text: 'Kappa Architecture recognizes that batch processing is essentially a special case of stream processing (a stream with a bounded start and end). By storing all raw events in a replayable, append-only log with configurable retention (potentially infinite), the architecture enables reprocessing historical data by simply replaying the log through stream processors. This eliminates the need to maintain two separate codebases for batch and stream processing. When you need to change your processing logic, deploy the new version and replay from the beginning of the log to rebuild your views. The simplicity comes with trade-offs: very long replay times for large datasets and potential challenges with complex analytical queries that are better suited for batch systems.',
         scenario: 'IoT Smart City Platform',
         scenarioDescription: 'A smart city platform collects sensor data from traffic lights, air quality monitors, and public transit vehicles. All events are stored in an infinite event log (Kafka) allowing the system to replay historical data when deploying new analytics algorithms. Stream processors continuously calculate traffic congestion patterns, pollution levels, and transit delays. Materialized views maintain pre-computed metrics that power real-time dashboards for city planners and public mobile apps.',
         components: [
@@ -363,10 +366,10 @@ const BigDataArchitectureExplorer = () => {
       name: 'Streaming Architecture',
       difficulty: 'Intermediate',
       tagline: 'Pure Real-Time Processing',
-      description: 'Event-driven architecture for continuous low-latency processing with stream-first approach.',
+      description: 'Pure Streaming Architecture focuses exclusively on processing unbounded data streams in real-time, prioritizing minimal latency over historical completeness. Unlike Lambda which adds batch for accuracy or Kappa which adds replay for reprocessing, pure streaming treats data as ephemeral flows that must be processed immediately. This pattern excels when the value of data degrades rapidly with time—real-time alerting, fraud detection, live monitoring, and operational dashboards where "good enough now" beats "perfect later."',
       layout: 'linear',
       overview: {
-        text: 'Pure streaming architecture for real-time event processing with continuous data flows and minimal latency.',
+        text: 'Pure Streaming Architecture embraces the philosophy that data is most valuable at the moment it\'s created. Events flow from producers through message brokers to stream processors and finally to sinks (databases, dashboards, or other services), with each stage designed for minimal latency. Stream processors use windowing (tumbling, sliding, session windows) to aggregate data over time periods, and stateful processing to maintain counters, aggregates, and complex event patterns. The architecture handles challenges like out-of-order events, late-arriving data, and backpressure when downstream systems can\'t keep up. While this simplicity enables sub-second latency, it sacrifices the ability to easily reprocess historical data or perform complex batch analytics.',
         scenario: 'Ride-Sharing Platform - Uber/Lyft',
         scenarioDescription: 'A ride-sharing platform requires sub-second latency for matching riders with drivers. Mobile apps continuously emit location updates, ride requests, and driver availability events. Stream processors calculate real-time surge pricing based on supply-demand ratios, estimate arrival times using current traffic conditions, and detect anomalies like GPS spoofing. Results flow directly to live rider and driver apps with minimal delay, while operational metrics stream to monitoring dashboards.',
         components: [
@@ -415,10 +418,10 @@ const BigDataArchitectureExplorer = () => {
       name: 'Batch Architecture',
       difficulty: 'Beginner',
       tagline: 'Traditional ETL Processing',
-      description: 'Scheduled batch processing for data warehousing with periodic ETL jobs and analytical workloads.',
+      description: 'Batch Architecture is the foundational pattern for data warehousing and analytics, processing data in discrete, scheduled jobs rather than continuously. Data is extracted from source systems, transformed through ETL (Extract, Transform, Load) or ELT pipelines, and loaded into a data warehouse optimized for analytical queries. This architecture excels at complex transformations, aggregations, and joins that would be difficult or expensive in real-time. The trade-off is latency—data freshness is limited by batch frequency (hourly, daily, or weekly).',
       layout: 'linear',
       overview: {
-        text: 'Traditional batch processing architecture with scheduled ETL workflows for data warehousing and business intelligence.',
+        text: 'Batch Architecture follows the classic data warehouse paradigm: source systems generate operational data, which is periodically extracted and staged in a data lake or staging area. ETL pipelines transform raw data into analytical models (often using dimensional modeling with fact and dimension tables), applying business rules, data quality checks, and aggregations. The transformed data lands in a data warehouse optimized for OLAP (Online Analytical Processing) queries. Orchestration tools like Airflow schedule and monitor these pipelines, handling dependencies, retries, and alerting. Modern implementations often use ELT (Extract, Load, Transform) where raw data is loaded first and transformed within the warehouse using tools like dbt. Despite its simplicity, batch processing remains dominant for business intelligence, regulatory reporting, and scenarios where data freshness measured in hours or days is acceptable.',
         scenario: 'Retail Chain Analytics - Walmart/Target',
         scenarioDescription: 'A national retail chain with thousands of stores runs nightly batch processes to consolidate sales data. Point-of-sale systems upload daily transaction logs to a central data lake. Overnight ETL pipelines clean, transform, and aggregate data - calculating store performance metrics, regional sales trends, and inventory turnover rates. The data warehouse powers morning executive dashboards and enables business analysts to create custom reports for merchandising decisions and quarterly forecasting.',
         components: [
@@ -470,10 +473,10 @@ const BigDataArchitectureExplorer = () => {
       name: 'Blockchain Data Pipeline',
       difficulty: 'Intermediate',
       tagline: 'Real-Time Blockchain Analytics',
-      description: 'Containerized pipeline for ingesting and analyzing blockchain data from multiple chains with real-time monitoring.',
+      description: 'This architecture demonstrates a practical implementation of real-time data ingestion and analytics using blockchain data as the subject matter. It combines streaming ingestion patterns (continuously polling blockchain APIs), columnar storage for analytics (ClickHouse), and a modern full-stack dashboard (Next.js). The architecture showcases how to handle multi-source data ingestion, data model differences between sources (Bitcoin vs Solana), and real-time visualization—skills transferable to any domain requiring continuous data collection and analysis.',
       layout: 'blockchain',
       overview: {
-        text: 'A modern data pipeline architecture for collecting, storing, and analyzing blockchain data from Bitcoin and Solana networks.',
+        text: 'This hands-on pipeline demonstrates key big data patterns: multi-source data ingestion where each blockchain (Bitcoin, Solana) has different data models and APIs requiring specialized collectors; columnar storage using ClickHouse which provides exceptional compression ratios and query performance for time-series and analytical workloads; containerized microservices enabling easy deployment and scaling; and real-time dashboards that visualize ingestion rates, data freshness, and enable ad-hoc SQL queries. The architecture intentionally keeps complexity manageable for learning while demonstrating production-grade patterns. It uses public APIs (which have rate limits) rather than running full blockchain nodes, making it accessible for educational purposes.',
         scenario: 'Blockchain Analytics Platform',
         scenarioDescription: 'An educational system for ingesting blockchain data from Bitcoin and Solana into ClickHouse, featuring real-time monitoring via Next.js. External blockchain APIs continuously stream block and transaction data to a FastAPI collector service with separate Bitcoin and Solana collectors, which persist the data in a columnar ClickHouse database with dedicated tables. The Next.js dashboard provides real-time visualization with ingestion rate metrics, countdown timer, and data preview tables, along with collection controls and SQL query capabilities for analyzing blockchain metrics, transaction patterns, and network performance.',
         components: [
@@ -1064,6 +1067,550 @@ for message in consumer:
     batch: '#ec4899',
     query: '#10b981'
   };
+
+  // Case Studies Data - Real-world Big Data Architecture Examples
+  const caseStudies = [
+    {
+      id: 'netflix',
+      company: 'Netflix',
+      industry: 'Streaming Entertainment',
+      logo: '🎬',
+      color: '#e50914',
+      title: 'Real-Time Personalization at Scale',
+      subtitle: 'Processing 500+ billion events daily',
+      architectureType: 'Lambda Architecture + Event-Driven',
+      challenge: 'Netflix needed to deliver personalized content recommendations to 230+ million subscribers across 190+ countries, while processing massive amounts of viewing data in real-time to update recommendations as user preferences evolve.',
+      solution: 'Netflix implemented a sophisticated Lambda Architecture combining Apache Kafka for real-time event streaming with Apache Spark for batch processing. Their data pipeline ingests over 500 billion events daily, including every play, pause, search, and browse action.',
+      implementation: [
+        'Apache Kafka handles real-time event streaming from millions of concurrent users',
+        'Apache Spark processes batch jobs for deep learning model training on petabytes of viewing history',
+        'Apache Flink provides real-time stream processing for instant recommendation updates',
+        'Amazon S3 serves as their data lake storing raw viewing events and processed datasets',
+        'Apache Cassandra and Amazon DynamoDB provide low-latency serving for personalization APIs'
+      ],
+      keyMetrics: [
+        { label: 'Events/Day', value: '500B+' },
+        { label: 'Storage', value: '60+ PB' },
+        { label: 'Users', value: '230M+' },
+        { label: 'Countries', value: '190+' }
+      ],
+      keyLearnings: [
+        'Event-driven architecture enables near-instant personalization updates',
+        'Separating batch and speed layers allows for both accurate historical analysis and real-time responsiveness',
+        'Investing in data quality at ingestion prevents cascading issues downstream',
+        'A/B testing infrastructure integrated into the data pipeline enables rapid experimentation'
+      ],
+      technologies: ['Kafka', 'Spark', 'Flink', 'S3', 'Cassandra', 'Druid'],
+      references: [
+        { title: 'Netflix Tech Blog: Evolution of the Netflix Data Pipeline', url: 'https://netflixtechblog.com/evolution-of-the-netflix-data-pipeline-da246ca36905' },
+        { title: 'Netflix: Keystone Real-Time Stream Processing Platform', url: 'https://netflixtechblog.com/keystone-real-time-stream-processing-platform-a3ee651812a' }
+      ]
+    },
+    {
+      id: 'uber',
+      company: 'Uber',
+      industry: 'Transportation & Logistics',
+      logo: '🚗',
+      color: '#000000',
+      title: 'Real-Time Marketplace Matching',
+      subtitle: 'Sub-second rider-driver matching across 10,000+ cities',
+      architectureType: 'Streaming Architecture + Kappa',
+      challenge: 'Uber processes millions of GPS pings per second from drivers and riders globally, requiring sub-second latency for ride matching, dynamic pricing (surge), and ETA calculations while maintaining system reliability across 10,000+ cities.',
+      solution: 'Uber built a stream-first architecture centered on Apache Kafka and Apache Flink. Their "Marketplace" platform processes location updates in real-time to optimize driver-rider matching and calculate surge pricing dynamically.',
+      implementation: [
+        'Apache Kafka processes trillions of messages daily with geo-partitioned topics',
+        'Apache Flink handles real-time surge pricing calculations with sub-second latency',
+        'Apache Hive and Presto power batch analytics on historical trip data',
+        'Custom-built H3 geospatial indexing system enables efficient location-based queries',
+        'Apache Pinot serves real-time OLAP queries for operational dashboards'
+      ],
+      keyMetrics: [
+        { label: 'Messages/Day', value: '1T+' },
+        { label: 'GPS Pings/Sec', value: '1M+' },
+        { label: 'Cities', value: '10,000+' },
+        { label: 'Latency', value: '<100ms' }
+      ],
+      keyLearnings: [
+        'Geospatial partitioning is essential for location-based streaming applications',
+        'Stream processing must handle late-arriving data gracefully for accurate analytics',
+        'Idempotent processing ensures correctness during system failures and retries',
+        'Backpressure handling is critical when processing variable traffic patterns'
+      ],
+      technologies: ['Kafka', 'Flink', 'Spark', 'Pinot', 'Hive'],
+      references: [
+        { title: 'Uber Engineering: Real-Time Exactly-Once Ad Event Processing', url: 'https://www.uber.com/blog/real-time-exactly-once-ad-event-processing/' },
+        { title: 'Uber Engineering: AresDB - Real-time Analytics Engine', url: 'https://www.uber.com/blog/aresdb/' }
+      ]
+    },
+    {
+      id: 'airbnb',
+      company: 'Airbnb',
+      industry: 'Travel & Hospitality',
+      logo: '🏠',
+      color: '#ff5a5f',
+      title: 'Search Ranking & Dynamic Pricing',
+      subtitle: 'ML-powered search across 7M+ listings',
+      architectureType: 'Lambda Architecture + ML Pipelines',
+      challenge: 'Airbnb needed to rank millions of listings in real-time based on guest preferences, host responsiveness, seasonality, and hundreds of other signals while enabling hosts to price competitively with dynamic pricing suggestions.',
+      solution: 'Airbnb developed a comprehensive Lambda Architecture with Apache Spark for batch ML model training, Apache Kafka for real-time feature updates, and Apache Airflow for workflow orchestration. Their "Minerva" platform unifies metrics computation across batch and streaming.',
+      implementation: [
+        'Apache Airflow orchestrates 25,000+ daily batch jobs for data transformation and ML training',
+        'Apache Spark trains ranking models on historical booking and search data',
+        'Apache Kafka streams real-time availability updates and booking events',
+        'Apache Druid powers real-time analytics dashboards for hosts and internal teams',
+        'Custom feature store provides consistent ML features across batch training and real-time inference'
+      ],
+      keyMetrics: [
+        { label: 'Listings', value: '7M+' },
+        { label: 'Daily Jobs', value: '25,000+' },
+        { label: 'Data Warehouse', value: '50+ PB' },
+        { label: 'Countries', value: '220+' }
+      ],
+      keyLearnings: [
+        'Feature stores bridge the gap between batch model training and real-time serving',
+        'Data quality monitoring is essential when ML models depend on data pipelines',
+        'Unified metrics definitions (Minerva) prevent metric inconsistencies across teams',
+        'Progressive rollout of ML models through experimentation platforms reduces risk'
+      ],
+      technologies: ['Spark', 'Airflow', 'Kafka', 'Druid', 'Hive'],
+      references: [
+        { title: 'Airbnb Engineering: Airflow at Airbnb', url: 'https://medium.com/airbnb-engineering/airflow-a-workflow-management-platform-46318b977fd8' },
+        { title: 'Airbnb Engineering: Minerva - Metric Platform', url: 'https://medium.com/airbnb-engineering/how-airbnb-achieved-metric-consistency-at-scale-f23cc53dea70' }
+      ]
+    },
+    {
+      id: 'meta',
+      company: 'Meta (Facebook)',
+      industry: 'Social Media',
+      logo: '👥',
+      color: '#1877f2',
+      title: 'Unified Data Warehouse at Exabyte Scale',
+      subtitle: 'Largest Hadoop/Presto deployment in the world',
+      architectureType: 'Batch Architecture + Custom Stream Processing',
+      challenge: 'Meta operates one of the largest data infrastructures in the world, processing exabytes of data daily from billions of users across Facebook, Instagram, WhatsApp, and Messenger while supporting both real-time features and long-term analytics.',
+      solution: 'Meta built custom data infrastructure including Scuba for real-time analytics, Presto for interactive SQL queries, and massive Hadoop clusters for batch processing. Their unified data platform processes exabytes daily while maintaining sub-second query latency for analysts.',
+      implementation: [
+        'Scuba provides real-time analytics with sub-second query latency on streaming data',
+        'Presto enables interactive SQL queries across their entire data warehouse',
+        'Apache Spark and custom MapReduce jobs process batch workloads at exabyte scale',
+        'Prophet (open-sourced) handles time-series forecasting for capacity planning',
+        'Custom data lake architecture with columnar storage for analytical efficiency'
+      ],
+      keyMetrics: [
+        { label: 'Daily Data', value: '1+ EB' },
+        { label: 'Presto Queries/Day', value: '1M+' },
+        { label: 'Active Users', value: '3B+' },
+        { label: 'Data Centers', value: '20+' }
+      ],
+      keyLearnings: [
+        'At extreme scale, building custom tools often becomes necessary',
+        'Data governance and privacy must be built into the architecture from day one',
+        'Query optimization and caching dramatically impact costs at scale',
+        'Separating storage and compute enables independent scaling'
+      ],
+      technologies: ['Spark', 'Presto', 'Hive', 'Kafka'],
+      references: [
+        { title: 'Meta Engineering: Scaling Data Infrastructure', url: 'https://engineering.fb.com/2014/10/21/core-infra/scaling-the-facebook-data-warehouse-to-300-pb/' },
+        { title: 'Presto: SQL on Everything', url: 'https://prestodb.io/' }
+      ]
+    },
+    {
+      id: 'google',
+      company: 'Google',
+      industry: 'Technology',
+      logo: '🔍',
+      color: '#4285f4',
+      title: 'Global-Scale Data Processing',
+      subtitle: 'Pioneers of MapReduce, BigQuery, and Dataflow',
+      architectureType: 'Hybrid (Innovators of Lambda/Kappa patterns)',
+      challenge: 'Google processes hundreds of petabytes daily across Search, YouTube, Gmail, and Cloud services, requiring both batch processing for index building and real-time processing for ads, recommendations, and spam detection.',
+      solution: 'Google pioneered many foundational big data technologies including MapReduce, Bigtable, Spanner, Dremel (BigQuery), and Dataflow. Their unified "Millwheel" and later "Dataflow" model enables both batch and stream processing with the same programming model.',
+      implementation: [
+        'BigQuery provides serverless analytics with automatic scaling and SQL interface',
+        'Cloud Dataflow (Apache Beam) unifies batch and stream processing semantics',
+        'Cloud Pub/Sub handles real-time event ingestion at global scale',
+        'Bigtable serves as high-throughput, low-latency storage for time-series data',
+        'Spanner provides globally-distributed, strongly-consistent transactions'
+      ],
+      keyMetrics: [
+        { label: 'Search Queries/Day', value: '8.5B+' },
+        { label: 'YouTube Hours/Day', value: '1B+' },
+        { label: 'Gmail Users', value: '1.8B+' },
+        { label: 'Data Centers', value: '30+' }
+      ],
+      keyLearnings: [
+        'Unified batch and stream processing (Dataflow model) simplifies development',
+        'Separation of storage and compute enables elastic scaling',
+        'Strong consistency is achievable at global scale (Spanner)',
+        'Serverless architectures reduce operational burden significantly'
+      ],
+      technologies: ['BigQuery', 'Dataflow', 'Pub/Sub', 'Bigtable', 'Spanner'],
+      references: [
+        { title: 'Google Cloud: Dataflow Programming Model', url: 'https://cloud.google.com/dataflow/docs/concepts/dataflow-templates' },
+        { title: 'The Dataflow Model (Research Paper)', url: 'https://research.google/pubs/pub43864/' }
+      ]
+    },
+    {
+      id: 'linkedin',
+      company: 'LinkedIn',
+      industry: 'Professional Networking',
+      logo: '💼',
+      color: '#0077b5',
+      title: 'Real-Time Activity Tracking',
+      subtitle: 'Creators of Apache Kafka',
+      architectureType: 'Kappa Architecture (Kafka-centric)',
+      challenge: 'LinkedIn needed to track and process billions of user interactions daily for features like "Who viewed your profile," news feed ranking, and connection recommendations while maintaining real-time responsiveness for 900+ million members.',
+      solution: 'LinkedIn created Apache Kafka to solve their real-time data challenges, building an entire data ecosystem around it. Their architecture processes trillions of messages daily, powering both real-time features and batch analytics through a unified event log.',
+      implementation: [
+        'Apache Kafka (created at LinkedIn) serves as the central nervous system for all data',
+        'Apache Samza (created at LinkedIn) provides stateful stream processing',
+        'Apache Pinot enables real-time OLAP analytics for member-facing features',
+        'Hadoop clusters process batch analytics and ML model training',
+        'Venice (created at LinkedIn) serves as a derived data serving platform'
+      ],
+      keyMetrics: [
+        { label: 'Messages/Day', value: '7T+' },
+        { label: 'Members', value: '900M+' },
+        { label: 'Kafka Clusters', value: '100+' },
+        { label: 'Topics', value: '100K+' }
+      ],
+      keyLearnings: [
+        'A unified event log (Kafka) enables both real-time and batch processing',
+        'Stream processing frameworks benefit from deep Kafka integration',
+        'Compacted topics enable event sourcing patterns for derived data',
+        'Schema evolution is critical for long-lived event streams'
+      ],
+      technologies: ['Kafka', 'Samza', 'Pinot', 'Spark', 'Hadoop'],
+      references: [
+        { title: 'LinkedIn Engineering: The Log - What every software engineer should know', url: 'https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying' },
+        { title: 'Apache Kafka Documentation', url: 'https://kafka.apache.org/documentation/' }
+      ]
+    },
+    {
+      id: 'twitter',
+      company: 'X (Twitter)',
+      industry: 'Social Media',
+      logo: '🐦',
+      color: '#1da1f2',
+      title: 'Real-Time Tweet Processing',
+      subtitle: 'Processing 500M+ tweets daily',
+      architectureType: 'Streaming Architecture + Lambda',
+      challenge: 'Twitter processes hundreds of millions of tweets daily, requiring real-time delivery to followers, instant search indexing, trend detection, and spam filtering—all while handling massive traffic spikes during global events.',
+      solution: 'Twitter built a sophisticated streaming architecture with Apache Kafka for event streaming, Apache Storm (which they helped develop) for real-time processing, and Manhattan (custom distributed database) for low-latency storage.',
+      implementation: [
+        'Apache Kafka handles event streaming for all tweet-related events',
+        'Heron (successor to Storm) processes real-time analytics and trend detection',
+        'Manhattan provides low-latency key-value storage for timelines',
+        'Apache Hadoop and Scalding (Scala MapReduce) power batch analytics',
+        'Snowflake IDs enable globally unique, time-sortable tweet identifiers'
+      ],
+      keyMetrics: [
+        { label: 'Tweets/Day', value: '500M+' },
+        { label: 'Users', value: '350M+' },
+        { label: 'Timeline Reads/Sec', value: '300K+' },
+        { label: 'Peak Events/Sec', value: '150K+' }
+      ],
+      keyLearnings: [
+        'Fan-out on write vs. read is a critical architectural decision for social graphs',
+        'Distributed ID generation is essential for globally distributed systems',
+        'Caching at multiple layers is crucial for handling read-heavy workloads',
+        'Graceful degradation prevents complete failures during traffic spikes'
+      ],
+      technologies: ['Kafka', 'Storm', 'Hadoop', 'Manhattan'],
+      references: [
+        { title: 'Twitter Engineering: The Infrastructure Behind Twitter Scale', url: 'https://blog.twitter.com/engineering/en_us/topics/infrastructure' },
+        { title: 'Twitter Engineering: Manhattan - Real-Time, Multi-Tenant Distributed Database', url: 'https://blog.twitter.com/engineering/en_us/a/2014/manhattan-our-real-time-multi-tenant-distributed-database-for-twitter-scale' }
+      ]
+    },
+    {
+      id: 'pinterest',
+      company: 'Pinterest',
+      industry: 'Social Discovery',
+      logo: '📌',
+      color: '#e60023',
+      title: 'Visual Discovery at Scale',
+      subtitle: 'Processing billions of Pins for personalized discovery',
+      architectureType: 'Lambda Architecture + ML Pipelines',
+      challenge: 'Pinterest needed to process billions of Pins and user interactions to power visual search, personalized recommendations, and shopping features while scaling ML inference to handle millions of requests per second.',
+      solution: 'Pinterest built a comprehensive data platform combining Apache Kafka for real-time events, Apache Spark for batch processing, and custom ML infrastructure for visual understanding and recommendations at scale.',
+      implementation: [
+        'Apache Kafka processes billions of events daily for real-time features',
+        'Apache Spark powers batch ML training and data transformations',
+        'Apache Flink handles real-time feature computation for ML models',
+        'Custom visual embedding service processes billions of images',
+        'Apache Druid provides real-time analytics for business metrics'
+      ],
+      keyMetrics: [
+        { label: 'Monthly Users', value: '450M+' },
+        { label: 'Pins', value: '300B+' },
+        { label: 'ML Predictions/Sec', value: '10M+' },
+        { label: 'Visual Searches/Day', value: '600M+' }
+      ],
+      keyLearnings: [
+        'Visual ML at scale requires specialized infrastructure for embeddings',
+        'Feature freshness significantly impacts recommendation quality',
+        'A/B testing infrastructure is critical for ML-driven products',
+        'Batch-computed features complement real-time features for ML models'
+      ],
+      technologies: ['Kafka', 'Spark', 'Flink', 'Druid', 'S3'],
+      references: [
+        { title: 'Pinterest Engineering: Building a Real-Time Feature Engineering Platform', url: 'https://medium.com/pinterest-engineering/building-a-real-time-feature-engineering-platform-at-pinterest-7ce4c0bdcb56' },
+        { title: 'Pinterest Engineering: Unified Feature Platform', url: 'https://medium.com/pinterest-engineering/feature-engineering-platform-2-0-at-pinterest-f3d9e8f6e6e0' }
+      ]
+    },
+    {
+      id: 'grab',
+      company: 'Grab',
+      industry: 'Super App (Ride-hailing, Food, Payments)',
+      logo: '🚕',
+      color: '#00b14f',
+      title: 'Southeast Asia\'s Super App Data Platform',
+      subtitle: 'Unified data platform for ride-hailing, food delivery, and fintech',
+      architectureType: 'Streaming Architecture + Event-Driven',
+      challenge: 'Grab needed to build a unified data platform supporting multiple business verticals (transportation, food delivery, payments, insurance) across Southeast Asia with varying data regulations and infrastructure maturity levels.',
+      solution: 'Grab built "Trident," a unified data streaming platform based on Apache Kafka that powers real-time features across all business lines while maintaining data governance and compliance across different countries.',
+      implementation: [
+        'Apache Kafka serves as the backbone for all real-time events across business units',
+        'Apache Flink powers real-time ETAs, surge pricing, and fraud detection',
+        'Apache Spark handles batch processing for ML model training and reporting',
+        'Presto enables interactive queries across their data lake',
+        'Custom data catalog ensures data discoverability and governance'
+      ],
+      keyMetrics: [
+        { label: 'Daily Rides', value: '10M+' },
+        { label: 'Countries', value: '8' },
+        { label: 'GrabPay Transactions', value: 'Billions' },
+        { label: 'Events/Sec', value: '100K+' }
+      ],
+      keyLearnings: [
+        'Unified data platform enables cross-business-unit insights and features',
+        'Regional data regulations require flexible data residency solutions',
+        'Multi-tenant data platforms need strong access controls and governance',
+        'Schema management is critical when many teams produce and consume data'
+      ],
+      technologies: ['Kafka', 'Flink', 'Spark', 'Presto', 'S3'],
+      references: [
+        { title: 'Grab Engineering: Trident - Real-Time Event Streaming Platform', url: 'https://engineering.grab.com/trident-real-time-event-processing-at-scale' },
+        { title: 'Grab Engineering: Data Platform Evolution', url: 'https://engineering.grab.com/' }
+      ]
+    },
+    {
+      id: 'reddit',
+      company: 'Reddit',
+      industry: 'Social Media & Community',
+      logo: '🤖',
+      color: '#ff4500',
+      title: 'Community-Scale Content Processing',
+      subtitle: 'Real-time content ranking and moderation',
+      architectureType: 'Lambda Architecture + Event-Driven',
+      challenge: 'Reddit processes billions of votes, comments, and posts daily, requiring real-time content ranking, spam detection, and personalized feed generation while respecting community-specific rules and moderation policies.',
+      solution: 'Reddit built a data platform combining Apache Kafka for real-time events, Apache Flink for stream processing, and Apache Spark for batch analytics. Their architecture supports both platform-wide features and community-specific customizations.',
+      implementation: [
+        'Apache Kafka streams all user interactions (votes, comments, posts)',
+        'Apache Flink computes real-time content scores and trending topics',
+        'Apache Spark powers batch ML training for content recommendations',
+        'Apache Druid provides real-time analytics for community insights',
+        'Custom content safety models process posts for policy violations'
+      ],
+      keyMetrics: [
+        { label: 'Daily Active Users', value: '50M+' },
+        { label: 'Communities', value: '100K+' },
+        { label: 'Posts/Day', value: 'Millions' },
+        { label: 'Comments/Day', value: 'Billions' }
+      ],
+      keyLearnings: [
+        'Community-specific ranking requires flexible, multi-tenant algorithms',
+        'Content moderation at scale benefits from ML-assisted workflows',
+        'Vote manipulation detection requires sophisticated anomaly detection',
+        'Caching is essential for hot content (viral posts, AMAs)'
+      ],
+      technologies: ['Kafka', 'Flink', 'Spark', 'Druid', 'S3'],
+      references: [
+        { title: 'Reddit Engineering: Data Science at Reddit', url: 'https://www.reddit.com/r/RedditEng/' },
+        { title: 'Reddit Engineering Blog', url: 'https://redditinc.com/blog' }
+      ]
+    },
+    {
+      id: 'microsoft',
+      company: 'Microsoft',
+      industry: 'Technology',
+      logo: '🪟',
+      color: '#00a4ef',
+      title: 'Azure Synapse Analytics',
+      subtitle: 'Unified analytics service for enterprises',
+      architectureType: 'Unified Batch & Stream (Lakehouse)',
+      challenge: 'Microsoft needed to provide enterprise customers with a unified analytics platform that combines data warehousing, big data analytics, and data integration while maintaining compatibility with existing tools and workloads.',
+      solution: 'Microsoft built Azure Synapse Analytics, a unified analytics service that brings together data integration, enterprise data warehousing, and big data analytics. It supports both serverless and provisioned resources with T-SQL, Spark, and Data Explorer.',
+      implementation: [
+        'Azure Synapse pipelines provide data integration and ETL/ELT workflows',
+        'Dedicated SQL pools deliver enterprise data warehouse performance',
+        'Apache Spark pools enable big data processing with notebook experiences',
+        'Serverless SQL enables queries directly on data lake files (Parquet, CSV, JSON)',
+        'Azure Data Explorer handles time-series and log analytics'
+      ],
+      keyMetrics: [
+        { label: 'Enterprise Customers', value: '1000s' },
+        { label: 'Azure Regions', value: '60+' },
+        { label: 'Integrated Services', value: '100+' },
+        { label: 'Query Performance', value: 'Petabyte-scale' }
+      ],
+      keyLearnings: [
+        'Unified experiences reduce tool sprawl and training costs',
+        'Serverless options enable cost-effective exploration workloads',
+        'Deep integrations with existing tools (Power BI, Excel) drive adoption',
+        'Enterprise security and compliance features are non-negotiable'
+      ],
+      technologies: ['Spark', 'Synapse', 'ADLS', 'Power BI'],
+      references: [
+        { title: 'Azure Synapse Analytics Documentation', url: 'https://docs.microsoft.com/en-us/azure/synapse-analytics/' },
+        { title: 'Microsoft Learn: Big Data Architectures', url: 'https://learn.microsoft.com/en-us/azure/architecture/databases/guide/big-data-architectures' }
+      ]
+    },
+    {
+      id: 'tesla',
+      company: 'Tesla',
+      industry: 'Automotive & Energy',
+      logo: '🚗',
+      color: '#cc0000',
+      title: 'Autonomous Driving Data Pipeline',
+      subtitle: 'Petabytes of video data for AI training',
+      architectureType: 'Batch Architecture + ML Pipelines',
+      challenge: 'Tesla collects petabytes of video and sensor data from millions of vehicles daily, requiring massive-scale storage, processing, and ML training infrastructure to improve autonomous driving capabilities.',
+      solution: 'Tesla built Dojo, their custom supercomputer, alongside a massive data pipeline that ingests vehicle telemetry, processes video data, and trains neural networks. Their data labeling and training infrastructure processes billions of video frames.',
+      implementation: [
+        'Custom data ingestion from millions of vehicles via cellular networks',
+        'Massive object storage for raw video and processed training data',
+        'Dojo supercomputer with custom D1 chips for training at unprecedented scale',
+        'Auto-labeling pipelines reduce manual annotation requirements',
+        'Shadow mode enables safe real-world testing of new models'
+      ],
+      keyMetrics: [
+        { label: 'Connected Vehicles', value: '5M+' },
+        { label: 'Training Data', value: 'Billions of frames' },
+        { label: 'Dojo Compute', value: 'Exaflops' },
+        { label: 'Miles Driven/Day', value: 'Millions' }
+      ],
+      keyLearnings: [
+        'Proprietary data at scale creates significant competitive advantages',
+        'Custom hardware can provide 10x+ efficiency gains for specific workloads',
+        'Shadow mode enables safe iteration on safety-critical systems',
+        'Edge-to-cloud data pipelines must handle intermittent connectivity'
+      ],
+      technologies: ['Custom Infrastructure', 'S3', 'Spark'],
+      references: [
+        { title: 'Tesla AI Day Presentation', url: 'https://www.tesla.com/AI' },
+        { title: 'Tesla Dojo Supercomputer', url: 'https://en.wikipedia.org/wiki/Tesla_Dojo' }
+      ]
+    },
+    {
+      id: 'anthropic',
+      company: 'Anthropic',
+      industry: 'AI Research',
+      logo: '🧠',
+      color: '#d4a574',
+      title: 'Large Language Model Training Infrastructure',
+      subtitle: 'Constitutional AI training at scale',
+      architectureType: 'Batch Architecture + Distributed ML',
+      challenge: 'Anthropic needed to build infrastructure for training large language models with a focus on AI safety, requiring massive-scale distributed training across thousands of GPUs while implementing constitutional AI training methods.',
+      solution: 'Anthropic built sophisticated ML infrastructure for training Claude models, combining distributed training frameworks, large-scale data processing pipelines, and unique constitutional AI training methodologies.',
+      implementation: [
+        'Distributed training across thousands of GPUs using custom orchestration',
+        'Large-scale data processing pipelines for training data preparation',
+        'Constitutional AI (CAI) training infrastructure for safety alignment',
+        'Reinforcement Learning from Human Feedback (RLHF) training systems',
+        'Evaluation infrastructure for model capability and safety assessments'
+      ],
+      keyMetrics: [
+        { label: 'Model Parameters', value: '100B+' },
+        { label: 'Training Compute', value: 'Massive GPU clusters' },
+        { label: 'Data Processing', value: 'Petabytes' },
+        { label: 'Safety Evaluations', value: 'Continuous' }
+      ],
+      keyLearnings: [
+        'AI safety must be designed into the training pipeline, not added later',
+        'Constitutional AI enables scalable alignment without extensive human feedback',
+        'Model evaluation infrastructure is as important as training infrastructure',
+        'Reproducibility and auditability are critical for responsible AI development'
+      ],
+      technologies: ['Custom ML Infrastructure', 'S3', 'Spark'],
+      references: [
+        { title: 'Anthropic Research: Constitutional AI', url: 'https://www.anthropic.com/research' },
+        { title: 'Constitutional AI Paper', url: 'https://arxiv.org/abs/2212.08073' }
+      ]
+    },
+    {
+      id: 'openai',
+      company: 'OpenAI',
+      industry: 'AI Research',
+      logo: '🤖',
+      color: '#00a67e',
+      title: 'GPT Training Infrastructure',
+      subtitle: 'Scaling language models to trillions of parameters',
+      architectureType: 'Batch Architecture + Distributed ML',
+      challenge: 'OpenAI needed to train the largest language models in the world, requiring unprecedented scale of distributed training across tens of thousands of GPUs with high utilization and fault tolerance.',
+      solution: 'OpenAI built custom training infrastructure in partnership with Microsoft Azure, utilizing massive GPU clusters and custom optimization techniques. Their infrastructure supports training models with hundreds of billions to trillions of parameters.',
+      implementation: [
+        'Partnership with Microsoft Azure for massive GPU cluster access',
+        'Custom distributed training frameworks optimized for transformer architectures',
+        'Large-scale web crawling and data processing for training data',
+        'RLHF infrastructure for aligning models with human preferences',
+        'Scalable inference infrastructure for ChatGPT serving millions of users'
+      ],
+      keyMetrics: [
+        { label: 'GPT-4 Parameters', value: '~1.7T (rumored)' },
+        { label: 'ChatGPT Users', value: '100M+' },
+        { label: 'Training Compute', value: '10,000+ GPUs' },
+        { label: 'API Requests/Day', value: 'Billions' }
+      ],
+      keyLearnings: [
+        'Scaling compute often yields emergent capabilities in large models',
+        'Infrastructure must handle both training (batch) and inference (real-time)',
+        'Rate limiting and usage policies are essential for responsible deployment',
+        'Continuous safety monitoring is required for publicly deployed AI systems'
+      ],
+      technologies: ['Azure', 'Custom ML Infrastructure', 'Kubernetes'],
+      references: [
+        { title: 'OpenAI: Scaling Laws for Neural Language Models', url: 'https://openai.com/research/scaling-laws-for-neural-language-models' },
+        { title: 'GPT-4 Technical Report', url: 'https://openai.com/research/gpt-4' }
+      ]
+    },
+    {
+      id: 'spotify',
+      company: 'Spotify',
+      industry: 'Music Streaming',
+      logo: '🎵',
+      color: '#1db954',
+      title: 'Personalized Music Discovery',
+      subtitle: 'Discover Weekly reaching 500M+ users',
+      architectureType: 'Lambda Architecture + ML Pipelines',
+      challenge: 'Spotify processes billions of listening events daily to power personalized features like Discover Weekly, Daily Mix, and Wrapped while supporting 500+ million users and 100+ million tracks.',
+      solution: 'Spotify built a sophisticated data platform with Google Cloud infrastructure, Apache Beam for unified batch/stream processing, and extensive ML infrastructure. Their architecture processes 600B+ events daily for features like Discover Weekly.',
+      implementation: [
+        'Google Cloud Dataflow (Apache Beam) unifies batch and stream processing',
+        'Apache Kafka handles real-time event streaming from all user interactions',
+        'Google BigQuery powers analytics and ML feature computation',
+        'Luigi (created at Spotify) orchestrates batch job dependencies',
+        'Custom ML platform trains and serves recommendation models at scale'
+      ],
+      keyMetrics: [
+        { label: 'Monthly Users', value: '500M+' },
+        { label: 'Tracks', value: '100M+' },
+        { label: 'Events/Day', value: '600B+' },
+        { label: 'Discover Weekly Users', value: '150M+' }
+      ],
+      keyLearnings: [
+        'Unified batch/stream processing (Beam) simplifies development significantly',
+        'User-generated playlists provide valuable collaborative filtering signals',
+        'Audio features (tempo, energy) complement behavioral data for recommendations',
+        'Personalization at scale requires both offline model training and real-time features'
+      ],
+      technologies: ['Kafka', 'BigQuery', 'Dataflow', 'GCS', 'Spark'],
+      references: [
+        { title: 'Spotify Engineering: Discover Weekly Recommendations', url: 'https://engineering.atspotify.com/' },
+        { title: 'Luigi: Workflow Orchestration', url: 'https://github.com/spotify/luigi' }
+      ]
+    }
+  ];
 
   const currentArch = architectures[activeArchitecture];
 
@@ -2631,14 +3178,15 @@ for message in consumer:
                   setShowAdditionalInfo(false);
                   setShowHandsOn(false);
                   setShowCurriculum(false);
+                  setShowCaseStudies(false);
                 }}
                 style={{
                   padding: '12px 24px',
                   minWidth: '180px',
-                  background: (activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum)
+                  background: (activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies)
                     ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'
                     : 'rgba(30, 41, 59, 0.6)',
-                  border: (activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum) ? '2px solid #60a5fa' : '1px solid rgba(71, 85, 105, 0.3)',
+                  border: (activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies) ? '2px solid #60a5fa' : '1px solid rgba(71, 85, 105, 0.3)',
                   borderRadius: '8px',
                   color: '#ffffff',
                   fontSize: '14px',
@@ -2648,12 +3196,12 @@ for message in consumer:
                   backdropFilter: 'blur(10px)'
                 }}
                 onMouseEnter={(e) => {
-                  if (!(activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum)) {
+                  if (!(activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies)) {
                     e.currentTarget.style.background = 'rgba(30, 41, 59, 0.8)';
                   }
                 }}
                 onMouseLeave={(e) => {
-                  if (!(activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum)) {
+                  if (!(activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies)) {
                     e.currentTarget.style.background = 'rgba(30, 41, 59, 0.6)';
                   }
                 }}
@@ -2666,6 +3214,7 @@ for message in consumer:
                 setShowAdditionalInfo(!showAdditionalInfo);
                 setShowHandsOn(false);
                 setShowCurriculum(false);
+                setShowCaseStudies(false);
                 if (!showAdditionalInfo) {
                   setTimeout(() => {
                     const additionalInfoSection = document.getElementById('additional-info');
@@ -2713,6 +3262,7 @@ for message in consumer:
                 setShowHandsOn(!showHandsOn);
                 setShowAdditionalInfo(false);
                 setShowCurriculum(false);
+                setShowCaseStudies(false);
                 if (!showHandsOn) {
                   setTimeout(() => {
                     const handsOnSection = document.getElementById('hands-on');
@@ -2760,6 +3310,7 @@ for message in consumer:
                 setShowCurriculum(!showCurriculum);
                 setShowAdditionalInfo(false);
                 setShowHandsOn(false);
+                setShowCaseStudies(false);
                 if (!showCurriculum) {
                   setTimeout(() => {
                     const curriculumSection = document.getElementById('curriculum-section');
@@ -2802,9 +3353,57 @@ for message in consumer:
             >
               DE Curriculum
             </button>
+            <button
+              onClick={() => {
+                setShowCaseStudies(!showCaseStudies);
+                setShowAdditionalInfo(false);
+                setShowHandsOn(false);
+                setShowCurriculum(false);
+                if (!showCaseStudies) {
+                  setTimeout(() => {
+                    const caseStudiesSection = document.getElementById('case-studies-section');
+                    if (caseStudiesSection) {
+                      caseStudiesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }, 100);
+                }
+              }}
+              style={{
+                padding: '12px 24px',
+                minWidth: '180px',
+                background: showCaseStudies
+                  ? 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)'
+                  : 'linear-gradient(135deg, rgba(236, 72, 153, 0.2) 0%, rgba(190, 24, 93, 0.15) 100%)',
+                border: showCaseStudies ? '2px solid #ec4899' : '2px solid rgba(236, 72, 153, 0.5)',
+                borderRadius: '8px',
+                color: '#ffffff',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s',
+                backdropFilter: 'blur(10px)',
+                boxShadow: showCaseStudies
+                  ? '0 0 20px rgba(236, 72, 153, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3)'
+                  : '0 0 15px rgba(236, 72, 153, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)'
+              }}
+              onMouseEnter={(e) => {
+                if (!showCaseStudies) {
+                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(236, 72, 153, 0.3) 0%, rgba(190, 24, 93, 0.2) 100%)';
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(236, 72, 153, 0.4), 0 4px 10px rgba(0, 0, 0, 0.25)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!showCaseStudies) {
+                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(236, 72, 153, 0.2) 0%, rgba(190, 24, 93, 0.15) 100%)';
+                  e.currentTarget.style.boxShadow = '0 0 15px rgba(236, 72, 153, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)';
+                }
+              }}
+            >
+              Case Studies
+            </button>
           </div>
 
-          {!showAdditionalInfo && !showHandsOn && !showCurriculum && (
+          {!showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && (
           <>
           <div
             style={{
@@ -3812,6 +4411,322 @@ for message in consumer:
           )}
 
           {showCurriculum && renderCurriculumSection()}
+
+          {showCaseStudies && (
+            <div
+              id="case-studies-section"
+              style={{
+                animation: 'fadeInScale 0.3s ease-out forwards'
+              }}
+            >
+              <div
+                style={{
+                  background: 'rgba(15, 23, 42, 0.8)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  borderRadius: '12px',
+                  padding: '32px',
+                  marginBottom: '24px'
+                }}
+              >
+                <div style={{ marginBottom: '32px' }}>
+                  <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '12px', color: '#ec4899' }}>
+                    Real-World Big Data Case Studies
+                  </h2>
+                  <p style={{ color: '#94a3b8', fontSize: '16px', lineHeight: '1.7', maxWidth: '900px' }}>
+                    Learn how industry leaders like Netflix, Uber, Airbnb, Google, and more have built and scaled their big data architectures.
+                    These case studies provide insights into real production systems processing billions of events daily,
+                    offering valuable lessons in architecture patterns, technology choices, and operational best practices.
+                  </p>
+                </div>
+
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))',
+                  gap: '24px'
+                }}>
+                  {caseStudies.map((study) => (
+                    <div
+                      key={study.id}
+                      style={{
+                        background: 'rgba(30, 41, 59, 0.6)',
+                        border: `2px solid ${study.color}33`,
+                        borderRadius: '16px',
+                        padding: '24px',
+                        transition: 'all 0.3s',
+                        cursor: 'default'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = `${study.color}66`;
+                        e.currentTarget.style.boxShadow = `0 8px 32px ${study.color}22`;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = `${study.color}33`;
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
+                    >
+                      {/* Header */}
+                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                          <div style={{
+                            fontSize: '32px',
+                            width: '56px',
+                            height: '56px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            background: `${study.color}22`,
+                            borderRadius: '12px',
+                            border: `1px solid ${study.color}44`
+                          }}>
+                            {study.logo}
+                          </div>
+                          <div>
+                            <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#ffffff', marginBottom: '2px' }}>
+                              {study.company}
+                            </h3>
+                            <span style={{ fontSize: '12px', color: '#94a3b8' }}>{study.industry}</span>
+                          </div>
+                        </div>
+                        <span style={{
+                          padding: '6px 12px',
+                          borderRadius: '6px',
+                          fontSize: '11px',
+                          fontWeight: '600',
+                          background: `${study.color}22`,
+                          color: study.color,
+                          border: `1px solid ${study.color}44`,
+                          whiteSpace: 'nowrap'
+                        }}>
+                          {study.architectureType}
+                        </span>
+                      </div>
+
+                      {/* Title & Subtitle */}
+                      <h4 style={{ fontSize: '18px', fontWeight: '600', color: '#e2e8f0', marginBottom: '4px' }}>
+                        {study.title}
+                      </h4>
+                      <p style={{ fontSize: '14px', color: study.color, marginBottom: '16px', fontWeight: '500' }}>
+                        {study.subtitle}
+                      </p>
+
+                      {/* Key Metrics */}
+                      <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(4, 1fr)',
+                        gap: '12px',
+                        marginBottom: '20px',
+                        padding: '16px',
+                        background: 'rgba(0, 0, 0, 0.2)',
+                        borderRadius: '12px'
+                      }}>
+                        {study.keyMetrics.map((metric, idx) => (
+                          <div key={idx} style={{ textAlign: 'center' }}>
+                            <div style={{ fontSize: '18px', fontWeight: '700', color: study.color }}>{metric.value}</div>
+                            <div style={{ fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{metric.label}</div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Challenge */}
+                      <div style={{ marginBottom: '16px' }}>
+                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#fbbf24', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ fontSize: '16px' }}>🎯</span> Challenge
+                        </h5>
+                        <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                          {study.challenge}
+                        </p>
+                      </div>
+
+                      {/* Solution */}
+                      <div style={{ marginBottom: '16px' }}>
+                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#10b981', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ fontSize: '16px' }}>💡</span> Solution
+                        </h5>
+                        <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                          {study.solution}
+                        </p>
+                      </div>
+
+                      {/* Implementation Details */}
+                      <div style={{ marginBottom: '16px' }}>
+                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#60a5fa', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ fontSize: '16px' }}>🔧</span> Implementation
+                        </h5>
+                        <ul style={{ fontSize: '12px', color: '#94a3b8', lineHeight: '1.8', paddingLeft: '16px', margin: 0 }}>
+                          {study.implementation.map((item, idx) => (
+                            <li key={idx} style={{ marginBottom: '4px' }}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Key Learnings */}
+                      <div style={{ marginBottom: '16px' }}>
+                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#a78bfa', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ fontSize: '16px' }}>📚</span> Key Learnings
+                        </h5>
+                        <ul style={{ fontSize: '12px', color: '#94a3b8', lineHeight: '1.8', paddingLeft: '16px', margin: 0 }}>
+                          {study.keyLearnings.map((learning, idx) => (
+                            <li key={idx} style={{ marginBottom: '4px' }}>{learning}</li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Technologies */}
+                      <div style={{ marginBottom: '16px' }}>
+                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#f472b6', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ fontSize: '16px' }}>🛠️</span> Technologies
+                        </h5>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                          {study.technologies.map((tech, idx) => {
+                            const url = technologyUrls[tech];
+                            const techStyle = {
+                              padding: '4px 10px',
+                              borderRadius: '6px',
+                              fontSize: '11px',
+                              fontWeight: '500',
+                              background: 'rgba(59, 130, 246, 0.15)',
+                              color: '#60a5fa',
+                              border: '1px solid rgba(59, 130, 246, 0.3)',
+                              textDecoration: 'none',
+                              transition: 'all 0.2s'
+                            };
+                            return url ? (
+                              <a
+                                key={idx}
+                                href={url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={techStyle}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.background = 'rgba(59, 130, 246, 0.3)';
+                                  e.currentTarget.style.transform = 'translateY(-1px)';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.background = 'rgba(59, 130, 246, 0.15)';
+                                  e.currentTarget.style.transform = 'translateY(0)';
+                                }}
+                              >
+                                {tech}
+                              </a>
+                            ) : (
+                              <span key={idx} style={techStyle}>{tech}</span>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* References */}
+                      <div>
+                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#94a3b8', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ fontSize: '16px' }}>🔗</span> References
+                        </h5>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                          {study.references.map((ref, idx) => (
+                            <a
+                              key={idx}
+                              href={ref.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{
+                                fontSize: '12px',
+                                color: '#60a5fa',
+                                textDecoration: 'none',
+                                transition: 'color 0.2s',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px'
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.color = '#93c5fd'}
+                              onMouseLeave={(e) => e.currentTarget.style.color = '#60a5fa'}
+                            >
+                              <ChevronRight size={12} />
+                              {ref.title}
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Summary Section */}
+                <div style={{
+                  marginTop: '40px',
+                  padding: '32px',
+                  background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)',
+                  border: '1px solid rgba(236, 72, 153, 0.3)',
+                  borderRadius: '16px'
+                }}>
+                  <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px', color: '#ec4899' }}>
+                    Common Patterns Across Case Studies
+                  </h3>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                    <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#f59e0b', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span>🔄</span> Event-Driven Architecture
+                      </h4>
+                      <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                        Nearly all case studies leverage Apache Kafka as a central event backbone. Event-driven patterns enable loose coupling,
+                        real-time processing, and replay capabilities for reprocessing historical data.
+                      </p>
+                    </div>
+
+                    <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#10b981', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span>⚡</span> Hybrid Batch + Stream
+                      </h4>
+                      <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                        Most companies combine batch processing (Spark) for ML training and historical analysis with stream processing (Flink/Kafka Streams)
+                        for real-time features, following Lambda or Kappa architecture patterns.
+                      </p>
+                    </div>
+
+                    <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#60a5fa', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span>🗄️</span> Separation of Storage & Compute
+                      </h4>
+                      <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                        Cloud data lakes (S3, GCS, ADLS) separate storage from compute, enabling independent scaling, cost optimization,
+                        and flexibility in choosing processing engines for different workloads.
+                      </p>
+                    </div>
+
+                    <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#a78bfa', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span>🤖</span> ML-Integrated Pipelines
+                      </h4>
+                      <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                        Data pipelines are designed with ML in mind: feature stores bridge batch training and real-time inference,
+                        while experimentation platforms enable rapid iteration on models and algorithms.
+                      </p>
+                    </div>
+
+                    <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#ec4899', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span>📊</span> Real-Time OLAP
+                      </h4>
+                      <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                        Apache Druid, Pinot, and ClickHouse appear frequently for real-time analytics, providing sub-second query latency
+                        on streaming data for dashboards and user-facing features.
+                      </p>
+                    </div>
+
+                    <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#fbbf24', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span>🔒</span> Data Governance at Scale
+                      </h4>
+                      <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                        As data volumes grow, governance becomes critical. Companies invest in data catalogs, schema registries,
+                        data contracts, and access controls to maintain data quality and compliance.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
