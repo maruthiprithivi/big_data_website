@@ -3170,15 +3170,37 @@ for message in consumer:
 
           {/* Navigation Section */}
           <div style={{ marginBottom: '24px' }}>
-            {/* Architecture Patterns - Tab Style */}
+            {/* Two-column navigation layout */}
             <div style={{
-              display: 'inline-flex',
-              background: 'rgba(15, 23, 42, 0.6)',
-              borderRadius: '12px',
-              padding: '4px',
-              marginBottom: '16px',
-              border: '1px solid rgba(71, 85, 105, 0.3)'
+              display: 'grid',
+              gridTemplateColumns: 'auto 1fr',
+              gap: '32px',
+              alignItems: 'start'
             }}>
+              {/* Architecture Patterns Group */}
+              <div>
+                <div style={{ marginBottom: '10px' }}>
+                  <h3 style={{
+                    fontSize: '11px',
+                    fontWeight: '600',
+                    color: '#64748b',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    marginBottom: '4px'
+                  }}>
+                    Architecture Patterns
+                  </h3>
+                  <p style={{ fontSize: '12px', color: '#475569' }}>
+                    Select a data architecture to explore
+                  </p>
+                </div>
+                <div style={{
+                  display: 'inline-flex',
+                  background: 'rgba(15, 23, 42, 0.6)',
+                  borderRadius: '12px',
+                  padding: '4px',
+                  border: '1px solid rgba(71, 85, 105, 0.3)'
+                }}>
               {Object.keys(architectures).filter(key => key !== 'blockchain').map(key => {
                 const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies;
                 return (
@@ -3221,15 +3243,31 @@ for message in consumer:
                   </button>
                 );
               })}
-            </div>
+                </div>
+              </div>
 
-            {/* Learning Resources - Card Grid */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: '12px',
-              maxWidth: '800px'
-            }}>
+              {/* Learning Resources Group */}
+              <div>
+                <div style={{ marginBottom: '10px' }}>
+                  <h3 style={{
+                    fontSize: '11px',
+                    fontWeight: '600',
+                    color: '#64748b',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    marginBottom: '4px'
+                  }}>
+                    Learning Resources
+                  </h3>
+                  <p style={{ fontSize: '12px', color: '#475569' }}>
+                    Explore guides, tutorials, and real-world examples
+                  </p>
+                </div>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(4, 1fr)',
+                  gap: '12px'
+                }}>
               {/* Additional Info Card */}
               <button
                 onClick={() => {
@@ -3457,6 +3495,8 @@ for message in consumer:
                 </svg>
                 <span>Case Studies</span>
               </button>
+                </div>
+              </div>
             </div>
           </div>
 
