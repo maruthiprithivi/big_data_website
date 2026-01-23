@@ -1246,8 +1246,8 @@ for message in consumer:
       ],
       technologies: ['BigQuery', 'Dataflow', 'Pub/Sub', 'Bigtable', 'Spanner'],
       references: [
-        { title: 'Google Cloud: Dataflow Programming Model', url: 'https://cloud.google.com/dataflow/docs/concepts/dataflow-templates' },
-        { title: 'The Dataflow Model (Research Paper)', url: 'https://research.google/pubs/pub43864/' }
+        { title: 'Google Cloud: Dataflow Overview', url: 'https://cloud.google.com/dataflow/docs/concepts' },
+        { title: 'The Dataflow Model (Research Paper)', url: 'https://research.google/pubs/the-dataflow-model-a-practical-approach-to-balancing-correctness-latency-and-cost-in-massive-scale-unbounded-out-of-order-data-processing/' }
       ]
     },
     {
@@ -1354,8 +1354,8 @@ for message in consumer:
       ],
       technologies: ['Kafka', 'Spark', 'Flink', 'Druid', 'S3'],
       references: [
-        { title: 'Pinterest Engineering: Building a Real-Time Feature Engineering Platform', url: 'https://medium.com/pinterest-engineering/building-a-real-time-feature-engineering-platform-at-pinterest-7ce4c0bdcb56' },
-        { title: 'Pinterest Engineering: Unified Feature Platform', url: 'https://medium.com/pinterest-engineering/feature-engineering-platform-2-0-at-pinterest-f3d9e8f6e6e0' }
+        { title: 'Pinterest Engineering: Real-time User Signal Serving for Feature Engineering', url: 'https://medium.com/pinterest-engineering/real-time-user-signal-serving-for-feature-engineering-ead9a01e5b' },
+        { title: 'Pinterest Engineering: A Decade of AI Platform at Pinterest', url: 'https://medium.com/pinterest-engineering/a-decade-of-ai-platform-at-pinterest-4e3b37c0f758' }
       ]
     },
     {
