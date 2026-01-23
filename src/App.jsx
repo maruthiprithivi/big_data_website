@@ -3168,239 +3168,296 @@ for message in consumer:
             </p>
           </div>
 
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', flexWrap: 'wrap' }}>
-            {Object.keys(architectures).filter(key => key !== 'blockchain').map(key => (
+          {/* Navigation Section */}
+          <div style={{ marginBottom: '24px' }}>
+            {/* Architecture Patterns - Tab Style */}
+            <div style={{
+              display: 'inline-flex',
+              background: 'rgba(15, 23, 42, 0.6)',
+              borderRadius: '12px',
+              padding: '4px',
+              marginBottom: '16px',
+              border: '1px solid rgba(71, 85, 105, 0.3)'
+            }}>
+              {Object.keys(architectures).filter(key => key !== 'blockchain').map(key => {
+                const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies;
+                return (
+                  <button
+                    key={key}
+                    onClick={() => {
+                      setActiveArchitecture(key);
+                      setSelectedComponent(null);
+                      setShowAdditionalInfo(false);
+                      setShowHandsOn(false);
+                      setShowCurriculum(false);
+                      setShowCaseStudies(false);
+                    }}
+                    style={{
+                      padding: '10px 20px',
+                      background: isActive ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' : 'transparent',
+                      border: 'none',
+                      borderRadius: '8px',
+                      color: isActive ? '#ffffff' : '#94a3b8',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      whiteSpace: 'nowrap'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.color = '#ffffff';
+                        e.currentTarget.style.background = 'rgba(59, 130, 246, 0.15)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.color = '#94a3b8';
+                        e.currentTarget.style.background = 'transparent';
+                      }
+                    }}
+                  >
+                    {architectures[key].name}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Learning Resources - Card Grid */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, 1fr)',
+              gap: '12px',
+              maxWidth: '800px'
+            }}>
+              {/* Additional Info Card */}
               <button
-                key={key}
                 onClick={() => {
-                  setActiveArchitecture(key);
-                  setSelectedComponent(null);
-                  setShowAdditionalInfo(false);
+                  setShowAdditionalInfo(!showAdditionalInfo);
                   setShowHandsOn(false);
                   setShowCurriculum(false);
                   setShowCaseStudies(false);
+                  if (!showAdditionalInfo) {
+                    setTimeout(() => {
+                      const additionalInfoSection = document.getElementById('additional-info');
+                      if (additionalInfoSection) {
+                        additionalInfoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }, 100);
+                  }
                 }}
                 style={{
-                  padding: '12px 24px',
-                  minWidth: '180px',
-                  background: (activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies)
-                    ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'
-                    : 'rgba(30, 41, 59, 0.6)',
-                  border: (activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies) ? '2px solid #60a5fa' : '1px solid rgba(71, 85, 105, 0.3)',
-                  borderRadius: '8px',
-                  color: '#ffffff',
-                  fontSize: '14px',
-                  fontWeight: '600',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '16px 12px',
+                  background: showAdditionalInfo
+                    ? 'rgba(139, 92, 246, 0.2)'
+                    : 'rgba(30, 41, 59, 0.4)',
+                  border: showAdditionalInfo
+                    ? '1px solid rgba(139, 92, 246, 0.5)'
+                    : '1px solid rgba(71, 85, 105, 0.3)',
+                  borderRadius: '12px',
+                  color: showAdditionalInfo ? '#a78bfa' : '#94a3b8',
+                  fontSize: '13px',
+                  fontWeight: '500',
                   cursor: 'pointer',
-                  transition: 'all 0.3s',
-                  backdropFilter: 'blur(10px)'
+                  transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  if (!(activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies)) {
-                    e.currentTarget.style.background = 'rgba(30, 41, 59, 0.8)';
+                  if (!showAdditionalInfo) {
+                    e.currentTarget.style.background = 'rgba(139, 92, 246, 0.1)';
+                    e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.3)';
+                    e.currentTarget.style.color = '#a78bfa';
                   }
                 }}
                 onMouseLeave={(e) => {
-                  if (!(activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies)) {
-                    e.currentTarget.style.background = 'rgba(30, 41, 59, 0.6)';
+                  if (!showAdditionalInfo) {
+                    e.currentTarget.style.background = 'rgba(30, 41, 59, 0.4)';
+                    e.currentTarget.style.borderColor = 'rgba(71, 85, 105, 0.3)';
+                    e.currentTarget.style.color = '#94a3b8';
                   }
                 }}
               >
-                {architectures[key].name}
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <span>Info</span>
               </button>
-            ))}
-            <button
-              onClick={() => {
-                setShowAdditionalInfo(!showAdditionalInfo);
-                setShowHandsOn(false);
-                setShowCurriculum(false);
-                setShowCaseStudies(false);
-                if (!showAdditionalInfo) {
-                  setTimeout(() => {
-                    const additionalInfoSection = document.getElementById('additional-info');
-                    if (additionalInfoSection) {
-                      additionalInfoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                  }, 100);
-                }
-              }}
-              style={{
-                padding: '12px 24px',
-                minWidth: '180px',
-                background: showAdditionalInfo
-                  ? 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)'
-                  : 'linear-gradient(135deg, rgba(167, 139, 250, 0.2) 0%, rgba(124, 58, 237, 0.15) 100%)',
-                border: showAdditionalInfo ? '2px solid #a78bfa' : '2px solid rgba(167, 139, 250, 0.5)',
-                borderRadius: '8px',
-                color: '#ffffff',
-                fontSize: '14px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.3s',
-                backdropFilter: 'blur(10px)',
-                boxShadow: showAdditionalInfo
-                  ? '0 0 20px rgba(167, 139, 250, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3)'
-                  : '0 0 15px rgba(167, 139, 250, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)'
-              }}
-              onMouseEnter={(e) => {
-                if (!showAdditionalInfo) {
-                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(167, 139, 250, 0.3) 0%, rgba(124, 58, 237, 0.2) 100%)';
-                  e.currentTarget.style.boxShadow = '0 0 20px rgba(167, 139, 250, 0.4), 0 4px 10px rgba(0, 0, 0, 0.25)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!showAdditionalInfo) {
-                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(167, 139, 250, 0.2) 0%, rgba(124, 58, 237, 0.15) 100%)';
-                  e.currentTarget.style.boxShadow = '0 0 15px rgba(167, 139, 250, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)';
-                }
-              }}
-            >
-              Additional Info
-            </button>
-            <button
-              onClick={() => {
-                setShowHandsOn(!showHandsOn);
-                setShowAdditionalInfo(false);
-                setShowCurriculum(false);
-                setShowCaseStudies(false);
-                if (!showHandsOn) {
-                  setTimeout(() => {
-                    const handsOnSection = document.getElementById('hands-on');
-                    if (handsOnSection) {
-                      handsOnSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                  }, 100);
-                }
-              }}
-              style={{
-                padding: '12px 24px',
-                minWidth: '180px',
-                background: showHandsOn
-                  ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
-                  : 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.15) 100%)',
-                border: showHandsOn ? '2px solid #10b981' : '2px solid rgba(16, 185, 129, 0.5)',
-                borderRadius: '8px',
-                color: '#ffffff',
-                fontSize: '14px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.3s',
-                backdropFilter: 'blur(10px)',
-                boxShadow: showHandsOn
-                  ? '0 0 20px rgba(16, 185, 129, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3)'
-                  : '0 0 15px rgba(16, 185, 129, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)'
-              }}
-              onMouseEnter={(e) => {
-                if (!showHandsOn) {
-                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.2) 100%)';
-                  e.currentTarget.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.4), 0 4px 10px rgba(0, 0, 0, 0.25)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!showHandsOn) {
-                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.15) 100%)';
-                  e.currentTarget.style.boxShadow = '0 0 15px rgba(16, 185, 129, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)';
-                }
-              }}
-            >
-              Hands-on
-            </button>
-            <button
-              onClick={() => {
-                setShowCurriculum(!showCurriculum);
-                setShowAdditionalInfo(false);
-                setShowHandsOn(false);
-                setShowCaseStudies(false);
-                if (!showCurriculum) {
-                  setTimeout(() => {
-                    const curriculumSection = document.getElementById('curriculum-section');
-                    if (curriculumSection) {
-                      curriculumSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                  }, 100);
-                }
-              }}
-              style={{
-                padding: '12px 24px',
-                minWidth: '180px',
-                background: showCurriculum
-                  ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
-                  : 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.15) 100%)',
-                border: showCurriculum ? '2px solid #f59e0b' : '2px solid rgba(245, 158, 11, 0.5)',
-                borderRadius: '8px',
-                color: '#ffffff',
-                fontSize: '14px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.3s',
-                backdropFilter: 'blur(10px)',
-                boxShadow: showCurriculum
-                  ? '0 0 20px rgba(245, 158, 11, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3)'
-                  : '0 0 15px rgba(245, 158, 11, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)'
-              }}
-              onMouseEnter={(e) => {
-                if (!showCurriculum) {
-                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(245, 158, 11, 0.3) 0%, rgba(217, 119, 6, 0.2) 100%)';
-                  e.currentTarget.style.boxShadow = '0 0 20px rgba(245, 158, 11, 0.4), 0 4px 10px rgba(0, 0, 0, 0.25)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!showCurriculum) {
-                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.15) 100%)';
-                  e.currentTarget.style.boxShadow = '0 0 15px rgba(245, 158, 11, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)';
-                }
-              }}
-            >
-              DE Curriculum
-            </button>
-            <button
-              onClick={() => {
-                setShowCaseStudies(!showCaseStudies);
-                setShowAdditionalInfo(false);
-                setShowHandsOn(false);
-                setShowCurriculum(false);
-                if (!showCaseStudies) {
-                  setTimeout(() => {
-                    const caseStudiesSection = document.getElementById('case-studies-section');
-                    if (caseStudiesSection) {
-                      caseStudiesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                  }, 100);
-                }
-              }}
-              style={{
-                padding: '12px 24px',
-                minWidth: '180px',
-                background: showCaseStudies
-                  ? 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)'
-                  : 'linear-gradient(135deg, rgba(236, 72, 153, 0.2) 0%, rgba(190, 24, 93, 0.15) 100%)',
-                border: showCaseStudies ? '2px solid #ec4899' : '2px solid rgba(236, 72, 153, 0.5)',
-                borderRadius: '8px',
-                color: '#ffffff',
-                fontSize: '14px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.3s',
-                backdropFilter: 'blur(10px)',
-                boxShadow: showCaseStudies
-                  ? '0 0 20px rgba(236, 72, 153, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3)'
-                  : '0 0 15px rgba(236, 72, 153, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)'
-              }}
-              onMouseEnter={(e) => {
-                if (!showCaseStudies) {
-                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(236, 72, 153, 0.3) 0%, rgba(190, 24, 93, 0.2) 100%)';
-                  e.currentTarget.style.boxShadow = '0 0 20px rgba(236, 72, 153, 0.4), 0 4px 10px rgba(0, 0, 0, 0.25)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!showCaseStudies) {
-                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(236, 72, 153, 0.2) 0%, rgba(190, 24, 93, 0.15) 100%)';
-                  e.currentTarget.style.boxShadow = '0 0 15px rgba(236, 72, 153, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)';
-                }
-              }}
-            >
-              Case Studies
-            </button>
+
+              {/* Hands-on Card */}
+              <button
+                onClick={() => {
+                  setShowHandsOn(!showHandsOn);
+                  setShowAdditionalInfo(false);
+                  setShowCurriculum(false);
+                  setShowCaseStudies(false);
+                  if (!showHandsOn) {
+                    setTimeout(() => {
+                      const handsOnSection = document.getElementById('hands-on');
+                      if (handsOnSection) {
+                        handsOnSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }, 100);
+                  }
+                }}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '16px 12px',
+                  background: showHandsOn
+                    ? 'rgba(16, 185, 129, 0.2)'
+                    : 'rgba(30, 41, 59, 0.4)',
+                  border: showHandsOn
+                    ? '1px solid rgba(16, 185, 129, 0.5)'
+                    : '1px solid rgba(71, 85, 105, 0.3)',
+                  borderRadius: '12px',
+                  color: showHandsOn ? '#10b981' : '#94a3b8',
+                  fontSize: '13px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  if (!showHandsOn) {
+                    e.currentTarget.style.background = 'rgba(16, 185, 129, 0.1)';
+                    e.currentTarget.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                    e.currentTarget.style.color = '#10b981';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!showHandsOn) {
+                    e.currentTarget.style.background = 'rgba(30, 41, 59, 0.4)';
+                    e.currentTarget.style.borderColor = 'rgba(71, 85, 105, 0.3)';
+                    e.currentTarget.style.color = '#94a3b8';
+                  }
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                </svg>
+                <span>Hands-on</span>
+              </button>
+
+              {/* Curriculum Card */}
+              <button
+                onClick={() => {
+                  setShowCurriculum(!showCurriculum);
+                  setShowAdditionalInfo(false);
+                  setShowHandsOn(false);
+                  setShowCaseStudies(false);
+                  if (!showCurriculum) {
+                    setTimeout(() => {
+                      const curriculumSection = document.getElementById('curriculum-section');
+                      if (curriculumSection) {
+                        curriculumSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }, 100);
+                  }
+                }}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '16px 12px',
+                  background: showCurriculum
+                    ? 'rgba(245, 158, 11, 0.2)'
+                    : 'rgba(30, 41, 59, 0.4)',
+                  border: showCurriculum
+                    ? '1px solid rgba(245, 158, 11, 0.5)'
+                    : '1px solid rgba(71, 85, 105, 0.3)',
+                  borderRadius: '12px',
+                  color: showCurriculum ? '#f59e0b' : '#94a3b8',
+                  fontSize: '13px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  if (!showCurriculum) {
+                    e.currentTarget.style.background = 'rgba(245, 158, 11, 0.1)';
+                    e.currentTarget.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+                    e.currentTarget.style.color = '#f59e0b';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!showCurriculum) {
+                    e.currentTarget.style.background = 'rgba(30, 41, 59, 0.4)';
+                    e.currentTarget.style.borderColor = 'rgba(71, 85, 105, 0.3)';
+                    e.currentTarget.style.color = '#94a3b8';
+                  }
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                  <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                </svg>
+                <span>Curriculum</span>
+              </button>
+
+              {/* Case Studies Card */}
+              <button
+                onClick={() => {
+                  setShowCaseStudies(!showCaseStudies);
+                  setShowAdditionalInfo(false);
+                  setShowHandsOn(false);
+                  setShowCurriculum(false);
+                  if (!showCaseStudies) {
+                    setTimeout(() => {
+                      const caseStudiesSection = document.getElementById('case-studies-section');
+                      if (caseStudiesSection) {
+                        caseStudiesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }, 100);
+                  }
+                }}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '16px 12px',
+                  background: showCaseStudies
+                    ? 'rgba(236, 72, 153, 0.2)'
+                    : 'rgba(30, 41, 59, 0.4)',
+                  border: showCaseStudies
+                    ? '1px solid rgba(236, 72, 153, 0.5)'
+                    : '1px solid rgba(71, 85, 105, 0.3)',
+                  borderRadius: '12px',
+                  color: showCaseStudies ? '#ec4899' : '#94a3b8',
+                  fontSize: '13px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  if (!showCaseStudies) {
+                    e.currentTarget.style.background = 'rgba(236, 72, 153, 0.1)';
+                    e.currentTarget.style.borderColor = 'rgba(236, 72, 153, 0.3)';
+                    e.currentTarget.style.color = '#ec4899';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!showCaseStudies) {
+                    e.currentTarget.style.background = 'rgba(30, 41, 59, 0.4)';
+                    e.currentTarget.style.borderColor = 'rgba(71, 85, 105, 0.3)';
+                    e.currentTarget.style.color = '#94a3b8';
+                  }
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+                <span>Case Studies</span>
+              </button>
+            </div>
           </div>
 
           {!showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && (
