@@ -68,6 +68,15 @@ const BigDataArchitectureExplorer = () => {
     return !bannerDismissed;
   });
 
+  // Curriculum section states
+  const [showCurriculum, setShowCurriculum] = useState(false);
+  const [activePhase, setActivePhase] = useState(1);
+  const [selectedLevel, setSelectedLevel] = useState(null);
+  const [completedLevels, setCompletedLevels] = useState(() => {
+    const saved = localStorage.getItem('curriculumCompletedLevels');
+    return saved ? JSON.parse(saved) : [];
+  });
+
   // Responsive diagram scaling
   const diagramContainerRef = useRef(null);
   const { scale, showWarning } = useResponsiveScale(activeArchitecture, diagramContainerRef);
@@ -145,6 +154,45 @@ const BigDataArchitectureExplorer = () => {
           box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
         }
       }
+      @keyframes levelUnlock {
+        0% {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes progressFill {
+        from {
+          width: 0%;
+        }
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: -200% 0;
+        }
+        100% {
+          background-position: 200% 0;
+        }
+      }
+      @keyframes bounceIn {
+        0% {
+          transform: scale(0);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
     `;
     document.head.appendChild(style);
     return () => document.head.removeChild(style);
@@ -156,6 +204,11 @@ const BigDataArchitectureExplorer = () => {
       setActiveArchitecture('lambda');
     }
   }, [activeArchitecture, showHandsOn]);
+
+  // Persist curriculum progress to localStorage
+  useEffect(() => {
+    localStorage.setItem('curriculumCompletedLevels', JSON.stringify(completedLevels));
+  }, [completedLevels]);
 
   // Handle banner dismissal
   const handleDismissBanner = () => {
@@ -482,6 +535,528 @@ const BigDataArchitectureExplorer = () => {
         { from: 'dashboard', to: 'browser', type: 'query' }
       ]
     }
+  };
+
+  // Data Engineering Curriculum - From Zero to Hired
+  const curriculumData = {
+    title: "Data Engineering Curriculum",
+    subtitle: "From Zero to Hired Data Engineer",
+    phases: [
+      {
+        id: 1,
+        name: "The Foundation",
+        subtitle: "Data Literacy",
+        goal: "Understand the ecosystem before touching code",
+        icon: "foundation",
+        color: "#3b82f6",
+        colorLight: "rgba(59, 130, 246, 0.15)",
+        levels: [
+          {
+            id: "1.1",
+            name: "The Data Lifecycle",
+            concept: "How data moves through systems: Generation → Ingestion → Storage → Processing → Consumption. Understanding this flow is fundamental to designing any data system.",
+            whyItMatters: "Every data engineering decision you make will be about optimizing one of these stages. Know the lifecycle, and you'll always know where you are in the bigger picture.",
+            analogy: "Think of data like water in a city: it's collected (Generation), piped in (Ingestion), stored in tanks (Storage), treated/filtered (Processing), and delivered to homes (Consumption).",
+            references: [
+              { title: "Data Engineering vs Data Science (Medium)", url: "https://medium.com/@rchang/a-beginners-guide-to-data-engineering-part-i-4227c5c457d7" }
+            ],
+            bossFight: {
+              name: "Napkin Architecture",
+              description: "Draw a diagram of how you think Spotify recommends songs to users.",
+              input: "Your napkin, whiteboard, or any drawing tool",
+              expectedOutput: "A diagram showing: User actions → Data collection → Storage → Processing/ML → Recommendations displayed"
+            }
+          },
+          {
+            id: "1.2",
+            name: "OLTP vs. OLAP",
+            concept: "Transactional databases (OLTP) power app backends with fast, simple operations. Analytical warehouses (OLAP) enable deep reporting on historical data.",
+            whyItMatters: "Choosing the wrong database type is one of the most expensive mistakes in data engineering. OLTP for your analytics? Slow queries. OLAP for your app? Slow writes.",
+            analogy: "OLTP is a cash register — fast, handles one transaction at a time, optimized for speed. OLAP is a library archive — slower to search, but can answer complex questions across millions of records.",
+            references: [
+              { title: "AWS: OLTP vs OLAP", url: "https://aws.amazon.com/compare/the-difference-between-olap-and-oltp/" }
+            ],
+            microTask: {
+              name: "Database Detective",
+              description: "List 3 examples each of systems that should use OLTP vs OLAP.",
+              input: "Think about apps you use daily",
+              expectedOutput: "OLTP: Banking app, E-commerce checkout, User login system. OLAP: Sales dashboard, Customer analytics, Financial reporting."
+            }
+          },
+          {
+            id: "1.3",
+            name: "Data Modeling Basics",
+            concept: "Normalization reduces data redundancy (good for writes). Denormalization increases redundancy for faster reads (good for analytics).",
+            whyItMatters: "Your data model determines query performance, storage costs, and how easy it is to maintain your system. Get it wrong, and you'll be refactoring for months.",
+            analogy: "Normalization is like organizing a library with a single copy of each book and a card catalog. Denormalization is like putting copies of popular books in every section — uses more space but faster to find.",
+            references: [
+              { title: "Splunk: Normalization vs Denormalization", url: "https://www.splunk.com/en_us/blog/learn/data-normalization.html" }
+            ],
+            microTask: {
+              name: "Schema Sketcher",
+              description: "Design a normalized schema for an e-commerce product catalog, then denormalize it for a product search feature.",
+              input: "Products have: name, price, category, brand, reviews",
+              expectedOutput: "Normalized: Products, Categories, Brands, Reviews tables with foreign keys. Denormalized: Single products_search table with embedded category_name, brand_name, avg_rating."
+            }
+          }
+        ]
+      },
+      {
+        id: 2,
+        name: "The Toolkit",
+        subtitle: "SQL & Python",
+        goal: "Master the tools of the trade",
+        icon: "tools",
+        color: "#10b981",
+        colorLight: "rgba(16, 185, 129, 0.15)",
+        levels: [
+          {
+            id: "2.1",
+            name: "SQL (The King)",
+            concept: "SQL is the universal language of data. Master SELECT, FROM, WHERE, GROUP BY, JOINs, and Window Functions — these cover 90% of real-world data work.",
+            whyItMatters: "Every data tool speaks SQL. Spark? SQL. BigQuery? SQL. dbt? SQL. If you master SQL, you can work with almost any data platform on Earth.",
+            analogy: "SQL is like English for data — it's the lingua franca. Learn it once, use it everywhere.",
+            references: [
+              { title: "Mode Analytics SQL Tutorial", url: "https://mode.com/sql-tutorial/" },
+              { title: "ThoughtSpot SQL Guide", url: "https://www.thoughtspot.com/data-trends/data-modeling/sql-commands-cheat-sheet" }
+            ],
+            codeExample: {
+              language: "sql",
+              code: `-- Window Functions: Running total of sales
+SELECT
+    order_date,
+    product_id,
+    amount,
+    SUM(amount) OVER (
+        PARTITION BY product_id
+        ORDER BY order_date
+    ) as running_total
+FROM sales
+WHERE order_date >= '2024-01-01';`
+            },
+            bossFight: {
+              name: "The Detective",
+              description: "Given a CSV of messy sales data, find the top 3 items sold on Tuesdays using only SQL.",
+              input: "sales.csv with columns: order_id, product_name, quantity, order_date, price",
+              expectedOutput: "A query returning product_name and total_quantity for top 3 products sold on Tuesdays, ordered by quantity descending."
+            }
+          },
+          {
+            id: "2.2",
+            name: "Python for Data",
+            concept: "Python + Pandas is the Swiss Army knife of data engineering. Learn DataFrames, reading CSV/JSON, and making API requests.",
+            whyItMatters: "Python is the glue that connects everything in data engineering. From quick scripts to production pipelines, Python is everywhere.",
+            analogy: "If SQL is for talking to databases, Python is for talking to everything else — APIs, files, cloud services, ML models.",
+            references: [
+              { title: "Pandas Official Getting Started", url: "https://pandas.pydata.org/docs/getting_started/index.html" }
+            ],
+            codeExample: {
+              language: "python",
+              code: `import pandas as pd
+import requests
+
+# Fetch weather data from API
+response = requests.get(
+    "https://api.open-meteo.com/v1/forecast",
+    params={"latitude": 40.71, "longitude": -74.01, "current_weather": True}
+)
+weather = response.json()
+
+# Convert to DataFrame and save
+df = pd.DataFrame([weather["current_weather"]])
+df.to_json("weather_data.json", orient="records")`
+            },
+            microTask: {
+              name: "Weather Fetcher",
+              description: "Write a Python script to fetch weather data from OpenMeteo API and save it to a JSON file.",
+              input: "OpenMeteo API: https://api.open-meteo.com/v1/forecast",
+              expectedOutput: "A weather_data.json file containing current weather for your city."
+            }
+          }
+        ]
+      },
+      {
+        id: 3,
+        name: "The Pipeline",
+        subtitle: "Core Engineering",
+        goal: "Move data automatically",
+        icon: "pipeline",
+        color: "#f59e0b",
+        colorLight: "rgba(245, 158, 11, 0.15)",
+        levels: [
+          {
+            id: "3.1",
+            name: "Dimensional Modeling",
+            concept: "Star Schema: Fact Tables store measurements (sales, clicks, events). Dimension Tables provide context (who, what, when, where).",
+            whyItMatters: "Dimensional modeling is the foundation of every data warehouse. It's how you make data queryable by business users.",
+            analogy: "Facts are the verbs (sold, clicked, shipped). Dimensions are the nouns (customer, product, date). Together they tell the complete story.",
+            references: [
+              { title: "Kimball Group Dimensional Modeling Techniques", url: "https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/" },
+              { title: "Holistics: Kimball in the Modern Stack", url: "https://www.holistics.io/blog/how-we-structure-our-data-team-at-holistics/" }
+            ],
+            codeExample: {
+              language: "sql",
+              code: `-- Star Schema Example
+-- Fact Table: Records every sale event
+CREATE TABLE fact_sales (
+    sale_id BIGINT PRIMARY KEY,
+    date_key INT REFERENCES dim_date(date_key),
+    product_key INT REFERENCES dim_product(product_key),
+    customer_key INT REFERENCES dim_customer(customer_key),
+    quantity INT,
+    amount DECIMAL(10,2)
+);
+
+-- Dimension Table: Product details
+CREATE TABLE dim_product (
+    product_key INT PRIMARY KEY,
+    product_name VARCHAR(255),
+    category VARCHAR(100),
+    brand VARCHAR(100)
+);`
+            },
+            microTask: {
+              name: "Schema Architect",
+              description: "Design a star schema for an online streaming service (like Netflix).",
+              input: "Track: what users watch, when, how long, on what device",
+              expectedOutput: "fact_viewing with dimension tables: dim_user, dim_content, dim_date, dim_device"
+            }
+          },
+          {
+            id: "3.2",
+            name: "Orchestration (Airflow)",
+            concept: "Airflow manages dependencies between tasks using DAGs (Directed Acyclic Graphs). It ensures tasks run in the right order, handles failures, and provides visibility.",
+            whyItMatters: "Production data pipelines have dozens of steps that must run in sequence. Airflow is the industry standard for orchestrating this complexity.",
+            analogy: "Airflow is like a conductor for an orchestra — it doesn't play instruments, but it ensures everyone plays at the right time in the right order.",
+            references: [
+              { title: "Official Apache Airflow Tutorial", url: "https://airflow.apache.org/docs/apache-airflow/stable/tutorial/index.html" }
+            ],
+            codeExample: {
+              language: "python",
+              code: `from airflow import DAG
+from airflow.operators.python import PythonOperator
+from datetime import datetime
+
+def extract_data():
+    # Fetch data from API
+    pass
+
+def transform_data():
+    # Clean and transform
+    pass
+
+def load_data():
+    # Load to warehouse
+    pass
+
+with DAG('daily_etl', start_date=datetime(2024, 1, 1), schedule='@daily') as dag:
+    extract = PythonOperator(task_id='extract', python_callable=extract_data)
+    transform = PythonOperator(task_id='transform', python_callable=transform_data)
+    load = PythonOperator(task_id='load', python_callable=load_data)
+
+    extract >> transform >> load  # Define dependencies`
+            },
+            bossFight: {
+              name: "The Daily Report",
+              description: "Build an Airflow DAG that runs every morning, pulls weather data from the API you built in Phase 2, and saves it to a database.",
+              input: "Your Python weather script from Level 2.2",
+              expectedOutput: "A working DAG with extract → transform → load tasks that runs on a schedule."
+            }
+          },
+          {
+            id: "3.3",
+            name: "Containerization (Docker)",
+            concept: "Docker packages your code with all its dependencies into containers. This solves 'it works on my machine' forever.",
+            whyItMatters: "Every modern data tool runs in containers. Kubernetes, cloud deployments, local development — Docker is the universal packaging format.",
+            analogy: "Docker is like shipping containers for code. Just as shipping containers standardized global trade, Docker standardized software deployment.",
+            references: [
+              { title: "Towards Data Science: Docker for Data Science", url: "https://towardsdatascience.com/docker-for-data-science-a-step-by-step-guide-1e5f7f3d8a5f/" }
+            ],
+            codeExample: {
+              language: "dockerfile",
+              code: `# Dockerfile for Python data pipeline
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY . .
+
+# Run the pipeline
+CMD ["python", "weather_pipeline.py"]`
+            },
+            microTask: {
+              name: "Container Builder",
+              description: "Containerize the Python weather script from Level 2.2.",
+              input: "Your weather_fetcher.py script",
+              expectedOutput: "A Dockerfile and working container that can be run with 'docker run weather-fetcher'"
+            }
+          }
+        ]
+      },
+      {
+        id: 4,
+        name: "Scale & Cloud",
+        subtitle: "The Pro Level",
+        goal: "Move from laptop to cloud infrastructure",
+        icon: "cloud",
+        color: "#8b5cf6",
+        colorLight: "rgba(139, 92, 246, 0.15)",
+        levels: [
+          {
+            id: "4.1",
+            name: "Big Data Processing (Spark)",
+            concept: "Apache Spark enables distributed computing when your data doesn't fit in RAM. It splits work across a cluster of machines.",
+            whyItMatters: "When you graduate from gigabytes to terabytes, Pandas won't cut it. Spark is how you process massive datasets in production.",
+            analogy: "Pandas is one person doing dishes. Spark is an assembly line of workers — each handles a portion, and the work gets done much faster.",
+            references: [
+              { title: "PySpark Official Quickstart", url: "https://spark.apache.org/docs/latest/api/python/getting_started/index.html" }
+            ],
+            codeExample: {
+              language: "python",
+              code: `from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, avg, count
+
+# Initialize Spark
+spark = SparkSession.builder.appName("SalesAnalytics").getOrCreate()
+
+# Read data (distributed across cluster)
+df = spark.read.parquet("s3://data-lake/sales/")
+
+# Transformations (executed in parallel)
+result = df.filter(col("year") == 2024) \\
+    .groupBy("product_category") \\
+    .agg(
+        count("*").alias("total_orders"),
+        avg("amount").alias("avg_order_value")
+    )
+
+result.write.parquet("s3://warehouse/category_metrics/")`
+            },
+            microTask: {
+              name: "Spark vs Pandas",
+              description: "Rewrite a Pandas aggregation script in PySpark. Compare the API differences.",
+              input: "A simple Pandas groupby operation",
+              expectedOutput: "Equivalent PySpark code with notes on syntax differences."
+            }
+          },
+          {
+            id: "4.2",
+            name: "Infrastructure as Code (Terraform)",
+            concept: "Terraform manages cloud resources via code files (.tf). Instead of clicking in AWS console, you declare what you want and Terraform creates it.",
+            whyItMatters: "Manual cloud setup doesn't scale and can't be version controlled. Terraform makes infrastructure reproducible, reviewable, and automated.",
+            analogy: "Terraform is like a recipe for your cloud kitchen. Instead of remembering how to set things up, you write it down once and can recreate it perfectly every time.",
+            references: [
+              { title: "HashiCorp: Terraform AWS Getting Started", url: "https://developer.hashicorp.com/terraform/tutorials/aws-get-started" }
+            ],
+            codeExample: {
+              language: "hcl",
+              code: `# main.tf - Create an S3 bucket for data lake
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = "us-east-1"
+}
+
+resource "aws_s3_bucket" "data_lake" {
+  bucket = "my-company-data-lake"
+
+  tags = {
+    Environment = "production"
+    Team        = "data-engineering"
+  }
+}`
+            },
+            microTask: {
+              name: "Infrastructure Starter",
+              description: "Write a Terraform script to create one AWS S3 bucket for your data lake.",
+              input: "AWS account (free tier works)",
+              expectedOutput: "A main.tf file that successfully creates an S3 bucket when you run 'terraform apply'"
+            }
+          },
+          {
+            id: "4.3",
+            name: "The Transformation Layer (dbt)",
+            concept: "dbt brings software engineering best practices to SQL: version control, testing, documentation, and modularity for your transformations.",
+            whyItMatters: "Raw data is messy. dbt is how modern teams transform raw data into clean, tested, documented tables that business users can trust.",
+            analogy: "If your data warehouse is a kitchen, dbt is your recipe book — tested recipes (models) that turn raw ingredients (source data) into dishes (analytics tables).",
+            references: [
+              { title: "dbt Labs: Getting Started", url: "https://docs.getdbt.com/docs/introduction" }
+            ],
+            codeExample: {
+              language: "sql",
+              code: `-- models/marts/dim_customers.sql
+{{ config(materialized='table') }}
+
+WITH source_customers AS (
+    SELECT * FROM {{ ref('stg_customers') }}
+),
+
+enriched AS (
+    SELECT
+        customer_id,
+        first_name,
+        last_name,
+        email,
+        created_at,
+        -- Add derived columns
+        DATEDIFF(day, created_at, CURRENT_DATE) as days_since_signup,
+        CASE
+            WHEN total_orders > 10 THEN 'power_user'
+            WHEN total_orders > 0 THEN 'active'
+            ELSE 'new'
+        END as customer_segment
+    FROM source_customers
+)
+
+SELECT * FROM enriched`
+            },
+            bossFight: {
+              name: "dbt Project Setup",
+              description: "Initialize a dbt project and create your first model that transforms raw user data into a clean dim_users table.",
+              input: "A raw_users table with messy data",
+              expectedOutput: "A dbt project with staging and marts layers, plus a working dim_users model with tests."
+            }
+          }
+        ]
+      },
+      {
+        id: 5,
+        name: "The Frontier",
+        subtitle: "Advanced Trends 2026",
+        goal: "Niche specialization and modern best practices",
+        icon: "rocket",
+        color: "#ec4899",
+        colorLight: "rgba(236, 72, 153, 0.15)",
+        levels: [
+          {
+            id: "5.1",
+            name: "Data Contracts",
+            concept: "Data Contracts treat data like an API with strict schema enforcement. Producers and consumers agree on the format, and breaking changes require coordination.",
+            whyItMatters: "In large organizations, upstream changes break downstream pipelines constantly. Data contracts prevent this chaos by formalizing agreements between teams.",
+            analogy: "Data contracts are like API documentation — they define what data looks like, what's required, and what's optional. Break the contract, break the build.",
+            references: [
+              { title: "Atlan: Data Contracts Explained", url: "https://atlan.com/data-contracts/" },
+              { title: "DataContract.com (Open Standard)", url: "https://datacontract.com/" }
+            ],
+            codeExample: {
+              language: "yaml",
+              code: `# datacontract.yaml
+dataContractSpecification: 0.9.3
+id: orders-contract
+info:
+  title: Orders Data Contract
+  version: 1.0.0
+  owner: data-platform-team
+
+models:
+  orders:
+    type: table
+    fields:
+      order_id:
+        type: string
+        required: true
+        primaryKey: true
+      customer_id:
+        type: string
+        required: true
+      amount:
+        type: decimal
+        required: true
+      created_at:
+        type: timestamp
+        required: true
+
+quality:
+  - type: sql
+    query: SELECT COUNT(*) FROM orders WHERE amount < 0
+    mustBe: 0`
+            },
+            microTask: {
+              name: "Contract Writer",
+              description: "Write a data contract for an events table that tracks user clicks on a website.",
+              input: "Events should include: event_id, user_id, event_type, page_url, timestamp",
+              expectedOutput: "A YAML data contract with field definitions and at least one quality check."
+            }
+          },
+          {
+            id: "5.2",
+            name: "Streaming (Kafka)",
+            concept: "Apache Kafka enables real-time event processing. Instead of batch processing data hourly, you process it as it arrives — milliseconds after it happens.",
+            whyItMatters: "Modern users expect real-time: live notifications, instant recommendations, fraud detection in milliseconds. Kafka makes this possible at scale.",
+            analogy: "Batch processing is like mail delivery — you get all your letters once a day. Kafka is like a text message — you get it the instant it's sent.",
+            references: [
+              { title: "Confluent: Apache Kafka Introduction", url: "https://developer.confluent.io/what-is-apache-kafka/" }
+            ],
+            codeExample: {
+              language: "python",
+              code: `from kafka import KafkaConsumer, KafkaProducer
+import json
+
+# Producer: Send events to Kafka
+producer = KafkaProducer(
+    bootstrap_servers=['localhost:9092'],
+    value_serializer=lambda v: json.dumps(v).encode('utf-8')
+)
+
+event = {
+    'user_id': 'user_123',
+    'action': 'page_view',
+    'page': '/products/shoes',
+    'timestamp': '2024-01-15T10:30:00Z'
+}
+producer.send('user-events', value=event)
+
+# Consumer: Process events in real-time
+consumer = KafkaConsumer(
+    'user-events',
+    bootstrap_servers=['localhost:9092'],
+    value_deserializer=lambda m: json.loads(m.decode('utf-8'))
+)
+
+for message in consumer:
+    event = message.value
+    print(f"Processing: {event['action']} by {event['user_id']}")`
+            },
+            bossFight: {
+              name: "Real-Time Pipeline",
+              description: "Build a Kafka producer that sends simulated user events, and a consumer that aggregates them into a 'users online' counter.",
+              input: "Kafka running locally (use Docker)",
+              expectedOutput: "A working producer sending events and a consumer printing real-time counts."
+            }
+          }
+        ]
+      }
+    ]
+  };
+
+  // Phase colors for curriculum
+  const phaseColors = {
+    1: { primary: '#3b82f6', light: 'rgba(59, 130, 246, 0.15)', border: 'rgba(59, 130, 246, 0.3)' },
+    2: { primary: '#10b981', light: 'rgba(16, 185, 129, 0.15)', border: 'rgba(16, 185, 129, 0.3)' },
+    3: { primary: '#f59e0b', light: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.3)' },
+    4: { primary: '#8b5cf6', light: 'rgba(139, 92, 246, 0.15)', border: 'rgba(139, 92, 246, 0.3)' },
+    5: { primary: '#ec4899', light: 'rgba(236, 72, 153, 0.15)', border: 'rgba(236, 72, 153, 0.3)' }
+  };
+
+  // Phase icons for curriculum
+  const phaseIcons = {
+    foundation: '🏗️',
+    tools: '🛠️',
+    pipeline: '🔄',
+    cloud: '☁️',
+    rocket: '🚀'
   };
 
   const connectionColors = {
@@ -1382,6 +1957,584 @@ const BigDataArchitectureExplorer = () => {
     }
   }, [expandedDecisionNodes, setNodes, setEdges, setActiveArchitecture, setShowAdditionalInfo, reactFlowInstance]);
 
+  // Helper function to calculate progress
+  const calculateProgress = () => {
+    const totalLevels = curriculumData.phases.reduce((acc, phase) => acc + phase.levels.length, 0);
+    return totalLevels > 0 ? Math.round((completedLevels.length / totalLevels) * 100) : 0;
+  };
+
+  const calculatePhaseProgress = (phaseId) => {
+    const phase = curriculumData.phases.find(p => p.id === phaseId);
+    if (!phase) return 0;
+    const phaseCompletedLevels = phase.levels.filter(level => completedLevels.includes(level.id));
+    return phase.levels.length > 0 ? Math.round((phaseCompletedLevels.length / phase.levels.length) * 100) : 0;
+  };
+
+  const isLevelCompleted = (levelId) => completedLevels.includes(levelId);
+
+  const toggleLevelCompletion = (levelId) => {
+    setCompletedLevels(prev => {
+      if (prev.includes(levelId)) {
+        return prev.filter(id => id !== levelId);
+      } else {
+        return [...prev, levelId];
+      }
+    });
+  };
+
+  // Render Curriculum Section
+  const renderCurriculumSection = () => {
+    const currentPhase = curriculumData.phases.find(p => p.id === activePhase);
+    const currentLevel = selectedLevel ? currentPhase?.levels.find(l => l.id === selectedLevel) : null;
+    const progress = calculateProgress();
+    const phaseProgress = calculatePhaseProgress(activePhase);
+
+    return (
+      <div id="curriculum-section" style={{ animation: 'fadeInSlideDown 0.5s ease-out' }}>
+        {/* Curriculum Header */}
+        <div style={{
+          background: 'rgba(15, 23, 42, 0.8)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(245, 158, 11, 0.3)',
+          borderRadius: '12px',
+          padding: '24px',
+          marginBottom: '24px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', marginBottom: '16px' }}>
+            <div>
+              <h2 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '4px', color: '#f59e0b' }}>
+                {curriculumData.title}
+              </h2>
+              <p style={{ color: '#94a3b8', fontSize: '16px' }}>
+                {curriculumData.subtitle}
+              </p>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#f59e0b' }}>
+                {progress}%
+              </div>
+              <div style={{ fontSize: '12px', color: '#94a3b8' }}>Overall Progress</div>
+            </div>
+          </div>
+          {/* Overall Progress Bar */}
+          <div style={{
+            background: 'rgba(245, 158, 11, 0.1)',
+            borderRadius: '8px',
+            height: '12px',
+            overflow: 'hidden'
+          }}>
+            <div style={{
+              background: 'linear-gradient(90deg, #f59e0b, #d97706)',
+              height: '100%',
+              width: `${progress}%`,
+              borderRadius: '8px',
+              transition: 'width 0.5s ease-out',
+              animation: 'progressFill 1s ease-out'
+            }} />
+          </div>
+        </div>
+
+        {/* Phase Tabs */}
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', flexWrap: 'wrap' }}>
+          {curriculumData.phases.map(phase => {
+            const isActive = activePhase === phase.id;
+            const pProgress = calculatePhaseProgress(phase.id);
+            const colors = phaseColors[phase.id];
+
+            return (
+              <button
+                key={phase.id}
+                onClick={() => {
+                  setActivePhase(phase.id);
+                  setSelectedLevel(null);
+                }}
+                style={{
+                  padding: '12px 20px',
+                  minWidth: '160px',
+                  background: isActive
+                    ? `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primary}dd 100%)`
+                    : colors.light,
+                  border: `2px solid ${isActive ? colors.primary : colors.border}`,
+                  borderRadius: '12px',
+                  color: '#ffffff',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s',
+                  backdropFilter: 'blur(10px)',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = `${colors.primary}33`;
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = colors.light;
+                  }
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '16px' }}>{phaseIcons[phase.icon]}</span>
+                  <span>Phase {phase.id}</span>
+                </div>
+                <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '8px' }}>{phase.name}</div>
+                {/* Mini progress bar */}
+                <div style={{
+                  background: 'rgba(0,0,0,0.3)',
+                  borderRadius: '4px',
+                  height: '4px',
+                  overflow: 'hidden'
+                }}>
+                  <div style={{
+                    background: '#ffffff',
+                    height: '100%',
+                    width: `${pProgress}%`,
+                    borderRadius: '4px',
+                    transition: 'width 0.3s'
+                  }} />
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Current Phase Header */}
+        {currentPhase && (
+          <div style={{
+            background: phaseColors[activePhase].light,
+            border: `1px solid ${phaseColors[activePhase].border}`,
+            borderRadius: '12px',
+            padding: '20px',
+            marginBottom: '24px'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+              <span style={{ fontSize: '32px' }}>{phaseIcons[currentPhase.icon]}</span>
+              <div>
+                <h3 style={{ fontSize: '22px', fontWeight: 'bold', color: phaseColors[activePhase].primary }}>
+                  Phase {currentPhase.id}: {currentPhase.name}
+                </h3>
+                <p style={{ fontSize: '14px', color: '#94a3b8' }}>{currentPhase.subtitle}</p>
+              </div>
+            </div>
+            <p style={{ color: '#cbd5e1', fontSize: '15px', marginBottom: '12px' }}>
+              <strong style={{ color: phaseColors[activePhase].primary }}>Goal:</strong> {currentPhase.goal}
+            </p>
+            {/* Phase Progress */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{
+                flex: 1,
+                background: 'rgba(0,0,0,0.2)',
+                borderRadius: '6px',
+                height: '8px',
+                overflow: 'hidden'
+              }}>
+                <div style={{
+                  background: phaseColors[activePhase].primary,
+                  height: '100%',
+                  width: `${phaseProgress}%`,
+                  borderRadius: '6px',
+                  transition: 'width 0.5s'
+                }} />
+              </div>
+              <span style={{ fontSize: '14px', fontWeight: '600', color: phaseColors[activePhase].primary }}>
+                {phaseProgress}%
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Levels Grid and Detail Panel */}
+        <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
+          {/* Levels Grid */}
+          <div style={{ flex: selectedLevel ? '0 0 350px' : '1', minWidth: '300px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {currentPhase?.levels.map((level, idx) => {
+                const isCompleted = isLevelCompleted(level.id);
+                const isSelected = selectedLevel === level.id;
+                const hasBossFight = !!level.bossFight;
+                const hasMicroTask = !!level.microTask;
+
+                return (
+                  <div
+                    key={level.id}
+                    onClick={() => setSelectedLevel(level.id)}
+                    style={{
+                      background: isSelected
+                        ? `${phaseColors[activePhase].primary}22`
+                        : 'rgba(15, 23, 42, 0.8)',
+                      border: `2px solid ${isSelected ? phaseColors[activePhase].primary : isCompleted ? '#10b981' : 'rgba(71, 85, 105, 0.3)'}`,
+                      borderRadius: '12px',
+                      padding: '20px',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s',
+                      animation: `levelUnlock 0.4s ease-out ${idx * 0.1}s both`
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isSelected) {
+                        e.currentTarget.style.borderColor = phaseColors[activePhase].primary;
+                        e.currentTarget.style.transform = 'translateX(4px)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isSelected) {
+                        e.currentTarget.style.borderColor = isCompleted ? '#10b981' : 'rgba(71, 85, 105, 0.3)';
+                        e.currentTarget.style.transform = 'translateX(0)';
+                      }
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                          <span style={{
+                            background: isCompleted ? 'rgba(16, 185, 129, 0.2)' : phaseColors[activePhase].light,
+                            border: `1px solid ${isCompleted ? '#10b981' : phaseColors[activePhase].border}`,
+                            borderRadius: '6px',
+                            padding: '4px 10px',
+                            fontSize: '12px',
+                            fontWeight: '700',
+                            color: isCompleted ? '#10b981' : phaseColors[activePhase].primary
+                          }}>
+                            Level {level.id}
+                          </span>
+                          {isCompleted && (
+                            <span style={{ color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <Check size={16} strokeWidth={3} />
+                            </span>
+                          )}
+                        </div>
+                        <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '8px', color: '#ffffff' }}>
+                          {level.name}
+                        </h4>
+                        <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.5', marginBottom: '12px' }}>
+                          {level.concept.substring(0, 120)}...
+                        </p>
+                        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                          {hasBossFight && (
+                            <span style={{
+                              background: 'rgba(239, 68, 68, 0.15)',
+                              border: '1px solid rgba(239, 68, 68, 0.3)',
+                              borderRadius: '6px',
+                              padding: '4px 10px',
+                              fontSize: '11px',
+                              fontWeight: '600',
+                              color: '#ef4444',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '4px'
+                            }}>
+                              <Sparkles size={12} /> Boss Fight
+                            </span>
+                          )}
+                          {hasMicroTask && (
+                            <span style={{
+                              background: 'rgba(6, 182, 212, 0.15)',
+                              border: '1px solid rgba(6, 182, 212, 0.3)',
+                              borderRadius: '6px',
+                              padding: '4px 10px',
+                              fontSize: '11px',
+                              fontWeight: '600',
+                              color: '#06b6d4',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '4px'
+                            }}>
+                              <Zap size={12} /> Micro-Task
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <ChevronRight size={20} color={isSelected ? phaseColors[activePhase].primary : '#64748b'} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Level Detail Panel */}
+          {currentLevel && (
+            <div style={{
+              flex: '1',
+              minWidth: '400px',
+              background: 'rgba(15, 23, 42, 0.9)',
+              border: `1px solid ${phaseColors[activePhase].border}`,
+              borderRadius: '12px',
+              padding: '24px',
+              animation: 'fadeInScale 0.3s ease-out',
+              maxHeight: 'calc(100vh - 300px)',
+              overflowY: 'auto'
+            }}>
+              {/* Level Header */}
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '20px' }}>
+                <div>
+                  <span style={{
+                    background: phaseColors[activePhase].light,
+                    border: `1px solid ${phaseColors[activePhase].border}`,
+                    borderRadius: '6px',
+                    padding: '4px 12px',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    color: phaseColors[activePhase].primary,
+                    marginBottom: '8px',
+                    display: 'inline-block'
+                  }}>
+                    Level {currentLevel.id}
+                  </span>
+                  <h3 style={{ fontSize: '24px', fontWeight: 'bold', color: '#ffffff', marginTop: '8px' }}>
+                    {currentLevel.name}
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setSelectedLevel(null)}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#64748b',
+                    cursor: 'pointer',
+                    padding: '8px'
+                  }}
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              {/* Concept Section */}
+              <div style={{
+                background: 'rgba(59, 130, 246, 0.1)',
+                border: '1px solid rgba(59, 130, 246, 0.3)',
+                borderRadius: '8px',
+                padding: '16px',
+                marginBottom: '16px'
+              }}>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#60a5fa', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Database size={16} /> Concept
+                </h4>
+                <p style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.7' }}>
+                  {currentLevel.concept}
+                </p>
+              </div>
+
+              {/* Why It Matters */}
+              <div style={{
+                background: 'rgba(245, 158, 11, 0.1)',
+                border: '1px solid rgba(245, 158, 11, 0.3)',
+                borderRadius: '8px',
+                padding: '16px',
+                marginBottom: '16px'
+              }}>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#f59e0b', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Sparkles size={16} /> Why This Matters
+                </h4>
+                <p style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.7' }}>
+                  {currentLevel.whyItMatters}
+                </p>
+              </div>
+
+              {/* Analogy */}
+              {currentLevel.analogy && (
+                <div style={{
+                  background: 'rgba(139, 92, 246, 0.1)',
+                  border: '1px solid rgba(139, 92, 246, 0.3)',
+                  borderRadius: '8px',
+                  padding: '16px',
+                  marginBottom: '16px'
+                }}>
+                  <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#a78bfa', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Info size={16} /> Think of it like...
+                  </h4>
+                  <p style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.7', fontStyle: 'italic' }}>
+                    "{currentLevel.analogy}"
+                  </p>
+                </div>
+              )}
+
+              {/* Code Example */}
+              {currentLevel.codeExample && (
+                <div style={{
+                  background: 'rgba(30, 41, 59, 0.8)',
+                  border: '1px solid rgba(71, 85, 105, 0.5)',
+                  borderRadius: '8px',
+                  padding: '16px',
+                  marginBottom: '16px'
+                }}>
+                  <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#fbbf24', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <ScrollText size={16} /> Code Example ({currentLevel.codeExample.language})
+                  </h4>
+                  <pre style={{
+                    background: 'rgba(0, 0, 0, 0.4)',
+                    borderRadius: '6px',
+                    padding: '16px',
+                    overflow: 'auto',
+                    fontSize: '12px',
+                    lineHeight: '1.6',
+                    color: '#e2e8f0',
+                    fontFamily: 'monospace'
+                  }}>
+                    <code>{currentLevel.codeExample.code}</code>
+                  </pre>
+                </div>
+              )}
+
+              {/* References */}
+              <div style={{
+                background: 'rgba(16, 185, 129, 0.1)',
+                border: '1px solid rgba(16, 185, 129, 0.3)',
+                borderRadius: '8px',
+                padding: '16px',
+                marginBottom: '16px'
+              }}>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#10b981', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Globe size={16} /> Learning Resources
+                </h4>
+                <ul style={{ margin: 0, paddingLeft: '0', listStyle: 'none' }}>
+                  {currentLevel.references.map((ref, idx) => (
+                    <li key={idx} style={{ marginBottom: '8px' }}>
+                      <a
+                        href={ref.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color: '#10b981',
+                          textDecoration: 'none',
+                          fontSize: '14px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          transition: 'color 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.color = '#34d399'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = '#10b981'}
+                      >
+                        <ChevronRight size={14} />
+                        {ref.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Boss Fight */}
+              {currentLevel.bossFight && (
+                <div style={{
+                  background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.1) 100%)',
+                  border: '2px solid rgba(239, 68, 68, 0.4)',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  marginBottom: '16px'
+                }}>
+                  <h4 style={{
+                    fontSize: '18px',
+                    fontWeight: '700',
+                    color: '#ef4444',
+                    marginBottom: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px'
+                  }}>
+                    <Sparkles size={20} /> BOSS FIGHT: {currentLevel.bossFight.name}
+                  </h4>
+                  <p style={{ color: '#fca5a5', fontSize: '14px', lineHeight: '1.7', marginBottom: '16px' }}>
+                    {currentLevel.bossFight.description}
+                  </p>
+                  <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                    <div style={{ flex: '1', minWidth: '200px' }}>
+                      <h5 style={{ fontSize: '12px', fontWeight: '600', color: '#f87171', marginBottom: '6px' }}>INPUT</h5>
+                      <p style={{ color: '#fecaca', fontSize: '13px' }}>{currentLevel.bossFight.input}</p>
+                    </div>
+                    <div style={{ flex: '1', minWidth: '200px' }}>
+                      <h5 style={{ fontSize: '12px', fontWeight: '600', color: '#f87171', marginBottom: '6px' }}>EXPECTED OUTPUT</h5>
+                      <p style={{ color: '#fecaca', fontSize: '13px' }}>{currentLevel.bossFight.expectedOutput}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Micro Task */}
+              {currentLevel.microTask && (
+                <div style={{
+                  background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(8, 145, 178, 0.1) 100%)',
+                  border: '2px solid rgba(6, 182, 212, 0.4)',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  marginBottom: '16px'
+                }}>
+                  <h4 style={{
+                    fontSize: '18px',
+                    fontWeight: '700',
+                    color: '#06b6d4',
+                    marginBottom: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px'
+                  }}>
+                    <Zap size={20} /> MICRO-TASK: {currentLevel.microTask.name}
+                  </h4>
+                  <p style={{ color: '#67e8f9', fontSize: '14px', lineHeight: '1.7', marginBottom: '16px' }}>
+                    {currentLevel.microTask.description}
+                  </p>
+                  <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                    <div style={{ flex: '1', minWidth: '200px' }}>
+                      <h5 style={{ fontSize: '12px', fontWeight: '600', color: '#22d3ee', marginBottom: '6px' }}>INPUT</h5>
+                      <p style={{ color: '#a5f3fc', fontSize: '13px' }}>{currentLevel.microTask.input}</p>
+                    </div>
+                    <div style={{ flex: '1', minWidth: '200px' }}>
+                      <h5 style={{ fontSize: '12px', fontWeight: '600', color: '#22d3ee', marginBottom: '6px' }}>EXPECTED OUTPUT</h5>
+                      <p style={{ color: '#a5f3fc', fontSize: '13px' }}>{currentLevel.microTask.expectedOutput}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Mark Complete Button */}
+              <button
+                onClick={() => toggleLevelCompletion(currentLevel.id)}
+                style={{
+                  width: '100%',
+                  padding: '16px',
+                  background: isLevelCompleted(currentLevel.id)
+                    ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                    : 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.15) 100%)',
+                  border: `2px solid ${isLevelCompleted(currentLevel.id) ? '#10b981' : 'rgba(16, 185, 129, 0.5)'}`,
+                  borderRadius: '10px',
+                  color: '#ffffff',
+                  fontSize: '16px',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.02)';
+                  e.currentTarget.style.boxShadow = '0 4px 20px rgba(16, 185, 129, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                {isLevelCompleted(currentLevel.id) ? (
+                  <>
+                    <Check size={20} strokeWidth={3} /> Level Complete!
+                  </>
+                ) : (
+                  <>
+                    <Check size={20} /> Mark as Complete
+                  </>
+                )}
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div style={{ minHeight: '100vh', background: '#0a0a0f', color: '#ffffff' }}>
       <style>{`
@@ -1477,14 +2630,15 @@ const BigDataArchitectureExplorer = () => {
                   setSelectedComponent(null);
                   setShowAdditionalInfo(false);
                   setShowHandsOn(false);
+                  setShowCurriculum(false);
                 }}
                 style={{
                   padding: '12px 24px',
                   minWidth: '180px',
-                  background: (activeArchitecture === key && !showAdditionalInfo && !showHandsOn)
+                  background: (activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum)
                     ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'
                     : 'rgba(30, 41, 59, 0.6)',
-                  border: (activeArchitecture === key && !showAdditionalInfo && !showHandsOn) ? '2px solid #60a5fa' : '1px solid rgba(71, 85, 105, 0.3)',
+                  border: (activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum) ? '2px solid #60a5fa' : '1px solid rgba(71, 85, 105, 0.3)',
                   borderRadius: '8px',
                   color: '#ffffff',
                   fontSize: '14px',
@@ -1494,12 +2648,12 @@ const BigDataArchitectureExplorer = () => {
                   backdropFilter: 'blur(10px)'
                 }}
                 onMouseEnter={(e) => {
-                  if (!(activeArchitecture === key && !showAdditionalInfo && !showHandsOn)) {
+                  if (!(activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum)) {
                     e.currentTarget.style.background = 'rgba(30, 41, 59, 0.8)';
                   }
                 }}
                 onMouseLeave={(e) => {
-                  if (!(activeArchitecture === key && !showAdditionalInfo && !showHandsOn)) {
+                  if (!(activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum)) {
                     e.currentTarget.style.background = 'rgba(30, 41, 59, 0.6)';
                   }
                 }}
@@ -1511,6 +2665,7 @@ const BigDataArchitectureExplorer = () => {
               onClick={() => {
                 setShowAdditionalInfo(!showAdditionalInfo);
                 setShowHandsOn(false);
+                setShowCurriculum(false);
                 if (!showAdditionalInfo) {
                   setTimeout(() => {
                     const additionalInfoSection = document.getElementById('additional-info');
@@ -1557,6 +2712,7 @@ const BigDataArchitectureExplorer = () => {
               onClick={() => {
                 setShowHandsOn(!showHandsOn);
                 setShowAdditionalInfo(false);
+                setShowCurriculum(false);
                 if (!showHandsOn) {
                   setTimeout(() => {
                     const handsOnSection = document.getElementById('hands-on');
@@ -1599,9 +2755,56 @@ const BigDataArchitectureExplorer = () => {
             >
               Hands-on
             </button>
+            <button
+              onClick={() => {
+                setShowCurriculum(!showCurriculum);
+                setShowAdditionalInfo(false);
+                setShowHandsOn(false);
+                if (!showCurriculum) {
+                  setTimeout(() => {
+                    const curriculumSection = document.getElementById('curriculum-section');
+                    if (curriculumSection) {
+                      curriculumSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }, 100);
+                }
+              }}
+              style={{
+                padding: '12px 24px',
+                minWidth: '180px',
+                background: showCurriculum
+                  ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
+                  : 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.15) 100%)',
+                border: showCurriculum ? '2px solid #f59e0b' : '2px solid rgba(245, 158, 11, 0.5)',
+                borderRadius: '8px',
+                color: '#ffffff',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s',
+                backdropFilter: 'blur(10px)',
+                boxShadow: showCurriculum
+                  ? '0 0 20px rgba(245, 158, 11, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3)'
+                  : '0 0 15px rgba(245, 158, 11, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)'
+              }}
+              onMouseEnter={(e) => {
+                if (!showCurriculum) {
+                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(245, 158, 11, 0.3) 0%, rgba(217, 119, 6, 0.2) 100%)';
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(245, 158, 11, 0.4), 0 4px 10px rgba(0, 0, 0, 0.25)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!showCurriculum) {
+                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.15) 100%)';
+                  e.currentTarget.style.boxShadow = '0 0 15px rgba(245, 158, 11, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)';
+                }
+              }}
+            >
+              DE Curriculum
+            </button>
           </div>
 
-          {!showAdditionalInfo && !showHandsOn && (
+          {!showAdditionalInfo && !showHandsOn && !showCurriculum && (
           <>
           <div
             style={{
@@ -2607,6 +3810,8 @@ const BigDataArchitectureExplorer = () => {
               </div>
             </>
           )}
+
+          {showCurriculum && renderCurriculumSection()}
         </div>
       </div>
 
