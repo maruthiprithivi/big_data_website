@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import {
   Database, Inbox, Cpu, Activity, HardDrive, Zap,
   Globe, Cloud, GitMerge, LayoutDashboard, ScrollText,
-  ChevronRight, Check, Sparkles, Info, ChevronDown, ChevronUp, X
+  ChevronRight, Check, Sparkles, Info, ChevronDown, ChevronUp, X,
+  Table2, Layers, Link, Star, Snowflake, Box
 } from 'lucide-react';
 import { ReactFlow, Background, useNodesState, useEdgesState, Handle, Position, useReactFlow } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -22,7 +23,9 @@ const useResponsiveScale = (layoutType, containerRef) => {
       blockchain: 1340,
       kappa: 1080,
       streaming: 1080,
-      batch: 1340
+      batch: 1340,
+      star: 852,
+      snowflake: 1080
     };
 
     // Absolute minimum before showing warning
@@ -72,6 +75,9 @@ const BigDataArchitectureExplorer = () => {
   const [showCurriculum, setShowCurriculum] = useState(false);
   const [activePhase, setActivePhase] = useState(1);
   const [selectedLevel, setSelectedLevel] = useState(null);
+
+  // Schema tooltip state
+  const [hoveredSchemaComponent, setHoveredSchemaComponent] = useState(null);
 
   // Case Studies section state
   const [showCaseStudies, setShowCaseStudies] = useState(false);
@@ -230,7 +236,13 @@ const BigDataArchitectureExplorer = () => {
     cloud: Cloud,
     pipeline: GitMerge,
     dashboard: LayoutDashboard,
-    log: ScrollText
+    log: ScrollText,
+    fact: Table2,
+    dimension: Layers,
+    bridge: Link,
+    star: Star,
+    snowflake: Snowflake,
+    aggregate: Box
   };
 
   const colorScheme = {
@@ -244,7 +256,13 @@ const BigDataArchitectureExplorer = () => {
     cloud: { bg: 'rgba(59, 130, 246, 0.15)', border: '#3b82f6', icon: '#3b82f6', label: '#1f2f5c' },
     pipeline: { bg: 'rgba(124, 58, 237, 0.15)', border: '#7c3aed', icon: '#7c3aed', label: '#2f1f5c' },
     dashboard: { bg: 'rgba(236, 72, 153, 0.15)', border: '#ec4899', icon: '#ec4899', label: '#5c1f4a' },
-    log: { bg: 'rgba(59, 130, 246, 0.15)', border: '#3b82f6', icon: '#3b82f6', label: '#1f2f5c' }
+    log: { bg: 'rgba(59, 130, 246, 0.15)', border: '#3b82f6', icon: '#3b82f6', label: '#1f2f5c' },
+    fact: { bg: 'rgba(245, 158, 11, 0.15)', border: '#f59e0b', icon: '#f59e0b', label: '#5c3d1f' },
+    dimension: { bg: 'rgba(59, 130, 246, 0.15)', border: '#60a5fa', icon: '#60a5fa', label: '#1e3a5f' },
+    bridge: { bg: 'rgba(168, 85, 247, 0.15)', border: '#a855f7', icon: '#a855f7', label: '#3d1f5c' },
+    star: { bg: 'rgba(245, 158, 11, 0.15)', border: '#f59e0b', icon: '#f59e0b', label: '#5c3d1f' },
+    snowflake: { bg: 'rgba(6, 182, 212, 0.15)', border: '#06b6d4', icon: '#06b6d4', label: '#1f4a5c' },
+    aggregate: { bg: 'rgba(16, 185, 129, 0.15)', border: '#10b981', icon: '#10b981', label: '#1f4a3d' }
   };
 
   const architectures = {
@@ -536,6 +554,150 @@ const BigDataArchitectureExplorer = () => {
         { from: 'solana-collector', to: 'clickhouse', type: 'batch' },
         { from: 'clickhouse', to: 'dashboard', type: 'query' },
         { from: 'dashboard', to: 'browser', type: 'query' }
+      ]
+    },
+    starSchema: {
+      name: 'Star Schema',
+      difficulty: 'Beginner',
+      tagline: 'Denormalized Dimensional Modeling',
+      description: 'Star Schema is the most widely used dimensional modeling pattern in data warehousing, introduced by Ralph Kimball. It organizes data into a central fact table surrounded by denormalized dimension tables, forming a star-like shape. The fact table stores quantitative measurements (metrics/events) with foreign keys pointing to dimension tables that provide descriptive context (who, what, when, where, why). Its simplicity makes it the go-to choice for business intelligence, OLAP cubes, and analytical queries where query performance matters more than storage efficiency.',
+      layout: 'star',
+      overview: {
+        text: 'In a Star Schema, the fact table sits at the center and contains the numeric measures of a business process (revenue, quantity, clicks) along with foreign keys to each dimension table. Dimension tables are denormalized—meaning all descriptive attributes are stored in a single flat table rather than being split across multiple normalized tables. For example, a dim_product table contains product_name, category_name, brand_name, and subcategory all in one row, even though category and brand could be separate entities. This denormalization eliminates complex JOINs at query time, enabling fast aggregations. The trade-off is data redundancy: "Electronics" might be stored thousands of times in dim_product. Star schemas are the foundation of tools like Tableau, Power BI, and Looker, which assume this structure for drag-and-drop analytics. Most modern cloud data warehouses (Snowflake, BigQuery, Redshift) are optimized for star schema query patterns.',
+        scenario: 'E-Commerce Sales Analytics - Shopify-Scale',
+        scenarioDescription: 'An online retail platform tracks every purchase across millions of merchants. The fact_sales table records each transaction with amount, quantity, discount, and tax. Surrounding dimension tables provide context: dim_customer (demographics, segment, lifetime value), dim_product (name, category, brand, price tier), dim_date (day, week, month, quarter, fiscal year, holiday flag), and dim_store (merchant name, region, platform plan). Business analysts use Tableau to answer questions like "What was the revenue by product category per quarter in the West region?" — a query that requires joining the fact table with three dimensions, made fast by the star schema\'s denormalized design.',
+        components: [
+          { name: 'Fact Table (fact_sales)', metric: 'Millions of transaction rows with sale_amount, quantity, discount, tax, and foreign keys to every dimension' },
+          { name: 'Dimension: Customer', metric: 'Denormalized customer profiles with name, email, segment, city, state, country in one flat table' },
+          { name: 'Dimension: Product', metric: 'Product catalog with embedded category, brand, and subcategory attributes — no separate lookups needed' },
+          { name: 'Dimension: Date', metric: 'Pre-computed date attributes: day_of_week, is_holiday, fiscal_quarter, season for fast time-based analysis' },
+          { name: 'Dimension: Store', metric: 'Merchant details with region, plan tier, and join date — denormalized for single-JOIN access' }
+        ]
+      },
+      useCases: [
+        'Business intelligence dashboards and reporting',
+        'OLAP cube construction and slice-and-dice analysis',
+        'Self-service analytics for business users',
+        'Data warehouse foundations (Kimball methodology)',
+        'Aggregation-heavy queries (SUM, COUNT, AVG by dimensions)'
+      ],
+      advantages: [
+        'Simple and intuitive — easy for business users to understand',
+        'Fewer JOINs required — typically one JOIN per dimension',
+        'Fast query performance due to denormalized dimensions',
+        'Well-supported by all BI tools (Tableau, Power BI, Looker)',
+        'Straightforward ETL development with clear patterns',
+        'Optimized for read-heavy analytical workloads'
+      ],
+      challenges: [
+        'Data redundancy — dimension attributes duplicated across rows',
+        'Not ideal for many-to-many relationships without bridge tables',
+        'Dimension updates require careful handling (SCD Type 1/2/3)',
+        'Large dimension tables can grow unwieldy without governance',
+        'Storage overhead from denormalization (less of an issue with modern columnar storage)'
+      ],
+      gotchas: [
+        'Don\'t put measures in dimension tables — facts hold numbers, dimensions hold context',
+        'Avoid "junk dimensions" by grouping low-cardinality flags into a single dimension',
+        'Date dimensions should ALWAYS be a separate table, not just a date column in the fact',
+        'Surrogate keys (auto-increment IDs) are preferred over natural keys in dimensions for SCD handling',
+        'Conformed dimensions (shared across multiple fact tables) are critical for cross-process analysis',
+        'Don\'t over-normalize your dimensions — that turns your star into a snowflake, losing the performance benefit'
+      ],
+      learningResources: [
+        { title: 'Kimball Group: Dimensional Modeling Techniques', url: 'https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/' },
+        { title: 'AWS: Star Schema Benchmark for Data Warehouses', url: 'https://docs.aws.amazon.com/redshift/latest/dg/c_best-practices-star-schema.html' },
+        { title: 'Holistics: Star Schema in Modern Data Stack', url: 'https://www.holistics.io/blog/how-we-structure-our-data-team-at-holistics/' }
+      ],
+      components: [
+        { id: 'fact-sales', name: 'Fact: Sales', shape: 'fact', description: 'Central fact table', details: 'Stores granular transaction events: sale_id, date_key, product_key, customer_key, store_key, quantity, amount, discount, tax. Each row is one sale event. Grain: one row per line item per transaction.', technologies: ['Snowflake', 'BigQuery', 'Redshift'] },
+        { id: 'dim-customer', name: 'Dim: Customer', shape: 'dimension', description: 'Customer dimension', details: 'Denormalized customer attributes: customer_key, name, email, phone, city, state, country, segment, lifetime_value, signup_date. Stores all customer context in a single flat row.', technologies: ['PostgreSQL', 'Snowflake', 'dbt'] },
+        { id: 'dim-product', name: 'Dim: Product', shape: 'dimension', description: 'Product dimension', details: 'Denormalized product catalog: product_key, product_name, category_name, subcategory, brand_name, price_tier, weight, is_active. Category and brand are embedded, not separate tables.', technologies: ['PostgreSQL', 'Snowflake', 'dbt'] },
+        { id: 'dim-date', name: 'Dim: Date', shape: 'dimension', description: 'Date dimension', details: 'Pre-computed calendar: date_key, full_date, day_of_week, month, quarter, year, fiscal_year, is_holiday, is_weekend, season. Enables fast time-based slicing without date functions in queries.', technologies: ['SQL', 'dbt', 'Airflow'] },
+        { id: 'dim-store', name: 'Dim: Store', shape: 'dimension', description: 'Store/Location dimension', details: 'Store or merchant attributes: store_key, store_name, region, city, state, country, store_type, manager, open_date. Provides geographic and organizational context for sales analysis.', technologies: ['PostgreSQL', 'Snowflake', 'dbt'] }
+      ],
+      connections: [
+        { from: 'fact-sales', to: 'dim-customer', type: 'fk' },
+        { from: 'fact-sales', to: 'dim-product', type: 'fk' },
+        { from: 'fact-sales', to: 'dim-date', type: 'fk' },
+        { from: 'fact-sales', to: 'dim-store', type: 'fk' }
+      ]
+    },
+    snowflakeSchema: {
+      name: 'Snowflake Schema',
+      difficulty: 'Intermediate',
+      tagline: 'Normalized Dimensional Modeling',
+      description: 'Snowflake Schema extends the Star Schema by normalizing dimension tables into multiple related sub-tables, creating a structure that resembles a snowflake. Instead of storing all product attributes in one flat dim_product table, the snowflake schema splits them into separate dim_product, dim_category, dim_subcategory, and dim_brand tables linked by foreign keys. This reduces data redundancy at the cost of more complex queries requiring additional JOINs. The snowflake pattern is named for its branching, crystalline appearance when drawn as an entity-relationship diagram.',
+      layout: 'snowflake',
+      overview: {
+        text: 'In a Snowflake Schema, the central fact table remains the same as in a star schema, but dimension tables are normalized into third normal form (3NF) or similar. A dim_product table no longer contains category_name directly — instead, it holds a category_key that references a separate dim_category table, which in turn might reference a dim_department table. This cascading normalization creates "branches" extending outward from each dimension. The benefits are reduced storage (each category name stored exactly once) and easier dimension maintenance (updating a category name requires changing one row instead of thousands). The drawbacks are more complex queries (additional JOINs), potentially slower performance on large datasets, and harder comprehension for business users. Snowflake schemas are more common in enterprise data warehouses with strict data governance requirements, and in environments where ETL processes benefit from normalized staging areas. Modern columnar warehouses like Snowflake (the product, not the schema pattern) can often handle the extra JOINs efficiently with their optimizers.',
+        scenario: 'Healthcare Analytics - Hospital Network',
+        scenarioDescription: 'A nationwide hospital network tracks patient encounters across hundreds of facilities. The fact_encounters table stores each patient visit with diagnosis codes, procedures performed, charges, and length of stay. The dimension tables are heavily normalized: dim_patient links to dim_insurance_provider and dim_geographic_region; dim_physician links to dim_department which links to dim_hospital; dim_diagnosis links to dim_diagnosis_category which links to dim_diagnosis_group (ICD hierarchy). This normalization is critical in healthcare where regulatory compliance demands data consistency — changing a department name must propagate correctly across all reports, and insurance provider details must be maintained in exactly one place.',
+        components: [
+          { name: 'Fact Table (fact_encounters)', metric: 'Patient encounter events: admission, diagnosis codes, procedures, charges, length of stay, and foreign keys to normalized dimensions' },
+          { name: 'Dimension: Patient', metric: 'Patient demographics linked to separate insurance and geographic tables — not embedded' },
+          { name: 'Dimension: Physician → Department → Hospital', metric: 'Three-level normalization: physician references department, department references hospital facility' },
+          { name: 'Dimension: Diagnosis → Category → Group', metric: 'ICD code hierarchy maintained as separate related tables for regulatory compliance' },
+          { name: 'Dimension: Date', metric: 'Shared conformed date dimension (same as star schema — dates rarely need further normalization)' }
+        ]
+      },
+      useCases: [
+        'Enterprise data warehouses with strict governance requirements',
+        'Healthcare, finance, and regulatory reporting systems',
+        'Environments needing minimal data redundancy',
+        'Complex hierarchical dimensions (org charts, product taxonomies, geographic hierarchies)',
+        'Systems where dimension maintenance is frequent and must be consistent'
+      ],
+      advantages: [
+        'Eliminates data redundancy through normalization',
+        'Easier dimension maintenance — update once, reflected everywhere',
+        'Better data integrity with enforced foreign key relationships',
+        'Efficient storage for high-cardinality dimension hierarchies',
+        'Supports complex hierarchical analysis (drill-down/roll-up)',
+        'Cleaner staging/loading process for ETL pipelines'
+      ],
+      challenges: [
+        'More complex queries requiring multiple JOINs per dimension path',
+        'Slower query performance due to additional JOIN operations',
+        'Harder for business users to understand and navigate',
+        'BI tools may require additional configuration for normalized dimensions',
+        'More complex ETL logic to maintain referential integrity across sub-tables',
+        'Debugging query results is harder with deeply nested dimension paths'
+      ],
+      gotchas: [
+        'Don\'t normalize everything — date dimensions and junk dimensions should stay flat',
+        'Each additional normalization level adds a JOIN — 3 levels deep means 3 JOINs just for one dimension',
+        'BI tools like Tableau may struggle with snowflake patterns; you may need to create denormalized views',
+        'The "Snowflake" warehouse product is NOT the same as snowflake schema — don\'t confuse them in interviews',
+        'Consider hybrid approaches: normalize only dimensions with deep hierarchies, keep flat dimensions as stars',
+        'Bridge tables are needed for many-to-many relationships (e.g., patient has multiple diagnoses per encounter)',
+        'Test query performance early — the JOIN penalty varies greatly between database engines'
+      ],
+      learningResources: [
+        { title: 'Kimball Group: Dimensional Modeling Techniques', url: 'https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/' },
+        { title: 'Snowflake (Product) Docs: Data Modeling Best Practices', url: 'https://docs.snowflake.com/en/user-guide/data-modeling-best-practices' },
+        { title: 'Splunk: Normalization vs Denormalization Guide', url: 'https://www.splunk.com/en_us/blog/learn/data-normalization.html' }
+      ],
+      components: [
+        { id: 'fact-encounters', name: 'Fact: Encounters', shape: 'fact', description: 'Central fact table', details: 'Stores patient encounter events: encounter_id, patient_key, physician_key, diagnosis_key, date_key, procedure_codes, charges, length_of_stay, admission_type. Grain: one row per patient per encounter.', technologies: ['Snowflake', 'BigQuery', 'Redshift'] },
+        { id: 'dim-patient', name: 'Dim: Patient', shape: 'dimension', description: 'Patient dimension', details: 'Patient demographics: patient_key, name, dob, gender, insurance_key, region_key. References normalized sub-tables instead of embedding insurance and geographic details.', technologies: ['PostgreSQL', 'Snowflake'] },
+        { id: 'dim-insurance', name: 'Sub: Insurance', shape: 'bridge', description: 'Insurance sub-dimension', details: 'Normalized insurance provider details: insurance_key, provider_name, plan_type, coverage_level, network_tier. Maintained in one place — updates propagate to all patients.', technologies: ['PostgreSQL', 'Snowflake'] },
+        { id: 'dim-physician', name: 'Dim: Physician', shape: 'dimension', description: 'Physician dimension', details: 'Physician attributes: physician_key, name, specialty, department_key. References the department sub-table for organizational context.', technologies: ['PostgreSQL', 'Snowflake'] },
+        { id: 'dim-department', name: 'Sub: Department', shape: 'bridge', description: 'Department sub-dimension', details: 'Department details: department_key, department_name, hospital_key, floor, capacity. Links physicians to their organizational units.', technologies: ['PostgreSQL', 'Snowflake'] },
+        { id: 'dim-hospital', name: 'Sub: Hospital', shape: 'aggregate', description: 'Hospital sub-dimension', details: 'Hospital facility: hospital_key, hospital_name, city, state, bed_count, trauma_level. The deepest level of the physician hierarchy.', technologies: ['PostgreSQL', 'Snowflake'] },
+        { id: 'dim-diagnosis', name: 'Dim: Diagnosis', shape: 'dimension', description: 'Diagnosis dimension', details: 'ICD diagnosis codes: diagnosis_key, icd_code, description, category_key. References category sub-table for the ICD hierarchy.', technologies: ['PostgreSQL', 'Snowflake'] },
+        { id: 'dim-dx-category', name: 'Sub: Dx Category', shape: 'bridge', description: 'Diagnosis category', details: 'Diagnosis category grouping: category_key, category_name, group_key. Provides mid-level ICD hierarchy for roll-up reporting.', technologies: ['PostgreSQL', 'Snowflake'] },
+        { id: 'dim-date', name: 'Dim: Date', shape: 'dimension', description: 'Date dimension', details: 'Shared conformed date dimension: date_key, full_date, day_of_week, month, quarter, year, fiscal_year, is_holiday. Typically stays flat even in snowflake schemas.', technologies: ['SQL', 'dbt'] }
+      ],
+      connections: [
+        { from: 'fact-encounters', to: 'dim-patient', type: 'fk' },
+        { from: 'fact-encounters', to: 'dim-physician', type: 'fk' },
+        { from: 'fact-encounters', to: 'dim-diagnosis', type: 'fk' },
+        { from: 'fact-encounters', to: 'dim-date', type: 'fk' },
+        { from: 'dim-patient', to: 'dim-insurance', type: 'normalize' },
+        { from: 'dim-physician', to: 'dim-department', type: 'normalize' },
+        { from: 'dim-department', to: 'dim-hospital', type: 'normalize' },
+        { from: 'dim-diagnosis', to: 'dim-dx-category', type: 'normalize' }
       ]
     }
   };
@@ -1065,7 +1227,9 @@ for message in consumer:
   const connectionColors = {
     stream: '#f59e0b',
     batch: '#ec4899',
-    query: '#10b981'
+    query: '#10b981',
+    fk: '#60a5fa',
+    normalize: '#a855f7'
   };
 
   // Case Studies Data - Real-world Big Data Architecture Examples
@@ -1675,6 +1839,154 @@ for message in consumer:
     );
   };
 
+  // Schema-specific tooltips for educational context
+  const schemaTooltips = {
+    'fact-sales': { title: 'Fact Table', tip: 'The central table storing measurable events (transactions). Contains numeric values (amount, quantity) and foreign keys to every dimension. Grain: one row per line item.' },
+    'dim-customer': { title: 'Customer Dimension', tip: 'Denormalized: all customer attributes in ONE flat table. City, state, country are embedded — no separate geography table. Trade-off: "New York" stored thousands of times.' },
+    'dim-product': { title: 'Product Dimension', tip: 'Denormalized: category_name and brand_name stored directly. In a snowflake, these would be separate tables. Star keeps it simple — one JOIN gets everything.' },
+    'dim-date': { title: 'Date Dimension', tip: 'Always a separate table, never just a date column. Pre-computed attributes (is_holiday, fiscal_quarter) avoid expensive date functions in queries.' },
+    'dim-store': { title: 'Store Dimension', tip: 'Location and organizational context. In star schema, region and country are embedded. In snowflake, they would be normalized into separate hierarchy tables.' },
+    'fact-encounters': { title: 'Fact Table', tip: 'Patient encounter events at the center. Each row is one visit with diagnosis codes, charges, and foreign keys to normalized dimension hierarchies.' },
+    'dim-patient': { title: 'Patient Dimension (Normalized)', tip: 'Unlike star schema, insurance details are NOT embedded here. Instead, insurance_key references a separate dim_insurance table — this is normalization in action.' },
+    'dim-insurance': { title: 'Insurance Sub-Dimension', tip: 'Normalized out of dim_patient. Provider name stored once, not duplicated across every patient row. Update the provider name in one place — it propagates everywhere.' },
+    'dim-physician': { title: 'Physician Dimension (Normalized)', tip: 'References dim_department via department_key instead of embedding department_name. This creates the branching "snowflake" shape.' },
+    'dim-department': { title: 'Department Sub-Dimension', tip: 'Second level of normalization. Links to dim_hospital — creating a 3-level hierarchy: Physician → Department → Hospital. Each level is a separate JOIN.' },
+    'dim-hospital': { title: 'Hospital Sub-Dimension (Level 3)', tip: 'Deepest normalization level. To get a physician\'s hospital name, you need: fact → dim_physician → dim_department → dim_hospital. That\'s 3 JOINs for one attribute!' },
+    'dim-diagnosis': { title: 'Diagnosis Dimension (Normalized)', tip: 'ICD codes reference a category hierarchy. Critical in healthcare where regulatory compliance demands consistent code groupings.' },
+    'dim-dx-category': { title: 'Diagnosis Category Sub-Dimension', tip: 'Groups ICD codes into categories for roll-up reporting. Normalization ensures category names are consistent across all diagnoses.' },
+    'dim-date-snow': { title: 'Date Dimension (Stays Flat)', tip: 'Even in snowflake schemas, date dimensions typically remain denormalized. There\'s no benefit to normalizing month into a separate table.' }
+  };
+
+  const SchemaComponentCard = ({ component, onClick, tooltipPosition = 'top' }) => {
+    const colors = colorScheme[component.shape] || colorScheme.database;
+    const Icon = iconComponents[component.shape];
+    const tooltip = schemaTooltips[component.id];
+    const isHovered = hoveredSchemaComponent === component.id;
+
+    return (
+      <div
+        style={{ position: 'relative' }}
+        onMouseEnter={() => setHoveredSchemaComponent(component.id)}
+        onMouseLeave={() => setHoveredSchemaComponent(null)}
+      >
+        {/* Tooltip */}
+        {isHovered && tooltip && (
+          <div style={{
+            position: 'absolute',
+            [tooltipPosition === 'bottom' ? 'top' : 'bottom']: '100%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            [tooltipPosition === 'bottom' ? 'marginTop' : 'marginBottom']: '12px',
+            width: '280px',
+            background: 'rgba(15, 23, 42, 0.98)',
+            border: `2px solid ${colors.border}`,
+            borderRadius: '12px',
+            padding: '16px',
+            zIndex: 100,
+            boxShadow: `0 8px 32px rgba(0,0,0,0.6), 0 0 20px ${colors.border}33`,
+            animation: 'fadeInScale 0.2s ease-out',
+            pointerEvents: 'none'
+          }}>
+            {/* Arrow pointer */}
+            <div style={{
+              position: 'absolute',
+              [tooltipPosition === 'bottom' ? 'top' : 'bottom']: '-8px',
+              left: '50%',
+              transform: `translateX(-50%) ${tooltipPosition === 'bottom' ? 'rotate(180deg)' : ''}`,
+              width: 0,
+              height: 0,
+              borderLeft: '8px solid transparent',
+              borderRight: '8px solid transparent',
+              borderTop: `8px solid ${colors.border}`
+            }} />
+            <div style={{
+              fontSize: '14px',
+              fontWeight: '700',
+              color: colors.border,
+              marginBottom: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <Icon size={16} color={colors.icon} />
+              {tooltip.title}
+            </div>
+            <div style={{
+              fontSize: '12px',
+              color: '#cbd5e1',
+              lineHeight: '1.6'
+            }}>
+              {tooltip.tip}
+            </div>
+            <div style={{
+              fontSize: '11px',
+              color: '#64748b',
+              marginTop: '8px',
+              fontStyle: 'italic'
+            }}>
+              Click for full details
+            </div>
+          </div>
+        )}
+
+        <div
+          onClick={() => onClick(component)}
+          style={{
+            background: colors.bg,
+            border: `2px solid ${isHovered ? colors.border : colors.border}`,
+            borderRadius: '16px',
+            padding: '20px',
+            minWidth: '180px',
+            maxWidth: '180px',
+            minHeight: '180px',
+            maxHeight: '180px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '16px',
+            cursor: 'pointer',
+            transition: 'all 0.3s',
+            boxShadow: isHovered
+              ? `0 0 30px ${colors.border}66, 0 0 60px ${colors.border}22`
+              : `0 0 20px ${colors.border}33`,
+            transform: isHovered ? 'scale(1.08)' : 'scale(1)'
+          }}
+        >
+          <div
+            style={{
+              width: '80px',
+              height: '80px',
+              borderRadius: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: `${colors.border}22`,
+              border: `1px solid ${colors.border}44`
+            }}
+          >
+            <Icon size={44} color={colors.icon} strokeWidth={1.5} />
+          </div>
+          <div
+            style={{
+              background: colors.label,
+              color: 'white',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              fontSize: '13px',
+              fontWeight: '600',
+              textAlign: 'center',
+              width: '100%',
+              border: `1px solid ${colors.border}66`
+            }}
+          >
+            {component.name}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const ConnectionArrow = ({ type }) => {
     const color = connectionColors[type] || '#60a5fa';
 
@@ -2071,6 +2383,514 @@ for message in consumer:
 
         {/* Column 5: Browser */}
         <ComponentCard component={browser} onClick={setSelectedComponent} />
+      </div>
+    );
+  };
+
+  // Radial arrow for star/snowflake schemas: draws an SVG line from center to a position
+  const RadialArrow = ({ type, angle, length = 120 }) => {
+    const color = connectionColors[type] || '#60a5fa';
+    const radians = (angle * Math.PI) / 180;
+    const endX = Math.cos(radians) * length;
+    const endY = Math.sin(radians) * length;
+    const CHEVRON_OFFSET = 14;
+    const chevronX = Math.cos(radians) * (length - CHEVRON_OFFSET);
+    const chevronY = Math.sin(radians) * (length - CHEVRON_OFFSET);
+    const chevronRotation = angle;
+    const pathId = `radial-path-${type}-${angle}`;
+
+    return (
+      <g>
+        <path
+          id={pathId}
+          d={`M 0 0 L ${endX} ${endY}`}
+          stroke={color}
+          strokeWidth="2"
+          fill="none"
+          strokeLinecap="round"
+        />
+        {showDataFlow && (
+          <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
+            <animateMotion dur="1.5s" repeatCount="indefinite">
+              <mpath href={`#${pathId}`} />
+            </animateMotion>
+          </circle>
+        )}
+        <g transform={`translate(${chevronX}, ${chevronY}) rotate(${chevronRotation})`}>
+          <polyline
+            points="-6,-6 4,0 -6,6"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </g>
+      </g>
+    );
+  };
+
+  // Chain arrow for snowflake normalization branches (dimension → sub-dimension)
+  const ChainArrow = ({ type, angle, innerLength = 120, outerLength = 80 }) => {
+    const color = connectionColors[type] || '#a855f7';
+    const radians = (angle * Math.PI) / 180;
+    const startX = Math.cos(radians) * innerLength;
+    const startY = Math.sin(radians) * innerLength;
+    const endX = Math.cos(radians) * (innerLength + outerLength);
+    const endY = Math.sin(radians) * (innerLength + outerLength);
+    const CHEVRON_OFFSET = 14;
+    const chevronX = Math.cos(radians) * (innerLength + outerLength - CHEVRON_OFFSET);
+    const chevronY = Math.sin(radians) * (innerLength + outerLength - CHEVRON_OFFSET);
+    const pathId = `chain-path-${type}-${angle}`;
+
+    return (
+      <g>
+        <path
+          id={pathId}
+          d={`M ${startX} ${startY} L ${endX} ${endY}`}
+          stroke={color}
+          strokeWidth="2"
+          fill="none"
+          strokeLinecap="round"
+          strokeDasharray="6 4"
+        />
+        {showDataFlow && (
+          <circle r="4" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
+            <animateMotion dur="1.2s" repeatCount="indefinite">
+              <mpath href={`#${pathId}`} />
+            </animateMotion>
+          </circle>
+        )}
+        <g transform={`translate(${chevronX}, ${chevronY}) rotate(${angle})`}>
+          <polyline
+            points="-5,-5 3,0 -5,5"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </g>
+      </g>
+    );
+  };
+
+  // Branch arrow for snowflake: a chain that goes out at a slight angle from the main dimension direction
+  const BranchArrow = ({ type, startAngle, branchAngle, innerLength = 120, outerLength = 80 }) => {
+    const color = connectionColors[type] || '#a855f7';
+    const startRadians = (startAngle * Math.PI) / 180;
+    const branchRadians = (branchAngle * Math.PI) / 180;
+    const startX = Math.cos(startRadians) * innerLength;
+    const startY = Math.sin(startRadians) * innerLength;
+    const endX = startX + Math.cos(branchRadians) * outerLength;
+    const endY = startY + Math.sin(branchRadians) * outerLength;
+    const CHEVRON_OFFSET = 14;
+    const chevronX = endX - Math.cos(branchRadians) * CHEVRON_OFFSET;
+    const chevronY = endY - Math.sin(branchRadians) * CHEVRON_OFFSET;
+    const pathId = `branch-path-${type}-${startAngle}-${branchAngle}`;
+
+    return (
+      <g>
+        <path
+          id={pathId}
+          d={`M ${startX} ${startY} L ${endX} ${endY}`}
+          stroke={color}
+          strokeWidth="2"
+          fill="none"
+          strokeLinecap="round"
+          strokeDasharray="6 4"
+        />
+        {showDataFlow && (
+          <circle r="4" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
+            <animateMotion dur="1.2s" repeatCount="indefinite">
+              <mpath href={`#${pathId}`} />
+            </animateMotion>
+          </circle>
+        )}
+        <g transform={`translate(${chevronX}, ${chevronY}) rotate(${branchAngle})`}>
+          <polyline
+            points="-5,-5 3,0 -5,5"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </g>
+      </g>
+    );
+  };
+
+  const renderStarLayout = () => {
+    const comps = currentArch.components;
+    const fact = comps.find(c => c.id === 'fact-sales');
+    const dimCustomer = comps.find(c => c.id === 'dim-customer');
+    const dimProduct = comps.find(c => c.id === 'dim-product');
+    const dimDate = comps.find(c => c.id === 'dim-date');
+    const dimStore = comps.find(c => c.id === 'dim-store');
+
+    // Positions for the star pattern: fact at center, dimensions around it
+    // Card size is 180x180, so offset by 90 for center alignment
+    const CENTER = { x: 400, y: 320 };
+    const RADIUS = 260;
+    const dimAngles = [
+      { comp: dimCustomer, angle: 225 },  // top-left
+      { comp: dimProduct, angle: 315 },   // top-right
+      { comp: dimDate, angle: 45 },       // bottom-right
+      { comp: dimStore, angle: 135 }      // bottom-left
+    ];
+
+    const SVG_W = 800;
+    const SVG_H = 640;
+
+    return (
+      <div style={{ position: 'relative', width: `${SVG_W}px`, height: `${SVG_H}px`, margin: '0 auto' }}>
+        {/* SVG layer for connections */}
+        <svg
+          width={SVG_W}
+          height={SVG_H}
+          style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none', overflow: 'visible' }}
+        >
+          <g transform={`translate(${CENTER.x}, ${CENTER.y})`}>
+            {dimAngles.map(({ angle }, idx) => (
+              <RadialArrow key={idx} type="fk" angle={angle} length={RADIUS - 100} />
+            ))}
+          </g>
+        </svg>
+
+        {/* FK connection labels on the lines */}
+        {dimAngles.map(({ comp, angle }, idx) => {
+          const radians = (angle * Math.PI) / 180;
+          const midX = CENTER.x + Math.cos(radians) * (RADIUS * 0.45);
+          const midY = CENTER.y + Math.sin(radians) * (RADIUS * 0.45);
+          return (
+            <div
+              key={`fk-label-${idx}`}
+              style={{
+                position: 'absolute',
+                left: midX - 20,
+                top: midY - 12,
+                zIndex: 3,
+                pointerEvents: 'none'
+              }}
+            >
+              <div style={{
+                background: 'rgba(59, 130, 246, 0.2)',
+                border: '1px solid rgba(96, 165, 250, 0.4)',
+                borderRadius: '4px',
+                padding: '2px 8px',
+                fontSize: '10px',
+                fontWeight: '700',
+                color: '#60a5fa',
+                whiteSpace: 'nowrap',
+                letterSpacing: '0.5px'
+              }}>
+                FK
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Fact table at center */}
+        <div style={{
+          position: 'absolute',
+          left: CENTER.x - 90,
+          top: CENTER.y - 90,
+          zIndex: hoveredSchemaComponent === 'fact-sales' ? 10 : 2
+        }}>
+          <SchemaComponentCard component={fact} onClick={setSelectedComponent} tooltipPosition="bottom" />
+        </div>
+
+        {/* Dimension tables around the fact */}
+        {dimAngles.map(({ comp, angle }, idx) => {
+          const radians = (angle * Math.PI) / 180;
+          const x = CENTER.x + Math.cos(radians) * RADIUS - 90;
+          const y = CENTER.y + Math.sin(radians) * RADIUS - 90;
+          const tooltipPos = angle > 180 ? 'bottom' : 'top';
+          return (
+            <div
+              key={idx}
+              style={{
+                position: 'absolute',
+                left: x,
+                top: y,
+                zIndex: hoveredSchemaComponent === comp.id ? 10 : 2
+              }}
+            >
+              <SchemaComponentCard component={comp} onClick={setSelectedComponent} tooltipPosition={tooltipPos} />
+            </div>
+          );
+        })}
+
+        {/* Star schema label */}
+        <div style={{
+          position: 'absolute',
+          bottom: '8px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          color: '#f59e0b',
+          fontSize: '13px',
+          fontWeight: '600',
+          opacity: 0.7
+        }}>
+          <Star size={16} />
+          <span>Star Pattern: Fact table at center, denormalized dimensions radiate outward</span>
+        </div>
+      </div>
+    );
+  };
+
+  const renderSnowflakeLayout = () => {
+    const comps = currentArch.components;
+    const fact = comps.find(c => c.id === 'fact-encounters');
+    const dimPatient = comps.find(c => c.id === 'dim-patient');
+    const dimInsurance = comps.find(c => c.id === 'dim-insurance');
+    const dimPhysician = comps.find(c => c.id === 'dim-physician');
+    const dimDepartment = comps.find(c => c.id === 'dim-department');
+    const dimHospital = comps.find(c => c.id === 'dim-hospital');
+    const dimDiagnosis = comps.find(c => c.id === 'dim-diagnosis');
+    const dimDxCategory = comps.find(c => c.id === 'dim-dx-category');
+    const dimDate = comps.find(c => c.id === 'dim-date');
+
+    const CENTER = { x: 520, y: 400 };
+    const INNER_RADIUS = 260;
+    const OUTER_RADIUS = 180;
+    const SVG_W = 1040;
+    const SVG_H = 800;
+
+    // Inner ring: direct dimensions from fact table
+    // Outer ring: sub-dimensions (normalized branches)
+    const dimPositions = [
+      { comp: dimPatient, angle: 210 },    // upper-left
+      { comp: dimPhysician, angle: 330 },  // upper-right
+      { comp: dimDiagnosis, angle: 90 },   // bottom-center
+      { comp: dimDate, angle: 150 }        // bottom-left (no branch)
+    ];
+
+    // Branches: sub-dimensions that extend from inner dimensions
+    const branches = [
+      { comp: dimInsurance, parentAngle: 210, branchAngle: 200 },     // from Patient → Insurance
+      { comp: dimDepartment, parentAngle: 330, branchAngle: 310 },    // from Physician → Department
+      { comp: dimHospital, parentAngle: 330, branchAngle: 350 },      // from Department → Hospital (further out)
+      { comp: dimDxCategory, parentAngle: 90, branchAngle: 90 }       // from Diagnosis → Category
+    ];
+
+    // Hospital is a second-level branch: Department → Hospital
+    const deptRadians = (310 * Math.PI) / 180;
+    const deptX = CENTER.x + Math.cos((330 * Math.PI) / 180) * INNER_RADIUS + Math.cos(deptRadians) * OUTER_RADIUS;
+    const deptY = CENTER.y + Math.sin((330 * Math.PI) / 180) * INNER_RADIUS + Math.sin(deptRadians) * OUTER_RADIUS;
+
+    return (
+      <div style={{ position: 'relative', width: `${SVG_W}px`, height: `${SVG_H}px`, margin: '0 auto' }}>
+        {/* SVG layer for connections */}
+        <svg
+          width={SVG_W}
+          height={SVG_H}
+          style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none', overflow: 'visible' }}
+        >
+          <g transform={`translate(${CENTER.x}, ${CENTER.y})`}>
+            {/* Inner connections: fact → dimensions */}
+            {dimPositions.map(({ angle }, idx) => (
+              <RadialArrow key={`inner-${idx}`} type="fk" angle={angle} length={INNER_RADIUS - 100} />
+            ))}
+          </g>
+
+          {/* Outer connections: dimensions → sub-dimensions (normalized branches) */}
+          <g transform={`translate(${CENTER.x}, ${CENTER.y})`}>
+            {/* Patient → Insurance */}
+            <BranchArrow type="normalize" startAngle={210} branchAngle={200} innerLength={INNER_RADIUS} outerLength={OUTER_RADIUS - 10} />
+            {/* Physician → Department */}
+            <BranchArrow type="normalize" startAngle={330} branchAngle={310} innerLength={INNER_RADIUS} outerLength={OUTER_RADIUS - 10} />
+            {/* Diagnosis → Category */}
+            <BranchArrow type="normalize" startAngle={90} branchAngle={90} innerLength={INNER_RADIUS} outerLength={OUTER_RADIUS - 10} />
+          </g>
+
+          {/* Second-level: Department → Hospital */}
+          <g>
+            <line
+              x1={deptX}
+              y1={deptY}
+              x2={deptX + Math.cos((350 * Math.PI) / 180) * (OUTER_RADIUS - 20)}
+              y2={deptY + Math.sin((350 * Math.PI) / 180) * (OUTER_RADIUS - 20)}
+              stroke={connectionColors.normalize}
+              strokeWidth="2"
+              strokeDasharray="6 4"
+              strokeLinecap="round"
+            />
+            {showDataFlow && (
+              <>
+                <circle r="4" fill={connectionColors.normalize} filter={`drop-shadow(0 0 6px ${connectionColors.normalize})`}>
+                  <animateMotion dur="1.2s" repeatCount="indefinite"
+                    path={`M ${deptX} ${deptY} L ${deptX + Math.cos((350 * Math.PI) / 180) * (OUTER_RADIUS - 20)} ${deptY + Math.sin((350 * Math.PI) / 180) * (OUTER_RADIUS - 20)}`}
+                  />
+                </circle>
+              </>
+            )}
+          </g>
+        </svg>
+
+        {/* FK connection labels on inner ring lines */}
+        {dimPositions.map(({ comp, angle }, idx) => {
+          const radians = (angle * Math.PI) / 180;
+          const midX = CENTER.x + Math.cos(radians) * (INNER_RADIUS * 0.4);
+          const midY = CENTER.y + Math.sin(radians) * (INNER_RADIUS * 0.4);
+          return (
+            <div
+              key={`fk-label-${idx}`}
+              style={{
+                position: 'absolute',
+                left: midX - 20,
+                top: midY - 12,
+                zIndex: 3,
+                pointerEvents: 'none'
+              }}
+            >
+              <div style={{
+                background: 'rgba(59, 130, 246, 0.2)',
+                border: '1px solid rgba(96, 165, 250, 0.4)',
+                borderRadius: '4px',
+                padding: '2px 8px',
+                fontSize: '10px',
+                fontWeight: '700',
+                color: '#60a5fa',
+                whiteSpace: 'nowrap',
+                letterSpacing: '0.5px'
+              }}>
+                FK
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Normalize connection labels on outer ring branches */}
+        {[
+          { parentAngle: 210, branchAngle: 200, label: '3NF' },
+          { parentAngle: 330, branchAngle: 310, label: '3NF' },
+          { parentAngle: 90, branchAngle: 90, label: '3NF' }
+        ].map(({ parentAngle, branchAngle, label }, idx) => {
+          const parentRadians = (parentAngle * Math.PI) / 180;
+          const branchRadians = (branchAngle * Math.PI) / 180;
+          const parentX = CENTER.x + Math.cos(parentRadians) * INNER_RADIUS;
+          const parentY = CENTER.y + Math.sin(parentRadians) * INNER_RADIUS;
+          const midX = parentX + Math.cos(branchRadians) * (OUTER_RADIUS * 0.45);
+          const midY = parentY + Math.sin(branchRadians) * (OUTER_RADIUS * 0.45);
+          return (
+            <div
+              key={`norm-label-${idx}`}
+              style={{
+                position: 'absolute',
+                left: midX - 16,
+                top: midY - 12,
+                zIndex: 3,
+                pointerEvents: 'none'
+              }}
+            >
+              <div style={{
+                background: 'rgba(168, 85, 247, 0.2)',
+                border: '1px solid rgba(168, 85, 247, 0.4)',
+                borderRadius: '4px',
+                padding: '2px 6px',
+                fontSize: '10px',
+                fontWeight: '700',
+                color: '#a855f7',
+                whiteSpace: 'nowrap',
+                letterSpacing: '0.5px'
+              }}>
+                {label}
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Fact table at center */}
+        <div style={{
+          position: 'absolute',
+          left: CENTER.x - 90,
+          top: CENTER.y - 90,
+          zIndex: hoveredSchemaComponent === 'fact-encounters' ? 10 : 2
+        }}>
+          <SchemaComponentCard component={fact} onClick={setSelectedComponent} tooltipPosition="bottom" />
+        </div>
+
+        {/* Inner ring: direct dimensions */}
+        {dimPositions.map(({ comp, angle }, idx) => {
+          const radians = (angle * Math.PI) / 180;
+          const x = CENTER.x + Math.cos(radians) * INNER_RADIUS - 90;
+          const y = CENTER.y + Math.sin(radians) * INNER_RADIUS - 90;
+          const tooltipPos = angle >= 90 && angle < 270 ? 'top' : 'bottom';
+          return (
+            <div
+              key={`dim-${idx}`}
+              style={{
+                position: 'absolute',
+                left: x,
+                top: y,
+                zIndex: hoveredSchemaComponent === comp.id ? 10 : 2
+              }}
+            >
+              <SchemaComponentCard component={comp} onClick={setSelectedComponent} tooltipPosition={tooltipPos} />
+            </div>
+          );
+        })}
+
+        {/* Outer ring: sub-dimensions (normalized branches) */}
+        {branches.map(({ comp, parentAngle, branchAngle }, idx) => {
+          const parentRadians = (parentAngle * Math.PI) / 180;
+          const branchRadians = (branchAngle * Math.PI) / 180;
+          const parentX = CENTER.x + Math.cos(parentRadians) * INNER_RADIUS;
+          const parentY = CENTER.y + Math.sin(parentRadians) * INNER_RADIUS;
+          const x = parentX + Math.cos(branchRadians) * OUTER_RADIUS - 90;
+          const y = parentY + Math.sin(branchRadians) * OUTER_RADIUS - 90;
+
+          // Skip hospital here - it's positioned separately
+          if (comp.id === 'dim-hospital') return null;
+
+          const tooltipPos = branchAngle >= 90 && branchAngle < 270 ? 'top' : 'bottom';
+          return (
+            <div
+              key={`sub-${idx}`}
+              style={{
+                position: 'absolute',
+                left: x,
+                top: y,
+                zIndex: hoveredSchemaComponent === comp.id ? 10 : 2
+              }}
+            >
+              <SchemaComponentCard component={comp} onClick={setSelectedComponent} tooltipPosition={tooltipPos} />
+            </div>
+          );
+        })}
+
+        {/* Hospital: second-level branch from Department */}
+        <div style={{
+          position: 'absolute',
+          left: deptX + Math.cos((350 * Math.PI) / 180) * (OUTER_RADIUS - 20) - 90,
+          top: deptY + Math.sin((350 * Math.PI) / 180) * (OUTER_RADIUS - 20) - 90,
+          zIndex: hoveredSchemaComponent === 'dim-hospital' ? 10 : 2
+        }}>
+          <SchemaComponentCard component={dimHospital} onClick={setSelectedComponent} tooltipPosition="bottom" />
+        </div>
+
+        {/* Snowflake schema label */}
+        <div style={{
+          position: 'absolute',
+          bottom: '8px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          color: '#06b6d4',
+          fontSize: '13px',
+          fontWeight: '600',
+          opacity: 0.7
+        }}>
+          <Snowflake size={16} />
+          <span>Snowflake Pattern: Normalized dimensions branch into sub-tables (dashed lines)</span>
+        </div>
       </div>
     );
   };
@@ -3542,19 +4362,22 @@ for message in consumer:
               <span style={{ color: '#94a3b8', fontSize: '14px', fontWeight: '600' }}>
                 Connection Types:
               </span>
-              {Object.entries(connectionColors).map(([type, color]) => (
-                <div key={type} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <div style={{
-                    width: '32px',
-                    height: '3px',
-                    background: color,
-                    borderRadius: '2px'
-                  }} />
-                  <span style={{ color: '#e2e8f0', fontSize: '14px', textTransform: 'capitalize' }}>
-                    {type}
-                  </span>
-                </div>
-              ))}
+              {Object.entries(connectionColors).map(([type, color]) => {
+                const labels = { stream: 'Stream', batch: 'Batch', query: 'Query', fk: 'Foreign Key', normalize: 'Normalize' };
+                return (
+                  <div key={type} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{
+                      width: '32px',
+                      height: '3px',
+                      background: color,
+                      borderRadius: '2px'
+                    }} />
+                    <span style={{ color: '#e2e8f0', fontSize: '14px' }}>
+                      {labels[type] || type}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -3608,6 +4431,8 @@ for message in consumer:
             >
               {currentArch.layout === 'lambda' ? renderLambdaLayout() :
                currentArch.layout === 'blockchain' ? renderBlockchainLayout() :
+               currentArch.layout === 'star' ? renderStarLayout() :
+               currentArch.layout === 'snowflake' ? renderSnowflakeLayout() :
                renderLinearLayout()}
             </div>
 
@@ -3759,6 +4584,52 @@ for message in consumer:
                 ))}
               </div>
             </div>
+
+            {currentArch.gotchas && currentArch.gotchas.length > 0 && (
+            <div style={{ marginBottom: '32px' }}>
+              <h3 style={{
+                fontSize: '24px',
+                fontWeight: 'bold',
+                marginBottom: '8px',
+                color: '#ef4444'
+              }}>
+                Gotchas & Common Mistakes
+              </h3>
+              <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '16px', fontStyle: 'italic' }}>
+                Pitfalls that trip up beginners and experienced engineers alike
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {currentArch.gotchas.map((gotcha, idx) => (
+                  <div key={idx} style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '12px',
+                    background: 'rgba(239, 68, 68, 0.08)',
+                    border: '1px solid rgba(239, 68, 68, 0.2)',
+                    borderRadius: '8px',
+                    padding: '12px 16px'
+                  }}>
+                    <div style={{
+                      marginTop: '2px',
+                      minWidth: '20px',
+                      height: '20px',
+                      borderRadius: '50%',
+                      background: 'rgba(239, 68, 68, 0.2)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '11px',
+                      fontWeight: '700',
+                      color: '#ef4444'
+                    }}>
+                      !
+                    </div>
+                    <span style={{ color: '#e2e8f0', fontSize: '14px', lineHeight: '1.6' }}>{gotcha}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            )}
 
             <div>
               <h3 style={{
