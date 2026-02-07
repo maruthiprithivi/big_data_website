@@ -24,8 +24,8 @@ const useResponsiveScale = (layoutType, containerRef) => {
       kappa: 1080,
       streaming: 1080,
       batch: 1340,
-      star: 852,
-      snowflake: 1080
+      star: 960,
+      snowflake: 1100
     };
 
     // Absolute minimum before showing warning
@@ -604,6 +604,78 @@ const BigDataArchitectureExplorer = () => {
         'Conformed dimensions (shared across multiple fact tables) are critical for cross-process analysis',
         'Don\'t over-normalize your dimensions — that turns your star into a snowflake, losing the performance benefit'
       ],
+      designExamples: {
+        good: [
+          {
+            title: 'Correct: Surrogate keys + denormalized dimensions',
+            description: 'Fact table uses integer surrogate keys (date_key, product_key) instead of natural keys. Dimensions are flat with all attributes embedded.',
+            columns: [
+              { table: 'fact_sales', cols: ['sale_id (PK)', 'date_key (FK)', 'product_key (FK)', 'customer_key (FK)', 'quantity', 'amount'] },
+              { table: 'dim_product', cols: ['product_key (PK)', 'product_name', 'category_name', 'brand_name', 'price_tier'] }
+            ],
+            why: 'Surrogate keys are stable (won\'t change), small (INT vs VARCHAR), and support SCD Type 2. Denormalized dims = 1 JOIN per dimension.'
+          },
+          {
+            title: 'Correct: Separate date dimension table',
+            description: 'A pre-built dim_date table with pre-computed attributes, referenced by FK from the fact table.',
+            columns: [
+              { table: 'fact_sales', cols: ['...', 'date_key (FK)'] },
+              { table: 'dim_date', cols: ['date_key (PK)', 'full_date', 'day_of_week', 'is_holiday', 'fiscal_quarter', 'season'] }
+            ],
+            why: 'Pre-computed date attributes avoid expensive DATE functions in queries. Fiscal calendars and holidays are impossible to derive from a raw date.'
+          },
+          {
+            title: 'Correct: Conformed dimensions shared across facts',
+            description: 'dim_customer and dim_date are reused by both fact_sales and fact_returns, enabling cross-process analysis.',
+            columns: [
+              { table: 'fact_sales', cols: ['...', 'customer_key (FK)', 'date_key (FK)'] },
+              { table: 'fact_returns', cols: ['...', 'customer_key (FK)', 'date_key (FK)'] }
+            ],
+            why: 'Conformed dimensions let you JOIN fact_sales and fact_returns on the same customer_key, enabling queries like "return rate by customer segment."'
+          }
+        ],
+        bad: [
+          {
+            title: 'Wrong: Storing measures in dimension tables',
+            description: 'Putting numeric measures (revenue, quantity) in a dimension table instead of the fact table.',
+            columns: [
+              { table: 'dim_product (BAD)', cols: ['product_key (PK)', 'product_name', 'total_revenue', 'units_sold'] }
+            ],
+            why: 'Measures in dimensions can\'t be aggregated across time or other dimensions. Revenue belongs in fact_sales, not dim_product.',
+            fix: 'Move all numeric measures to the fact table. Dimensions should only contain descriptive context (who, what, when, where).'
+          },
+          {
+            title: 'Wrong: Using natural keys instead of surrogate keys',
+            description: 'Using email or SSN as primary key in dimensions instead of auto-increment integer.',
+            columns: [
+              { table: 'dim_customer (BAD)', cols: ['email (PK)', 'name', 'city', 'segment'] },
+              { table: 'fact_sales (BAD)', cols: ['...', 'email (FK)'] }
+            ],
+            why: 'Natural keys change (users update emails), are large (VARCHAR JOINs are slow), and break SCD Type 2 tracking.',
+            fix: 'Always use auto-increment surrogate keys (customer_key INT). Store the natural key as a regular attribute for lookup.'
+          },
+          {
+            title: 'Wrong: Date as a column instead of a dimension',
+            description: 'Storing sale_date as a raw DATE/TIMESTAMP column in the fact table with no date dimension.',
+            columns: [
+              { table: 'fact_sales (BAD)', cols: ['sale_id', 'sale_date (DATE)', 'product_id', 'amount'] }
+            ],
+            why: 'Every query needs EXTRACT(MONTH FROM sale_date), CASE WHEN for holidays, fiscal year logic, etc. This is slow and inconsistent.',
+            fix: 'Create a dim_date table with pre-computed attributes. Replace sale_date with date_key (FK) referencing dim_date.'
+          },
+          {
+            title: 'Avoid: Over-normalizing into a snowflake',
+            description: 'Splitting dim_product into dim_product → dim_category → dim_brand when you don\'t need to.',
+            columns: [
+              { table: 'dim_product (OVER-NORMALIZED)', cols: ['product_key', 'product_name', 'category_key (FK)', 'brand_key (FK)'] },
+              { table: 'dim_category', cols: ['category_key (PK)', 'category_name'] },
+              { table: 'dim_brand', cols: ['brand_key (PK)', 'brand_name'] }
+            ],
+            why: 'This turns your star into a snowflake, adding 2 extra JOINs. In a star schema, category_name and brand_name should be embedded in dim_product.',
+            fix: 'Keep dimensions flat in a star schema. Only normalize (snowflake) when you have deep hierarchies or strict governance requirements.'
+          }
+        ]
+      },
       learningResources: [
         { title: 'Kimball Group: Dimensional Modeling Techniques', url: 'https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/' },
         { title: 'AWS: Star Schema Benchmark for Data Warehouses', url: 'https://docs.aws.amazon.com/redshift/latest/dg/c_best-practices-star-schema.html' },
@@ -673,6 +745,77 @@ const BigDataArchitectureExplorer = () => {
         'Bridge tables are needed for many-to-many relationships (e.g., patient has multiple diagnoses per encounter)',
         'Test query performance early — the JOIN penalty varies greatly between database engines'
       ],
+      designExamples: {
+        good: [
+          {
+            title: 'Correct: Normalize only deep hierarchies',
+            description: 'Physician → Department → Hospital is 3 levels deep. Each level is a separate table with its own PK, making maintenance clean.',
+            columns: [
+              { table: 'dim_physician', cols: ['physician_key (PK)', 'name', 'specialty', 'department_key (FK)'] },
+              { table: 'dim_department', cols: ['department_key (PK)', 'dept_name', 'hospital_key (FK)'] },
+              { table: 'dim_hospital', cols: ['hospital_key (PK)', 'hospital_name', 'city', 'state'] }
+            ],
+            why: 'Renaming a department requires updating ONE row. In a star schema, you\'d update thousands of physician rows. Hierarchical drill-down (Hospital → Department → Physician) is natural.'
+          },
+          {
+            title: 'Correct: Keep date dimension flat even in snowflake',
+            description: 'dim_date stays denormalized with all attributes in one table — no separate dim_month or dim_year tables.',
+            columns: [
+              { table: 'dim_date (FLAT - correct)', cols: ['date_key (PK)', 'full_date', 'month', 'quarter', 'year', 'is_holiday', 'fiscal_year'] }
+            ],
+            why: 'Date attributes are static and finite. Normalizing month into a separate table adds a JOIN with zero benefit. Keep dates flat.'
+          },
+          {
+            title: 'Correct: Use bridge tables for many-to-many',
+            description: 'A patient can have multiple diagnoses per encounter. Use a bridge table to model this correctly.',
+            columns: [
+              { table: 'bridge_encounter_diagnosis', cols: ['encounter_key (FK)', 'diagnosis_key (FK)', 'rank', 'is_primary'] },
+              { table: 'fact_encounters', cols: ['encounter_id (PK)', 'patient_key (FK)', 'date_key (FK)'] }
+            ],
+            why: 'Bridge tables handle M:N relationships cleanly. Without them, you\'d duplicate fact rows (inflating metrics) or lose diagnosis detail.'
+          }
+        ],
+        bad: [
+          {
+            title: 'Wrong: Normalizing everything blindly',
+            description: 'Splitting every attribute into its own table, including low-cardinality fields like gender or admission_type.',
+            columns: [
+              { table: 'dim_patient (OVER-NORMALIZED)', cols: ['patient_key', 'name', 'gender_key (FK)', 'region_key (FK)', 'insurance_key (FK)'] },
+              { table: 'dim_gender (UNNECESSARY)', cols: ['gender_key (PK)', 'gender_name'] }
+            ],
+            why: 'Gender has 3-4 values. A separate table adds a JOIN for almost no storage savings. Only normalize dimensions with real hierarchies (>2 levels) or frequently changing values.',
+            fix: 'Keep low-cardinality attributes embedded in the parent dimension. Reserve normalization for attributes with many values or deep hierarchies.'
+          },
+          {
+            title: 'Wrong: Too many levels of normalization',
+            description: 'Creating 5+ levels deep: Physician → Department → Hospital → HealthSystem → Region → Country.',
+            columns: [
+              { table: 'Query requires (BAD)', cols: ['fact → physician → dept → hospital → system → region → country', '= 6 JOINs for one attribute!'] }
+            ],
+            why: 'Each normalization level adds a JOIN. At 5+ levels, query performance degrades severely and debugging becomes painful.',
+            fix: 'Cap normalization at 2-3 levels. Beyond that, consider denormalizing the deepest levels or creating materialized views.'
+          },
+          {
+            title: 'Wrong: Forgetting referential integrity',
+            description: 'Not enforcing FK constraints between normalized tables, allowing orphaned records.',
+            columns: [
+              { table: 'dim_physician (BAD)', cols: ['physician_key', 'name', 'department_key = 999 (NO MATCHING ROW!)'] }
+            ],
+            why: 'Without FK constraints, department_key=999 can reference a non-existent department. Reports break silently — wrong counts, missing data, NULL joins.',
+            fix: 'Always enforce FK constraints in your database. Use NOT NULL on FK columns. Validate referential integrity in your ETL pipeline.'
+          },
+          {
+            title: 'Avoid: Assuming BI tools handle snowflake natively',
+            description: 'Expecting Tableau or Power BI to navigate your 3-level normalized physician hierarchy automatically.',
+            columns: [
+              { table: 'Tableau expects', cols: ['dim_physician with hospital_name embedded (star-like)'] },
+              { table: 'You have', cols: ['dim_physician → dim_department → dim_hospital (snowflake)'] }
+            ],
+            why: 'Most BI tools are optimized for star schemas. Snowflake patterns often require creating denormalized views (CREATE VIEW dim_physician_full AS ...) for the BI layer.',
+            fix: 'Create denormalized views on top of your snowflake tables. The physical model stays normalized; the BI layer sees a virtual star.'
+          }
+        ]
+      },
       learningResources: [
         { title: 'Kimball Group: Dimensional Modeling Techniques', url: 'https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/' },
         { title: 'Snowflake (Product) Docs: Data Modeling Best Practices', url: 'https://docs.snowflake.com/en/user-guide/data-modeling-best-practices' },
@@ -2521,103 +2664,270 @@ for message in consumer:
     );
   };
 
-  const renderStarLayout = () => {
-    const comps = currentArch.components;
-    const fact = comps.find(c => c.id === 'fact-sales');
-    const dimCustomer = comps.find(c => c.id === 'dim-customer');
-    const dimProduct = comps.find(c => c.id === 'dim-product');
-    const dimDate = comps.find(c => c.id === 'dim-date');
-    const dimStore = comps.find(c => c.id === 'dim-store');
-
-    // Positions for the star pattern: fact at center, dimensions around it
-    // Card size is 180x180, so offset by 90 for center alignment
-    const CENTER = { x: 400, y: 320 };
-    const RADIUS = 260;
-    const dimAngles = [
-      { comp: dimCustomer, angle: 225 },  // top-left
-      { comp: dimProduct, angle: 315 },   // top-right
-      { comp: dimDate, angle: 45 },       // bottom-right
-      { comp: dimStore, angle: 135 }      // bottom-left
-    ];
-
-    const SVG_W = 800;
-    const SVG_H = 640;
+  // ER Diagram Table component for schema visuals
+  const ERTable = ({ title, type, columns, style: posStyle, onClick, id }) => {
+    const isFact = type === 'fact';
+    const headerBg = isFact ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 'linear-gradient(135deg, #3b82f6, #2563eb)';
+    const borderColor = isFact ? '#f59e0b' : '#60a5fa';
+    const glowColor = isFact ? 'rgba(245, 158, 11, 0.3)' : 'rgba(96, 165, 250, 0.2)';
 
     return (
-      <div style={{ position: 'relative', width: `${SVG_W}px`, height: `${SVG_H}px`, margin: '0 auto' }}>
-        {/* SVG layer for connections */}
-        <svg
-          width={SVG_W}
-          height={SVG_H}
-          style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none', overflow: 'visible' }}
-        >
-          <g transform={`translate(${CENTER.x}, ${CENTER.y})`}>
-            {dimAngles.map(({ angle }, idx) => (
-              <RadialArrow key={idx} type="fk" angle={angle} length={RADIUS - 100} />
-            ))}
-          </g>
-        </svg>
-
-        {/* FK connection labels on the lines */}
-        {dimAngles.map(({ comp, angle }, idx) => {
-          const radians = (angle * Math.PI) / 180;
-          const midX = CENTER.x + Math.cos(radians) * (RADIUS * 0.45);
-          const midY = CENTER.y + Math.sin(radians) * (RADIUS * 0.45);
-          return (
-            <div
-              key={`fk-label-${idx}`}
-              style={{
-                position: 'absolute',
-                left: midX - 20,
-                top: midY - 12,
-                zIndex: 3,
-                pointerEvents: 'none'
-              }}
-            >
-              <div style={{
-                background: 'rgba(59, 130, 246, 0.2)',
-                border: '1px solid rgba(96, 165, 250, 0.4)',
-                borderRadius: '4px',
-                padding: '2px 8px',
-                fontSize: '10px',
-                fontWeight: '700',
-                color: '#60a5fa',
-                whiteSpace: 'nowrap',
-                letterSpacing: '0.5px'
-              }}>
-                FK
-              </div>
-            </div>
-          );
-        })}
-
-        {/* Fact table at center */}
+      <div
+        onClick={onClick}
+        style={{
+          background: 'rgba(15, 23, 42, 0.95)',
+          border: `2px solid ${borderColor}`,
+          borderRadius: '8px',
+          minWidth: '220px',
+          cursor: 'pointer',
+          boxShadow: `0 4px 20px ${glowColor}`,
+          transition: 'all 0.2s ease',
+          ...posStyle
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 8px 32px ${glowColor}, 0 0 20px ${glowColor}`; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.boxShadow = `0 4px 20px ${glowColor}`; e.currentTarget.style.transform = 'translateY(0)'; }}
+      >
+        {/* Table header */}
         <div style={{
-          position: 'absolute',
-          left: CENTER.x - 90,
-          top: CENTER.y - 90,
-          zIndex: hoveredSchemaComponent === 'fact-sales' ? 10 : 2
+          background: headerBg,
+          padding: '10px 14px',
+          borderRadius: '6px 6px 0 0',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
         }}>
-          <SchemaComponentCard component={fact} onClick={setSelectedComponent} tooltipPosition="bottom" />
+          {isFact ? <Table2 size={16} color="#fff" /> : <Layers size={16} color="#fff" />}
+          <span style={{ color: '#fff', fontSize: '13px', fontWeight: '700' }}>{title}</span>
         </div>
-
-        {/* Dimension tables around the fact */}
-        {dimAngles.map(({ comp, angle }, idx) => {
-          const radians = (angle * Math.PI) / 180;
-          const x = CENTER.x + Math.cos(radians) * RADIUS - 90;
-          const y = CENTER.y + Math.sin(radians) * RADIUS - 90;
-          const tooltipPos = angle > 180 ? 'bottom' : 'top';
-          return (
+        {/* Column rows */}
+        <div style={{ padding: '4px 0' }}>
+          {columns.map((col, idx) => (
             <div
               key={idx}
               style={{
-                position: 'absolute',
-                left: x,
-                top: y,
-                zIndex: hoveredSchemaComponent === comp.id ? 10 : 2
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '5px 14px',
+                borderBottom: idx < columns.length - 1 ? '1px solid rgba(71, 85, 105, 0.2)' : 'none',
+                fontSize: '12px'
               }}
             >
-              <SchemaComponentCard component={comp} onClick={setSelectedComponent} tooltipPosition={tooltipPos} />
+              {col.pk && (
+                <span style={{
+                  background: 'rgba(245, 158, 11, 0.2)',
+                  color: '#fbbf24',
+                  padding: '1px 5px',
+                  borderRadius: '3px',
+                  fontSize: '9px',
+                  fontWeight: '700',
+                  border: '1px solid rgba(245, 158, 11, 0.4)',
+                  flexShrink: 0
+                }}>PK</span>
+              )}
+              {col.fk && (
+                <span style={{
+                  background: 'rgba(59, 130, 246, 0.2)',
+                  color: '#60a5fa',
+                  padding: '1px 5px',
+                  borderRadius: '3px',
+                  fontSize: '9px',
+                  fontWeight: '700',
+                  border: '1px solid rgba(59, 130, 246, 0.4)',
+                  flexShrink: 0
+                }}>FK</span>
+              )}
+              <span style={{ color: col.pk ? '#fbbf24' : col.fk ? '#93c5fd' : '#cbd5e1', fontWeight: col.pk || col.fk ? '600' : '400', fontFamily: 'monospace' }}>
+                {col.name}
+              </span>
+              <span style={{ color: '#64748b', marginLeft: 'auto', fontSize: '11px', fontFamily: 'monospace' }}>{col.type}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const renderStarLayout = () => {
+    const comps = currentArch.components;
+    const fact = comps.find(c => c.id === 'fact-sales');
+
+    // ER diagram table definitions with PK/FK columns
+    const factCols = [
+      { name: 'sale_id', type: 'BIGINT', pk: true },
+      { name: 'date_key', type: 'INT', fk: true },
+      { name: 'product_key', type: 'INT', fk: true },
+      { name: 'customer_key', type: 'INT', fk: true },
+      { name: 'store_key', type: 'INT', fk: true },
+      { name: 'quantity', type: 'INT' },
+      { name: 'sale_amount', type: 'DECIMAL' },
+      { name: 'discount', type: 'DECIMAL' },
+      { name: 'tax', type: 'DECIMAL' }
+    ];
+    const dimCustomerCols = [
+      { name: 'customer_key', type: 'INT', pk: true },
+      { name: 'name', type: 'VARCHAR' },
+      { name: 'email', type: 'VARCHAR' },
+      { name: 'city', type: 'VARCHAR' },
+      { name: 'state', type: 'VARCHAR' },
+      { name: 'country', type: 'VARCHAR' },
+      { name: 'segment', type: 'VARCHAR' }
+    ];
+    const dimProductCols = [
+      { name: 'product_key', type: 'INT', pk: true },
+      { name: 'product_name', type: 'VARCHAR' },
+      { name: 'category_name', type: 'VARCHAR' },
+      { name: 'brand_name', type: 'VARCHAR' },
+      { name: 'subcategory', type: 'VARCHAR' },
+      { name: 'price_tier', type: 'VARCHAR' }
+    ];
+    const dimDateCols = [
+      { name: 'date_key', type: 'INT', pk: true },
+      { name: 'full_date', type: 'DATE' },
+      { name: 'day_of_week', type: 'VARCHAR' },
+      { name: 'month', type: 'INT' },
+      { name: 'quarter', type: 'INT' },
+      { name: 'year', type: 'INT' },
+      { name: 'is_holiday', type: 'BOOLEAN' }
+    ];
+    const dimStoreCols = [
+      { name: 'store_key', type: 'INT', pk: true },
+      { name: 'store_name', type: 'VARCHAR' },
+      { name: 'region', type: 'VARCHAR' },
+      { name: 'city', type: 'VARCHAR' },
+      { name: 'state', type: 'VARCHAR' },
+      { name: 'store_type', type: 'VARCHAR' }
+    ];
+
+    const SVG_W = 960;
+    const SVG_H = 720;
+
+    // Positions for ER diagram layout (fact centered, dims at corners)
+    const factPos = { x: 350, y: 240 };
+    const dimPositions = [
+      { id: 'dim-customer', label: 'dim_customer', cols: dimCustomerCols, x: 20, y: 10, fkLine: { startLabel: 'customer_key' } },
+      { id: 'dim-product', label: 'dim_product', cols: dimProductCols, x: 700, y: 10, fkLine: { startLabel: 'product_key' } },
+      { id: 'dim-store', label: 'dim_store', cols: dimStoreCols, x: 20, y: 470, fkLine: { startLabel: 'store_key' } },
+      { id: 'dim-date', label: 'dim_date', cols: dimDateCols, x: 700, y: 470, fkLine: { startLabel: 'date_key' } }
+    ];
+
+    return (
+      <div style={{ position: 'relative', width: `${SVG_W}px`, height: `${SVG_H}px`, margin: '0 auto' }}>
+        {/* SVG layer for FK connection lines */}
+        <svg
+          width={SVG_W}
+          height={SVG_H}
+          style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }}
+        >
+          <defs>
+            <marker id="fk-arrow-star" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#60a5fa" />
+            </marker>
+            <marker id="fk-crow-star" viewBox="0 0 12 12" refX="0" refY="6" markerWidth="10" markerHeight="10" orient="auto">
+              <path d="M 12 0 L 0 6 L 12 12" fill="none" stroke="#60a5fa" strokeWidth="1.5" />
+              <line x1="4" y1="0" x2="4" y2="12" stroke="#60a5fa" strokeWidth="1.5" />
+            </marker>
+          </defs>
+          {/* Fact center point for connections */}
+          {dimPositions.map((dim, idx) => {
+            const factCenterX = factPos.x + 110;
+            const factCenterY = factPos.y + 130;
+            const dimCenterX = dim.x + 110;
+            const dimCenterY = dim.y + 100;
+
+            // Calculate edge points (from fact edge to dim edge)
+            const dx = dimCenterX - factCenterX;
+            const dy = dimCenterY - factCenterY;
+            const angle = Math.atan2(dy, dx);
+
+            const startX = factCenterX + Math.cos(angle) * 120;
+            const startY = factCenterY + Math.sin(angle) * 100;
+            const endX = dimCenterX - Math.cos(angle) * 120;
+            const endY = dimCenterY - Math.sin(angle) * 80;
+
+            return (
+              <g key={`fk-line-${idx}`}>
+                <line
+                  x1={startX} y1={startY}
+                  x2={endX} y2={endY}
+                  stroke="#60a5fa"
+                  strokeWidth="2"
+                  markerEnd="url(#fk-crow-star)"
+                  markerStart="url(#fk-arrow-star)"
+                />
+                {/* FK label on line */}
+                <rect
+                  x={(startX + endX) / 2 - 28}
+                  y={(startY + endY) / 2 - 10}
+                  width="56"
+                  height="20"
+                  rx="4"
+                  fill="rgba(15, 23, 42, 0.9)"
+                  stroke="rgba(96, 165, 250, 0.4)"
+                  strokeWidth="1"
+                />
+                <text
+                  x={(startX + endX) / 2}
+                  y={(startY + endY) / 2 + 4}
+                  textAnchor="middle"
+                  fill="#60a5fa"
+                  fontSize="10"
+                  fontWeight="700"
+                  fontFamily="monospace"
+                >
+                  {dim.fkLine.startLabel}
+                </text>
+                {showDataFlow && (
+                  <circle r="4" fill="#60a5fa" filter="drop-shadow(0 0 6px #60a5fa)">
+                    <animateMotion dur="2s" repeatCount="indefinite" path={`M ${startX} ${startY} L ${endX} ${endY}`} />
+                  </circle>
+                )}
+              </g>
+            );
+          })}
+          {/* Cardinality labels */}
+          {dimPositions.map((dim, idx) => {
+            const factCenterX = factPos.x + 110;
+            const factCenterY = factPos.y + 130;
+            const dimCenterX = dim.x + 110;
+            const dimCenterY = dim.y + 100;
+            const dx = dimCenterX - factCenterX;
+            const dy = dimCenterY - factCenterY;
+            const angle = Math.atan2(dy, dx);
+            const nearFact = { x: factCenterX + Math.cos(angle) * 130, y: factCenterY + Math.sin(angle) * 110 };
+            const nearDim = { x: dimCenterX - Math.cos(angle) * 130, y: dimCenterY - Math.sin(angle) * 90 };
+            return (
+              <g key={`card-${idx}`}>
+                <text x={nearFact.x + (dy > 0 ? -15 : 15)} y={nearFact.y + (dx > 0 ? 15 : -8)} fill="#94a3b8" fontSize="10" fontFamily="monospace">N</text>
+                <text x={nearDim.x + (dy > 0 ? -8 : 8)} y={nearDim.y + (dx > 0 ? -8 : 15)} fill="#94a3b8" fontSize="10" fontFamily="monospace">1</text>
+              </g>
+            );
+          })}
+        </svg>
+
+        {/* Fact table (center) */}
+        <div style={{ position: 'absolute', left: factPos.x, top: factPos.y, zIndex: 2 }}>
+          <ERTable
+            title="fact_sales"
+            type="fact"
+            id="fact-sales"
+            columns={factCols}
+            onClick={() => setSelectedComponent(fact)}
+          />
+        </div>
+
+        {/* Dimension tables (corners) */}
+        {dimPositions.map((dim) => {
+          const comp = comps.find(c => c.id === dim.id);
+          return (
+            <div key={dim.id} style={{ position: 'absolute', left: dim.x, top: dim.y, zIndex: 2 }}>
+              <ERTable
+                title={dim.label}
+                type="dimension"
+                id={dim.id}
+                columns={dim.cols}
+                onClick={() => setSelectedComponent(comp)}
+              />
             </div>
           );
         })}
@@ -2625,7 +2935,7 @@ for message in consumer:
         {/* Star schema label */}
         <div style={{
           position: 'absolute',
-          bottom: '8px',
+          bottom: '4px',
           left: '50%',
           transform: 'translateX(-50%)',
           display: 'flex',
@@ -2634,10 +2944,72 @@ for message in consumer:
           color: '#f59e0b',
           fontSize: '13px',
           fontWeight: '600',
-          opacity: 0.7
+          opacity: 0.8
         }}>
           <Star size={16} />
-          <span>Star Pattern: Fact table at center, denormalized dimensions radiate outward</span>
+          <span>Star Schema: 1 fact table, 4 denormalized dimensions — each dimension is a single flat table (no sub-tables)</span>
+        </div>
+      </div>
+    );
+  };
+
+  // Sub-dimension ER table (purple themed for normalized branches)
+  const ERSubTable = ({ title, columns, style: posStyle, onClick }) => {
+    return (
+      <div
+        onClick={onClick}
+        style={{
+          background: 'rgba(15, 23, 42, 0.95)',
+          border: '2px solid #a855f7',
+          borderRadius: '8px',
+          minWidth: '190px',
+          cursor: 'pointer',
+          boxShadow: '0 4px 20px rgba(168, 85, 247, 0.2)',
+          transition: 'all 0.2s ease',
+          ...posStyle
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 8px 32px rgba(168, 85, 247, 0.3), 0 0 20px rgba(168, 85, 247, 0.2)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.boxShadow = '0 4px 20px rgba(168, 85, 247, 0.2)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+      >
+        <div style={{
+          background: 'linear-gradient(135deg, #a855f7, #7c3aed)',
+          padding: '8px 12px',
+          borderRadius: '6px 6px 0 0',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px'
+        }}>
+          <Link size={14} color="#fff" />
+          <span style={{ color: '#fff', fontSize: '12px', fontWeight: '700' }}>{title}</span>
+          <span style={{
+            marginLeft: 'auto',
+            background: 'rgba(255,255,255,0.2)',
+            padding: '1px 6px',
+            borderRadius: '3px',
+            fontSize: '9px',
+            color: '#e9d5ff',
+            fontWeight: '600'
+          }}>3NF</span>
+        </div>
+        <div style={{ padding: '3px 0' }}>
+          {columns.map((col, idx) => (
+            <div
+              key={idx}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '4px 12px',
+                borderBottom: idx < columns.length - 1 ? '1px solid rgba(71, 85, 105, 0.2)' : 'none',
+                fontSize: '11px'
+              }}
+            >
+              {col.pk && <span style={{ background: 'rgba(245, 158, 11, 0.2)', color: '#fbbf24', padding: '1px 4px', borderRadius: '3px', fontSize: '8px', fontWeight: '700', border: '1px solid rgba(245, 158, 11, 0.4)', flexShrink: 0 }}>PK</span>}
+              {col.fk && <span style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#c084fc', padding: '1px 4px', borderRadius: '3px', fontSize: '8px', fontWeight: '700', border: '1px solid rgba(168, 85, 247, 0.4)', flexShrink: 0 }}>FK</span>}
+              <span style={{ color: col.pk ? '#fbbf24' : col.fk ? '#c084fc' : '#cbd5e1', fontWeight: col.pk || col.fk ? '600' : '400', fontFamily: 'monospace', fontSize: '11px' }}>{col.name}</span>
+              <span style={{ color: '#64748b', marginLeft: 'auto', fontSize: '10px', fontFamily: 'monospace' }}>{col.type}</span>
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -2645,251 +3017,202 @@ for message in consumer:
 
   const renderSnowflakeLayout = () => {
     const comps = currentArch.components;
-    const fact = comps.find(c => c.id === 'fact-encounters');
-    const dimPatient = comps.find(c => c.id === 'dim-patient');
-    const dimInsurance = comps.find(c => c.id === 'dim-insurance');
-    const dimPhysician = comps.find(c => c.id === 'dim-physician');
-    const dimDepartment = comps.find(c => c.id === 'dim-department');
-    const dimHospital = comps.find(c => c.id === 'dim-hospital');
-    const dimDiagnosis = comps.find(c => c.id === 'dim-diagnosis');
-    const dimDxCategory = comps.find(c => c.id === 'dim-dx-category');
-    const dimDate = comps.find(c => c.id === 'dim-date');
 
-    const CENTER = { x: 520, y: 400 };
-    const INNER_RADIUS = 260;
-    const OUTER_RADIUS = 180;
-    const SVG_W = 1040;
-    const SVG_H = 800;
-
-    // Inner ring: direct dimensions from fact table
-    // Outer ring: sub-dimensions (normalized branches)
-    const dimPositions = [
-      { comp: dimPatient, angle: 210 },    // upper-left
-      { comp: dimPhysician, angle: 330 },  // upper-right
-      { comp: dimDiagnosis, angle: 90 },   // bottom-center
-      { comp: dimDate, angle: 150 }        // bottom-left (no branch)
+    // Snowflake ER tables
+    const factCols = [
+      { name: 'encounter_id', type: 'BIGINT', pk: true },
+      { name: 'patient_key', type: 'INT', fk: true },
+      { name: 'physician_key', type: 'INT', fk: true },
+      { name: 'diagnosis_key', type: 'INT', fk: true },
+      { name: 'date_key', type: 'INT', fk: true },
+      { name: 'charges', type: 'DECIMAL' },
+      { name: 'length_of_stay', type: 'INT' },
+      { name: 'admission_type', type: 'VARCHAR' }
+    ];
+    const dimPatientCols = [
+      { name: 'patient_key', type: 'INT', pk: true },
+      { name: 'name', type: 'VARCHAR' },
+      { name: 'dob', type: 'DATE' },
+      { name: 'gender', type: 'VARCHAR' },
+      { name: 'insurance_key', type: 'INT', fk: true }
+    ];
+    const dimPhysicianCols = [
+      { name: 'physician_key', type: 'INT', pk: true },
+      { name: 'name', type: 'VARCHAR' },
+      { name: 'specialty', type: 'VARCHAR' },
+      { name: 'department_key', type: 'INT', fk: true }
+    ];
+    const dimDiagnosisCols = [
+      { name: 'diagnosis_key', type: 'INT', pk: true },
+      { name: 'icd_code', type: 'VARCHAR' },
+      { name: 'description', type: 'VARCHAR' },
+      { name: 'category_key', type: 'INT', fk: true }
+    ];
+    const dimDateCols = [
+      { name: 'date_key', type: 'INT', pk: true },
+      { name: 'full_date', type: 'DATE' },
+      { name: 'day_of_week', type: 'VARCHAR' },
+      { name: 'month', type: 'INT' },
+      { name: 'year', type: 'INT' },
+      { name: 'is_holiday', type: 'BOOLEAN' }
+    ];
+    // Sub-dimensions (normalized)
+    const subInsuranceCols = [
+      { name: 'insurance_key', type: 'INT', pk: true },
+      { name: 'provider_name', type: 'VARCHAR' },
+      { name: 'plan_type', type: 'VARCHAR' },
+      { name: 'coverage_level', type: 'VARCHAR' }
+    ];
+    const subDeptCols = [
+      { name: 'department_key', type: 'INT', pk: true },
+      { name: 'dept_name', type: 'VARCHAR' },
+      { name: 'hospital_key', type: 'INT', fk: true },
+      { name: 'floor', type: 'INT' }
+    ];
+    const subHospitalCols = [
+      { name: 'hospital_key', type: 'INT', pk: true },
+      { name: 'hospital_name', type: 'VARCHAR' },
+      { name: 'city', type: 'VARCHAR' },
+      { name: 'state', type: 'VARCHAR' },
+      { name: 'bed_count', type: 'INT' }
+    ];
+    const subDxCatCols = [
+      { name: 'category_key', type: 'INT', pk: true },
+      { name: 'category_name', type: 'VARCHAR' },
+      { name: 'group_name', type: 'VARCHAR' }
     ];
 
-    // Branches: sub-dimensions that extend from inner dimensions
-    const branches = [
-      { comp: dimInsurance, parentAngle: 210, branchAngle: 200 },     // from Patient → Insurance
-      { comp: dimDepartment, parentAngle: 330, branchAngle: 310 },    // from Physician → Department
-      { comp: dimHospital, parentAngle: 330, branchAngle: 350 },      // from Department → Hospital (further out)
-      { comp: dimDxCategory, parentAngle: 90, branchAngle: 90 }       // from Diagnosis → Category
+    const SVG_W = 1100;
+    const SVG_H = 920;
+
+    // Positions — organized as a clear ER diagram layout
+    const tables = {
+      fact:       { x: 420, y: 330 },
+      patient:    { x: 60,  y: 160 },
+      physician:  { x: 780, y: 160 },
+      diagnosis:  { x: 420, y: 640 },
+      date:       { x: 60,  y: 560 },
+      insurance:  { x: 60,  y: 0 },
+      department: { x: 780, y: 0 },
+      hospital:   { x: 880, y: 340 },
+      dxCategory: { x: 420, y: 830 }
+    };
+
+    // FK connection definitions
+    const fkConnections = [
+      { from: tables.fact, to: tables.patient, label: 'patient_key', type: 'fk', fw: 240, fh: 200, tw: 200, th: 140 },
+      { from: tables.fact, to: tables.physician, label: 'physician_key', type: 'fk', fw: 240, fh: 200, tw: 200, th: 120 },
+      { from: tables.fact, to: tables.diagnosis, label: 'diagnosis_key', type: 'fk', fw: 240, fh: 200, tw: 220, th: 120 },
+      { from: tables.fact, to: tables.date, label: 'date_key', type: 'fk', fw: 240, fh: 200, tw: 200, th: 160 }
+    ];
+    const normConnections = [
+      { from: tables.patient, to: tables.insurance, label: 'insurance_key', fw: 200, fh: 140, tw: 190, th: 110 },
+      { from: tables.physician, to: tables.department, label: 'department_key', fw: 200, fh: 120, tw: 190, th: 110 },
+      { from: tables.department, to: tables.hospital, label: 'hospital_key', fw: 190, fh: 110, tw: 190, th: 140 },
+      { from: tables.diagnosis, to: tables.dxCategory, label: 'category_key', fw: 220, fh: 120, tw: 190, th: 90 }
     ];
 
-    // Hospital is a second-level branch: Department → Hospital
-    const deptRadians = (310 * Math.PI) / 180;
-    const deptX = CENTER.x + Math.cos((330 * Math.PI) / 180) * INNER_RADIUS + Math.cos(deptRadians) * OUTER_RADIUS;
-    const deptY = CENTER.y + Math.sin((330 * Math.PI) / 180) * INNER_RADIUS + Math.sin(deptRadians) * OUTER_RADIUS;
+    const drawConnection = (conn, idx, isNormalize) => {
+      const color = isNormalize ? '#a855f7' : '#60a5fa';
+      const fromCx = conn.from.x + conn.fw / 2;
+      const fromCy = conn.from.y + conn.fh / 2;
+      const toCx = conn.to.x + conn.tw / 2;
+      const toCy = conn.to.y + conn.th / 2;
+      const dx = toCx - fromCx;
+      const dy = toCy - fromCy;
+      const angle = Math.atan2(dy, dx);
+      const startX = fromCx + Math.cos(angle) * Math.min(conn.fw, conn.fh) * 0.5;
+      const startY = fromCy + Math.sin(angle) * Math.min(conn.fw, conn.fh) * 0.4;
+      const endX = toCx - Math.cos(angle) * Math.min(conn.tw, conn.th) * 0.5;
+      const endY = toCy - Math.sin(angle) * Math.min(conn.tw, conn.th) * 0.4;
+      const midX = (startX + endX) / 2;
+      const midY = (startY + endY) / 2;
+
+      return (
+        <g key={`conn-${isNormalize ? 'norm' : 'fk'}-${idx}`}>
+          <line
+            x1={startX} y1={startY} x2={endX} y2={endY}
+            stroke={color}
+            strokeWidth="2"
+            strokeDasharray={isNormalize ? '6 4' : 'none'}
+          />
+          <rect x={midX - 38} y={midY - 10} width="76" height="20" rx="4" fill="rgba(15, 23, 42, 0.9)" stroke={`${color}66`} strokeWidth="1" />
+          <text x={midX} y={midY + 4} textAnchor="middle" fill={color} fontSize="9" fontWeight="700" fontFamily="monospace">
+            {conn.label}
+          </text>
+          {showDataFlow && (
+            <circle r="3" fill={color} filter={`drop-shadow(0 0 4px ${color})`}>
+              <animateMotion dur="2s" repeatCount="indefinite" path={`M ${startX} ${startY} L ${endX} ${endY}`} />
+            </circle>
+          )}
+        </g>
+      );
+    };
 
     return (
       <div style={{ position: 'relative', width: `${SVG_W}px`, height: `${SVG_H}px`, margin: '0 auto' }}>
-        {/* SVG layer for connections */}
-        <svg
-          width={SVG_W}
-          height={SVG_H}
-          style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none', overflow: 'visible' }}
-        >
-          <g transform={`translate(${CENTER.x}, ${CENTER.y})`}>
-            {/* Inner connections: fact → dimensions */}
-            {dimPositions.map(({ angle }, idx) => (
-              <RadialArrow key={`inner-${idx}`} type="fk" angle={angle} length={INNER_RADIUS - 100} />
-            ))}
-          </g>
-
-          {/* Outer connections: dimensions → sub-dimensions (normalized branches) */}
-          <g transform={`translate(${CENTER.x}, ${CENTER.y})`}>
-            {/* Patient → Insurance */}
-            <BranchArrow type="normalize" startAngle={210} branchAngle={200} innerLength={INNER_RADIUS} outerLength={OUTER_RADIUS - 10} />
-            {/* Physician → Department */}
-            <BranchArrow type="normalize" startAngle={330} branchAngle={310} innerLength={INNER_RADIUS} outerLength={OUTER_RADIUS - 10} />
-            {/* Diagnosis → Category */}
-            <BranchArrow type="normalize" startAngle={90} branchAngle={90} innerLength={INNER_RADIUS} outerLength={OUTER_RADIUS - 10} />
-          </g>
-
-          {/* Second-level: Department → Hospital */}
-          <g>
-            <line
-              x1={deptX}
-              y1={deptY}
-              x2={deptX + Math.cos((350 * Math.PI) / 180) * (OUTER_RADIUS - 20)}
-              y2={deptY + Math.sin((350 * Math.PI) / 180) * (OUTER_RADIUS - 20)}
-              stroke={connectionColors.normalize}
-              strokeWidth="2"
-              strokeDasharray="6 4"
-              strokeLinecap="round"
-            />
-            {showDataFlow && (
-              <>
-                <circle r="4" fill={connectionColors.normalize} filter={`drop-shadow(0 0 6px ${connectionColors.normalize})`}>
-                  <animateMotion dur="1.2s" repeatCount="indefinite"
-                    path={`M ${deptX} ${deptY} L ${deptX + Math.cos((350 * Math.PI) / 180) * (OUTER_RADIUS - 20)} ${deptY + Math.sin((350 * Math.PI) / 180) * (OUTER_RADIUS - 20)}`}
-                  />
-                </circle>
-              </>
-            )}
-          </g>
+        {/* SVG for all connections */}
+        <svg width={SVG_W} height={SVG_H} style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }}>
+          {fkConnections.map((conn, idx) => drawConnection(conn, idx, false))}
+          {normConnections.map((conn, idx) => drawConnection(conn, idx, true))}
         </svg>
 
-        {/* FK connection labels on inner ring lines */}
-        {dimPositions.map(({ comp, angle }, idx) => {
-          const radians = (angle * Math.PI) / 180;
-          const midX = CENTER.x + Math.cos(radians) * (INNER_RADIUS * 0.4);
-          const midY = CENTER.y + Math.sin(radians) * (INNER_RADIUS * 0.4);
-          return (
-            <div
-              key={`fk-label-${idx}`}
-              style={{
-                position: 'absolute',
-                left: midX - 20,
-                top: midY - 12,
-                zIndex: 3,
-                pointerEvents: 'none'
-              }}
-            >
-              <div style={{
-                background: 'rgba(59, 130, 246, 0.2)',
-                border: '1px solid rgba(96, 165, 250, 0.4)',
-                borderRadius: '4px',
-                padding: '2px 8px',
-                fontSize: '10px',
-                fontWeight: '700',
-                color: '#60a5fa',
-                whiteSpace: 'nowrap',
-                letterSpacing: '0.5px'
-              }}>
-                FK
-              </div>
-            </div>
-          );
-        })}
-
-        {/* Normalize connection labels on outer ring branches */}
-        {[
-          { parentAngle: 210, branchAngle: 200, label: '3NF' },
-          { parentAngle: 330, branchAngle: 310, label: '3NF' },
-          { parentAngle: 90, branchAngle: 90, label: '3NF' }
-        ].map(({ parentAngle, branchAngle, label }, idx) => {
-          const parentRadians = (parentAngle * Math.PI) / 180;
-          const branchRadians = (branchAngle * Math.PI) / 180;
-          const parentX = CENTER.x + Math.cos(parentRadians) * INNER_RADIUS;
-          const parentY = CENTER.y + Math.sin(parentRadians) * INNER_RADIUS;
-          const midX = parentX + Math.cos(branchRadians) * (OUTER_RADIUS * 0.45);
-          const midY = parentY + Math.sin(branchRadians) * (OUTER_RADIUS * 0.45);
-          return (
-            <div
-              key={`norm-label-${idx}`}
-              style={{
-                position: 'absolute',
-                left: midX - 16,
-                top: midY - 12,
-                zIndex: 3,
-                pointerEvents: 'none'
-              }}
-            >
-              <div style={{
-                background: 'rgba(168, 85, 247, 0.2)',
-                border: '1px solid rgba(168, 85, 247, 0.4)',
-                borderRadius: '4px',
-                padding: '2px 6px',
-                fontSize: '10px',
-                fontWeight: '700',
-                color: '#a855f7',
-                whiteSpace: 'nowrap',
-                letterSpacing: '0.5px'
-              }}>
-                {label}
-              </div>
-            </div>
-          );
-        })}
-
-        {/* Fact table at center */}
-        <div style={{
-          position: 'absolute',
-          left: CENTER.x - 90,
-          top: CENTER.y - 90,
-          zIndex: hoveredSchemaComponent === 'fact-encounters' ? 10 : 2
-        }}>
-          <SchemaComponentCard component={fact} onClick={setSelectedComponent} tooltipPosition="bottom" />
+        {/* Fact Table */}
+        <div style={{ position: 'absolute', left: tables.fact.x, top: tables.fact.y, zIndex: 2 }}>
+          <ERTable title="fact_encounters" type="fact" columns={factCols} onClick={() => setSelectedComponent(comps.find(c => c.id === 'fact-encounters'))} />
         </div>
 
-        {/* Inner ring: direct dimensions */}
-        {dimPositions.map(({ comp, angle }, idx) => {
-          const radians = (angle * Math.PI) / 180;
-          const x = CENTER.x + Math.cos(radians) * INNER_RADIUS - 90;
-          const y = CENTER.y + Math.sin(radians) * INNER_RADIUS - 90;
-          const tooltipPos = angle >= 90 && angle < 270 ? 'top' : 'bottom';
-          return (
-            <div
-              key={`dim-${idx}`}
-              style={{
-                position: 'absolute',
-                left: x,
-                top: y,
-                zIndex: hoveredSchemaComponent === comp.id ? 10 : 2
-              }}
-            >
-              <SchemaComponentCard component={comp} onClick={setSelectedComponent} tooltipPosition={tooltipPos} />
-            </div>
-          );
-        })}
-
-        {/* Outer ring: sub-dimensions (normalized branches) */}
-        {branches.map(({ comp, parentAngle, branchAngle }, idx) => {
-          const parentRadians = (parentAngle * Math.PI) / 180;
-          const branchRadians = (branchAngle * Math.PI) / 180;
-          const parentX = CENTER.x + Math.cos(parentRadians) * INNER_RADIUS;
-          const parentY = CENTER.y + Math.sin(parentRadians) * INNER_RADIUS;
-          const x = parentX + Math.cos(branchRadians) * OUTER_RADIUS - 90;
-          const y = parentY + Math.sin(branchRadians) * OUTER_RADIUS - 90;
-
-          // Skip hospital here - it's positioned separately
-          if (comp.id === 'dim-hospital') return null;
-
-          const tooltipPos = branchAngle >= 90 && branchAngle < 270 ? 'top' : 'bottom';
-          return (
-            <div
-              key={`sub-${idx}`}
-              style={{
-                position: 'absolute',
-                left: x,
-                top: y,
-                zIndex: hoveredSchemaComponent === comp.id ? 10 : 2
-              }}
-            >
-              <SchemaComponentCard component={comp} onClick={setSelectedComponent} tooltipPosition={tooltipPos} />
-            </div>
-          );
-        })}
-
-        {/* Hospital: second-level branch from Department */}
-        <div style={{
-          position: 'absolute',
-          left: deptX + Math.cos((350 * Math.PI) / 180) * (OUTER_RADIUS - 20) - 90,
-          top: deptY + Math.sin((350 * Math.PI) / 180) * (OUTER_RADIUS - 20) - 90,
-          zIndex: hoveredSchemaComponent === 'dim-hospital' ? 10 : 2
-        }}>
-          <SchemaComponentCard component={dimHospital} onClick={setSelectedComponent} tooltipPosition="bottom" />
+        {/* Direct Dimensions */}
+        <div style={{ position: 'absolute', left: tables.patient.x, top: tables.patient.y, zIndex: 2 }}>
+          <ERTable title="dim_patient" type="dimension" columns={dimPatientCols} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-patient'))} />
+        </div>
+        <div style={{ position: 'absolute', left: tables.physician.x, top: tables.physician.y, zIndex: 2 }}>
+          <ERTable title="dim_physician" type="dimension" columns={dimPhysicianCols} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-physician'))} />
+        </div>
+        <div style={{ position: 'absolute', left: tables.diagnosis.x, top: tables.diagnosis.y, zIndex: 2 }}>
+          <ERTable title="dim_diagnosis" type="dimension" columns={dimDiagnosisCols} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-diagnosis'))} />
+        </div>
+        <div style={{ position: 'absolute', left: tables.date.x, top: tables.date.y, zIndex: 2 }}>
+          <ERTable title="dim_date" type="dimension" columns={dimDateCols} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-date'))} />
         </div>
 
-        {/* Snowflake schema label */}
+        {/* Sub-dimensions (normalized) */}
+        <div style={{ position: 'absolute', left: tables.insurance.x, top: tables.insurance.y, zIndex: 2 }}>
+          <ERSubTable title="dim_insurance" columns={subInsuranceCols} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-insurance'))} />
+        </div>
+        <div style={{ position: 'absolute', left: tables.department.x, top: tables.department.y, zIndex: 2 }}>
+          <ERSubTable title="dim_department" columns={subDeptCols} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-department'))} />
+        </div>
+        <div style={{ position: 'absolute', left: tables.hospital.x, top: tables.hospital.y, zIndex: 2 }}>
+          <ERSubTable title="dim_hospital" columns={subHospitalCols} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-hospital'))} />
+        </div>
+        <div style={{ position: 'absolute', left: tables.dxCategory.x, top: tables.dxCategory.y, zIndex: 2 }}>
+          <ERSubTable title="dim_dx_category" columns={subDxCatCols} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-dx-category'))} />
+        </div>
+
+        {/* Legend */}
         <div style={{
           position: 'absolute',
-          bottom: '8px',
+          bottom: '4px',
           left: '50%',
           transform: 'translateX(-50%)',
           display: 'flex',
           alignItems: 'center',
-          gap: '8px',
-          color: '#06b6d4',
-          fontSize: '13px',
-          fontWeight: '600',
-          opacity: 0.7
+          gap: '20px',
+          fontSize: '12px'
         }}>
-          <Snowflake size={16} />
-          <span>Snowflake Pattern: Normalized dimensions branch into sub-tables (dashed lines)</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div style={{ width: '24px', height: '2px', background: '#60a5fa' }} />
+            <span style={{ color: '#60a5fa', fontWeight: '600' }}>FK (Foreign Key)</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div style={{ width: '24px', height: '2px', background: '#a855f7', borderTop: '2px dashed #a855f7' }} />
+            <span style={{ color: '#a855f7', fontWeight: '600' }}>3NF Normalized</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Snowflake size={14} color="#06b6d4" />
+            <span style={{ color: '#06b6d4', fontWeight: '600' }}>Snowflake: Dimensions branch into sub-tables</span>
+          </div>
         </div>
       </div>
     );
@@ -3988,295 +4311,237 @@ for message in consumer:
             </p>
           </div>
 
-          {/* Navigation Section */}
-          <div style={{ marginBottom: '24px' }}>
-            {/* Architecture Patterns - Tab Style */}
-            <div style={{
-              display: 'inline-flex',
-              background: 'rgba(15, 23, 42, 0.6)',
-              borderRadius: '12px',
-              padding: '4px',
-              marginBottom: '16px',
-              border: '1px solid rgba(71, 85, 105, 0.3)'
-            }}>
-              {Object.keys(architectures).filter(key => key !== 'blockchain').map(key => {
-                const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies;
-                return (
-                  <button
-                    key={key}
-                    onClick={() => {
-                      setActiveArchitecture(key);
-                      setSelectedComponent(null);
-                      setShowAdditionalInfo(false);
-                      setShowHandsOn(false);
-                      setShowCurriculum(false);
-                      setShowCaseStudies(false);
-                    }}
-                    style={{
-                      padding: '10px 20px',
-                      background: isActive ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' : 'transparent',
-                      border: 'none',
-                      borderRadius: '8px',
-                      color: isActive ? '#ffffff' : '#94a3b8',
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                      whiteSpace: 'nowrap'
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isActive) {
-                        e.currentTarget.style.color = '#ffffff';
-                        e.currentTarget.style.background = 'rgba(59, 130, 246, 0.15)';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isActive) {
-                        e.currentTarget.style.color = '#94a3b8';
-                        e.currentTarget.style.background = 'transparent';
-                      }
-                    }}
-                  >
-                    {architectures[key].name}
-                  </button>
-                );
-              })}
-            </div>
+          {/* Navigation Section - Organized by Category */}
+          <div style={{
+            marginBottom: '24px',
+            background: 'rgba(15, 23, 42, 0.6)',
+            border: '1px solid rgba(71, 85, 105, 0.3)',
+            borderRadius: '16px',
+            padding: '20px 24px',
+            backdropFilter: 'blur(10px)'
+          }}>
+            {/* Two-row layout: Architecture topics on top, Resources below */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
-            {/* Learning Resources - Card Grid */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: '12px',
-              maxWidth: '800px'
-            }}>
-              {/* Additional Info Card */}
-              <button
-                onClick={() => {
-                  setShowAdditionalInfo(!showAdditionalInfo);
-                  setShowHandsOn(false);
-                  setShowCurriculum(false);
-                  setShowCaseStudies(false);
-                  if (!showAdditionalInfo) {
-                    setTimeout(() => {
-                      const additionalInfoSection = document.getElementById('additional-info');
-                      if (additionalInfoSection) {
-                        additionalInfoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }
-                    }, 100);
-                  }
-                }}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '16px 12px',
-                  background: showAdditionalInfo
-                    ? 'rgba(139, 92, 246, 0.2)'
-                    : 'rgba(30, 41, 59, 0.4)',
-                  border: showAdditionalInfo
-                    ? '1px solid rgba(139, 92, 246, 0.5)'
-                    : '1px solid rgba(71, 85, 105, 0.3)',
-                  borderRadius: '12px',
-                  color: showAdditionalInfo ? '#a78bfa' : '#94a3b8',
-                  fontSize: '13px',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  if (!showAdditionalInfo) {
-                    e.currentTarget.style.background = 'rgba(139, 92, 246, 0.1)';
-                    e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.3)';
-                    e.currentTarget.style.color = '#a78bfa';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!showAdditionalInfo) {
-                    e.currentTarget.style.background = 'rgba(30, 41, 59, 0.4)';
-                    e.currentTarget.style.borderColor = 'rgba(71, 85, 105, 0.3)';
-                    e.currentTarget.style.color = '#94a3b8';
-                  }
-                }}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="12" y1="16" x2="12" y2="12"></line>
-                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                </svg>
-                <span>Info</span>
-              </button>
+              {/* Row 1: Architecture Categories */}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
+                  <div style={{
+                    width: '4px',
+                    height: '16px',
+                    borderRadius: '2px',
+                    background: 'linear-gradient(180deg, #3b82f6, #60a5fa)'
+                  }} />
+                  <span style={{ fontSize: '11px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1.5px' }}>
+                    Architecture Patterns
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {/* Processing Architectures */}
+                  <div style={{
+                    display: 'flex',
+                    background: 'rgba(30, 41, 59, 0.5)',
+                    borderRadius: '10px',
+                    padding: '3px',
+                    gap: '2px',
+                    border: '1px solid rgba(71, 85, 105, 0.2)'
+                  }}>
+                    {['lambda', 'kappa', 'streaming', 'batch'].map(key => {
+                      const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies;
+                      const icons = { lambda: 'L', kappa: 'K', streaming: 'S', batch: 'B' };
+                      return (
+                        <button
+                          key={key}
+                          onClick={() => {
+                            setActiveArchitecture(key);
+                            setSelectedComponent(null);
+                            setShowAdditionalInfo(false);
+                            setShowHandsOn(false);
+                            setShowCurriculum(false);
+                            setShowCaseStudies(false);
+                          }}
+                          style={{
+                            padding: '8px 16px',
+                            background: isActive ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' : 'transparent',
+                            border: 'none',
+                            borderRadius: '8px',
+                            color: isActive ? '#ffffff' : '#94a3b8',
+                            fontSize: '13px',
+                            fontWeight: isActive ? '600' : '500',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                            whiteSpace: 'nowrap',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (!isActive) {
+                              e.currentTarget.style.color = '#ffffff';
+                              e.currentTarget.style.background = 'rgba(59, 130, 246, 0.15)';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!isActive) {
+                              e.currentTarget.style.color = '#94a3b8';
+                              e.currentTarget.style.background = 'transparent';
+                            }
+                          }}
+                        >
+                          <span style={{
+                            width: '20px',
+                            height: '20px',
+                            borderRadius: '4px',
+                            background: isActive ? 'rgba(255,255,255,0.2)' : 'rgba(59, 130, 246, 0.15)',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '10px',
+                            fontWeight: '700',
+                            color: isActive ? '#ffffff' : '#60a5fa',
+                            flexShrink: 0
+                          }}>
+                            {icons[key]}
+                          </span>
+                          {architectures[key].name}
+                        </button>
+                      );
+                    })}
+                  </div>
 
-              {/* Hands-on Card */}
-              <button
-                onClick={() => {
-                  setShowHandsOn(!showHandsOn);
-                  setShowAdditionalInfo(false);
-                  setShowCurriculum(false);
-                  setShowCaseStudies(false);
-                  if (!showHandsOn) {
-                    setTimeout(() => {
-                      const handsOnSection = document.getElementById('hands-on');
-                      if (handsOnSection) {
-                        handsOnSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }
-                    }, 100);
-                  }
-                }}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '16px 12px',
-                  background: showHandsOn
-                    ? 'rgba(16, 185, 129, 0.2)'
-                    : 'rgba(30, 41, 59, 0.4)',
-                  border: showHandsOn
-                    ? '1px solid rgba(16, 185, 129, 0.5)'
-                    : '1px solid rgba(71, 85, 105, 0.3)',
-                  borderRadius: '12px',
-                  color: showHandsOn ? '#10b981' : '#94a3b8',
-                  fontSize: '13px',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  if (!showHandsOn) {
-                    e.currentTarget.style.background = 'rgba(16, 185, 129, 0.1)';
-                    e.currentTarget.style.borderColor = 'rgba(16, 185, 129, 0.3)';
-                    e.currentTarget.style.color = '#10b981';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!showHandsOn) {
-                    e.currentTarget.style.background = 'rgba(30, 41, 59, 0.4)';
-                    e.currentTarget.style.borderColor = 'rgba(71, 85, 105, 0.3)';
-                    e.currentTarget.style.color = '#94a3b8';
-                  }
-                }}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-                </svg>
-                <span>Hands-on</span>
-              </button>
+                  {/* Divider */}
+                  <div style={{ width: '1px', background: 'rgba(71, 85, 105, 0.3)', margin: '4px 4px' }} />
 
-              {/* Curriculum Card */}
-              <button
-                onClick={() => {
-                  setShowCurriculum(!showCurriculum);
-                  setShowAdditionalInfo(false);
-                  setShowHandsOn(false);
-                  setShowCaseStudies(false);
-                  if (!showCurriculum) {
-                    setTimeout(() => {
-                      const curriculumSection = document.getElementById('curriculum-section');
-                      if (curriculumSection) {
-                        curriculumSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }
-                    }, 100);
-                  }
-                }}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '16px 12px',
-                  background: showCurriculum
-                    ? 'rgba(245, 158, 11, 0.2)'
-                    : 'rgba(30, 41, 59, 0.4)',
-                  border: showCurriculum
-                    ? '1px solid rgba(245, 158, 11, 0.5)'
-                    : '1px solid rgba(71, 85, 105, 0.3)',
-                  borderRadius: '12px',
-                  color: showCurriculum ? '#f59e0b' : '#94a3b8',
-                  fontSize: '13px',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  if (!showCurriculum) {
-                    e.currentTarget.style.background = 'rgba(245, 158, 11, 0.1)';
-                    e.currentTarget.style.borderColor = 'rgba(245, 158, 11, 0.3)';
-                    e.currentTarget.style.color = '#f59e0b';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!showCurriculum) {
-                    e.currentTarget.style.background = 'rgba(30, 41, 59, 0.4)';
-                    e.currentTarget.style.borderColor = 'rgba(71, 85, 105, 0.3)';
-                    e.currentTarget.style.color = '#94a3b8';
-                  }
-                }}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                  <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-                </svg>
-                <span>Curriculum</span>
-              </button>
+                  {/* Data Modeling */}
+                  <div style={{
+                    display: 'flex',
+                    background: 'rgba(30, 41, 59, 0.5)',
+                    borderRadius: '10px',
+                    padding: '3px',
+                    gap: '2px',
+                    border: '1px solid rgba(71, 85, 105, 0.2)'
+                  }}>
+                    {['starSchema', 'snowflakeSchema'].map(key => {
+                      const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies;
+                      const icons = { starSchema: null, snowflakeSchema: null };
+                      return (
+                        <button
+                          key={key}
+                          onClick={() => {
+                            setActiveArchitecture(key);
+                            setSelectedComponent(null);
+                            setShowAdditionalInfo(false);
+                            setShowHandsOn(false);
+                            setShowCurriculum(false);
+                            setShowCaseStudies(false);
+                          }}
+                          style={{
+                            padding: '8px 16px',
+                            background: isActive ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'transparent',
+                            border: 'none',
+                            borderRadius: '8px',
+                            color: isActive ? '#ffffff' : '#94a3b8',
+                            fontSize: '13px',
+                            fontWeight: isActive ? '600' : '500',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                            whiteSpace: 'nowrap',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (!isActive) {
+                              e.currentTarget.style.color = '#fbbf24';
+                              e.currentTarget.style.background = 'rgba(245, 158, 11, 0.12)';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!isActive) {
+                              e.currentTarget.style.color = '#94a3b8';
+                              e.currentTarget.style.background = 'transparent';
+                            }
+                          }}
+                        >
+                          {key === 'starSchema' ? <Star size={14} /> : <Snowflake size={14} />}
+                          {architectures[key].name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
 
-              {/* Case Studies Card */}
-              <button
-                onClick={() => {
-                  setShowCaseStudies(!showCaseStudies);
-                  setShowAdditionalInfo(false);
-                  setShowHandsOn(false);
-                  setShowCurriculum(false);
-                  if (!showCaseStudies) {
-                    setTimeout(() => {
-                      const caseStudiesSection = document.getElementById('case-studies-section');
-                      if (caseStudiesSection) {
-                        caseStudiesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }
-                    }, 100);
-                  }
-                }}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '16px 12px',
-                  background: showCaseStudies
-                    ? 'rgba(236, 72, 153, 0.2)'
-                    : 'rgba(30, 41, 59, 0.4)',
-                  border: showCaseStudies
-                    ? '1px solid rgba(236, 72, 153, 0.5)'
-                    : '1px solid rgba(71, 85, 105, 0.3)',
-                  borderRadius: '12px',
-                  color: showCaseStudies ? '#ec4899' : '#94a3b8',
-                  fontSize: '13px',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  if (!showCaseStudies) {
-                    e.currentTarget.style.background = 'rgba(236, 72, 153, 0.1)';
-                    e.currentTarget.style.borderColor = 'rgba(236, 72, 153, 0.3)';
-                    e.currentTarget.style.color = '#ec4899';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!showCaseStudies) {
-                    e.currentTarget.style.background = 'rgba(30, 41, 59, 0.4)';
-                    e.currentTarget.style.borderColor = 'rgba(71, 85, 105, 0.3)';
-                    e.currentTarget.style.color = '#94a3b8';
-                  }
-                }}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                </svg>
-                <span>Case Studies</span>
-              </button>
+              {/* Separator */}
+              <div style={{ height: '1px', background: 'rgba(71, 85, 105, 0.2)' }} />
+
+              {/* Row 2: Learning Resources */}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
+                  <div style={{
+                    width: '4px',
+                    height: '16px',
+                    borderRadius: '2px',
+                    background: 'linear-gradient(180deg, #a78bfa, #7c3aed)'
+                  }} />
+                  <span style={{ fontSize: '11px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1.5px' }}>
+                    Learning Resources
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                  {/* Info */}
+                  {[
+                    { key: 'info', label: 'Compare & Glossary', color: '#a78bfa', bgColor: '139, 92, 246', state: showAdditionalInfo, setState: () => { setShowAdditionalInfo(!showAdditionalInfo); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); if (!showAdditionalInfo) { setTimeout(() => { const el = document.getElementById('additional-info'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
+                      icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    },
+                    { key: 'handson', label: 'Hands-on Lab', color: '#10b981', bgColor: '16, 185, 129', state: showHandsOn, setState: () => { setShowHandsOn(!showHandsOn); setShowAdditionalInfo(false); setShowCurriculum(false); setShowCaseStudies(false); if (!showHandsOn) { setTimeout(() => { const el = document.getElementById('hands-on'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
+                      icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                    },
+                    { key: 'curriculum', label: 'Curriculum', color: '#f59e0b', bgColor: '245, 158, 11', state: showCurriculum, setState: () => { setShowCurriculum(!showCurriculum); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCaseStudies(false); if (!showCurriculum) { setTimeout(() => { const el = document.getElementById('curriculum-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
+                      icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                    },
+                    { key: 'cases', label: 'Case Studies', color: '#ec4899', bgColor: '236, 72, 153', state: showCaseStudies, setState: () => { setShowCaseStudies(!showCaseStudies); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); if (!showCaseStudies) { setTimeout(() => { const el = document.getElementById('case-studies-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
+                      icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    }
+                  ].map(({ key, label, color, bgColor, state, setState, icon }) => (
+                    <button
+                      key={key}
+                      onClick={setState}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '8px 16px',
+                        background: state ? `rgba(${bgColor}, 0.2)` : 'rgba(30, 41, 59, 0.5)',
+                        border: state ? `1px solid rgba(${bgColor}, 0.5)` : '1px solid rgba(71, 85, 105, 0.2)',
+                        borderRadius: '10px',
+                        color: state ? color : '#94a3b8',
+                        fontSize: '13px',
+                        fontWeight: '500',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!state) {
+                          e.currentTarget.style.background = `rgba(${bgColor}, 0.1)`;
+                          e.currentTarget.style.borderColor = `rgba(${bgColor}, 0.3)`;
+                          e.currentTarget.style.color = color;
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!state) {
+                          e.currentTarget.style.background = 'rgba(30, 41, 59, 0.5)';
+                          e.currentTarget.style.borderColor = 'rgba(71, 85, 105, 0.2)';
+                          e.currentTarget.style.color = '#94a3b8';
+                        }
+                      }}
+                    >
+                      {icon}
+                      <span>{label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -4625,6 +4890,188 @@ for message in consumer:
                       !
                     </div>
                     <span style={{ color: '#e2e8f0', fontSize: '14px', lineHeight: '1.6' }}>{gotcha}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            )}
+
+            {/* Design Examples: Good & Bad patterns with visual table examples */}
+            {currentArch.designExamples && (
+            <div style={{ marginBottom: '32px' }}>
+              {/* Good Examples */}
+              <h3 style={{
+                fontSize: '24px',
+                fontWeight: 'bold',
+                marginBottom: '8px',
+                color: '#22c55e',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px'
+              }}>
+                <Check size={24} color="#22c55e" />
+                Good Design Patterns
+              </h3>
+              <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '16px', fontStyle: 'italic' }}>
+                Follow these patterns for a well-designed schema
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
+                {currentArch.designExamples.good.map((example, idx) => (
+                  <div key={`good-${idx}`} style={{
+                    background: 'rgba(34, 197, 94, 0.06)',
+                    border: '1px solid rgba(34, 197, 94, 0.25)',
+                    borderRadius: '12px',
+                    padding: '20px',
+                    borderLeft: '4px solid #22c55e'
+                  }}>
+                    <div style={{ fontSize: '15px', fontWeight: '700', color: '#4ade80', marginBottom: '8px' }}>
+                      {example.title}
+                    </div>
+                    <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6', marginBottom: '12px' }}>
+                      {example.description}
+                    </p>
+                    {/* Visual table representation */}
+                    <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '12px' }}>
+                      {example.columns.map((tbl, tIdx) => (
+                        <div key={tIdx} style={{
+                          background: 'rgba(15, 23, 42, 0.8)',
+                          border: '1px solid rgba(34, 197, 94, 0.3)',
+                          borderRadius: '8px',
+                          minWidth: '200px',
+                          overflow: 'hidden'
+                        }}>
+                          <div style={{
+                            background: 'rgba(34, 197, 94, 0.15)',
+                            padding: '6px 12px',
+                            fontSize: '12px',
+                            fontWeight: '700',
+                            color: '#4ade80',
+                            fontFamily: 'monospace',
+                            borderBottom: '1px solid rgba(34, 197, 94, 0.2)'
+                          }}>
+                            {tbl.table}
+                          </div>
+                          {tbl.cols.map((col, cIdx) => (
+                            <div key={cIdx} style={{
+                              padding: '4px 12px',
+                              fontSize: '11px',
+                              fontFamily: 'monospace',
+                              color: col.includes('PK') ? '#fbbf24' : col.includes('FK') ? '#93c5fd' : '#94a3b8',
+                              fontWeight: col.includes('PK') || col.includes('FK') ? '600' : '400',
+                              borderBottom: cIdx < tbl.cols.length - 1 ? '1px solid rgba(71, 85, 105, 0.15)' : 'none'
+                            }}>
+                              {col}
+                            </div>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{
+                      background: 'rgba(34, 197, 94, 0.08)',
+                      borderRadius: '6px',
+                      padding: '10px 14px',
+                      fontSize: '12px',
+                      color: '#86efac',
+                      lineHeight: '1.5'
+                    }}>
+                      <strong>Why this works:</strong> {example.why}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Bad Examples */}
+              <h3 style={{
+                fontSize: '24px',
+                fontWeight: 'bold',
+                marginBottom: '8px',
+                color: '#ef4444',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px'
+              }}>
+                <X size={24} color="#ef4444" />
+                Anti-Patterns to Avoid
+              </h3>
+              <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '16px', fontStyle: 'italic' }}>
+                Common mistakes that lead to performance issues, data quality problems, or maintenance headaches
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {currentArch.designExamples.bad.map((example, idx) => (
+                  <div key={`bad-${idx}`} style={{
+                    background: 'rgba(239, 68, 68, 0.06)',
+                    border: '1px solid rgba(239, 68, 68, 0.25)',
+                    borderRadius: '12px',
+                    padding: '20px',
+                    borderLeft: '4px solid #ef4444'
+                  }}>
+                    <div style={{ fontSize: '15px', fontWeight: '700', color: '#f87171', marginBottom: '8px' }}>
+                      {example.title}
+                    </div>
+                    <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6', marginBottom: '12px' }}>
+                      {example.description}
+                    </p>
+                    {/* Visual table representation */}
+                    <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '12px' }}>
+                      {example.columns.map((tbl, tIdx) => (
+                        <div key={tIdx} style={{
+                          background: 'rgba(15, 23, 42, 0.8)',
+                          border: '1px solid rgba(239, 68, 68, 0.3)',
+                          borderRadius: '8px',
+                          minWidth: '200px',
+                          overflow: 'hidden'
+                        }}>
+                          <div style={{
+                            background: 'rgba(239, 68, 68, 0.15)',
+                            padding: '6px 12px',
+                            fontSize: '12px',
+                            fontWeight: '700',
+                            color: '#f87171',
+                            fontFamily: 'monospace',
+                            borderBottom: '1px solid rgba(239, 68, 68, 0.2)'
+                          }}>
+                            {tbl.table}
+                          </div>
+                          {tbl.cols.map((col, cIdx) => (
+                            <div key={cIdx} style={{
+                              padding: '4px 12px',
+                              fontSize: '11px',
+                              fontFamily: 'monospace',
+                              color: col.includes('PK') ? '#fbbf24' : col.includes('FK') ? '#93c5fd' : col.includes('BAD') || col.includes('NO MATCHING') || col.includes('UNNECESSARY') ? '#f87171' : '#94a3b8',
+                              fontWeight: col.includes('PK') || col.includes('FK') ? '600' : '400',
+                              borderBottom: cIdx < tbl.cols.length - 1 ? '1px solid rgba(71, 85, 105, 0.15)' : 'none',
+                              textDecoration: col.includes('BAD') || col.includes('NO MATCHING') ? 'line-through' : 'none',
+                              textDecorationColor: '#ef4444'
+                            }}>
+                              {col}
+                            </div>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{
+                      background: 'rgba(239, 68, 68, 0.08)',
+                      borderRadius: '6px',
+                      padding: '10px 14px',
+                      fontSize: '12px',
+                      color: '#fca5a5',
+                      lineHeight: '1.5',
+                      marginBottom: example.fix ? '8px' : '0'
+                    }}>
+                      <strong>Why this is wrong:</strong> {example.why}
+                    </div>
+                    {example.fix && (
+                      <div style={{
+                        background: 'rgba(59, 130, 246, 0.08)',
+                        borderRadius: '6px',
+                        padding: '10px 14px',
+                        fontSize: '12px',
+                        color: '#93c5fd',
+                        lineHeight: '1.5'
+                      }}>
+                        <strong>How to fix:</strong> {example.fix}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
