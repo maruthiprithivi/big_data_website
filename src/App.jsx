@@ -78,6 +78,8 @@ const BigDataArchitectureExplorer = () => {
 
   // Schema tooltip state
   const [hoveredSchemaComponent, setHoveredSchemaComponent] = useState(null);
+  // Hovered FK-PK connection line state
+  const [hoveredConnection, setHoveredConnection] = useState(null);
 
   // Case Studies section state
   const [showCaseStudies, setShowCaseStudies] = useState(false);
@@ -2664,8 +2666,36 @@ for message in consumer:
     );
   };
 
+  // Helper: calculate Y center of a column row relative to the table's top edge
+  const getERColY = (colIndex, isSubTable = false) => {
+    if (isSubTable) {
+      // ERSubTable: header ~30px, section pad 3px, row stride ~22px
+      return 30 + 3 + colIndex * 22 + 11;
+    }
+    // ERTable: header ~36px, section pad 4px, row stride ~25px
+    return 36 + 4 + colIndex * 25 + 12;
+  };
+
+  // Helper: build a cubic bezier SVG path between two column connection points
+  // sameSide: both endpoints exit from same side of their tables (needs outward bow)
+  // bowSide: 'right' bows +x, 'left' bows -x (only used when sameSide is true)
+  const buildConnectionPath = (x1, y1, x2, y2, sameSide = false, bowSide = 'right') => {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (sameSide) {
+      const bow = Math.max(60, Math.min(Math.abs(dy) * 0.45, 140));
+      const sign = bowSide === 'right' ? 1 : -1;
+      return `M ${x1} ${y1} C ${x1 + sign * bow} ${y1}, ${x2 + sign * bow} ${y2}, ${x2} ${y2}`;
+    }
+    // Opposite sides — smooth C-curve
+    const cpOffset = Math.max(50, Math.min(dist * 0.35, 130));
+    const sign = dx > 0 ? 1 : -1;
+    return `M ${x1} ${y1} C ${x1 + sign * cpOffset} ${y1}, ${x2 - sign * cpOffset} ${y2}, ${x2} ${y2}`;
+  };
+
   // ER Diagram Table component for schema visuals
-  const ERTable = ({ title, type, columns, style: posStyle, onClick, id }) => {
+  const ERTable = ({ title, type, columns, style: posStyle, onClick, id, highlightedColumns = [] }) => {
     const isFact = type === 'fact';
     const headerBg = isFact ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 'linear-gradient(135deg, #3b82f6, #2563eb)';
     const borderColor = isFact ? '#f59e0b' : '#60a5fa';
@@ -2701,7 +2731,9 @@ for message in consumer:
         </div>
         {/* Column rows */}
         <div style={{ padding: '4px 0' }}>
-          {columns.map((col, idx) => (
+          {columns.map((col, idx) => {
+            const isHL = highlightedColumns.includes(col.name);
+            return (
             <div
               key={idx}
               style={{
@@ -2710,12 +2742,16 @@ for message in consumer:
                 gap: '8px',
                 padding: '5px 14px',
                 borderBottom: idx < columns.length - 1 ? '1px solid rgba(71, 85, 105, 0.2)' : 'none',
-                fontSize: '12px'
+                fontSize: '12px',
+                background: isHL ? 'rgba(96, 165, 250, 0.15)' : 'transparent',
+                boxShadow: isHL ? 'inset 0 0 0 1px rgba(96, 165, 250, 0.4)' : 'none',
+                borderRadius: isHL ? '4px' : '0',
+                transition: 'background 0.2s, box-shadow 0.2s'
               }}
             >
               {col.pk && (
                 <span style={{
-                  background: 'rgba(245, 158, 11, 0.2)',
+                  background: isHL ? 'rgba(245, 158, 11, 0.4)' : 'rgba(245, 158, 11, 0.2)',
                   color: '#fbbf24',
                   padding: '1px 5px',
                   borderRadius: '3px',
@@ -2727,7 +2763,7 @@ for message in consumer:
               )}
               {col.fk && (
                 <span style={{
-                  background: 'rgba(59, 130, 246, 0.2)',
+                  background: isHL ? 'rgba(59, 130, 246, 0.4)' : 'rgba(59, 130, 246, 0.2)',
                   color: '#60a5fa',
                   padding: '1px 5px',
                   borderRadius: '3px',
@@ -2742,7 +2778,8 @@ for message in consumer:
               </span>
               <span style={{ color: '#64748b', marginLeft: 'auto', fontSize: '11px', fontFamily: 'monospace' }}>{col.type}</span>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     );
@@ -2811,95 +2848,113 @@ for message in consumer:
       { id: 'dim-date', label: 'dim_date', cols: dimDateCols, x: 700, y: 470, fkLine: { startLabel: 'date_key' } }
     ];
 
+    // Column-level FK → PK connection definitions
+    const TABLE_W = 220;
+    const starConnections = [
+      { id: 'customer_key', fkCol: 'customer_key', fkIdx: factCols.findIndex(c => c.name === 'customer_key'), pkIdx: 0, dimKey: 'dim-customer', dimIdx: 0, fromSide: 'left', toSide: 'right' },
+      { id: 'product_key', fkCol: 'product_key', fkIdx: factCols.findIndex(c => c.name === 'product_key'), pkIdx: 0, dimKey: 'dim-product', dimIdx: 1, fromSide: 'right', toSide: 'left' },
+      { id: 'store_key', fkCol: 'store_key', fkIdx: factCols.findIndex(c => c.name === 'store_key'), pkIdx: 0, dimKey: 'dim-store', dimIdx: 2, fromSide: 'left', toSide: 'right' },
+      { id: 'date_key', fkCol: 'date_key', fkIdx: factCols.findIndex(c => c.name === 'date_key'), pkIdx: 0, dimKey: 'dim-date', dimIdx: 3, fromSide: 'right', toSide: 'left' }
+    ];
+
+    // Compute highlighted columns for each table based on hovered connection
+    const factHighlight = hoveredConnection && hoveredConnection.schema === 'star' ? [hoveredConnection.fkCol] : [];
+    const dimHighlights = {};
+    dimPositions.forEach(d => { dimHighlights[d.id] = []; });
+    if (hoveredConnection && hoveredConnection.schema === 'star') {
+      const conn = starConnections.find(c => c.id === hoveredConnection.id);
+      if (conn) dimHighlights[conn.dimKey] = [conn.fkCol];
+    }
+
     return (
       <div style={{ position: 'relative', width: `${SVG_W}px`, height: `${SVG_H}px`, margin: '0 auto' }}>
         {/* SVG layer for FK connection lines */}
         <svg
           width={SVG_W}
           height={SVG_H}
-          style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }}
+          style={{ position: 'absolute', top: 0, left: 0, zIndex: 1 }}
         >
           <defs>
-            <marker id="fk-arrow-star" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="#60a5fa" />
-            </marker>
-            <marker id="fk-crow-star" viewBox="0 0 12 12" refX="0" refY="6" markerWidth="10" markerHeight="10" orient="auto">
-              <path d="M 12 0 L 0 6 L 12 12" fill="none" stroke="#60a5fa" strokeWidth="1.5" />
-              <line x1="4" y1="0" x2="4" y2="12" stroke="#60a5fa" strokeWidth="1.5" />
-            </marker>
+            <filter id="glow-star">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
           </defs>
-          {/* Fact center point for connections */}
-          {dimPositions.map((dim, idx) => {
-            const factCenterX = factPos.x + 110;
-            const factCenterY = factPos.y + 130;
-            const dimCenterX = dim.x + 110;
-            const dimCenterY = dim.y + 100;
+          {starConnections.map((conn) => {
+            const dim = dimPositions[conn.dimIdx];
+            const isHovered = hoveredConnection && hoveredConnection.schema === 'star' && hoveredConnection.id === conn.id;
 
-            // Calculate edge points (from fact edge to dim edge)
-            const dx = dimCenterX - factCenterX;
-            const dy = dimCenterY - factCenterY;
-            const angle = Math.atan2(dy, dx);
+            // FK row exit point on fact table edge
+            const fkY = factPos.y + getERColY(conn.fkIdx);
+            const fkX = conn.fromSide === 'left' ? factPos.x : factPos.x + TABLE_W;
 
-            const startX = factCenterX + Math.cos(angle) * 120;
-            const startY = factCenterY + Math.sin(angle) * 100;
-            const endX = dimCenterX - Math.cos(angle) * 120;
-            const endY = dimCenterY - Math.sin(angle) * 80;
+            // PK row entry point on dim table edge
+            const pkY = dim.y + getERColY(conn.pkIdx);
+            const pkX = conn.toSide === 'left' ? dim.x : dim.x + TABLE_W;
+
+            const pathD = buildConnectionPath(fkX, fkY, pkX, pkY);
+            const midX = (fkX + pkX) / 2;
+            const midY = (fkY + pkY) / 2;
+            const labelW = conn.fkCol.length * 7 + 16;
 
             return (
-              <g key={`fk-line-${idx}`}>
-                <line
-                  x1={startX} y1={startY}
-                  x2={endX} y2={endY}
-                  stroke="#60a5fa"
-                  strokeWidth="2"
-                  markerEnd="url(#fk-crow-star)"
-                  markerStart="url(#fk-arrow-star)"
+              <g key={`star-conn-${conn.id}`}>
+                {/* Visible path */}
+                <path
+                  d={pathD}
+                  fill="none"
+                  stroke={isHovered ? '#93c5fd' : '#60a5fa'}
+                  strokeWidth={isHovered ? 3 : 1.5}
+                  strokeOpacity={isHovered ? 1 : 0.7}
+                  filter={isHovered ? 'url(#glow-star)' : 'none'}
+                  style={{ transition: 'stroke 0.2s, stroke-width 0.2s, stroke-opacity 0.2s' }}
                 />
-                {/* FK label on line */}
+                {/* Invisible wide hit area for hover */}
+                <path
+                  d={pathD}
+                  fill="none"
+                  stroke="transparent"
+                  strokeWidth="14"
+                  style={{ cursor: 'pointer', pointerEvents: 'stroke' }}
+                  onMouseEnter={() => setHoveredConnection({ schema: 'star', id: conn.id, fkCol: conn.fkCol })}
+                  onMouseLeave={() => setHoveredConnection(null)}
+                />
+                {/* Endpoint dots */}
+                <circle cx={fkX} cy={fkY} r={isHovered ? 5 : 3.5} fill={isHovered ? '#93c5fd' : '#60a5fa'} style={{ transition: 'r 0.2s, fill 0.2s' }} />
+                <circle cx={pkX} cy={pkY} r={isHovered ? 5 : 3.5} fill={isHovered ? '#93c5fd' : '#60a5fa'} style={{ transition: 'r 0.2s, fill 0.2s' }} />
+                {/* FK label badge at midpoint */}
                 <rect
-                  x={(startX + endX) / 2 - 28}
-                  y={(startY + endY) / 2 - 10}
-                  width="56"
-                  height="20"
-                  rx="4"
-                  fill="rgba(15, 23, 42, 0.9)"
-                  stroke="rgba(96, 165, 250, 0.4)"
+                  x={midX - labelW / 2}
+                  y={midY - 11}
+                  width={labelW}
+                  height="22"
+                  rx="6"
+                  fill={isHovered ? 'rgba(30, 58, 138, 0.95)' : 'rgba(15, 23, 42, 0.9)'}
+                  stroke={isHovered ? '#93c5fd' : 'rgba(96, 165, 250, 0.4)'}
                   strokeWidth="1"
+                  style={{ transition: 'fill 0.2s, stroke 0.2s' }}
                 />
                 <text
-                  x={(startX + endX) / 2}
-                  y={(startY + endY) / 2 + 4}
+                  x={midX}
+                  y={midY + 4}
                   textAnchor="middle"
-                  fill="#60a5fa"
+                  fill={isHovered ? '#bfdbfe' : '#60a5fa'}
                   fontSize="10"
                   fontWeight="700"
                   fontFamily="monospace"
+                  style={{ transition: 'fill 0.2s' }}
                 >
-                  {dim.fkLine.startLabel}
+                  {conn.fkCol}
                 </text>
+                {/* Cardinality: N at fact side, 1 at dim side */}
+                <text x={fkX + (conn.fromSide === 'left' ? -16 : 8)} y={fkY - 10} fill={isHovered ? '#bfdbfe' : '#94a3b8'} fontSize="10" fontWeight="600" fontFamily="monospace">N</text>
+                <text x={pkX + (conn.toSide === 'left' ? -12 : 6)} y={pkY - 10} fill={isHovered ? '#bfdbfe' : '#94a3b8'} fontSize="10" fontWeight="600" fontFamily="monospace">1</text>
+                {/* Animated data flow dot */}
                 {showDataFlow && (
                   <circle r="4" fill="#60a5fa" filter="drop-shadow(0 0 6px #60a5fa)">
-                    <animateMotion dur="2s" repeatCount="indefinite" path={`M ${startX} ${startY} L ${endX} ${endY}`} />
+                    <animateMotion dur="2.5s" repeatCount="indefinite" path={pathD} />
                   </circle>
                 )}
-              </g>
-            );
-          })}
-          {/* Cardinality labels */}
-          {dimPositions.map((dim, idx) => {
-            const factCenterX = factPos.x + 110;
-            const factCenterY = factPos.y + 130;
-            const dimCenterX = dim.x + 110;
-            const dimCenterY = dim.y + 100;
-            const dx = dimCenterX - factCenterX;
-            const dy = dimCenterY - factCenterY;
-            const angle = Math.atan2(dy, dx);
-            const nearFact = { x: factCenterX + Math.cos(angle) * 130, y: factCenterY + Math.sin(angle) * 110 };
-            const nearDim = { x: dimCenterX - Math.cos(angle) * 130, y: dimCenterY - Math.sin(angle) * 90 };
-            return (
-              <g key={`card-${idx}`}>
-                <text x={nearFact.x + (dy > 0 ? -15 : 15)} y={nearFact.y + (dx > 0 ? 15 : -8)} fill="#94a3b8" fontSize="10" fontFamily="monospace">N</text>
-                <text x={nearDim.x + (dy > 0 ? -8 : 8)} y={nearDim.y + (dx > 0 ? -8 : 15)} fill="#94a3b8" fontSize="10" fontFamily="monospace">1</text>
               </g>
             );
           })}
@@ -2912,6 +2967,7 @@ for message in consumer:
             type="fact"
             id="fact-sales"
             columns={factCols}
+            highlightedColumns={factHighlight}
             onClick={() => setSelectedComponent(fact)}
           />
         </div>
@@ -2926,6 +2982,7 @@ for message in consumer:
                 type="dimension"
                 id={dim.id}
                 columns={dim.cols}
+                highlightedColumns={dimHighlights[dim.id] || []}
                 onClick={() => setSelectedComponent(comp)}
               />
             </div>
@@ -2954,7 +3011,7 @@ for message in consumer:
   };
 
   // Sub-dimension ER table (purple themed for normalized branches)
-  const ERSubTable = ({ title, columns, style: posStyle, onClick }) => {
+  const ERSubTable = ({ title, columns, style: posStyle, onClick, highlightedColumns = [] }) => {
     return (
       <div
         onClick={onClick}
@@ -2992,7 +3049,9 @@ for message in consumer:
           }}>3NF</span>
         </div>
         <div style={{ padding: '3px 0' }}>
-          {columns.map((col, idx) => (
+          {columns.map((col, idx) => {
+            const isHL = highlightedColumns.includes(col.name);
+            return (
             <div
               key={idx}
               style={{
@@ -3001,15 +3060,20 @@ for message in consumer:
                 gap: '6px',
                 padding: '4px 12px',
                 borderBottom: idx < columns.length - 1 ? '1px solid rgba(71, 85, 105, 0.2)' : 'none',
-                fontSize: '11px'
+                fontSize: '11px',
+                background: isHL ? 'rgba(168, 85, 247, 0.15)' : 'transparent',
+                boxShadow: isHL ? 'inset 0 0 0 1px rgba(168, 85, 247, 0.4)' : 'none',
+                borderRadius: isHL ? '4px' : '0',
+                transition: 'background 0.2s, box-shadow 0.2s'
               }}
             >
-              {col.pk && <span style={{ background: 'rgba(245, 158, 11, 0.2)', color: '#fbbf24', padding: '1px 4px', borderRadius: '3px', fontSize: '8px', fontWeight: '700', border: '1px solid rgba(245, 158, 11, 0.4)', flexShrink: 0 }}>PK</span>}
-              {col.fk && <span style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#c084fc', padding: '1px 4px', borderRadius: '3px', fontSize: '8px', fontWeight: '700', border: '1px solid rgba(168, 85, 247, 0.4)', flexShrink: 0 }}>FK</span>}
+              {col.pk && <span style={{ background: isHL ? 'rgba(245, 158, 11, 0.4)' : 'rgba(245, 158, 11, 0.2)', color: '#fbbf24', padding: '1px 4px', borderRadius: '3px', fontSize: '8px', fontWeight: '700', border: '1px solid rgba(245, 158, 11, 0.4)', flexShrink: 0 }}>PK</span>}
+              {col.fk && <span style={{ background: isHL ? 'rgba(168, 85, 247, 0.4)' : 'rgba(168, 85, 247, 0.2)', color: '#c084fc', padding: '1px 4px', borderRadius: '3px', fontSize: '8px', fontWeight: '700', border: '1px solid rgba(168, 85, 247, 0.4)', flexShrink: 0 }}>FK</span>}
               <span style={{ color: col.pk ? '#fbbf24' : col.fk ? '#c084fc' : '#cbd5e1', fontWeight: col.pk || col.fk ? '600' : '400', fontFamily: 'monospace', fontSize: '11px' }}>{col.name}</span>
               <span style={{ color: '#64748b', marginLeft: 'auto', fontSize: '10px', fontFamily: 'monospace' }}>{col.type}</span>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     );
@@ -3084,6 +3148,8 @@ for message in consumer:
 
     const SVG_W = 1100;
     const SVG_H = 920;
+    const SNOW_TW = 220;   // ERTable width
+    const SNOW_SW = 190;   // ERSubTable width
 
     // Positions — organized as a clear ER diagram layout
     const tables = {
@@ -3098,96 +3164,184 @@ for message in consumer:
       dxCategory: { x: 420, y: 830 }
     };
 
-    // FK connection definitions
-    const fkConnections = [
-      { from: tables.fact, to: tables.patient, label: 'patient_key', type: 'fk', fw: 240, fh: 200, tw: 200, th: 140 },
-      { from: tables.fact, to: tables.physician, label: 'physician_key', type: 'fk', fw: 240, fh: 200, tw: 200, th: 120 },
-      { from: tables.fact, to: tables.diagnosis, label: 'diagnosis_key', type: 'fk', fw: 240, fh: 200, tw: 220, th: 120 },
-      { from: tables.fact, to: tables.date, label: 'date_key', type: 'fk', fw: 240, fh: 200, tw: 200, th: 160 }
-    ];
-    const normConnections = [
-      { from: tables.patient, to: tables.insurance, label: 'insurance_key', fw: 200, fh: 140, tw: 190, th: 110 },
-      { from: tables.physician, to: tables.department, label: 'department_key', fw: 200, fh: 120, tw: 190, th: 110 },
-      { from: tables.department, to: tables.hospital, label: 'hospital_key', fw: 190, fh: 110, tw: 190, th: 140 },
-      { from: tables.diagnosis, to: tables.dxCategory, label: 'category_key', fw: 220, fh: 120, tw: 190, th: 90 }
+    // Column-level connection definitions for snowflake schema
+    const snowConnections = [
+      // FK connections: fact → dimensions
+      { id: 'patient_key', fkCol: 'patient_key', isNorm: false,
+        fkIdx: 1, fromPos: tables.fact, fromW: SNOW_TW, fromSub: false,
+        pkIdx: 0, toPos: tables.patient, toW: SNOW_TW, toSub: false,
+        fromSide: 'left', toSide: 'right' },
+      { id: 'physician_key', fkCol: 'physician_key', isNorm: false,
+        fkIdx: 2, fromPos: tables.fact, fromW: SNOW_TW, fromSub: false,
+        pkIdx: 0, toPos: tables.physician, toW: SNOW_TW, toSub: false,
+        fromSide: 'right', toSide: 'left' },
+      { id: 'diagnosis_key', fkCol: 'diagnosis_key', isNorm: false,
+        fkIdx: 3, fromPos: tables.fact, fromW: SNOW_TW, fromSub: false,
+        pkIdx: 0, toPos: tables.diagnosis, toW: SNOW_TW, toSub: false,
+        fromSide: 'right', toSide: 'right', sameSide: true, bowSide: 'right' },
+      { id: 'date_key', fkCol: 'date_key', isNorm: false,
+        fkIdx: 4, fromPos: tables.fact, fromW: SNOW_TW, fromSub: false,
+        pkIdx: 0, toPos: tables.date, toW: SNOW_TW, toSub: false,
+        fromSide: 'left', toSide: 'right' },
+      // Normalization connections: dim → sub-dim
+      { id: 'insurance_key', fkCol: 'insurance_key', isNorm: true,
+        fkIdx: 4, fromPos: tables.patient, fromW: SNOW_TW, fromSub: false,
+        pkIdx: 0, toPos: tables.insurance, toW: SNOW_SW, toSub: true,
+        fromSide: 'right', toSide: 'right', sameSide: true, bowSide: 'right' },
+      { id: 'department_key', fkCol: 'department_key', isNorm: true,
+        fkIdx: 3, fromPos: tables.physician, fromW: SNOW_TW, fromSub: false,
+        pkIdx: 0, toPos: tables.department, toW: SNOW_SW, toSub: true,
+        fromSide: 'left', toSide: 'left', sameSide: true, bowSide: 'left' },
+      { id: 'hospital_key', fkCol: 'hospital_key', isNorm: true,
+        fkIdx: 2, fromPos: tables.department, fromW: SNOW_SW, fromSub: true,
+        pkIdx: 0, toPos: tables.hospital, toW: SNOW_SW, toSub: true,
+        fromSide: 'right', toSide: 'left' },
+      { id: 'category_key', fkCol: 'category_key', isNorm: true,
+        fkIdx: 3, fromPos: tables.diagnosis, fromW: SNOW_TW, fromSub: false,
+        pkIdx: 0, toPos: tables.dxCategory, toW: SNOW_SW, toSub: true,
+        fromSide: 'left', toSide: 'left', sameSide: true, bowSide: 'left' }
     ];
 
-    const drawConnection = (conn, idx, isNormalize) => {
-      const color = isNormalize ? '#a855f7' : '#60a5fa';
-      const fromCx = conn.from.x + conn.fw / 2;
-      const fromCy = conn.from.y + conn.fh / 2;
-      const toCx = conn.to.x + conn.tw / 2;
-      const toCy = conn.to.y + conn.th / 2;
-      const dx = toCx - fromCx;
-      const dy = toCy - fromCy;
-      const angle = Math.atan2(dy, dx);
-      const startX = fromCx + Math.cos(angle) * Math.min(conn.fw, conn.fh) * 0.5;
-      const startY = fromCy + Math.sin(angle) * Math.min(conn.fw, conn.fh) * 0.4;
-      const endX = toCx - Math.cos(angle) * Math.min(conn.tw, conn.th) * 0.5;
-      const endY = toCy - Math.sin(angle) * Math.min(conn.tw, conn.th) * 0.4;
-      const midX = (startX + endX) / 2;
-      const midY = (startY + endY) / 2;
-
-      return (
-        <g key={`conn-${isNormalize ? 'norm' : 'fk'}-${idx}`}>
-          <line
-            x1={startX} y1={startY} x2={endX} y2={endY}
-            stroke={color}
-            strokeWidth="2"
-            strokeDasharray={isNormalize ? '6 4' : 'none'}
-          />
-          <rect x={midX - 38} y={midY - 10} width="76" height="20" rx="4" fill="rgba(15, 23, 42, 0.9)" stroke={`${color}66`} strokeWidth="1" />
-          <text x={midX} y={midY + 4} textAnchor="middle" fill={color} fontSize="9" fontWeight="700" fontFamily="monospace">
-            {conn.label}
-          </text>
-          {showDataFlow && (
-            <circle r="3" fill={color} filter={`drop-shadow(0 0 4px ${color})`}>
-              <animateMotion dur="2s" repeatCount="indefinite" path={`M ${startX} ${startY} L ${endX} ${endY}`} />
-            </circle>
-          )}
-        </g>
-      );
-    };
+    // Compute highlighted columns per table based on hovered connection
+    const snowHighlights = {};
+    const snowTableKeys = ['fact', 'patient', 'physician', 'diagnosis', 'date', 'insurance', 'department', 'hospital', 'dxCategory'];
+    snowTableKeys.forEach(k => { snowHighlights[k] = []; });
+    if (hoveredConnection && hoveredConnection.schema === 'snow') {
+      const conn = snowConnections.find(c => c.id === hoveredConnection.id);
+      if (conn) {
+        // Find which table keys match from/to positions
+        const fromKey = snowTableKeys.find(k => tables[k] === conn.fromPos);
+        const toKey = snowTableKeys.find(k => tables[k] === conn.toPos);
+        if (fromKey) snowHighlights[fromKey] = [...snowHighlights[fromKey], conn.fkCol];
+        if (toKey) snowHighlights[toKey] = [...snowHighlights[toKey], conn.fkCol];
+      }
+    }
 
     return (
       <div style={{ position: 'relative', width: `${SVG_W}px`, height: `${SVG_H}px`, margin: '0 auto' }}>
         {/* SVG for all connections */}
-        <svg width={SVG_W} height={SVG_H} style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }}>
-          {fkConnections.map((conn, idx) => drawConnection(conn, idx, false))}
-          {normConnections.map((conn, idx) => drawConnection(conn, idx, true))}
+        <svg width={SVG_W} height={SVG_H} style={{ position: 'absolute', top: 0, left: 0, zIndex: 1 }}>
+          <defs>
+            <filter id="glow-snow-fk">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+            <filter id="glow-snow-norm">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+          </defs>
+          {snowConnections.map((conn) => {
+            const isHovered = hoveredConnection && hoveredConnection.schema === 'snow' && hoveredConnection.id === conn.id;
+            const color = conn.isNorm ? '#a855f7' : '#60a5fa';
+            const hoverColor = conn.isNorm ? '#c084fc' : '#93c5fd';
+            const glowId = conn.isNorm ? 'glow-snow-norm' : 'glow-snow-fk';
+
+            // FK row exit point
+            const fkY = conn.fromPos.y + getERColY(conn.fkIdx, conn.fromSub);
+            const fkX = conn.fromSide === 'left' ? conn.fromPos.x : conn.fromPos.x + conn.fromW;
+
+            // PK row entry point
+            const pkY = conn.toPos.y + getERColY(conn.pkIdx, conn.toSub);
+            const pkX = conn.toSide === 'left' ? conn.toPos.x : conn.toPos.x + conn.toW;
+
+            const pathD = buildConnectionPath(fkX, fkY, pkX, pkY, !!conn.sameSide, conn.bowSide || 'right');
+            const midX = (fkX + pkX) / 2 + (conn.sameSide ? (conn.bowSide === 'right' ? 40 : -40) : 0);
+            const midY = (fkY + pkY) / 2;
+            const labelW = conn.fkCol.length * 7 + 16;
+
+            return (
+              <g key={`snow-conn-${conn.id}`}>
+                {/* Visible path */}
+                <path
+                  d={pathD}
+                  fill="none"
+                  stroke={isHovered ? hoverColor : color}
+                  strokeWidth={isHovered ? 3 : 1.5}
+                  strokeOpacity={isHovered ? 1 : 0.7}
+                  strokeDasharray={conn.isNorm ? '6 4' : 'none'}
+                  filter={isHovered ? `url(#${glowId})` : 'none'}
+                  style={{ transition: 'stroke 0.2s, stroke-width 0.2s, stroke-opacity 0.2s' }}
+                />
+                {/* Invisible hit area */}
+                <path
+                  d={pathD}
+                  fill="none"
+                  stroke="transparent"
+                  strokeWidth="14"
+                  style={{ cursor: 'pointer', pointerEvents: 'stroke' }}
+                  onMouseEnter={() => setHoveredConnection({ schema: 'snow', id: conn.id, fkCol: conn.fkCol })}
+                  onMouseLeave={() => setHoveredConnection(null)}
+                />
+                {/* Endpoint dots */}
+                <circle cx={fkX} cy={fkY} r={isHovered ? 5 : 3.5} fill={isHovered ? hoverColor : color} style={{ transition: 'r 0.2s, fill 0.2s' }} />
+                <circle cx={pkX} cy={pkY} r={isHovered ? 5 : 3.5} fill={isHovered ? hoverColor : color} style={{ transition: 'r 0.2s, fill 0.2s' }} />
+                {/* Label badge */}
+                <rect
+                  x={midX - labelW / 2}
+                  y={midY - 11}
+                  width={labelW}
+                  height="22"
+                  rx="6"
+                  fill={isHovered ? (conn.isNorm ? 'rgba(88, 28, 135, 0.95)' : 'rgba(30, 58, 138, 0.95)') : 'rgba(15, 23, 42, 0.9)'}
+                  stroke={isHovered ? hoverColor : `${color}66`}
+                  strokeWidth="1"
+                  style={{ transition: 'fill 0.2s, stroke 0.2s' }}
+                />
+                <text
+                  x={midX}
+                  y={midY + 4}
+                  textAnchor="middle"
+                  fill={isHovered ? (conn.isNorm ? '#e9d5ff' : '#bfdbfe') : color}
+                  fontSize="9"
+                  fontWeight="700"
+                  fontFamily="monospace"
+                  style={{ transition: 'fill 0.2s' }}
+                >
+                  {conn.fkCol}
+                </text>
+                {/* Animated data flow */}
+                {showDataFlow && (
+                  <circle r="3" fill={color} filter={`drop-shadow(0 0 4px ${color})`}>
+                    <animateMotion dur="2.5s" repeatCount="indefinite" path={pathD} />
+                  </circle>
+                )}
+              </g>
+            );
+          })}
         </svg>
 
         {/* Fact Table */}
         <div style={{ position: 'absolute', left: tables.fact.x, top: tables.fact.y, zIndex: 2 }}>
-          <ERTable title="fact_encounters" type="fact" columns={factCols} onClick={() => setSelectedComponent(comps.find(c => c.id === 'fact-encounters'))} />
+          <ERTable title="fact_encounters" type="fact" columns={factCols} highlightedColumns={snowHighlights.fact} onClick={() => setSelectedComponent(comps.find(c => c.id === 'fact-encounters'))} />
         </div>
 
         {/* Direct Dimensions */}
         <div style={{ position: 'absolute', left: tables.patient.x, top: tables.patient.y, zIndex: 2 }}>
-          <ERTable title="dim_patient" type="dimension" columns={dimPatientCols} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-patient'))} />
+          <ERTable title="dim_patient" type="dimension" columns={dimPatientCols} highlightedColumns={snowHighlights.patient} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-patient'))} />
         </div>
         <div style={{ position: 'absolute', left: tables.physician.x, top: tables.physician.y, zIndex: 2 }}>
-          <ERTable title="dim_physician" type="dimension" columns={dimPhysicianCols} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-physician'))} />
+          <ERTable title="dim_physician" type="dimension" columns={dimPhysicianCols} highlightedColumns={snowHighlights.physician} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-physician'))} />
         </div>
         <div style={{ position: 'absolute', left: tables.diagnosis.x, top: tables.diagnosis.y, zIndex: 2 }}>
-          <ERTable title="dim_diagnosis" type="dimension" columns={dimDiagnosisCols} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-diagnosis'))} />
+          <ERTable title="dim_diagnosis" type="dimension" columns={dimDiagnosisCols} highlightedColumns={snowHighlights.diagnosis} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-diagnosis'))} />
         </div>
         <div style={{ position: 'absolute', left: tables.date.x, top: tables.date.y, zIndex: 2 }}>
-          <ERTable title="dim_date" type="dimension" columns={dimDateCols} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-date'))} />
+          <ERTable title="dim_date" type="dimension" columns={dimDateCols} highlightedColumns={snowHighlights.date} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-date'))} />
         </div>
 
         {/* Sub-dimensions (normalized) */}
         <div style={{ position: 'absolute', left: tables.insurance.x, top: tables.insurance.y, zIndex: 2 }}>
-          <ERSubTable title="dim_insurance" columns={subInsuranceCols} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-insurance'))} />
+          <ERSubTable title="dim_insurance" columns={subInsuranceCols} highlightedColumns={snowHighlights.insurance} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-insurance'))} />
         </div>
         <div style={{ position: 'absolute', left: tables.department.x, top: tables.department.y, zIndex: 2 }}>
-          <ERSubTable title="dim_department" columns={subDeptCols} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-department'))} />
+          <ERSubTable title="dim_department" columns={subDeptCols} highlightedColumns={snowHighlights.department} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-department'))} />
         </div>
         <div style={{ position: 'absolute', left: tables.hospital.x, top: tables.hospital.y, zIndex: 2 }}>
-          <ERSubTable title="dim_hospital" columns={subHospitalCols} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-hospital'))} />
+          <ERSubTable title="dim_hospital" columns={subHospitalCols} highlightedColumns={snowHighlights.hospital} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-hospital'))} />
         </div>
         <div style={{ position: 'absolute', left: tables.dxCategory.x, top: tables.dxCategory.y, zIndex: 2 }}>
-          <ERSubTable title="dim_dx_category" columns={subDxCatCols} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-dx-category'))} />
+          <ERSubTable title="dim_dx_category" columns={subDxCatCols} highlightedColumns={snowHighlights.dxCategory} onClick={() => setSelectedComponent(comps.find(c => c.id === 'dim-dx-category'))} />
         </div>
 
         {/* Legend */}
