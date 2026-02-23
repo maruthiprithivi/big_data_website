@@ -25,7 +25,8 @@ const useResponsiveScale = (layoutType, containerRef) => {
       streaming: 1080,
       batch: 1340,
       star: 960,
-      snowflake: 1100
+      snowflake: 1100,
+      mapreduce: 1100
     };
 
     // Absolute minimum before showing warning
@@ -88,6 +89,11 @@ const BigDataArchitectureExplorer = () => {
     return saved ? JSON.parse(saved) : [];
   });
 
+  // MapReduce interactive states
+  const [mapReduceStep, setMapReduceStep] = useState(0); // 0 = show all, 1-8 = specific step
+  const [mapReduceAnimating, setMapReduceAnimating] = useState(false);
+  const [showMapReduceExample, setShowMapReduceExample] = useState(false);
+
   // Responsive diagram scaling
   const diagramContainerRef = useRef(null);
   const { scale, showWarning } = useResponsiveScale(activeArchitecture, diagramContainerRef);
@@ -130,7 +136,21 @@ const BigDataArchitectureExplorer = () => {
     'Glue': 'https://aws.amazon.com/glue/',
     'Tableau': 'https://www.tableau.com/',
     'Power BI': 'https://www.microsoft.com/en-us/power-platform/products/power-bi',
-    'Looker': 'https://cloud.google.com/looker'
+    'Looker': 'https://cloud.google.com/looker',
+    'YARN': 'https://hadoop.apache.org/docs/stable/hadoop-yarn/hadoop-yarn-site/YARN.html',
+    'ZooKeeper': 'https://zookeeper.apache.org/',
+    'HDFS': 'https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html',
+    'InputFormat': 'https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapreduce/InputFormat.html',
+    'Combiner': 'https://hadoop.apache.org/docs/stable/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html',
+    'Partitioner': 'https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapreduce/Partitioner.html',
+    'Merge Sort': 'https://en.wikipedia.org/wiki/Merge_sort',
+    'Aggregation': 'https://hadoop.apache.org/docs/stable/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html#Reducer',
+    'Parquet': 'https://parquet.apache.org/',
+    'Hive': 'https://hive.apache.org/',
+    'Hadoop Streaming': 'https://hadoop.apache.org/docs/stable/hadoop-streaming/HadoopStreaming.html',
+    'Java': 'https://docs.oracle.com/en/java/',
+    'Python': 'https://www.python.org/',
+    'HTTP': 'https://developer.mozilla.org/en-US/docs/Web/HTTP'
   };
 
   // Add CSS animations for the decision tree
@@ -843,6 +863,76 @@ const BigDataArchitectureExplorer = () => {
         { from: 'dim-physician', to: 'dim-department', type: 'normalize' },
         { from: 'dim-department', to: 'dim-hospital', type: 'normalize' },
         { from: 'dim-diagnosis', to: 'dim-dx-category', type: 'normalize' }
+      ]
+    },
+    mapreduce: {
+      name: 'MapReduce',
+      difficulty: 'Intermediate',
+      tagline: 'Distributed Data Processing Framework',
+      description: 'MapReduce is the foundational distributed processing model introduced by Google in 2004 and implemented in Apache Hadoop. It breaks large data processing tasks into two primary phases — Map and Reduce — allowing massive datasets to be processed in parallel across thousands of commodity servers. A client submits a job; the framework splits input data into chunks distributed across servers, applies the Map function to each chunk independently (producing intermediate key-value pairs), shuffles and sorts those pairs by key, then applies the Reduce function to aggregate results. This model enabled companies like Yahoo, Facebook, and LinkedIn to process petabytes of data reliably on commodity hardware.',
+      layout: 'mapreduce',
+      overview: {
+        text: 'MapReduce follows a simple but powerful paradigm: "divide and conquer" at massive scale. The process begins when a client submits a job to the JobTracker (YARN ResourceManager in Hadoop 2+), which consults the NameNode to locate input data blocks across the HDFS cluster. Input splits are assigned to Map tasks running on DataNodes where the data physically resides (data locality optimization). Each Mapper reads its split, applies the user-defined map() function to each record, and emits intermediate key-value pairs. The framework then performs a Shuffle & Sort phase — the most network-intensive step — where intermediate pairs are partitioned by key, transferred across the network to Reducer nodes, and sorted. Each Reducer receives all values for a given key range, applies the reduce() function to aggregate them, and writes final output to HDFS. The master/worker model with heartbeat monitoring provides fault tolerance: if a worker fails, its tasks are reassigned to other nodes.',
+        scenario: 'Web Search Engine - Google-Scale Log Analysis',
+        scenarioDescription: 'A search engine processes 20TB of daily web crawl logs to compute page relevance scores and search index updates. The client submits a word count and link analysis job. HDFS stores log files as 128MB blocks across 500 servers. The MapReduce framework splits the job into 160,000 Map tasks (one per block), each parsing log entries and emitting (URL, metadata) pairs. The Shuffle phase redistributes ~5TB of intermediate data by URL key across 2,000 Reduce tasks, which aggregate page visit counts, compute link graphs, and output updated search index segments back to HDFS.',
+        components: [
+          { name: 'Client / Driver', metric: 'Submits the MapReduce job with JAR, input/output paths, and configuration' },
+          { name: 'JobTracker / ResourceManager', metric: 'Coordinates job execution, schedules tasks, monitors progress and failures' },
+          { name: 'NameNode (HDFS)', metric: 'Stores metadata about file block locations across the cluster' },
+          { name: 'Input Splits', metric: 'Input data divided into 128MB chunks, one per Map task' },
+          { name: 'Map Phase', metric: 'User-defined map() function applied in parallel to each split, emitting key-value pairs' },
+          { name: 'Shuffle & Sort', metric: 'Intermediate pairs partitioned by key, transferred across network, and sorted' },
+          { name: 'Reduce Phase', metric: 'User-defined reduce() function aggregates all values per key' },
+          { name: 'HDFS Output', metric: 'Final results written back to HDFS as part-r-XXXXX files' }
+        ]
+      },
+      useCases: [
+        'Large-scale log analysis and ETL',
+        'Building search indexes (inverted indexes)',
+        'Machine learning data preprocessing',
+        'Distributed sorting and aggregation',
+        'Graph processing (PageRank iterations)',
+        'Data warehouse batch transformations'
+      ],
+      advantages: [
+        'Scales linearly — add more nodes for more throughput',
+        'Fault-tolerant — automatic task re-execution on failure',
+        'Data locality — moves computation to data, not data to computation',
+        'Simple programming model — just implement map() and reduce()',
+        'Handles petabytes of data on commodity hardware',
+        'Proven at Google, Yahoo, Facebook scale'
+      ],
+      challenges: [
+        'High latency — not suitable for real-time or interactive queries',
+        'Disk-heavy — intermediate data written to disk between stages',
+        'Only two stages (Map then Reduce) — complex pipelines require chaining multiple jobs',
+        'JVM startup overhead for each task',
+        'Shuffle phase is network-intensive and can become a bottleneck',
+        'Largely superseded by Apache Spark for in-memory iterative processing'
+      ],
+      learningResources: [
+        { title: 'Google Research: MapReduce - Simplified Data Processing on Large Clusters (Original Paper)', url: 'https://research.google/pubs/mapreduce-simplified-data-processing-on-large-clusters/' },
+        { title: 'Apache Hadoop Official Documentation: MapReduce Tutorial', url: 'https://hadoop.apache.org/docs/stable/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html' },
+        { title: 'Hadoop: The Definitive Guide (O\'Reilly) - Free Sample Chapters', url: 'https://www.oreilly.com/library/view/hadoop-the-definitive/9781491901687/' }
+      ],
+      components: [
+        { id: 'mr-client', name: 'Client', shape: 'cloud', description: 'Job submitter', details: 'The client application submits a MapReduce job including the JAR file with map/reduce functions, input/output HDFS paths, and job configuration. It communicates with the ResourceManager to initiate execution.', technologies: ['Java', 'Hadoop Streaming', 'Python'] },
+        { id: 'mr-jobtracker', name: 'ResourceManager', shape: 'api', description: 'Job coordinator', details: 'The central scheduler (YARN ResourceManager) receives job submissions, negotiates container resources with NodeManagers, schedules Map and Reduce tasks, and monitors execution. Handles task failures by rescheduling on other nodes.', technologies: ['YARN', 'Hadoop', 'ZooKeeper'] },
+        { id: 'mr-namenode', name: 'NameNode', shape: 'database', description: 'HDFS metadata', details: 'Stores the filesystem metadata: which blocks belong to which files and which DataNodes hold each block replica. The ResourceManager consults the NameNode to assign Map tasks to nodes holding the relevant data blocks (data locality).', technologies: ['HDFS', 'Hadoop'] },
+        { id: 'mr-input', name: 'Input Splits', shape: 'log', description: 'Data partitioning', details: 'Input data is divided into fixed-size splits (typically matching HDFS block size of 128MB). Each split is assigned to one Map task. InputFormat classes (TextInputFormat, SequenceFileInputFormat) control how files are split and records are parsed.', technologies: ['HDFS', 'InputFormat'] },
+        { id: 'mr-map', name: 'Map Phase', shape: 'cluster', description: 'Parallel mapping', details: 'Each Mapper runs on a DataNode, reads one input split, and applies the user-defined map(key, value) function to each record. Outputs intermediate key-value pairs to local disk (not HDFS). A combiner (optional local reducer) can pre-aggregate before the shuffle.', technologies: ['Java', 'Python', 'Combiner'] },
+        { id: 'mr-shuffle', name: 'Shuffle & Sort', shape: 'pipeline', description: 'Data redistribution', details: 'The most complex and network-intensive phase. Intermediate map outputs are partitioned by key (using a hash partitioner by default), transferred across the network to Reducer nodes, and merge-sorted. Each Reducer receives all pairs for its key partition.', technologies: ['Partitioner', 'HTTP', 'Merge Sort'] },
+        { id: 'mr-reduce', name: 'Reduce Phase', shape: 'stream', description: 'Aggregation', details: 'Each Reducer receives a sorted stream of (key, [values]) for its assigned key partition. The user-defined reduce(key, values) function aggregates the values — summing counts, merging lists, computing statistics. Output is written to HDFS.', technologies: ['Java', 'Python', 'Aggregation'] },
+        { id: 'mr-output', name: 'HDFS Output', shape: 'warehouse', description: 'Final results', details: 'Reduce output is written to HDFS as part-r-NNNNN files (one per Reducer). OutputFormat classes control the file format (text, sequence file, Parquet). Results can feed into subsequent MapReduce jobs or analytics tools.', technologies: ['HDFS', 'Parquet', 'Hive'] }
+      ],
+      connections: [
+        { from: 'mr-client', to: 'mr-jobtracker', type: 'query' },
+        { from: 'mr-jobtracker', to: 'mr-namenode', type: 'query' },
+        { from: 'mr-namenode', to: 'mr-input', type: 'batch' },
+        { from: 'mr-input', to: 'mr-map', type: 'batch' },
+        { from: 'mr-map', to: 'mr-shuffle', type: 'stream' },
+        { from: 'mr-shuffle', to: 'mr-reduce', type: 'stream' },
+        { from: 'mr-reduce', to: 'mr-output', type: 'batch' }
       ]
     }
   };
@@ -2476,6 +2566,665 @@ for message in consumer:
             </g>
           </g>
         </svg>
+      </div>
+    );
+  };
+
+  // MapReduce: Fan-out arrow (1 source splits down to 3 targets)
+  const MapReduceFanOutArrow = ({ color = '#ec4899', count = 3 }) => {
+    const SVG_W = (count * 180) + ((count - 1) * 40); // total width of target row
+    const SVG_H = 80;
+    const centerX = SVG_W / 2;
+    const spacing = 180 + 40; // card width + gap
+    const startOffset = centerX - ((count - 1) / 2) * spacing;
+
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+        <svg width={SVG_W} height={SVG_H} style={{ overflow: 'visible' }}>
+          {Array.from({ length: count }).map((_, i) => {
+            const targetX = startOffset + i * spacing;
+            const pathId = `fanout-path-${i}`;
+            const d = `M ${centerX} 0 Q ${centerX} ${SVG_H * 0.5}, ${targetX} ${SVG_H}`;
+            return (
+              <g key={i}>
+                <path id={pathId} d={d} stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" />
+                {showDataFlow && (
+                  <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
+                    <animateMotion dur="1.2s" repeatCount="indefinite" begin={`${i * 0.15}s`}>
+                      <mpath href={`#${pathId}`} />
+                    </animateMotion>
+                  </circle>
+                )}
+                <g transform={`translate(${targetX}, ${SVG_H - 6})`}>
+                  <polyline points="-5,-5 0,2 5,-5" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </g>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+    );
+  };
+
+  // MapReduce: Fan-in arrow (multiple sources merge to 1 target)
+  const MapReduceFanInArrow = ({ color = '#f59e0b', sourceCount = 3 }) => {
+    const SVG_W = (sourceCount * 180) + ((sourceCount - 1) * 40);
+    const SVG_H = 80;
+    const centerX = SVG_W / 2;
+    const spacing = 180 + 40;
+    const startOffset = centerX - ((sourceCount - 1) / 2) * spacing;
+
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+        <svg width={SVG_W} height={SVG_H} style={{ overflow: 'visible' }}>
+          {Array.from({ length: sourceCount }).map((_, i) => {
+            const sourceX = startOffset + i * spacing;
+            const pathId = `fanin-path-${i}`;
+            const d = `M ${sourceX} 0 Q ${sourceX} ${SVG_H * 0.5}, ${centerX} ${SVG_H}`;
+            return (
+              <g key={i}>
+                <path id={pathId} d={d} stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" />
+                {showDataFlow && (
+                  <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
+                    <animateMotion dur="1.2s" repeatCount="indefinite" begin={`${i * 0.15}s`}>
+                      <mpath href={`#${pathId}`} />
+                    </animateMotion>
+                  </circle>
+                )}
+              </g>
+            );
+          })}
+          <g transform={`translate(${centerX}, ${SVG_H - 6})`}>
+            <polyline points="-5,-5 0,2 5,-5" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </g>
+        </svg>
+      </div>
+    );
+  };
+
+  // MapReduce: Shuffle cross-connect arrows (3 sources to 2 targets with crossing paths)
+  const MapReduceShuffleArrows = () => {
+    const sourceCount = 3;
+    const targetCount = 2;
+    const SVG_W = (sourceCount * 180) + ((sourceCount - 1) * 40);
+    const SVG_H = 100;
+    const spacing = 180 + 40;
+    const centerX = SVG_W / 2;
+    const srcOffset = centerX - ((sourceCount - 1) / 2) * spacing;
+    const tgtOffset = centerX - ((targetCount - 1) / 2) * spacing;
+    const shuffleColor = '#f59e0b';
+
+    // Each source connects to each target with crossing lines
+    const paths = [];
+    let idx = 0;
+    for (let s = 0; s < sourceCount; s++) {
+      for (let t = 0; t < targetCount; t++) {
+        const sx = srcOffset + s * spacing;
+        const tx = tgtOffset + t * spacing;
+        const pathId = `shuffle-path-${s}-${t}`;
+        paths.push(
+          <g key={idx}>
+            <path
+              id={pathId}
+              d={`M ${sx} 0 C ${sx} ${SVG_H * 0.4}, ${tx} ${SVG_H * 0.6}, ${tx} ${SVG_H}`}
+              stroke={shuffleColor}
+              strokeWidth="1.5"
+              fill="none"
+              strokeLinecap="round"
+              opacity="0.6"
+            />
+            {showDataFlow && (
+              <circle r="4" fill={shuffleColor} filter={`drop-shadow(0 0 4px ${shuffleColor})`}>
+                <animateMotion dur={`${1.0 + idx * 0.2}s`} repeatCount="indefinite" begin={`${idx * 0.12}s`}>
+                  <mpath href={`#${pathId}`} />
+                </animateMotion>
+              </circle>
+            )}
+          </g>
+        );
+        idx++;
+      }
+    }
+
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+        <svg width={SVG_W} height={SVG_H} style={{ overflow: 'visible' }}>
+          {paths}
+          {/* Chevrons at each target */}
+          {Array.from({ length: targetCount }).map((_, t) => {
+            const tx = tgtOffset + t * spacing;
+            return (
+              <g key={t} transform={`translate(${tx}, ${SVG_H - 6})`}>
+                <polyline points="-5,-5 0,2 5,-5" fill="none" stroke={shuffleColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+    );
+  };
+
+  // MapReduce: Mini-card for parallel tasks (smaller than ComponentCard)
+  const MapReduceMiniCard = ({ label, icon: IconComp, color, borderColor, isActive = true, onClick, exampleText }) => {
+    const step = mapReduceStep;
+    const dimmed = step > 0 && !isActive;
+
+    return (
+      <div
+        onClick={onClick}
+        style={{
+          background: `${color}`,
+          border: `2px solid ${borderColor}`,
+          borderRadius: '12px',
+          padding: '12px',
+          width: '160px',
+          minHeight: '80px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '8px',
+          cursor: 'pointer',
+          transition: 'all 0.3s',
+          opacity: dimmed ? 0.25 : 1,
+          boxShadow: (!dimmed && step > 0) ? `0 0 20px ${borderColor}66, 0 0 40px ${borderColor}22` : `0 0 12px ${borderColor}33`,
+          transform: (!dimmed && step > 0) ? 'scale(1.05)' : 'scale(1)'
+        }}
+        onMouseEnter={(e) => { if (!dimmed) e.currentTarget.style.transform = 'scale(1.08)'; }}
+        onMouseLeave={(e) => { if (!dimmed) e.currentTarget.style.transform = (!dimmed && step > 0) ? 'scale(1.05)' : 'scale(1)'; }}
+      >
+        <IconComp size={28} color={borderColor} strokeWidth={1.5} />
+        <span style={{
+          color: 'white',
+          fontSize: '12px',
+          fontWeight: '600',
+          textAlign: 'center'
+        }}>{label}</span>
+        {showMapReduceExample && exampleText && (
+          <div style={{
+            background: 'rgba(0,0,0,0.4)',
+            borderRadius: '6px',
+            padding: '4px 8px',
+            fontSize: '10px',
+            color: '#fbbf24',
+            fontFamily: 'Monaco, Consolas, monospace',
+            textAlign: 'center',
+            marginTop: '2px',
+            maxWidth: '140px',
+            wordBreak: 'break-word'
+          }}>{exampleText}</div>
+        )}
+      </div>
+    );
+  };
+
+  // MapReduce step labels
+  const mapReduceSteps = [
+    { label: 'Show All', description: 'View complete MapReduce pipeline' },
+    { label: 'Submit', description: 'Client submits job to ResourceManager' },
+    { label: 'Locate', description: 'ResourceManager queries NameNode for data locations' },
+    { label: 'Split', description: 'Input data split into chunks for parallel processing' },
+    { label: 'Map', description: 'Parallel map() execution on each input split' },
+    { label: 'Shuffle', description: 'Intermediate data redistributed and sorted by key' },
+    { label: 'Reduce', description: 'Reduce function aggregates values per key' },
+    { label: 'Output', description: 'Final results written to HDFS' }
+  ];
+
+  // Auto-advance animation effect
+  useEffect(() => {
+    if (!mapReduceAnimating) return;
+    const timer = setInterval(() => {
+      setMapReduceStep(prev => {
+        if (prev >= 7) {
+          setMapReduceAnimating(false);
+          return 0;
+        }
+        return prev + 1;
+      });
+    }, 2000);
+    return () => clearInterval(timer);
+  }, [mapReduceAnimating]);
+
+  // Reset step when switching away from mapreduce
+  useEffect(() => {
+    if (activeArchitecture !== 'mapreduce') {
+      setMapReduceStep(0);
+      setMapReduceAnimating(false);
+      setShowMapReduceExample(false);
+    }
+  }, [activeArchitecture]);
+
+  const renderMapReduceLayout = () => {
+    const comps = currentArch.components;
+    const client = comps.find(c => c.id === 'mr-client');
+    const jobtracker = comps.find(c => c.id === 'mr-jobtracker');
+    const namenode = comps.find(c => c.id === 'mr-namenode');
+    const input = comps.find(c => c.id === 'mr-input');
+    const map = comps.find(c => c.id === 'mr-map');
+    const shuffle = comps.find(c => c.id === 'mr-shuffle');
+    const reduce = comps.find(c => c.id === 'mr-reduce');
+    const output = comps.find(c => c.id === 'mr-output');
+
+    const step = mapReduceStep;
+    const isStepActive = (steps) => step === 0 || steps.includes(step);
+
+    // Word count example data per stage
+    const exampleData = {
+      input1: '"hello world"',
+      input2: '"hello foo"',
+      input3: '"world bar"',
+      map1: '(hello,1)(world,1)',
+      map2: '(hello,1)(foo,1)',
+      map3: '(world,1)(bar,1)',
+      reduce1: 'hello→[1,1]=2',
+      reduce2: 'world→[1,1]=2\nfoo→1, bar→1',
+      output: 'hello:2, world:2\nfoo:1, bar:1'
+    };
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0px', position: 'relative' }}>
+
+        {/* Step-by-step animation controls */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          marginBottom: '24px',
+          padding: '12px 20px',
+          background: 'rgba(30, 41, 59, 0.8)',
+          borderRadius: '12px',
+          border: '1px solid rgba(71, 85, 105, 0.3)',
+          flexWrap: 'wrap',
+          justifyContent: 'center'
+        }}>
+          {/* Play/Reset */}
+          <button
+            onClick={() => {
+              if (mapReduceAnimating) {
+                setMapReduceAnimating(false);
+              } else {
+                setMapReduceStep(1);
+                setMapReduceAnimating(true);
+              }
+            }}
+            style={{
+              padding: '6px 14px',
+              background: mapReduceAnimating ? 'rgba(239, 68, 68, 0.2)' : 'rgba(59, 130, 246, 0.2)',
+              border: `1px solid ${mapReduceAnimating ? '#ef4444' : '#3b82f6'}`,
+              borderRadius: '8px',
+              color: mapReduceAnimating ? '#ef4444' : '#60a5fa',
+              fontSize: '12px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            {mapReduceAnimating ? '⏸ Pause' : '▶ Play Flow'}
+          </button>
+
+          {/* Step indicators */}
+          <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+            {mapReduceSteps.map((s, i) => (
+              <button
+                key={i}
+                onClick={() => { setMapReduceStep(i); setMapReduceAnimating(false); }}
+                title={s.description}
+                style={{
+                  padding: '4px 10px',
+                  background: step === i ? 'rgba(59, 130, 246, 0.3)' : 'rgba(30, 41, 59, 0.5)',
+                  border: `1px solid ${step === i ? '#3b82f6' : 'rgba(71, 85, 105, 0.3)'}`,
+                  borderRadius: '6px',
+                  color: step === i ? '#60a5fa' : '#64748b',
+                  fontSize: '11px',
+                  fontWeight: step === i ? '700' : '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {i === 0 ? 'All' : i}
+              </button>
+            ))}
+          </div>
+
+          {/* Divider */}
+          <div style={{ width: '1px', height: '24px', background: 'rgba(71, 85, 105, 0.3)' }} />
+
+          {/* Example toggle */}
+          <button
+            onClick={() => setShowMapReduceExample(!showMapReduceExample)}
+            style={{
+              padding: '6px 14px',
+              background: showMapReduceExample ? 'rgba(245, 158, 11, 0.2)' : 'rgba(30, 41, 59, 0.5)',
+              border: `1px solid ${showMapReduceExample ? '#f59e0b' : 'rgba(71, 85, 105, 0.3)'}`,
+              borderRadius: '8px',
+              color: showMapReduceExample ? '#fbbf24' : '#94a3b8',
+              fontSize: '12px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <Sparkles size={14} />
+            {showMapReduceExample ? 'Hide Example' : 'Word Count Example'}
+          </button>
+        </div>
+
+        {/* Step description */}
+        {step > 0 && (
+          <div style={{
+            marginBottom: '16px',
+            padding: '8px 20px',
+            background: 'rgba(59, 130, 246, 0.1)',
+            border: '1px solid rgba(59, 130, 246, 0.3)',
+            borderRadius: '8px',
+            color: '#93c5fd',
+            fontSize: '13px',
+            textAlign: 'center'
+          }}>
+            <strong>Step {step}:</strong> {mapReduceSteps[step]?.description}
+          </div>
+        )}
+
+        {/* Phase labels alongside the diagram */}
+        <div style={{ position: 'relative', width: '100%' }}>
+
+          {/* Row 1: Client */}
+          <div style={{
+            display: 'flex', justifyContent: 'center',
+            opacity: isStepActive([1]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <ComponentCard component={client} onClick={setSelectedComponent} />
+          </div>
+
+          {/* Arrow: Client → ResourceManager */}
+          <div style={{
+            display: 'flex', justifyContent: 'center', padding: '4px 0',
+            opacity: isStepActive([1]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <VerticalConnectionArrow type="query" direction="down" />
+          </div>
+
+          {/* Row 2: ResourceManager + NameNode */}
+          <div style={{
+            display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0px',
+            opacity: isStepActive([1, 2]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <ComponentCard component={jobtracker} onClick={setSelectedComponent} />
+            <ConnectionArrow type="query" />
+            <ComponentCard component={namenode} onClick={setSelectedComponent} />
+          </div>
+
+          {/* Arrow: ResourceManager → Input Splits (fan out to 3) */}
+          <div style={{
+            padding: '8px 0',
+            opacity: isStepActive([2, 3]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <MapReduceFanOutArrow color={connectionColors.batch} count={3} />
+          </div>
+
+          {/* Row 3: Input Splits (3x mini cards) */}
+          <div style={{
+            display: 'flex', justifyContent: 'center', gap: '40px',
+            opacity: isStepActive([3]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            {[
+              { label: 'Split 1', ex: exampleData.input1 },
+              { label: 'Split 2', ex: exampleData.input2 },
+              { label: 'Split 3', ex: exampleData.input3 }
+            ].map((s, i) => (
+              <MapReduceMiniCard
+                key={i}
+                label={s.label}
+                icon={ScrollText}
+                color="rgba(59, 130, 246, 0.15)"
+                borderColor="#3b82f6"
+                isActive={isStepActive([3])}
+                onClick={() => setSelectedComponent(input)}
+                exampleText={s.ex}
+              />
+            ))}
+          </div>
+
+          {/* Arrows: Split → Map (vertical, 3x parallel) */}
+          <div style={{
+            display: 'flex', justifyContent: 'center', gap: '40px', padding: '0',
+            opacity: isStepActive([3, 4]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            {[0, 1, 2].map(i => (
+              <div key={i} style={{ width: '160px', display: 'flex', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px 0', height: '60px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: connectionColors.batch, transform: 'rotate(90deg)' }}>
+                    <div style={{
+                      width: '40px', height: '2px',
+                      background: `linear-gradient(90deg, transparent, ${connectionColors.batch}, ${connectionColors.batch})`,
+                      position: 'relative'
+                    }}>
+                      {showDataFlow && (
+                        <div style={{
+                          position: 'absolute', width: '8px', height: '8px', borderRadius: '50%',
+                          background: connectionColors.batch, boxShadow: `0 0 10px ${connectionColors.batch}`,
+                          animation: 'flowRight 1.2s infinite linear', top: '-3px'
+                        }} />
+                      )}
+                    </div>
+                    <ChevronRight size={14} />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Phase label: MAP PHASE */}
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px',
+            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <div style={{
+              padding: '4px 16px',
+              background: 'rgba(236, 72, 153, 0.15)',
+              border: '1px solid rgba(236, 72, 153, 0.3)',
+              borderRadius: '20px',
+              color: '#ec4899',
+              fontSize: '11px',
+              fontWeight: '700',
+              letterSpacing: '2px',
+              textTransform: 'uppercase'
+            }}>Map Phase — Parallel Execution</div>
+          </div>
+
+          {/* Row 4: Map Tasks (3x mini cards) */}
+          <div style={{
+            display: 'flex', justifyContent: 'center', gap: '40px',
+            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            {[
+              { label: 'Mapper 1', ex: exampleData.map1 },
+              { label: 'Mapper 2', ex: exampleData.map2 },
+              { label: 'Mapper 3', ex: exampleData.map3 }
+            ].map((m, i) => (
+              <MapReduceMiniCard
+                key={i}
+                label={m.label}
+                icon={Cpu}
+                color="rgba(236, 72, 153, 0.15)"
+                borderColor="#ec4899"
+                isActive={isStepActive([4])}
+                onClick={() => setSelectedComponent(map)}
+                exampleText={m.ex}
+              />
+            ))}
+          </div>
+
+          {/* Phase label: SHUFFLE & SORT */}
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '12px 0 4px 0',
+            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <div style={{
+              padding: '4px 16px',
+              background: 'rgba(245, 158, 11, 0.15)',
+              border: '1px solid rgba(245, 158, 11, 0.3)',
+              borderRadius: '20px',
+              color: '#f59e0b',
+              fontSize: '11px',
+              fontWeight: '700',
+              letterSpacing: '2px',
+              textTransform: 'uppercase'
+            }}>Shuffle & Sort — Network Transfer</div>
+          </div>
+
+          {/* Shuffle cross-connect arrows */}
+          <div style={{
+            padding: '8px 0',
+            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <MapReduceShuffleArrows />
+          </div>
+
+          {/* Row 5: Shuffle & Sort wide card */}
+          <div style={{
+            display: 'flex', justifyContent: 'center',
+            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <div
+              onClick={() => setSelectedComponent(shuffle)}
+              style={{
+                background: 'rgba(124, 58, 237, 0.15)',
+                border: '2px solid #7c3aed',
+                borderRadius: '16px',
+                padding: '16px 40px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '16px',
+                cursor: 'pointer',
+                transition: 'all 0.3s',
+                boxShadow: (step === 5) ? '0 0 30px rgba(124, 58, 237, 0.4)' : '0 0 15px rgba(124, 58, 237, 0.2)'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              <div style={{
+                width: '50px', height: '50px', borderRadius: '12px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'rgba(124, 58, 237, 0.2)',
+                border: '1px solid rgba(124, 58, 237, 0.4)'
+              }}>
+                <GitMerge size={28} color="#7c3aed" strokeWidth={1.5} />
+              </div>
+              <div>
+                <div style={{ color: '#a78bfa', fontSize: '16px', fontWeight: '700' }}>Shuffle & Sort</div>
+                <div style={{ color: '#94a3b8', fontSize: '12px' }}>Partition by key → Transfer → Merge sort</div>
+              </div>
+              {showMapReduceExample && (
+                <div style={{
+                  background: 'rgba(0,0,0,0.4)', borderRadius: '8px', padding: '8px 12px',
+                  fontSize: '11px', color: '#fbbf24', fontFamily: 'Monaco, Consolas, monospace',
+                  lineHeight: '1.5'
+                }}>
+                  Group: hello→[1,1,1], world→[1,1], foo→[1], bar→[1]
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Phase label: REDUCE PHASE */}
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '12px 0 4px 0',
+            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <div style={{
+              padding: '4px 16px',
+              background: 'rgba(245, 158, 11, 0.15)',
+              border: '1px solid rgba(245, 158, 11, 0.3)',
+              borderRadius: '20px',
+              color: '#f59e0b',
+              fontSize: '11px',
+              fontWeight: '700',
+              letterSpacing: '2px',
+              textTransform: 'uppercase'
+            }}>Reduce Phase — Aggregation</div>
+          </div>
+
+          {/* Arrows: Shuffle → Reducers (fan out to 2) */}
+          <div style={{
+            padding: '8px 0',
+            opacity: isStepActive([5, 6]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <MapReduceFanOutArrow color={connectionColors.stream} count={2} />
+          </div>
+
+          {/* Row 6: Reduce Tasks (2x mini cards) */}
+          <div style={{
+            display: 'flex', justifyContent: 'center', gap: '40px',
+            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            {[
+              { label: 'Reducer 1', ex: exampleData.reduce1 },
+              { label: 'Reducer 2', ex: exampleData.reduce2 }
+            ].map((r, i) => (
+              <MapReduceMiniCard
+                key={i}
+                label={r.label}
+                icon={Activity}
+                color="rgba(245, 158, 11, 0.15)"
+                borderColor="#f59e0b"
+                isActive={isStepActive([6])}
+                onClick={() => setSelectedComponent(reduce)}
+                exampleText={r.ex}
+              />
+            ))}
+          </div>
+
+          {/* Arrows: Reducers → Output (fan in to 1) */}
+          <div style={{
+            padding: '8px 0',
+            opacity: isStepActive([6, 7]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <MapReduceFanInArrow color={connectionColors.batch} sourceCount={2} />
+          </div>
+
+          {/* Row 7: HDFS Output */}
+          <div style={{
+            display: 'flex', justifyContent: 'center',
+            opacity: isStepActive([7]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <div style={{ position: 'relative' }}>
+              <ComponentCard component={output} onClick={setSelectedComponent} />
+              {showMapReduceExample && (
+                <div style={{
+                  position: 'absolute', top: '50%', left: '100%', marginLeft: '12px',
+                  transform: 'translateY(-50%)',
+                  background: 'rgba(0,0,0,0.6)', borderRadius: '8px', padding: '8px 12px',
+                  fontSize: '11px', color: '#fbbf24', fontFamily: 'Monaco, Consolas, monospace',
+                  whiteSpace: 'nowrap', border: '1px solid rgba(245, 158, 11, 0.3)'
+                }}>
+                  {exampleData.output}
+                </div>
+              )}
+            </div>
+          </div>
+
+        </div>
       </div>
     );
   };
@@ -4500,9 +5249,9 @@ for message in consumer:
                     gap: '2px',
                     border: '1px solid rgba(71, 85, 105, 0.2)'
                   }}>
-                    {['lambda', 'kappa', 'streaming', 'batch'].map(key => {
+                    {['lambda', 'kappa', 'streaming', 'batch', 'mapreduce'].map(key => {
                       const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies;
-                      const icons = { lambda: 'L', kappa: 'K', streaming: 'S', batch: 'B' };
+                      const icons = { lambda: 'L', kappa: 'K', streaming: 'S', batch: 'B', mapreduce: 'MR' };
                       return (
                         <button
                           key={key}
@@ -4852,6 +5601,7 @@ for message in consumer:
                currentArch.layout === 'blockchain' ? renderBlockchainLayout() :
                currentArch.layout === 'star' ? renderStarLayout() :
                currentArch.layout === 'snowflake' ? renderSnowflakeLayout() :
+               currentArch.layout === 'mapreduce' ? renderMapReduceLayout() :
                renderLinearLayout()}
             </div>
 
