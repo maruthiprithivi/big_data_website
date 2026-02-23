@@ -2705,7 +2705,7 @@ for message in consumer:
   };
 
   // MapReduce: Mini-card for parallel tasks (smaller than ComponentCard)
-  const MapReduceMiniCard = ({ label, icon: IconComp, color, borderColor, isActive = true, onClick, exampleText }) => {
+  const MapReduceMiniCard = ({ label, icon: IconComp, color, borderColor, isActive = true, onClick }) => {
     const step = mapReduceStep;
     const dimmed = step > 0 && !isActive;
 
@@ -2740,20 +2740,6 @@ for message in consumer:
           fontWeight: '600',
           textAlign: 'center'
         }}>{label}</span>
-        {showMapReduceExample && exampleText && (
-          <div style={{
-            background: 'rgba(0,0,0,0.4)',
-            borderRadius: '6px',
-            padding: '4px 8px',
-            fontSize: '10px',
-            color: '#fbbf24',
-            fontFamily: 'Monaco, Consolas, monospace',
-            textAlign: 'center',
-            marginTop: '2px',
-            maxWidth: '140px',
-            wordBreak: 'break-word'
-          }}>{exampleText}</div>
-        )}
       </div>
     );
   };
@@ -2794,6 +2780,66 @@ for message in consumer:
     }
   }, [activeArchitecture]);
 
+  // Data annotation pill: shows data state beside a pipeline stage
+  const DataFlowAnnotation = ({ lines, color = '#60a5fa', borderColor = 'rgba(59, 130, 246, 0.3)', position = 'right', wide = false }) => (
+    <div style={{
+      background: 'rgba(15, 23, 42, 0.9)',
+      border: `1px solid ${borderColor}`,
+      borderRadius: '10px',
+      padding: '10px 14px',
+      minWidth: wide ? '280px' : '200px',
+      maxWidth: wide ? '340px' : '260px',
+      backdropFilter: 'blur(8px)',
+      boxShadow: `0 4px 16px rgba(0,0,0,0.3), inset 0 0 0 1px ${borderColor}22`
+    }}>
+      {lines.map((line, idx) => (
+        <div key={idx} style={{ marginBottom: idx < lines.length - 1 ? '6px' : 0 }}>
+          {line.label && (
+            <div style={{ fontSize: '10px', fontWeight: '700', color: color, textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '2px' }}>
+              {line.label}
+            </div>
+          )}
+          <div style={{
+            fontSize: '11px',
+            fontFamily: 'Monaco, Consolas, "Courier New", monospace',
+            color: '#e2e8f0',
+            lineHeight: '1.5',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word'
+          }}>
+            {line.code}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  // Arrow connector from diagram to annotation
+  const AnnotationConnector = ({ color = 'rgba(59, 130, 246, 0.4)' }) => (
+    <div style={{
+      width: '32px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0
+    }}>
+      <div style={{
+        width: '24px',
+        height: '2px',
+        background: `linear-gradient(90deg, transparent, ${color})`,
+        position: 'relative'
+      }}>
+        <div style={{
+          position: 'absolute', right: '-4px', top: '-3px',
+          width: 0, height: 0,
+          borderTop: '4px solid transparent',
+          borderBottom: '4px solid transparent',
+          borderLeft: `6px solid ${color}`
+        }} />
+      </div>
+    </div>
+  );
+
   const renderMapReduceLayout = () => {
     const comps = currentArch.components;
     const client = comps.find(c => c.id === 'mr-client');
@@ -2807,19 +2853,6 @@ for message in consumer:
 
     const step = mapReduceStep;
     const isStepActive = (steps) => step === 0 || steps.includes(step);
-
-    // Word count example data per stage
-    const exampleData = {
-      input1: '"hello world"',
-      input2: '"hello foo"',
-      input3: '"world bar"',
-      map1: '(hello,1)(world,1)',
-      map2: '(hello,1)(foo,1)',
-      map3: '(world,1)(bar,1)',
-      reduce1: 'hello→[1,1]=2',
-      reduce2: 'world→[1,1]=2\nfoo→1, bar→1',
-      output: 'hello:2, world:2\nfoo:1, bar:1'
-    };
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0px', position: 'relative' }}>
@@ -2929,16 +2962,29 @@ for message in consumer:
           </div>
         )}
 
-        {/* Phase labels alongside the diagram */}
+        {/* Main diagram area */}
         <div style={{ position: 'relative', width: '100%' }}>
 
-          {/* Row 1: Client */}
+          {/* ─── Row 1: Client ─── */}
           <div style={{
-            display: 'flex', justifyContent: 'center',
+            display: 'flex', justifyContent: 'center', alignItems: 'center',
             opacity: isStepActive([1]) ? 1 : (step > 0 ? 0.25 : 1),
             transition: 'opacity 0.5s'
           }}>
             <ComponentCard component={client} onClick={setSelectedComponent} />
+            {showMapReduceExample && (
+              <>
+                <AnnotationConnector color="rgba(59, 130, 246, 0.4)" />
+                <DataFlowAnnotation
+                  color="#60a5fa"
+                  borderColor="rgba(59, 130, 246, 0.3)"
+                  lines={[
+                    { label: 'Job Submission', code: 'hadoop jar wordcount.jar \\\n  WordCount /input /output' },
+                    { label: 'Input File (on HDFS)', code: '/input/docs.txt:\n"hello world hello foo world bar"' }
+                  ]}
+                />
+              </>
+            )}
           </div>
 
           {/* Arrow: Client → ResourceManager */}
@@ -2950,12 +2996,25 @@ for message in consumer:
             <VerticalConnectionArrow type="query" direction="down" />
           </div>
 
-          {/* Row 2: ResourceManager + NameNode */}
+          {/* ─── Row 2: ResourceManager + NameNode ─── */}
           <div style={{
-            display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0px',
+            display: 'flex', justifyContent: 'center', alignItems: 'center',
             opacity: isStepActive([1, 2]) ? 1 : (step > 0 ? 0.25 : 1),
             transition: 'opacity 0.5s'
           }}>
+            {showMapReduceExample && (
+              <>
+                <DataFlowAnnotation
+                  color="#a78bfa"
+                  borderColor="rgba(139, 92, 246, 0.3)"
+                  position="left"
+                  lines={[
+                    { label: 'NameNode Response', code: 'Block 1 → DataNode-A (rows 1-2)\nBlock 2 → DataNode-B (rows 3-4)\nBlock 3 → DataNode-C (rows 5-6)' }
+                  ]}
+                />
+                <AnnotationConnector color="rgba(139, 92, 246, 0.4)" />
+              </>
+            )}
             <ComponentCard component={jobtracker} onClick={setSelectedComponent} />
             <ConnectionArrow type="query" />
             <ComponentCard component={namenode} onClick={setSelectedComponent} />
@@ -2970,28 +3029,43 @@ for message in consumer:
             <MapReduceFanOutArrow color={connectionColors.batch} count={3} />
           </div>
 
-          {/* Row 3: Input Splits (3x mini cards) */}
+          {/* ─── Row 3: Input Splits (3x mini cards) with data annotations ─── */}
           <div style={{
-            display: 'flex', justifyContent: 'center', gap: '40px',
+            display: 'flex', justifyContent: 'center', alignItems: 'center',
             opacity: isStepActive([3]) ? 1 : (step > 0 ? 0.25 : 1),
             transition: 'opacity 0.5s'
           }}>
-            {[
-              { label: 'Split 1', ex: exampleData.input1 },
-              { label: 'Split 2', ex: exampleData.input2 },
-              { label: 'Split 3', ex: exampleData.input3 }
-            ].map((s, i) => (
-              <MapReduceMiniCard
-                key={i}
-                label={s.label}
-                icon={ScrollText}
-                color="rgba(59, 130, 246, 0.15)"
-                borderColor="#3b82f6"
-                isActive={isStepActive([3])}
-                onClick={() => setSelectedComponent(input)}
-                exampleText={s.ex}
-              />
-            ))}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '40px' }}>
+              {[
+                { label: 'Split 1' },
+                { label: 'Split 2' },
+                { label: 'Split 3' }
+              ].map((s, i) => (
+                <MapReduceMiniCard
+                  key={i}
+                  label={s.label}
+                  icon={ScrollText}
+                  color="rgba(59, 130, 246, 0.15)"
+                  borderColor="#3b82f6"
+                  isActive={isStepActive([3])}
+                  onClick={() => setSelectedComponent(input)}
+                />
+              ))}
+            </div>
+            {showMapReduceExample && (
+              <>
+                <AnnotationConnector color="rgba(59, 130, 246, 0.4)" />
+                <DataFlowAnnotation
+                  color="#60a5fa"
+                  borderColor="rgba(59, 130, 246, 0.3)"
+                  wide
+                  lines={[
+                    { label: 'Data Splitting (128MB chunks)', code: 'Split 1: "hello world"\nSplit 2: "hello foo"\nSplit 3: "world bar"' },
+                    { label: 'Each split → 1 mapper (data locality)', code: 'Split assigned to node holding that HDFS block' }
+                  ]}
+                />
+              </>
+            )}
           </div>
 
           {/* Arrows: Split → Map (vertical, 3x parallel) */}
@@ -3043,28 +3117,58 @@ for message in consumer:
             }}>Map Phase — Parallel Execution</div>
           </div>
 
-          {/* Row 4: Map Tasks (3x mini cards) */}
+          {/* ─── Row 4: Map Tasks (3x mini cards) with data annotations ─── */}
           <div style={{
-            display: 'flex', justifyContent: 'center', gap: '40px',
+            display: 'flex', justifyContent: 'center', alignItems: 'center',
             opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.25 : 1),
             transition: 'opacity 0.5s'
           }}>
-            {[
-              { label: 'Mapper 1', ex: exampleData.map1 },
-              { label: 'Mapper 2', ex: exampleData.map2 },
-              { label: 'Mapper 3', ex: exampleData.map3 }
-            ].map((m, i) => (
-              <MapReduceMiniCard
-                key={i}
-                label={m.label}
-                icon={Cpu}
-                color="rgba(236, 72, 153, 0.15)"
-                borderColor="#ec4899"
-                isActive={isStepActive([4])}
-                onClick={() => setSelectedComponent(map)}
-                exampleText={m.ex}
-              />
-            ))}
+            {showMapReduceExample && (
+              <>
+                <DataFlowAnnotation
+                  color="#ec4899"
+                  borderColor="rgba(236, 72, 153, 0.3)"
+                  position="left"
+                  wide
+                  lines={[
+                    { label: 'map(key, value) → emit(k, v)', code: 'For each word in line:\n  emit(word, 1)' }
+                  ]}
+                />
+                <AnnotationConnector color="rgba(236, 72, 153, 0.4)" />
+              </>
+            )}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '40px' }}>
+              {[
+                { label: 'Mapper 1' },
+                { label: 'Mapper 2' },
+                { label: 'Mapper 3' }
+              ].map((m, i) => (
+                <MapReduceMiniCard
+                  key={i}
+                  label={m.label}
+                  icon={Cpu}
+                  color="rgba(236, 72, 153, 0.15)"
+                  borderColor="#ec4899"
+                  isActive={isStepActive([4])}
+                  onClick={() => setSelectedComponent(map)}
+                />
+              ))}
+            </div>
+            {showMapReduceExample && (
+              <>
+                <AnnotationConnector color="rgba(236, 72, 153, 0.4)" />
+                <DataFlowAnnotation
+                  color="#ec4899"
+                  borderColor="rgba(236, 72, 153, 0.3)"
+                  wide
+                  lines={[
+                    { label: 'Mapper 1 Output', code: '(hello, 1), (world, 1)' },
+                    { label: 'Mapper 2 Output', code: '(hello, 1), (foo, 1)' },
+                    { label: 'Mapper 3 Output', code: '(world, 1), (bar, 1)' }
+                  ]}
+                />
+              </>
+            )}
           </div>
 
           {/* Phase label: SHUFFLE & SORT */}
@@ -3095,12 +3199,27 @@ for message in consumer:
             <MapReduceShuffleArrows />
           </div>
 
-          {/* Row 5: Shuffle & Sort wide card */}
+          {/* ─── Row 5: Shuffle & Sort wide card with data annotations ─── */}
           <div style={{
-            display: 'flex', justifyContent: 'center',
+            display: 'flex', justifyContent: 'center', alignItems: 'center',
             opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
             transition: 'opacity 0.5s'
           }}>
+            {showMapReduceExample && (
+              <>
+                <DataFlowAnnotation
+                  color="#f59e0b"
+                  borderColor="rgba(245, 158, 11, 0.3)"
+                  position="left"
+                  wide
+                  lines={[
+                    { label: 'Step 1: Partition by key hash', code: 'hash("hello") % 2 → Reducer 0\nhash("world") % 2 → Reducer 0\nhash("foo")   % 2 → Reducer 1\nhash("bar")   % 2 → Reducer 1' },
+                    { label: 'Step 2: Sort within partition', code: 'Reducer 0: (hello,1),(hello,1),\n           (world,1),(world,1)\nReducer 1: (bar,1),(foo,1)' }
+                  ]}
+                />
+                <AnnotationConnector color="rgba(245, 158, 11, 0.4)" />
+              </>
+            )}
             <div
               onClick={() => setSelectedComponent(shuffle)}
               style={{
@@ -3113,7 +3232,8 @@ for message in consumer:
                 gap: '16px',
                 cursor: 'pointer',
                 transition: 'all 0.3s',
-                boxShadow: (step === 5) ? '0 0 30px rgba(124, 58, 237, 0.4)' : '0 0 15px rgba(124, 58, 237, 0.2)'
+                boxShadow: (step === 5) ? '0 0 30px rgba(124, 58, 237, 0.4)' : '0 0 15px rgba(124, 58, 237, 0.2)',
+                flexShrink: 0
               }}
               onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
               onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
@@ -3130,16 +3250,21 @@ for message in consumer:
                 <div style={{ color: '#a78bfa', fontSize: '16px', fontWeight: '700' }}>Shuffle & Sort</div>
                 <div style={{ color: '#94a3b8', fontSize: '12px' }}>Partition by key → Transfer → Merge sort</div>
               </div>
-              {showMapReduceExample && (
-                <div style={{
-                  background: 'rgba(0,0,0,0.4)', borderRadius: '8px', padding: '8px 12px',
-                  fontSize: '11px', color: '#fbbf24', fontFamily: 'Monaco, Consolas, monospace',
-                  lineHeight: '1.5'
-                }}>
-                  Group: hello→[1,1,1], world→[1,1], foo→[1], bar→[1]
-                </div>
-              )}
             </div>
+            {showMapReduceExample && (
+              <>
+                <AnnotationConnector color="rgba(124, 58, 237, 0.4)" />
+                <DataFlowAnnotation
+                  color="#a78bfa"
+                  borderColor="rgba(124, 58, 237, 0.3)"
+                  wide
+                  lines={[
+                    { label: 'After Shuffle & Sort', code: 'Partition 0 (sorted):\n  hello → [1, 1]\n  world → [1, 1]' },
+                    { label: '', code: 'Partition 1 (sorted):\n  bar → [1]\n  foo → [1]' }
+                  ]}
+                />
+              </>
+            )}
           </div>
 
           {/* Phase label: REDUCE PHASE */}
@@ -3170,27 +3295,55 @@ for message in consumer:
             <MapReduceFanOutArrow color={connectionColors.stream} count={2} />
           </div>
 
-          {/* Row 6: Reduce Tasks (2x mini cards) */}
+          {/* ─── Row 6: Reduce Tasks with data annotations ─── */}
           <div style={{
-            display: 'flex', justifyContent: 'center', gap: '40px',
+            display: 'flex', justifyContent: 'center', alignItems: 'center',
             opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
             transition: 'opacity 0.5s'
           }}>
-            {[
-              { label: 'Reducer 1', ex: exampleData.reduce1 },
-              { label: 'Reducer 2', ex: exampleData.reduce2 }
-            ].map((r, i) => (
-              <MapReduceMiniCard
-                key={i}
-                label={r.label}
-                icon={Activity}
-                color="rgba(245, 158, 11, 0.15)"
-                borderColor="#f59e0b"
-                isActive={isStepActive([6])}
-                onClick={() => setSelectedComponent(reduce)}
-                exampleText={r.ex}
-              />
-            ))}
+            {showMapReduceExample && (
+              <>
+                <DataFlowAnnotation
+                  color="#f59e0b"
+                  borderColor="rgba(245, 158, 11, 0.3)"
+                  position="left"
+                  lines={[
+                    { label: 'reduce(key, values[])', code: 'sum all values for key' }
+                  ]}
+                />
+                <AnnotationConnector color="rgba(245, 158, 11, 0.4)" />
+              </>
+            )}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '40px' }}>
+              {[
+                { label: 'Reducer 1' },
+                { label: 'Reducer 2' }
+              ].map((r, i) => (
+                <MapReduceMiniCard
+                  key={i}
+                  label={r.label}
+                  icon={Activity}
+                  color="rgba(245, 158, 11, 0.15)"
+                  borderColor="#f59e0b"
+                  isActive={isStepActive([6])}
+                  onClick={() => setSelectedComponent(reduce)}
+                />
+              ))}
+            </div>
+            {showMapReduceExample && (
+              <>
+                <AnnotationConnector color="rgba(245, 158, 11, 0.4)" />
+                <DataFlowAnnotation
+                  color="#f59e0b"
+                  borderColor="rgba(245, 158, 11, 0.3)"
+                  wide
+                  lines={[
+                    { label: 'Reducer 1 Output', code: 'hello: 1+1 = 2\nworld: 1+1 = 2' },
+                    { label: 'Reducer 2 Output', code: 'bar: 1\nfoo: 1' }
+                  ]}
+                />
+              </>
+            )}
           </div>
 
           {/* Arrows: Reducers → Output (fan in to 1) */}
@@ -3202,26 +3355,28 @@ for message in consumer:
             <MapReduceFanInArrow color={connectionColors.batch} sourceCount={2} />
           </div>
 
-          {/* Row 7: HDFS Output */}
+          {/* ─── Row 7: HDFS Output with data annotation ─── */}
           <div style={{
-            display: 'flex', justifyContent: 'center',
+            display: 'flex', justifyContent: 'center', alignItems: 'center',
             opacity: isStepActive([7]) ? 1 : (step > 0 ? 0.25 : 1),
             transition: 'opacity 0.5s'
           }}>
-            <div style={{ position: 'relative' }}>
-              <ComponentCard component={output} onClick={setSelectedComponent} />
-              {showMapReduceExample && (
-                <div style={{
-                  position: 'absolute', top: '50%', left: '100%', marginLeft: '12px',
-                  transform: 'translateY(-50%)',
-                  background: 'rgba(0,0,0,0.6)', borderRadius: '8px', padding: '8px 12px',
-                  fontSize: '11px', color: '#fbbf24', fontFamily: 'Monaco, Consolas, monospace',
-                  whiteSpace: 'nowrap', border: '1px solid rgba(245, 158, 11, 0.3)'
-                }}>
-                  {exampleData.output}
-                </div>
-              )}
-            </div>
+            <ComponentCard component={output} onClick={setSelectedComponent} />
+            {showMapReduceExample && (
+              <>
+                <AnnotationConnector color="rgba(16, 185, 129, 0.4)" />
+                <DataFlowAnnotation
+                  color="#10b981"
+                  borderColor="rgba(16, 185, 129, 0.3)"
+                  wide
+                  lines={[
+                    { label: 'HDFS Output Files', code: 'part-r-00000:\n  bar\t1\n  foo\t1' },
+                    { label: '', code: 'part-r-00001:\n  hello\t2\n  world\t2' },
+                    { label: 'Total', code: '4 unique words counted across 3 splits' }
+                  ]}
+                />
+              </>
+            )}
           </div>
 
         </div>
