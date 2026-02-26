@@ -6205,7 +6205,7 @@ for message in consumer:
                     { key: 'cases', label: 'Case Studies', color: '#ec4899', bgColor: '236, 72, 153', state: showCaseStudies, setState: () => { setShowCaseStudies(!showCaseStudies); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowComparison(false); if (!showCaseStudies) { setTimeout(() => { const el = document.getElementById('case-studies-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
                       icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
                     },
-                    { key: 'comparison', label: 'MR vs Spark', color: '#06b6d4', bgColor: '6, 182, 212', state: showComparison, setState: () => { setShowComparison(!showComparison); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); if (!showComparison) { setTimeout(() => { const el = document.getElementById('comparison-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
+                    { key: 'comparison', label: 'Distributed vs Clustered', color: '#06b6d4', bgColor: '6, 182, 212', state: showComparison, setState: () => { setShowComparison(!showComparison); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); if (!showComparison) { setTimeout(() => { const el = document.getElementById('comparison-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
                       icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"></path></svg>
                     }
                   ].map(({ key, label, color, bgColor, state, setState, icon }) => (
@@ -7832,8 +7832,192 @@ for message in consumer:
                     <span style={{ color: '#f59e0b' }}>Apache Spark</span>
                   </h2>
                   <p style={{ color: '#94a3b8', fontSize: '14px' }}>
-                    Distributed batch processing vs Unified in-memory analytics — how do they compare?
+                    The Distributed Workhorse vs The Clustered Speedster — understanding the nuance
                   </p>
+                </div>
+
+                {/* Distributed vs Clustered: The Nuance */}
+                <div style={{
+                  background: 'rgba(15, 23, 42, 0.6)',
+                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  borderRadius: '16px', padding: '28px', marginBottom: '28px'
+                }}>
+                  <h3 style={{ color: '#e2e8f0', fontSize: '17px', fontWeight: '700', marginBottom: '20px', textAlign: 'center' }}>
+                    Distributed vs. Clustered Computing: The Nuance
+                  </h3>
+
+                  {/* Umbrella concept */}
+                  <div style={{
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', marginBottom: '24px'
+                  }}>
+                    {/* Distributed = the umbrella */}
+                    <div style={{
+                      background: 'rgba(139, 92, 246, 0.1)',
+                      border: '2px solid rgba(139, 92, 246, 0.4)',
+                      borderRadius: '16px', padding: '20px', width: '100%', position: 'relative'
+                    }}>
+                      <div style={{
+                        position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)',
+                        background: 'rgba(139, 92, 246, 0.3)', border: '1px solid #8b5cf6',
+                        borderRadius: '20px', padding: '4px 16px',
+                        fontSize: '11px', fontWeight: '700', color: '#c4b5fd',
+                        textTransform: 'uppercase', letterSpacing: '1.5px', whiteSpace: 'nowrap'
+                      }}>
+                        Distributed Computing — The Broad Umbrella
+                      </div>
+                      <p style={{ color: '#c4b5fd', fontSize: '13px', textAlign: 'center', lineHeight: '1.7', marginTop: '8px' }}>
+                        Any system where components on <strong>networked computers</strong> communicate and coordinate by <strong>passing messages</strong>.
+                      </p>
+
+                      {/* Clustered = a subset inside */}
+                      <div style={{
+                        background: 'rgba(6, 182, 212, 0.1)',
+                        border: '2px solid rgba(6, 182, 212, 0.4)',
+                        borderRadius: '12px', padding: '16px', marginTop: '16px', position: 'relative'
+                      }}>
+                        <div style={{
+                          position: 'absolute', top: '-10px', left: '50%', transform: 'translateX(-50%)',
+                          background: 'rgba(6, 182, 212, 0.3)', border: '1px solid #06b6d4',
+                          borderRadius: '20px', padding: '3px 14px',
+                          fontSize: '10px', fontWeight: '700', color: '#67e8f9',
+                          textTransform: 'uppercase', letterSpacing: '1.5px', whiteSpace: 'nowrap'
+                        }}>
+                          Clustered Computing — A Specific Type
+                        </div>
+                        <p style={{ color: '#67e8f9', fontSize: '13px', textAlign: 'center', lineHeight: '1.7', marginTop: '4px' }}>
+                          A set of connected nodes working <strong>so closely together</strong> that they can be viewed as a <strong>single system</strong>.
+                        </p>
+
+                        {/* Both MR and Spark live here */}
+                        <div style={{
+                          display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px'
+                        }}>
+                          {/* MapReduce */}
+                          <div style={{
+                            background: 'rgba(236, 72, 153, 0.1)',
+                            border: '1px solid rgba(236, 72, 153, 0.3)',
+                            borderRadius: '10px', padding: '14px', textAlign: 'center'
+                          }}>
+                            <div style={{ color: '#ec4899', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
+                              MapReduce
+                            </div>
+                            <div style={{
+                              background: 'rgba(236, 72, 153, 0.15)', borderRadius: '6px',
+                              padding: '4px 10px', display: 'inline-block', marginBottom: '8px',
+                              fontSize: '10px', fontWeight: '700', color: '#f9a8d4',
+                              textTransform: 'uppercase', letterSpacing: '1px'
+                            }}>
+                              Disk-Centric
+                            </div>
+                            <p style={{ color: '#cbd5e1', fontSize: '11px', lineHeight: '1.6' }}>
+                              Runs on a Hadoop cluster, but <em>feels</em> more "distributed" — it breaks jobs into tiny pieces, sends them out, <strong>writes results to disk</strong>, and repeats. A literal distribution of a massive batch job across a vast sea of commodity hardware.
+                            </p>
+                          </div>
+
+                          {/* Spark */}
+                          <div style={{
+                            background: 'rgba(245, 158, 11, 0.1)',
+                            border: '1px solid rgba(245, 158, 11, 0.3)',
+                            borderRadius: '10px', padding: '14px', textAlign: 'center'
+                          }}>
+                            <div style={{ color: '#f59e0b', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
+                              Apache Spark
+                            </div>
+                            <div style={{
+                              background: 'rgba(245, 158, 11, 0.15)', borderRadius: '6px',
+                              padding: '4px 10px', display: 'inline-block', marginBottom: '8px',
+                              fontSize: '10px', fontWeight: '700', color: '#fde68a',
+                              textTransform: 'uppercase', letterSpacing: '1px'
+                            }}>
+                              Memory-Centric
+                            </div>
+                            <p style={{ color: '#cbd5e1', fontSize: '11px', lineHeight: '1.6' }}>
+                              The poster child for "clustered" computing — it treats the cluster like a <strong>single, massive pool of RAM</strong> using RDDs. Data stays in-memory, making it feel like one cohesive <strong>"Supercomputer"</strong> rather than a collection of independent workers.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* The Analogy: Filing Cabinet vs Pool of RAM */}
+                  <div style={{
+                    display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '20px', alignItems: 'center'
+                  }}>
+                    {/* Filing Cabinet */}
+                    <div style={{
+                      background: 'rgba(236, 72, 153, 0.06)',
+                      border: '1px dashed rgba(236, 72, 153, 0.3)',
+                      borderRadius: '12px', padding: '20px', textAlign: 'center'
+                    }}>
+                      <div style={{ fontSize: '32px', marginBottom: '8px' }}>🗄️</div>
+                      <div style={{ color: '#ec4899', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
+                        "Giant Filing Cabinet"
+                      </div>
+                      <p style={{ color: '#94a3b8', fontSize: '11px', lineHeight: '1.6' }}>
+                        MapReduce treats the cluster like a filing cabinet — <strong>read a file, process it, put it back, pick up the next</strong>. Every step involves opening a drawer (disk I/O).
+                      </p>
+                      <div style={{
+                        marginTop: '10px', fontFamily: 'Monaco, Consolas, monospace', fontSize: '10px',
+                        color: '#f9a8d4', background: 'rgba(0,0,0,0.3)', borderRadius: '8px', padding: '8px',
+                        lineHeight: '1.6'
+                      }}>
+                        Read → Process → Write to disk<br/>
+                        Read from disk → Shuffle → Write to disk<br/>
+                        Read from disk → Reduce → Write to HDFS
+                      </div>
+                    </div>
+
+                    {/* VS divider */}
+                    <div style={{
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px'
+                    }}>
+                      <div style={{ width: '2px', height: '30px', background: 'rgba(71, 85, 105, 0.3)' }} />
+                      <div style={{
+                        padding: '8px 14px', borderRadius: '10px',
+                        background: 'rgba(30, 41, 59, 0.8)', border: '1px solid rgba(71, 85, 105, 0.3)',
+                        color: '#64748b', fontSize: '13px', fontWeight: '700'
+                      }}>VS</div>
+                      <div style={{ width: '2px', height: '30px', background: 'rgba(71, 85, 105, 0.3)' }} />
+                    </div>
+
+                    {/* Pool of RAM */}
+                    <div style={{
+                      background: 'rgba(245, 158, 11, 0.06)',
+                      border: '1px dashed rgba(245, 158, 11, 0.3)',
+                      borderRadius: '12px', padding: '20px', textAlign: 'center'
+                    }}>
+                      <div style={{ fontSize: '32px', marginBottom: '8px' }}>🧠</div>
+                      <div style={{ color: '#f59e0b', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
+                        "Massive Pool of RAM"
+                      </div>
+                      <p style={{ color: '#94a3b8', fontSize: '11px', lineHeight: '1.6' }}>
+                        Spark treats the cluster like one giant brain — data stays <strong>in-memory across all nodes</strong>. No filing cabinet drawers to open. The RDD keeps data alive and accessible.
+                      </p>
+                      <div style={{
+                        marginTop: '10px', fontFamily: 'Monaco, Consolas, monospace', fontSize: '10px',
+                        color: '#fde68a', background: 'rgba(0,0,0,0.3)', borderRadius: '8px', padding: '8px',
+                        lineHeight: '1.6'
+                      }}>
+                        Read → Transform (in memory)<br/>
+                        → Transform (still in memory)<br/>
+                        → Shuffle → Transform (back in memory)<br/>
+                        → Output
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Key takeaway */}
+                  <div style={{
+                    marginTop: '20px', padding: '12px 20px', textAlign: 'center',
+                    background: 'rgba(139, 92, 246, 0.08)',
+                    border: '1px solid rgba(139, 92, 246, 0.25)',
+                    borderRadius: '10px'
+                  }}>
+                    <div style={{ color: '#c4b5fd', fontSize: '12px', lineHeight: '1.7' }}>
+                      <strong>Both run on clusters.</strong> The difference is <em>how</em> they use the cluster. MapReduce treats each node as an independent worker with a shared filing system (HDFS). Spark treats all nodes as parts of one unified computational engine, sharing memory through RDDs.
+                    </div>
+                  </div>
                 </div>
 
                 {/* Interactive highlight buttons */}
@@ -7884,7 +8068,7 @@ for message in consumer:
                       </div>
                       <div>
                         <div style={{ color: '#ec4899', fontSize: '18px', fontWeight: '700' }}>MapReduce</div>
-                        <div style={{ color: '#94a3b8', fontSize: '11px' }}>Distributed Batch Processing</div>
+                        <div style={{ color: '#94a3b8', fontSize: '11px' }}>The Distributed Workhorse — Disk-Centric</div>
                       </div>
                     </div>
 
@@ -7925,7 +8109,7 @@ for message in consumer:
                         opacity: comparisonHighlight === 'speed' || !comparisonHighlight ? 1 : 0.3,
                         transition: 'opacity 0.3s'
                       }}>
-                        ⚠ Disk I/O at every stage boundary — 3 disk operations per job
+                        ⚠ Opens the filing cabinet at every stage — 3 disk round-trips per job
                       </div>
                     </div>
 
@@ -7970,7 +8154,7 @@ for message in consumer:
                       </div>
                       <div>
                         <div style={{ color: '#f59e0b', fontSize: '18px', fontWeight: '700' }}>Apache Spark</div>
-                        <div style={{ color: '#94a3b8', fontSize: '11px' }}>Unified In-Memory Analytics</div>
+                        <div style={{ color: '#94a3b8', fontSize: '11px' }}>The Clustered Speedster — Memory-Centric</div>
                       </div>
                     </div>
 
@@ -8011,7 +8195,7 @@ for message in consumer:
                         opacity: comparisonHighlight === 'speed' || !comparisonHighlight ? 1 : 0.3,
                         transition: 'opacity 0.3s'
                       }}>
-                        ✓ Data stays in memory — only shuffle writes to disk temporarily
+                        ✓ One giant pool of RAM — data stays in-memory, no filing cabinet needed
                       </div>
                     </div>
 
@@ -8047,16 +8231,22 @@ for message in consumer:
                   border: '1px solid rgba(71, 85, 105, 0.3)',
                   borderRadius: '16px', padding: '24px', marginBottom: '24px'
                 }}>
-                  <h3 style={{ color: '#e2e8f0', fontSize: '16px', fontWeight: '700', marginBottom: '20px', textAlign: 'center' }}>
-                    Same Task, Different Approaches: Word Count on 384MB
+                  <h3 style={{ color: '#e2e8f0', fontSize: '16px', fontWeight: '700', marginBottom: '6px', textAlign: 'center' }}>
+                    Same Task, Different Philosophy: Word Count on 384MB
                   </h3>
+                  <p style={{ color: '#64748b', fontSize: '12px', textAlign: 'center', marginBottom: '20px' }}>
+                    Filing cabinet (read/write/read/write) vs. shared memory (read once, transform in place)
+                  </p>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
 
                     {/* MapReduce approach */}
                     <div style={{ padding: '16px', background: 'rgba(236, 72, 153, 0.05)', borderRadius: '12px', border: '1px solid rgba(236, 72, 153, 0.2)' }}>
-                      <div style={{ color: '#ec4899', fontSize: '13px', fontWeight: '700', marginBottom: '12px', textAlign: 'center' }}>
-                        MapReduce Approach
+                      <div style={{ color: '#ec4899', fontSize: '13px', fontWeight: '700', marginBottom: '4px', textAlign: 'center' }}>
+                        MapReduce — The Filing Cabinet
+                      </div>
+                      <div style={{ color: '#94a3b8', fontSize: '10px', textAlign: 'center', marginBottom: '12px' }}>
+                        Every step opens a drawer (disk I/O)
                       </div>
                       <div style={{ fontFamily: 'Monaco, Consolas, monospace', fontSize: '10px', lineHeight: '1.8', color: '#cbd5e1' }}>
                         <div style={{ color: '#64748b' }}>// Step 1: Read from HDFS (disk)</div>
@@ -8078,8 +8268,11 @@ for message in consumer:
 
                     {/* Spark approach */}
                     <div style={{ padding: '16px', background: 'rgba(245, 158, 11, 0.05)', borderRadius: '12px', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-                      <div style={{ color: '#f59e0b', fontSize: '13px', fontWeight: '700', marginBottom: '12px', textAlign: 'center' }}>
-                        Spark Approach
+                      <div style={{ color: '#f59e0b', fontSize: '13px', fontWeight: '700', marginBottom: '4px', textAlign: 'center' }}>
+                        Spark — The Supercomputer
+                      </div>
+                      <div style={{ color: '#94a3b8', fontSize: '10px', textAlign: 'center', marginBottom: '12px' }}>
+                        Everything stays in one giant pool of RAM
                       </div>
                       <div style={{ fontFamily: 'Monaco, Consolas, monospace', fontSize: '10px', lineHeight: '1.8', color: '#cbd5e1' }}>
                         <div style={{ color: '#64748b' }}>// Entire pipeline in one expression:</div>
@@ -8125,6 +8318,7 @@ for message in consumer:
                     {/* Table Rows */}
                     {[
                       { aspect: 'Year Introduced', mr: '2004 (Google paper)', spark: '2009 (UC Berkeley)', cat: null },
+                      { aspect: 'Cluster Personality', mr: 'Independent workers + filing cabinet', spark: 'One "supercomputer" — shared pool of RAM', cat: 'data' },
                       { aspect: 'Processing Type', mr: 'Batch only', spark: 'Batch + Stream + SQL + ML', cat: 'model' },
                       { aspect: 'Data Storage', mr: 'Disk (HDFS) between stages', spark: 'In-memory (RAM) between stages', cat: 'data' },
                       { aspect: 'Speed (batch)', mr: '1x baseline', spark: '10-100x faster', cat: 'speed' },
@@ -8195,7 +8389,7 @@ for message in consumer:
                   borderRadius: '12px'
                 }}>
                   <div style={{ color: '#22d3ee', fontSize: '13px', lineHeight: '1.8' }}>
-                    <strong>The Evolution:</strong> MapReduce pioneered distributed data processing in 2004. Spark evolved the concept in 2009 by keeping data in memory and introducing a unified API. Today, Spark has largely replaced MapReduce for most workloads, but understanding MapReduce is essential — it established the fundamental patterns (map → shuffle → reduce) that all modern distributed systems build upon.
+                    <strong>The Evolution:</strong> Both MapReduce and Spark are <em>clustered</em> technologies under the <em>distributed computing</em> umbrella — but they treat the cluster differently. MapReduce (2004) pioneered the "distributed workhorse" pattern: break a job into tiny pieces, file results to disk, repeat. Spark (2009) reimagined the cluster as a unified "supercomputer" — one massive pool of RAM where data stays alive between operations. Today Spark has largely replaced MapReduce for most workloads, but understanding MapReduce is essential — it established the fundamental map → shuffle → reduce pattern that all modern distributed systems build upon.
                   </div>
                 </div>
               </div>
