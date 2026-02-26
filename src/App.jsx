@@ -3,7 +3,8 @@ import {
   Database, Inbox, Cpu, Activity, HardDrive, Zap,
   Globe, Cloud, GitMerge, LayoutDashboard, ScrollText,
   ChevronRight, Check, Sparkles, Info, ChevronDown, ChevronUp, X,
-  Table2, Layers, Link, Star, Snowflake, Box
+  Table2, Layers, Link, Star, Snowflake, Box,
+  ArrowRight, Eye, EyeOff
 } from 'lucide-react';
 import { ReactFlow, Background, useNodesState, useEdgesState, Handle, Position, useReactFlow } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -26,7 +27,8 @@ const useResponsiveScale = (layoutType, containerRef) => {
       batch: 1340,
       star: 960,
       snowflake: 1100,
-      mapreduce: 1100
+      mapreduce: 1100,
+      spark: 1100
     };
 
     // Absolute minimum before showing warning
@@ -93,6 +95,15 @@ const BigDataArchitectureExplorer = () => {
   const [mapReduceStep, setMapReduceStep] = useState(0); // 0 = show all, 1-8 = specific step
   const [mapReduceAnimating, setMapReduceAnimating] = useState(false);
   const [showMapReduceExample, setShowMapReduceExample] = useState(false);
+  const [showDataTransform, setShowDataTransform] = useState(true); // data flow transformation panel
+
+  // Spark interactive states
+  const [sparkStep, setSparkStep] = useState(0);
+  const [sparkAnimating, setSparkAnimating] = useState(false);
+
+  // MapReduce vs Spark comparison state
+  const [showComparison, setShowComparison] = useState(false);
+  const [comparisonHighlight, setComparisonHighlight] = useState(null); // null or 'speed'|'fault'|'data'|'model'
 
   // Responsive diagram scaling
   const diagramContainerRef = useRef(null);
@@ -150,7 +161,21 @@ const BigDataArchitectureExplorer = () => {
     'Hadoop Streaming': 'https://hadoop.apache.org/docs/stable/hadoop-streaming/HadoopStreaming.html',
     'Java': 'https://docs.oracle.com/en/java/',
     'Python': 'https://www.python.org/',
-    'HTTP': 'https://developer.mozilla.org/en-US/docs/Web/HTTP'
+    'HTTP': 'https://developer.mozilla.org/en-US/docs/Web/HTTP',
+    'Spark SQL': 'https://spark.apache.org/sql/',
+    'Spark Streaming': 'https://spark.apache.org/streaming/',
+    'MLlib': 'https://spark.apache.org/mllib/',
+    'GraphX': 'https://spark.apache.org/graphx/',
+    'PySpark': 'https://spark.apache.org/docs/latest/api/python/',
+    'Scala': 'https://www.scala-lang.org/',
+    'Delta Lake': 'https://delta.io/',
+    'Catalyst': 'https://databricks.com/glossary/catalyst-optimizer',
+    'Tungsten': 'https://databricks.com/glossary/tungsten',
+    'RDD': 'https://spark.apache.org/docs/latest/rdd-programming-guide.html',
+    'DataFrame': 'https://spark.apache.org/docs/latest/sql-programming-guide.html',
+    'Mesos': 'https://mesos.apache.org/',
+    'Kubernetes': 'https://kubernetes.io/',
+    'Databricks': 'https://www.databricks.com/'
   };
 
   // Add CSS animations for the decision tree
@@ -933,6 +958,76 @@ const BigDataArchitectureExplorer = () => {
         { from: 'mr-map', to: 'mr-shuffle', type: 'stream' },
         { from: 'mr-shuffle', to: 'mr-reduce', type: 'stream' },
         { from: 'mr-reduce', to: 'mr-output', type: 'batch' }
+      ]
+    },
+    spark: {
+      name: 'Apache Spark',
+      difficulty: 'Advanced',
+      tagline: 'Unified In-Memory Analytics Engine',
+      description: 'Apache Spark is a unified analytics engine for large-scale data processing, originally developed at UC Berkeley\'s AMPLab in 2009. Unlike MapReduce which writes intermediate results to disk, Spark keeps data in-memory across operations using Resilient Distributed Datasets (RDDs), achieving up to 100x faster performance for iterative algorithms. Spark provides a rich API for batch processing, SQL queries, streaming, machine learning (MLlib), and graph processing (GraphX) — all in a single framework.',
+      layout: 'spark',
+      overview: {
+        text: 'Spark follows a Driver-Executor architecture. The Driver program creates a SparkContext, builds a DAG (Directed Acyclic Graph) of transformations, and the DAG Scheduler splits it into stages at shuffle boundaries. The Cluster Manager (YARN, Mesos, or Kubernetes) allocates Executors across worker nodes. Each Executor runs tasks in parallel on data partitions held in memory. Transformations are lazy — they build up a computation plan. Actions trigger execution. If a partition is lost, Spark recomputes it from lineage (the chain of transformations) rather than replicating data. This combination of in-memory computation, lazy evaluation, and lineage-based fault tolerance makes Spark dramatically faster than MapReduce for multi-pass algorithms like machine learning and graph processing.',
+        scenario: 'Real-Time Recommendation Engine — Netflix-Scale',
+        scenarioDescription: 'A streaming service processes 500M daily viewing events to update user recommendations in near real-time. Spark Structured Streaming ingests events from Kafka, joins them with user profile data cached in memory, runs collaborative filtering (MLlib ALS) on the combined dataset, and writes updated recommendation vectors to a serving store. The entire pipeline — ingest, transform, ML scoring, and output — runs as a single Spark application, reusing in-memory DataFrames across stages instead of writing to disk between steps.',
+        components: [
+          { name: 'Driver Program', metric: 'Creates SparkContext, builds DAG, coordinates execution' },
+          { name: 'Cluster Manager', metric: 'YARN/Mesos/K8s allocates Executors across the cluster' },
+          { name: 'DAG Scheduler', metric: 'Splits job into stages at shuffle boundaries, optimizes pipeline' },
+          { name: 'Data Source', metric: 'HDFS, S3, Kafka, JDBC — reads data into distributed partitions' },
+          { name: 'RDD / DataFrame', metric: 'Immutable distributed collections held in memory across Executors' },
+          { name: 'Transformations', metric: 'Lazy operations: map, filter, join, groupBy build the DAG' },
+          { name: 'Shuffle (Exchange)', metric: 'Data redistribution between stages — only point data hits disk' },
+          { name: 'Actions & Output', metric: 'collect(), save(), count() — trigger DAG execution and produce results' }
+        ]
+      },
+      useCases: [
+        'Interactive SQL queries on large datasets (Spark SQL)',
+        'Real-time stream processing (Structured Streaming)',
+        'Machine learning pipelines (MLlib)',
+        'Graph analytics (GraphX)',
+        'ETL and data lake transformations',
+        'Iterative algorithms (PageRank, K-Means)'
+      ],
+      advantages: [
+        'Up to 100x faster than MapReduce via in-memory processing',
+        'Unified API for batch, streaming, SQL, ML, and graph',
+        'Lazy evaluation enables whole-stage optimization',
+        'Lineage-based fault tolerance — no data replication overhead',
+        'Rich ecosystem: DataFrames, Datasets, Catalyst optimizer, Tungsten engine',
+        'Supports Python, Scala, Java, R, and SQL interfaces'
+      ],
+      challenges: [
+        'High memory requirements — can run out of memory with large shuffles',
+        'Complex tuning — shuffle partitions, memory fractions, serialization',
+        'Not ideal for single-record low-latency lookups',
+        'Driver is a single point of failure (mitigated by checkpointing)',
+        'Shuffle stages still write to disk — network intensive',
+        'Steep learning curve for advanced optimization (Catalyst, Tungsten)'
+      ],
+      learningResources: [
+        { title: 'Apache Spark Official Documentation', url: 'https://spark.apache.org/docs/latest/' },
+        { title: 'Spark: The Definitive Guide (O\'Reilly)', url: 'https://www.oreilly.com/library/view/spark-the-definitive/9781491912201/' },
+        { title: 'UC Berkeley AMPLab: Original Spark Paper (NSDI 2012)', url: 'https://www.usenix.org/conference/nsdi12/technical-sessions/presentation/zaharia' }
+      ],
+      components: [
+        { id: 'spark-driver', name: 'Driver Program', shape: 'cloud', description: 'Application entry point', details: 'The Driver runs the user\'s main() function, creates the SparkContext/SparkSession, defines transformations and actions on RDDs/DataFrames, and coordinates the overall execution. It runs on one node and communicates with the Cluster Manager to request Executors.', technologies: ['Scala', 'PySpark', 'Java'] },
+        { id: 'spark-cluster-mgr', name: 'Cluster Manager', shape: 'api', description: 'Resource allocation', details: 'Manages cluster resources and allocates Executors. Can be YARN (Hadoop ecosystem), Apache Mesos, Kubernetes, or Spark\'s built-in Standalone mode. Negotiates CPU cores and memory for each Executor container.', technologies: ['YARN', 'Kubernetes', 'Mesos'] },
+        { id: 'spark-dag', name: 'DAG Scheduler', shape: 'pipeline', description: 'Execution planning', details: 'Converts the logical execution plan (chain of RDD transformations) into a physical execution plan as a DAG of stages. Stages are split at shuffle boundaries. Within each stage, tasks are pipelined (map→filter→map run in a single pass). The Catalyst optimizer further optimizes DataFrame/SQL queries.', technologies: ['Catalyst', 'Tungsten'] },
+        { id: 'spark-source', name: 'Data Source', shape: 'database', description: 'Input data', details: 'Spark reads from diverse sources: HDFS files, S3 objects, Kafka topics, JDBC databases, Delta Lake tables. Data is loaded into distributed partitions. DataFrameReader supports formats like Parquet, JSON, CSV, ORC, and Avro.', technologies: ['HDFS', 'S3', 'Kafka', 'Delta Lake'] },
+        { id: 'spark-rdd', name: 'RDD / DataFrame', shape: 'cache', description: 'In-memory data', details: 'Resilient Distributed Datasets are immutable, partitioned collections that can be cached in memory across the cluster. DataFrames add schema and the Catalyst optimizer. Datasets (typed DataFrames) provide compile-time type safety. Data stays in memory between operations — the key advantage over MapReduce.', technologies: ['RDD', 'DataFrame', 'Spark SQL'] },
+        { id: 'spark-transform', name: 'Transformations', shape: 'cluster', description: 'Lazy computation', details: 'Transformations (map, filter, flatMap, join, groupBy, union) are lazy — they define a computation plan but don\'t execute until an action is called. This allows Spark to optimize the entire pipeline. Narrow transformations (map, filter) don\'t require shuffles; wide transformations (groupBy, join) do.', technologies: ['Spark', 'Scala', 'PySpark'] },
+        { id: 'spark-shuffle', name: 'Shuffle Exchange', shape: 'stream', description: 'Stage boundary', details: 'When a wide transformation (join, groupBy, repartition) is encountered, Spark must redistribute data across partitions — a shuffle. This is the only point where Spark writes to disk (shuffle files). The DAG Scheduler creates a new stage at each shuffle boundary. Optimizing shuffle is critical for Spark performance.', technologies: ['Spark', 'Partitioner'] },
+        { id: 'spark-output', name: 'Actions & Output', shape: 'warehouse', description: 'Trigger execution', details: 'Actions (collect, count, save, show, foreach) trigger the actual execution of the DAG. Results are either returned to the Driver (collect), written to storage (save to HDFS/S3/Delta Lake), or pushed to external systems. Each action triggers a complete DAG execution from source to output.', technologies: ['HDFS', 'S3', 'Delta Lake', 'Databricks'] }
+      ],
+      connections: [
+        { from: 'spark-driver', to: 'spark-cluster-mgr', type: 'query' },
+        { from: 'spark-driver', to: 'spark-dag', type: 'query' },
+        { from: 'spark-source', to: 'spark-rdd', type: 'batch' },
+        { from: 'spark-rdd', to: 'spark-transform', type: 'stream' },
+        { from: 'spark-transform', to: 'spark-shuffle', type: 'stream' },
+        { from: 'spark-shuffle', to: 'spark-rdd', type: 'stream' },
+        { from: 'spark-transform', to: 'spark-output', type: 'batch' }
       ]
     }
   };
@@ -2758,7 +2853,7 @@ for message in consumer:
     );
   };
 
-  // MapReduce step labels
+  // MapReduce step labels with data transformation details
   const mapReduceSteps = [
     { label: 'Show All', description: 'View complete MapReduce pipeline' },
     { label: 'Submit', description: 'Client submits job to ResourceManager' },
@@ -2769,6 +2864,155 @@ for message in consumer:
     { label: 'Reduce', description: 'Reduce function aggregates values per key' },
     { label: 'Output', description: 'Final results written to HDFS' }
   ];
+
+  // Comprehensive data transformation details for each step
+  const dataTransformStages = {
+    1: {
+      title: 'Job Submission',
+      before: { label: 'User Code', data: ['WordCount.jar', 'input: /data/logs/', 'output: /results/counts/'] },
+      operation: { label: 'Submit to Cluster', detail: 'Client packages JAR + config and sends to ResourceManager via RPC' },
+      after: { label: 'Job Queued', data: ['job_202601_0001 ACCEPTED', 'Requested: 3 mappers, 2 reducers', 'Priority: NORMAL'] },
+      insight: 'The client never processes data itself — it only submits the job definition and waits for results.',
+      color: '#3b82f6'
+    },
+    2: {
+      title: 'Data Location Discovery',
+      before: { label: 'Job Request', data: ['Need blocks for: /data/logs/*', '3 files, ~384MB total'] },
+      operation: { label: 'NameNode Lookup', detail: 'ResourceManager queries NameNode metadata to find which DataNodes hold each block' },
+      after: { label: 'Block Location Map', data: ['Block 1 (128MB) → Node-A, Node-C', 'Block 2 (128MB) → Node-B, Node-A', 'Block 3 (128MB) → Node-C, Node-B'] },
+      insight: 'Data locality: Mappers are assigned to nodes where the data already lives, avoiding network transfer.',
+      color: '#10b981'
+    },
+    3: {
+      title: 'Input Splitting',
+      before: { label: 'Raw Files on HDFS', data: ['/data/logs/access_jan.log (128MB)', '/data/logs/access_feb.log (128MB)', '/data/logs/access_mar.log (128MB)'] },
+      operation: { label: 'InputFormat.getSplits()', detail: 'TextInputFormat splits files at line boundaries, one split per HDFS block (128MB default)' },
+      after: { label: '3 Input Splits Created', data: ['Split-0: "hello world hello"', 'Split-1: "foo hello world"', 'Split-2: "bar world foo"'] },
+      insight: 'Each split maps to exactly one Map task. More splits = more parallelism but more overhead.',
+      color: '#3b82f6'
+    },
+    4: {
+      title: 'Map Phase — Parallel Transformation',
+      before: { label: 'Input Splits (raw text)', data: ['Split-0: "hello world hello"', 'Split-1: "foo hello world"', 'Split-2: "bar world foo"'] },
+      operation: { label: 'map(key, value) → emit(word, 1)', detail: 'Each mapper reads one split line-by-line, tokenizes words, emits (word, 1) for each token' },
+      after: { label: 'Intermediate Key-Value Pairs', data: ['Mapper-0: (hello,1)(world,1)(hello,1)', 'Mapper-1: (foo,1)(hello,1)(world,1)', 'Mapper-2: (bar,1)(world,1)(foo,1)'] },
+      insight: 'Mappers run independently — no communication between them. Each processes only its local split.',
+      color: '#ec4899'
+    },
+    5: {
+      title: 'Shuffle & Sort — The Network Storm',
+      before: { label: 'Scattered KV Pairs (3 mappers)', data: ['M0: (hello,1)(world,1)(hello,1)', 'M1: (foo,1)(hello,1)(world,1)', 'M2: (bar,1)(world,1)(foo,1)'] },
+      operation: { label: 'Hash Partition → Transfer → Merge Sort', detail: 'Each key is hashed to a reducer partition. Pairs are sent across the network and merge-sorted by key.' },
+      after: { label: 'Grouped & Sorted by Key', data: ['→ Reducer-0: bar→[1], foo→[1,1], hello→[1,1,1]', '→ Reducer-1: world→[1,1,1]'] },
+      insight: 'This is the most expensive step — all intermediate data crosses the network. The "shuffle" is why MapReduce is disk-heavy.',
+      color: '#f59e0b'
+    },
+    6: {
+      title: 'Reduce Phase — Aggregation',
+      before: { label: 'Grouped Values per Key', data: ['Reducer-0: bar→[1], foo→[1,1], hello→[1,1,1]', 'Reducer-1: world→[1,1,1]'] },
+      operation: { label: 'reduce(key, values) → sum(values)', detail: 'Each reducer receives all values for its key range and applies the user-defined reduce function' },
+      after: { label: 'Aggregated Results', data: ['Reducer-0: (bar,1) (foo,2) (hello,3)', 'Reducer-1: (world,3)'] },
+      insight: 'Each reducer sees ALL values for a given key — this is guaranteed by the shuffle. sum([1,1,1]) = 3',
+      color: '#f59e0b'
+    },
+    7: {
+      title: 'Output to HDFS',
+      before: { label: 'Reducer Output (in memory)', data: ['Reducer-0: (bar,1) (foo,2) (hello,3)', 'Reducer-1: (world,3)'] },
+      operation: { label: 'OutputFormat.write()', detail: 'Each reducer writes results to HDFS as a separate part file (one file per reducer)' },
+      after: { label: 'HDFS Output Files', data: ['part-r-00000: bar\\t1, foo\\t2, hello\\t3', 'part-r-00001: world\\t3', 'Total: 4 unique words counted'] },
+      insight: 'Results are split across part files. Use "hadoop fs -cat /results/*" or downstream tools (Hive) to read them.',
+      color: '#10b981'
+    }
+  };
+
+  // Data Transform Panel Component
+  const DataTransformPanel = ({ stageData }) => {
+    if (!stageData) return null;
+    return (
+      <div style={{
+        margin: '0 0 20px 0',
+        padding: '20px',
+        background: 'rgba(15, 23, 42, 0.8)',
+        border: `1px solid ${stageData.color}44`,
+        borderRadius: '16px',
+        animation: 'fadeInScale 0.3s ease-out'
+      }}>
+        <div style={{ fontSize: '14px', fontWeight: '700', color: stageData.color, marginBottom: '16px', textAlign: 'center' }}>
+          {stageData.title}
+        </div>
+
+        {/* Before → Operation → After flow */}
+        <div style={{ display: 'flex', alignItems: 'stretch', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+          {/* BEFORE */}
+          <div style={{
+            flex: '1', minWidth: '200px', maxWidth: '280px',
+            background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '14px',
+            border: '1px solid rgba(71, 85, 105, 0.3)'
+          }}>
+            <div style={{ fontSize: '10px', fontWeight: '700', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '8px' }}>
+              Input
+            </div>
+            <div style={{ fontFamily: 'Monaco, Consolas, monospace', fontSize: '11px', lineHeight: '1.8' }}>
+              {stageData.before.data.map((line, i) => (
+                <div key={i} style={{ color: '#cbd5e1', padding: '2px 0' }}>{line}</div>
+              ))}
+            </div>
+          </div>
+
+          {/* ARROW + OPERATION */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minWidth: '140px', gap: '8px' }}>
+            <div style={{
+              background: `${stageData.color}22`,
+              border: `1px solid ${stageData.color}66`,
+              borderRadius: '10px',
+              padding: '10px 16px',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: '11px', fontWeight: '700', color: stageData.color }}>{stageData.operation.label}</div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <div style={{ width: '20px', height: '2px', background: stageData.color }} />
+              <ArrowRight size={16} color={stageData.color} />
+            </div>
+            <div style={{ fontSize: '10px', color: '#64748b', textAlign: 'center', maxWidth: '180px', lineHeight: '1.4' }}>
+              {stageData.operation.detail}
+            </div>
+          </div>
+
+          {/* AFTER */}
+          <div style={{
+            flex: '1', minWidth: '200px', maxWidth: '280px',
+            background: `${stageData.color}11`, borderRadius: '12px', padding: '14px',
+            border: `1px solid ${stageData.color}33`
+          }}>
+            <div style={{ fontSize: '10px', fontWeight: '700', color: stageData.color, textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '8px' }}>
+              Output
+            </div>
+            <div style={{ fontFamily: 'Monaco, Consolas, monospace', fontSize: '11px', lineHeight: '1.8' }}>
+              {stageData.after.data.map((line, i) => (
+                <div key={i} style={{ color: '#e2e8f0', padding: '2px 0' }}>{line}</div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Insight */}
+        <div style={{
+          marginTop: '14px',
+          padding: '10px 16px',
+          background: 'rgba(245, 158, 11, 0.08)',
+          border: '1px solid rgba(245, 158, 11, 0.2)',
+          borderRadius: '8px',
+          fontSize: '12px',
+          color: '#fbbf24',
+          textAlign: 'center',
+          lineHeight: '1.5'
+        }}>
+          <strong>Key Insight:</strong> {stageData.insight}
+        </div>
+      </div>
+    );
+  };
 
   // Auto-advance animation effect
   useEffect(() => {
@@ -2810,15 +3054,31 @@ for message in consumer:
 
     // Word count example data per stage
     const exampleData = {
-      input1: '"hello world"',
-      input2: '"hello foo"',
-      input3: '"world bar"',
-      map1: '(hello,1)(world,1)',
-      map2: '(hello,1)(foo,1)',
-      map3: '(world,1)(bar,1)',
-      reduce1: 'hello→[1,1]=2',
-      reduce2: 'world→[1,1]=2\nfoo→1, bar→1',
-      output: 'hello:2, world:2\nfoo:1, bar:1'
+      input1: '"hello world hello"',
+      input2: '"foo hello world"',
+      input3: '"bar world foo"',
+      map1: '(hello,1)(world,1)(hello,1)',
+      map2: '(foo,1)(hello,1)(world,1)',
+      map3: '(bar,1)(world,1)(foo,1)',
+      reduce1: 'hello→[1,1,1]=3\nfoo→[1,1]=2\nbar→[1]=1',
+      reduce2: 'world→[1,1,1]=3',
+      output: 'bar:1, foo:2\nhello:3, world:3'
+    };
+
+    // Inline data flow labels that appear on arrows
+    const InlineDataLabel = ({ text, color = '#94a3b8', visible = true }) => {
+      if (!visible || !showDataTransform || step === 0) return null;
+      return (
+        <div style={{
+          position: 'absolute', right: '-180px', top: '50%', transform: 'translateY(-50%)',
+          background: 'rgba(0,0,0,0.7)', borderRadius: '6px', padding: '4px 8px',
+          fontSize: '9px', color: color, fontFamily: 'Monaco, Consolas, monospace',
+          whiteSpace: 'nowrap', border: `1px solid ${color}33`, zIndex: 5,
+          animation: 'fadeInScale 0.3s ease-out'
+        }}>
+          {text}
+        </div>
+      );
     };
 
     return (
@@ -2891,6 +3151,27 @@ for message in consumer:
           {/* Divider */}
           <div style={{ width: '1px', height: '24px', background: 'rgba(71, 85, 105, 0.3)' }} />
 
+          {/* Data Transform toggle */}
+          <button
+            onClick={() => setShowDataTransform(!showDataTransform)}
+            style={{
+              padding: '6px 14px',
+              background: showDataTransform ? 'rgba(16, 185, 129, 0.2)' : 'rgba(30, 41, 59, 0.5)',
+              border: `1px solid ${showDataTransform ? '#10b981' : 'rgba(71, 85, 105, 0.3)'}`,
+              borderRadius: '8px',
+              color: showDataTransform ? '#34d399' : '#94a3b8',
+              fontSize: '12px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            {showDataTransform ? <Eye size={14} /> : <EyeOff size={14} />}
+            {showDataTransform ? 'Data Flow On' : 'Data Flow Off'}
+          </button>
+
           {/* Example toggle */}
           <button
             onClick={() => setShowMapReduceExample(!showMapReduceExample)}
@@ -2916,7 +3197,7 @@ for message in consumer:
         {/* Step description */}
         {step > 0 && (
           <div style={{
-            marginBottom: '16px',
+            marginBottom: '4px',
             padding: '8px 20px',
             background: 'rgba(59, 130, 246, 0.1)',
             border: '1px solid rgba(59, 130, 246, 0.3)',
@@ -2929,35 +3210,70 @@ for message in consumer:
           </div>
         )}
 
+        {/* Data Transformation Panel */}
+        {step > 0 && showDataTransform && dataTransformStages[step] && (
+          <DataTransformPanel stageData={dataTransformStages[step]} />
+        )}
+
         {/* Phase labels alongside the diagram */}
         <div style={{ position: 'relative', width: '100%' }}>
 
           {/* Row 1: Client */}
           <div style={{
-            display: 'flex', justifyContent: 'center',
+            display: 'flex', justifyContent: 'center', position: 'relative',
             opacity: isStepActive([1]) ? 1 : (step > 0 ? 0.25 : 1),
             transition: 'opacity 0.5s'
           }}>
             <ComponentCard component={client} onClick={setSelectedComponent} />
+            {step === 1 && showDataTransform && (
+              <div style={{
+                position: 'absolute', left: '50%', marginLeft: '110px', top: '50%', transform: 'translateY(-50%)',
+                background: 'rgba(0,0,0,0.7)', borderRadius: '8px', padding: '6px 10px',
+                fontSize: '10px', color: '#93c5fd', fontFamily: 'Monaco, Consolas, monospace',
+                border: '1px solid rgba(59,130,246,0.3)', animation: 'fadeInScale 0.3s ease-out',
+                whiteSpace: 'nowrap'
+              }}>
+                WordCount.jar + /data/logs/*
+              </div>
+            )}
           </div>
 
           {/* Arrow: Client → ResourceManager */}
           <div style={{
-            display: 'flex', justifyContent: 'center', padding: '4px 0',
+            display: 'flex', justifyContent: 'center', padding: '4px 0', position: 'relative',
             opacity: isStepActive([1]) ? 1 : (step > 0 ? 0.25 : 1),
             transition: 'opacity 0.5s'
           }}>
             <VerticalConnectionArrow type="query" direction="down" />
+            {step === 1 && showDataTransform && (
+              <div style={{
+                position: 'absolute', left: '50%', marginLeft: '40px', top: '50%', transform: 'translateY(-50%)',
+                fontSize: '9px', color: '#64748b', fontStyle: 'italic'
+              }}>
+                submit job via RPC
+              </div>
+            )}
           </div>
 
           {/* Row 2: ResourceManager + NameNode */}
           <div style={{
-            display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0px',
+            display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0px', position: 'relative',
             opacity: isStepActive([1, 2]) ? 1 : (step > 0 ? 0.25 : 1),
             transition: 'opacity 0.5s'
           }}>
             <ComponentCard component={jobtracker} onClick={setSelectedComponent} />
-            <ConnectionArrow type="query" />
+            <div style={{ position: 'relative' }}>
+              <ConnectionArrow type="query" />
+              {step === 2 && showDataTransform && (
+                <div style={{
+                  position: 'absolute', left: '50%', transform: 'translateX(-50%)', top: '-18px',
+                  fontSize: '9px', color: '#10b981', fontFamily: 'Monaco, Consolas, monospace',
+                  whiteSpace: 'nowrap'
+                }}>
+                  "Where are blocks for /data/logs/*?"
+                </div>
+              )}
+            </div>
             <ComponentCard component={namenode} onClick={setSelectedComponent} />
           </div>
 
@@ -3130,13 +3446,13 @@ for message in consumer:
                 <div style={{ color: '#a78bfa', fontSize: '16px', fontWeight: '700' }}>Shuffle & Sort</div>
                 <div style={{ color: '#94a3b8', fontSize: '12px' }}>Partition by key → Transfer → Merge sort</div>
               </div>
-              {showMapReduceExample && (
+              {(showMapReduceExample || (step === 5 && showDataTransform)) && (
                 <div style={{
                   background: 'rgba(0,0,0,0.4)', borderRadius: '8px', padding: '8px 12px',
                   fontSize: '11px', color: '#fbbf24', fontFamily: 'Monaco, Consolas, monospace',
                   lineHeight: '1.5'
                 }}>
-                  Group: hello→[1,1,1], world→[1,1], foo→[1], bar→[1]
+                  Group: hello→[1,1,1], world→[1,1,1], foo→[1,1], bar→[1]
                 </div>
               )}
             </div>
@@ -3219,6 +3535,488 @@ for message in consumer:
                   whiteSpace: 'nowrap', border: '1px solid rgba(245, 158, 11, 0.3)'
                 }}>
                   {exampleData.output}
+                </div>
+              )}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    );
+  };
+
+  // Spark step labels
+  const sparkSteps = [
+    { label: 'Show All', description: 'View complete Spark execution pipeline' },
+    { label: 'Create', description: 'Driver creates SparkContext and connects to Cluster Manager' },
+    { label: 'Plan', description: 'DAG Scheduler builds execution plan from transformations' },
+    { label: 'Load', description: 'Data loaded from source into distributed RDD/DataFrame partitions' },
+    { label: 'Transform', description: 'Lazy transformations (map, filter, join) build the computation DAG' },
+    { label: 'Shuffle', description: 'Wide transformations trigger data exchange between partitions' },
+    { label: 'Action', description: 'Actions trigger execution — results collected or written to storage' }
+  ];
+
+  // Spark data transformation stages
+  const sparkDataTransformStages = {
+    1: {
+      title: 'SparkContext Creation',
+      before: { label: 'User Application', data: ['word_count.py', 'spark = SparkSession.builder\\', '  .appName("WordCount")\\', '  .getOrCreate()'] },
+      operation: { label: 'Connect to Cluster', detail: 'Driver connects to YARN/K8s, requests Executor containers with CPU + memory' },
+      after: { label: 'Cluster Ready', data: ['SparkContext initialized', '4 Executors allocated (4 cores, 8GB each)', 'Application ID: app-20260101-001'] },
+      insight: 'Unlike MapReduce, one SparkContext can run many jobs without re-negotiating resources each time.',
+      color: '#3b82f6'
+    },
+    2: {
+      title: 'DAG Construction & Optimization',
+      before: { label: 'User Transformations', data: ['rdd = sc.textFile("/data/logs/*")', '  .flatMap(line => line.split(" "))', '  .map(word => (word, 1))', '  .reduceByKey(_ + _)'] },
+      operation: { label: 'Catalyst + DAG Scheduler', detail: 'Builds a DAG of stages, optimizes query plan, pipelines narrow transforms into single stages' },
+      after: { label: 'Optimized Execution Plan', data: ['Stage 0: textFile → flatMap → map', '  (pipelined — single pass!)', 'Stage 1: reduceByKey (shuffle)', '  2 stages, 4 tasks each'] },
+      insight: 'Spark pipelines multiple transforms into one stage — map→filter→map runs as ONE pass over data, not three.',
+      color: '#a855f7'
+    },
+    3: {
+      title: 'Data Loading into Memory',
+      before: { label: 'Source Data', data: ['/data/logs/jan.log (128MB)', '/data/logs/feb.log (128MB)', '/data/logs/mar.log (128MB)'] },
+      operation: { label: 'Parallel Read + Partition', detail: 'Each Executor reads its assigned partitions directly into JVM memory (or off-heap with Tungsten)' },
+      after: { label: 'In-Memory RDD Partitions', data: ['Executor-0: Partition 0 → [IN MEMORY]', 'Executor-1: Partition 1 → [IN MEMORY]', 'Executor-2: Partition 2 → [IN MEMORY]', '.cache() keeps data for reuse!'] },
+      insight: 'Data lives in memory across operations — no disk writes between steps. This is what makes Spark 100x faster.',
+      color: '#06b6d4'
+    },
+    4: {
+      title: 'Lazy Transformations (Pipelined)',
+      before: { label: 'In-Memory Partitions', data: ['P0: "hello world hello"', 'P1: "foo hello world"', 'P2: "bar world foo"'] },
+      operation: { label: 'flatMap → map (pipelined)', detail: 'Narrow transforms execute in a single pass — no shuffle, no disk, no network' },
+      after: { label: 'Transformed Partitions (still in memory)', data: ['P0: (hello,1)(world,1)(hello,1)', 'P1: (foo,1)(hello,1)(world,1)', 'P2: (bar,1)(world,1)(foo,1)'] },
+      insight: 'These transforms are lazy! Nothing executes until an action (collect, save) is called. Spark just records the plan.',
+      color: '#ec4899'
+    },
+    5: {
+      title: 'Shuffle Exchange (Stage Boundary)',
+      before: { label: 'Partitions by Source', data: ['P0: (hello,1)(world,1)(hello,1)', 'P1: (foo,1)(hello,1)(world,1)', 'P2: (bar,1)(world,1)(foo,1)'] },
+      operation: { label: 'Repartition by Key Hash', detail: 'Data redistributed across executors by key — shuffle files written to local disk temporarily' },
+      after: { label: 'Partitions by Key', data: ['P0: hello→[1,1,1], foo→[1,1], bar→[1]', 'P1: world→[1,1,1]', '(reduceByKey combines locally first!)'] },
+      insight: 'Shuffles are the bottleneck in Spark too — but Spark\'s combiner (map-side reduce) minimizes data transferred.',
+      color: '#f59e0b'
+    },
+    6: {
+      title: 'Action Triggers Execution',
+      before: { label: 'Aggregated Partitions', data: ['P0: (bar,1)(foo,2)(hello,3)', 'P1: (world,3)'] },
+      operation: { label: '.saveAsTextFile() or .collect()', detail: 'Action triggers the entire DAG execution — all stages run, results materialized' },
+      after: { label: 'Output Results', data: ['part-00000: bar 1, foo 2, hello 3', 'part-00001: world 3', 'Job completed in 2.3s (vs 45s MR)'] },
+      insight: 'Only ONE pass through the DAG. MapReduce would need separate jobs chained together for complex pipelines.',
+      color: '#10b981'
+    }
+  };
+
+  // Auto-advance animation for Spark
+  useEffect(() => {
+    if (!sparkAnimating) return;
+    const timer = setInterval(() => {
+      setSparkStep(prev => {
+        if (prev >= 6) {
+          setSparkAnimating(false);
+          return 0;
+        }
+        return prev + 1;
+      });
+    }, 2500);
+    return () => clearInterval(timer);
+  }, [sparkAnimating]);
+
+  // Reset Spark step when switching away
+  useEffect(() => {
+    if (activeArchitecture !== 'spark') {
+      setSparkStep(0);
+      setSparkAnimating(false);
+    }
+  }, [activeArchitecture]);
+
+  const renderSparkLayout = () => {
+    const comps = currentArch.components;
+    const driver = comps.find(c => c.id === 'spark-driver');
+    const clusterMgr = comps.find(c => c.id === 'spark-cluster-mgr');
+    const dag = comps.find(c => c.id === 'spark-dag');
+    const source = comps.find(c => c.id === 'spark-source');
+    const rdd = comps.find(c => c.id === 'spark-rdd');
+    const transform = comps.find(c => c.id === 'spark-transform');
+    const shuffle = comps.find(c => c.id === 'spark-shuffle');
+    const output = comps.find(c => c.id === 'spark-output');
+
+    const step = sparkStep;
+    const isStepActive = (steps) => step === 0 || steps.includes(step);
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0px', position: 'relative' }}>
+
+        {/* Step-by-step animation controls */}
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px',
+          padding: '12px 20px', background: 'rgba(30, 41, 59, 0.8)',
+          borderRadius: '12px', border: '1px solid rgba(71, 85, 105, 0.3)',
+          flexWrap: 'wrap', justifyContent: 'center'
+        }}>
+          <button
+            onClick={() => {
+              if (sparkAnimating) { setSparkAnimating(false); }
+              else { setSparkStep(1); setSparkAnimating(true); }
+            }}
+            style={{
+              padding: '6px 14px',
+              background: sparkAnimating ? 'rgba(239, 68, 68, 0.2)' : 'rgba(59, 130, 246, 0.2)',
+              border: `1px solid ${sparkAnimating ? '#ef4444' : '#3b82f6'}`,
+              borderRadius: '8px', color: sparkAnimating ? '#ef4444' : '#60a5fa',
+              fontSize: '12px', fontWeight: '600', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', gap: '6px'
+            }}
+          >
+            {sparkAnimating ? '⏸ Pause' : '▶ Play Flow'}
+          </button>
+
+          <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+            {sparkSteps.map((s, i) => (
+              <button
+                key={i}
+                onClick={() => { setSparkStep(i); setSparkAnimating(false); }}
+                title={s.description}
+                style={{
+                  padding: '4px 10px',
+                  background: step === i ? 'rgba(59, 130, 246, 0.3)' : 'rgba(30, 41, 59, 0.5)',
+                  border: `1px solid ${step === i ? '#3b82f6' : 'rgba(71, 85, 105, 0.3)'}`,
+                  borderRadius: '6px', color: step === i ? '#60a5fa' : '#64748b',
+                  fontSize: '11px', fontWeight: step === i ? '700' : '500',
+                  cursor: 'pointer', transition: 'all 0.2s'
+                }}
+              >
+                {i === 0 ? 'All' : i}
+              </button>
+            ))}
+          </div>
+
+          <div style={{ width: '1px', height: '24px', background: 'rgba(71, 85, 105, 0.3)' }} />
+
+          <button
+            onClick={() => setShowDataTransform(!showDataTransform)}
+            style={{
+              padding: '6px 14px',
+              background: showDataTransform ? 'rgba(16, 185, 129, 0.2)' : 'rgba(30, 41, 59, 0.5)',
+              border: `1px solid ${showDataTransform ? '#10b981' : 'rgba(71, 85, 105, 0.3)'}`,
+              borderRadius: '8px', color: showDataTransform ? '#34d399' : '#94a3b8',
+              fontSize: '12px', fontWeight: '500', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', gap: '6px'
+            }}
+          >
+            {showDataTransform ? <Eye size={14} /> : <EyeOff size={14} />}
+            {showDataTransform ? 'Data Flow On' : 'Data Flow Off'}
+          </button>
+        </div>
+
+        {/* Step description */}
+        {step > 0 && (
+          <div style={{
+            marginBottom: '4px', padding: '8px 20px',
+            background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)',
+            borderRadius: '8px', color: '#93c5fd', fontSize: '13px', textAlign: 'center'
+          }}>
+            <strong>Step {step}:</strong> {sparkSteps[step]?.description}
+          </div>
+        )}
+
+        {/* Data Transformation Panel for Spark */}
+        {step > 0 && showDataTransform && sparkDataTransformStages[step] && (
+          <DataTransformPanel stageData={sparkDataTransformStages[step]} />
+        )}
+
+        {/* Phase labels alongside the diagram */}
+        <div style={{ position: 'relative', width: '100%' }}>
+
+          {/* Row 1: Driver Program */}
+          <div style={{
+            display: 'flex', justifyContent: 'center',
+            opacity: isStepActive([1]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <ComponentCard component={driver} onClick={setSelectedComponent} />
+          </div>
+
+          {/* Arrow: Driver → Cluster Manager + DAG */}
+          <div style={{
+            display: 'flex', justifyContent: 'center', padding: '4px 0',
+            opacity: isStepActive([1, 2]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <MapReduceFanOutArrow color="#a855f7" count={2} />
+          </div>
+
+          {/* Row 2: Cluster Manager + DAG Scheduler */}
+          <div style={{
+            display: 'flex', justifyContent: 'center', gap: '60px',
+            opacity: isStepActive([1, 2]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <ComponentCard component={clusterMgr} onClick={setSelectedComponent} />
+            <ComponentCard component={dag} onClick={setSelectedComponent} />
+          </div>
+
+          {/* Arrow: down to Data Source */}
+          <div style={{
+            display: 'flex', justifyContent: 'center', padding: '4px 0',
+            opacity: isStepActive([2, 3]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <VerticalConnectionArrow type="batch" direction="down" />
+          </div>
+
+          {/* Row 3: Data Source */}
+          <div style={{
+            display: 'flex', justifyContent: 'center',
+            opacity: isStepActive([3]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <ComponentCard component={source} onClick={setSelectedComponent} />
+          </div>
+
+          {/* Arrow: Data Source → RDD (fan out to 3 partitions) */}
+          <div style={{
+            padding: '8px 0',
+            opacity: isStepActive([3]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <MapReduceFanOutArrow color="#06b6d4" count={3} />
+          </div>
+
+          {/* Phase label: IN-MEMORY PARTITIONS */}
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px',
+            opacity: isStepActive([3, 4]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <div style={{
+              padding: '4px 16px', background: 'rgba(6, 182, 212, 0.15)',
+              border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px',
+              color: '#06b6d4', fontSize: '11px', fontWeight: '700',
+              letterSpacing: '2px', textTransform: 'uppercase'
+            }}>In-Memory Partitions — No Disk I/O</div>
+          </div>
+
+          {/* Row 4: RDD / DataFrame partitions (3x mini cards) */}
+          <div style={{
+            display: 'flex', justifyContent: 'center', gap: '40px',
+            opacity: isStepActive([3, 4]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            {[
+              { label: 'Partition 0', ex: '"hello world hello"' },
+              { label: 'Partition 1', ex: '"foo hello world"' },
+              { label: 'Partition 2', ex: '"bar world foo"' }
+            ].map((p, i) => (
+              <MapReduceMiniCard
+                key={i} label={p.label} icon={Zap}
+                color="rgba(6, 182, 212, 0.15)" borderColor="#06b6d4"
+                isActive={isStepActive([3, 4])}
+                onClick={() => setSelectedComponent(rdd)}
+                exampleText={showDataTransform && step >= 3 ? p.ex : undefined}
+              />
+            ))}
+          </div>
+
+          {/* Arrow: partitions → Transformations (parallel) */}
+          <div style={{
+            display: 'flex', justifyContent: 'center', gap: '40px', padding: '0',
+            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            {[0, 1, 2].map(i => (
+              <div key={i} style={{ width: '160px', display: 'flex', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px 0', height: '60px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#ec4899', transform: 'rotate(90deg)' }}>
+                    <div style={{
+                      width: '40px', height: '2px',
+                      background: `linear-gradient(90deg, transparent, #ec4899, #ec4899)`,
+                      position: 'relative'
+                    }}>
+                      {showDataFlow && (
+                        <div style={{
+                          position: 'absolute', width: '8px', height: '8px', borderRadius: '50%',
+                          background: '#ec4899', boxShadow: '0 0 10px #ec4899',
+                          animation: 'flowRight 1.2s infinite linear', top: '-3px'
+                        }} />
+                      )}
+                    </div>
+                    <ChevronRight size={14} />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Phase label: TRANSFORM PHASE */}
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px',
+            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <div style={{
+              padding: '4px 16px', background: 'rgba(236, 72, 153, 0.15)',
+              border: '1px solid rgba(236, 72, 153, 0.3)', borderRadius: '20px',
+              color: '#ec4899', fontSize: '11px', fontWeight: '700',
+              letterSpacing: '2px', textTransform: 'uppercase'
+            }}>Transform Phase — Pipelined In One Pass</div>
+          </div>
+
+          {/* Row 5: Transformation tasks (3x mini cards) */}
+          <div style={{
+            display: 'flex', justifyContent: 'center', gap: '40px',
+            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            {[
+              { label: 'flatMap→map', ex: '(hello,1)(world,1)(hello,1)' },
+              { label: 'flatMap→map', ex: '(foo,1)(hello,1)(world,1)' },
+              { label: 'flatMap→map', ex: '(bar,1)(world,1)(foo,1)' }
+            ].map((t, i) => (
+              <MapReduceMiniCard
+                key={i} label={t.label} icon={Cpu}
+                color="rgba(236, 72, 153, 0.15)" borderColor="#ec4899"
+                isActive={isStepActive([4])}
+                onClick={() => setSelectedComponent(transform)}
+                exampleText={showDataTransform && step === 4 ? t.ex : undefined}
+              />
+            ))}
+          </div>
+
+          {/* Phase label: SHUFFLE EXCHANGE */}
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '12px 0 4px 0',
+            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <div style={{
+              padding: '4px 16px', background: 'rgba(245, 158, 11, 0.15)',
+              border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '20px',
+              color: '#f59e0b', fontSize: '11px', fontWeight: '700',
+              letterSpacing: '2px', textTransform: 'uppercase'
+            }}>Shuffle Exchange — Stage Boundary</div>
+          </div>
+
+          {/* Shuffle cross-connect arrows (reuse MapReduce shuffle arrows) */}
+          <div style={{
+            padding: '8px 0',
+            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <MapReduceShuffleArrows />
+          </div>
+
+          {/* Row 6: Shuffle Exchange wide card */}
+          <div style={{
+            display: 'flex', justifyContent: 'center',
+            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <div
+              onClick={() => setSelectedComponent(shuffle)}
+              style={{
+                background: 'rgba(245, 158, 11, 0.15)', border: '2px solid #f59e0b',
+                borderRadius: '16px', padding: '16px 40px',
+                display: 'flex', alignItems: 'center', gap: '16px',
+                cursor: 'pointer', transition: 'all 0.3s',
+                boxShadow: step === 5 ? '0 0 30px rgba(245, 158, 11, 0.4)' : '0 0 15px rgba(245, 158, 11, 0.2)'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              <div style={{
+                width: '50px', height: '50px', borderRadius: '12px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'rgba(245, 158, 11, 0.2)', border: '1px solid rgba(245, 158, 11, 0.4)'
+              }}>
+                <GitMerge size={28} color="#f59e0b" strokeWidth={1.5} />
+              </div>
+              <div>
+                <div style={{ color: '#fbbf24', fontSize: '16px', fontWeight: '700' }}>Shuffle Exchange</div>
+                <div style={{ color: '#94a3b8', fontSize: '12px' }}>Hash partition → Network transfer → Local disk write (temporary)</div>
+              </div>
+              {step === 5 && showDataTransform && (
+                <div style={{
+                  background: 'rgba(0,0,0,0.4)', borderRadius: '8px', padding: '8px 12px',
+                  fontSize: '11px', color: '#fbbf24', fontFamily: 'Monaco, Consolas, monospace',
+                  lineHeight: '1.5'
+                }}>
+                  reduceByKey: hello→[1,1,1], world→[1,1,1]
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Arrow: Shuffle → Output (fan out to 2 result partitions) */}
+          <div style={{
+            padding: '8px 0',
+            opacity: isStepActive([5, 6]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <MapReduceFanOutArrow color="#10b981" count={2} />
+          </div>
+
+          {/* Phase label: ACTION & OUTPUT */}
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px',
+            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <div style={{
+              padding: '4px 16px', background: 'rgba(16, 185, 129, 0.15)',
+              border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '20px',
+              color: '#10b981', fontSize: '11px', fontWeight: '700',
+              letterSpacing: '2px', textTransform: 'uppercase'
+            }}>Action & Output — Results Materialized</div>
+          </div>
+
+          {/* Row 7: Output partitions (2x mini cards) */}
+          <div style={{
+            display: 'flex', justifyContent: 'center', gap: '40px',
+            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            {[
+              { label: 'Result Part 0', ex: 'bar:1, foo:2, hello:3' },
+              { label: 'Result Part 1', ex: 'world:3' }
+            ].map((r, i) => (
+              <MapReduceMiniCard
+                key={i} label={r.label} icon={HardDrive}
+                color="rgba(16, 185, 129, 0.15)" borderColor="#10b981"
+                isActive={isStepActive([6])}
+                onClick={() => setSelectedComponent(output)}
+                exampleText={showDataTransform && step === 6 ? r.ex : undefined}
+              />
+            ))}
+          </div>
+
+          {/* Fan-in to final output */}
+          <div style={{
+            padding: '8px 0',
+            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <MapReduceFanInArrow color="#10b981" sourceCount={2} />
+          </div>
+
+          {/* Row 8: HDFS/S3 Output */}
+          <div style={{
+            display: 'flex', justifyContent: 'center',
+            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
+            transition: 'opacity 0.5s'
+          }}>
+            <div style={{ position: 'relative' }}>
+              <ComponentCard component={output} onClick={setSelectedComponent} />
+              {step === 6 && showDataTransform && (
+                <div style={{
+                  position: 'absolute', top: '50%', left: '100%', marginLeft: '12px',
+                  transform: 'translateY(-50%)',
+                  background: 'rgba(0,0,0,0.6)', borderRadius: '8px', padding: '8px 12px',
+                  fontSize: '11px', color: '#34d399', fontFamily: 'Monaco, Consolas, monospace',
+                  whiteSpace: 'nowrap', border: '1px solid rgba(16, 185, 129, 0.3)'
+                }}>
+                  Completed in 2.3s (vs 45s MapReduce)
                 </div>
               )}
             </div>
@@ -5249,9 +6047,9 @@ for message in consumer:
                     gap: '2px',
                     border: '1px solid rgba(71, 85, 105, 0.2)'
                   }}>
-                    {['lambda', 'kappa', 'streaming', 'batch', 'mapreduce'].map(key => {
-                      const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies;
-                      const icons = { lambda: 'L', kappa: 'K', streaming: 'S', batch: 'B', mapreduce: 'MR' };
+                    {['lambda', 'kappa', 'streaming', 'batch', 'mapreduce', 'spark'].map(key => {
+                      const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && !showComparison;
+                      const icons = { lambda: 'L', kappa: 'K', streaming: 'S', batch: 'B', mapreduce: 'MR', spark: 'SP' };
                       return (
                         <button
                           key={key}
@@ -5262,6 +6060,7 @@ for message in consumer:
                             setShowHandsOn(false);
                             setShowCurriculum(false);
                             setShowCaseStudies(false);
+                            setShowComparison(false);
                           }}
                           style={{
                             padding: '8px 16px',
@@ -5325,7 +6124,7 @@ for message in consumer:
                     border: '1px solid rgba(71, 85, 105, 0.2)'
                   }}>
                     {['starSchema', 'snowflakeSchema'].map(key => {
-                      const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies;
+                      const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && !showComparison;
                       const icons = { starSchema: null, snowflakeSchema: null };
                       return (
                         <button
@@ -5394,17 +6193,20 @@ for message in consumer:
                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                   {/* Info */}
                   {[
-                    { key: 'info', label: 'Compare & Glossary', color: '#a78bfa', bgColor: '139, 92, 246', state: showAdditionalInfo, setState: () => { setShowAdditionalInfo(!showAdditionalInfo); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); if (!showAdditionalInfo) { setTimeout(() => { const el = document.getElementById('additional-info'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
+                    { key: 'info', label: 'Compare & Glossary', color: '#a78bfa', bgColor: '139, 92, 246', state: showAdditionalInfo, setState: () => { setShowAdditionalInfo(!showAdditionalInfo); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); setShowComparison(false); if (!showAdditionalInfo) { setTimeout(() => { const el = document.getElementById('additional-info'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
                       icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                     },
-                    { key: 'handson', label: 'Hands-on Lab', color: '#10b981', bgColor: '16, 185, 129', state: showHandsOn, setState: () => { setShowHandsOn(!showHandsOn); setShowAdditionalInfo(false); setShowCurriculum(false); setShowCaseStudies(false); if (!showHandsOn) { setTimeout(() => { const el = document.getElementById('hands-on'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
+                    { key: 'handson', label: 'Hands-on Lab', color: '#10b981', bgColor: '16, 185, 129', state: showHandsOn, setState: () => { setShowHandsOn(!showHandsOn); setShowAdditionalInfo(false); setShowCurriculum(false); setShowCaseStudies(false); setShowComparison(false); if (!showHandsOn) { setTimeout(() => { const el = document.getElementById('hands-on'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
                       icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
                     },
-                    { key: 'curriculum', label: 'Curriculum', color: '#f59e0b', bgColor: '245, 158, 11', state: showCurriculum, setState: () => { setShowCurriculum(!showCurriculum); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCaseStudies(false); if (!showCurriculum) { setTimeout(() => { const el = document.getElementById('curriculum-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
+                    { key: 'curriculum', label: 'Curriculum', color: '#f59e0b', bgColor: '245, 158, 11', state: showCurriculum, setState: () => { setShowCurriculum(!showCurriculum); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCaseStudies(false); setShowComparison(false); if (!showCurriculum) { setTimeout(() => { const el = document.getElementById('curriculum-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
                       icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
                     },
-                    { key: 'cases', label: 'Case Studies', color: '#ec4899', bgColor: '236, 72, 153', state: showCaseStudies, setState: () => { setShowCaseStudies(!showCaseStudies); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); if (!showCaseStudies) { setTimeout(() => { const el = document.getElementById('case-studies-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
+                    { key: 'cases', label: 'Case Studies', color: '#ec4899', bgColor: '236, 72, 153', state: showCaseStudies, setState: () => { setShowCaseStudies(!showCaseStudies); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowComparison(false); if (!showCaseStudies) { setTimeout(() => { const el = document.getElementById('case-studies-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
                       icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    },
+                    { key: 'comparison', label: 'MR vs Spark', color: '#06b6d4', bgColor: '6, 182, 212', state: showComparison, setState: () => { setShowComparison(!showComparison); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); if (!showComparison) { setTimeout(() => { const el = document.getElementById('comparison-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
+                      icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"></path></svg>
                     }
                   ].map(({ key, label, color, bgColor, state, setState, icon }) => (
                     <button
@@ -5448,7 +6250,7 @@ for message in consumer:
             </div>
           </div>
 
-          {!showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && (
+          {!showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && !showComparison && (
           <>
           <div
             style={{
@@ -5602,6 +6404,7 @@ for message in consumer:
                currentArch.layout === 'star' ? renderStarLayout() :
                currentArch.layout === 'snowflake' ? renderSnowflakeLayout() :
                currentArch.layout === 'mapreduce' ? renderMapReduceLayout() :
+               currentArch.layout === 'spark' ? renderSparkLayout() :
                renderLinearLayout()}
             </div>
 
@@ -7001,6 +7804,398 @@ for message in consumer:
                         data contracts, and access controls to maintain data quality and compliance.
                       </p>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* MapReduce vs Spark Comparison Section */}
+          {showComparison && (
+            <div
+              id="comparison-section"
+              style={{ animation: 'fadeInScale 0.3s ease-out forwards' }}
+            >
+              <div style={{
+                background: 'rgba(15, 23, 42, 0.8)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(71, 85, 105, 0.3)',
+                borderRadius: '12px',
+                padding: '32px',
+                marginBottom: '24px'
+              }}>
+                {/* Header */}
+                <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+                  <h2 style={{ fontSize: '28px', fontWeight: '800', marginBottom: '8px' }}>
+                    <span style={{ color: '#ec4899' }}>MapReduce</span>
+                    <span style={{ color: '#64748b', margin: '0 16px' }}>vs</span>
+                    <span style={{ color: '#f59e0b' }}>Apache Spark</span>
+                  </h2>
+                  <p style={{ color: '#94a3b8', fontSize: '14px' }}>
+                    Distributed batch processing vs Unified in-memory analytics — how do they compare?
+                  </p>
+                </div>
+
+                {/* Interactive highlight buttons */}
+                <div style={{
+                  display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '28px', flexWrap: 'wrap'
+                }}>
+                  {[
+                    { key: null, label: 'Overview', icon: '📊' },
+                    { key: 'speed', label: 'Speed', icon: '⚡' },
+                    { key: 'fault', label: 'Fault Tolerance', icon: '🛡️' },
+                    { key: 'data', label: 'Data Flow', icon: '🔄' },
+                    { key: 'model', label: 'Programming', icon: '💻' }
+                  ].map(h => (
+                    <button
+                      key={h.key || 'overview'}
+                      onClick={() => setComparisonHighlight(h.key)}
+                      style={{
+                        padding: '8px 16px',
+                        background: comparisonHighlight === h.key ? 'rgba(6, 182, 212, 0.2)' : 'rgba(30, 41, 59, 0.5)',
+                        border: `1px solid ${comparisonHighlight === h.key ? '#06b6d4' : 'rgba(71, 85, 105, 0.3)'}`,
+                        borderRadius: '8px',
+                        color: comparisonHighlight === h.key ? '#22d3ee' : '#94a3b8',
+                        fontSize: '12px', fontWeight: '600', cursor: 'pointer',
+                        transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '6px'
+                      }}
+                    >
+                      <span>{h.icon}</span> {h.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Side-by-Side Comparison Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '32px' }}>
+
+                  {/* MapReduce Side */}
+                  <div style={{
+                    background: 'rgba(236, 72, 153, 0.08)',
+                    border: '1px solid rgba(236, 72, 153, 0.3)',
+                    borderRadius: '16px', padding: '24px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+                      <div style={{
+                        width: '40px', height: '40px', borderRadius: '10px',
+                        background: 'rgba(236, 72, 153, 0.2)', display: 'flex',
+                        alignItems: 'center', justifyContent: 'center'
+                      }}>
+                        <Cpu size={22} color="#ec4899" />
+                      </div>
+                      <div>
+                        <div style={{ color: '#ec4899', fontSize: '18px', fontWeight: '700' }}>MapReduce</div>
+                        <div style={{ color: '#94a3b8', fontSize: '11px' }}>Distributed Batch Processing</div>
+                      </div>
+                    </div>
+
+                    {/* Visual Flow: Disk-heavy pipeline */}
+                    <div style={{
+                      background: 'rgba(0,0,0,0.3)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
+                    }}>
+                      <div style={{ fontSize: '10px', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
+                        Execution Flow
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                        {[
+                          { label: 'HDFS Read', color: '#3b82f6', icon: '💾' },
+                          { label: 'Map', color: '#ec4899', icon: '🔀' },
+                          { label: 'Disk Write', color: '#ef4444', icon: '💾' },
+                          { label: 'Shuffle', color: '#f59e0b', icon: '🌐' },
+                          { label: 'Disk Read', color: '#ef4444', icon: '💾' },
+                          { label: 'Reduce', color: '#10b981', icon: '📊' },
+                          { label: 'HDFS Write', color: '#3b82f6', icon: '💾' }
+                        ].map((s, i) => (
+                          <React.Fragment key={i}>
+                            <div style={{
+                              padding: '4px 8px', borderRadius: '6px',
+                              background: `${s.color}22`, border: `1px solid ${s.color}44`,
+                              fontSize: '10px', color: s.color, fontWeight: '600',
+                              textAlign: 'center', whiteSpace: 'nowrap',
+                              opacity: comparisonHighlight === 'data' || !comparisonHighlight ? 1 : 0.3,
+                              transition: 'opacity 0.3s'
+                            }}>
+                              {s.icon} {s.label}
+                            </div>
+                            {i < 6 && <ChevronRight size={12} color="#475569" />}
+                          </React.Fragment>
+                        ))}
+                      </div>
+                      <div style={{
+                        marginTop: '10px', textAlign: 'center', fontSize: '10px', color: '#ef4444',
+                        opacity: comparisonHighlight === 'speed' || !comparisonHighlight ? 1 : 0.3,
+                        transition: 'opacity 0.3s'
+                      }}>
+                        ⚠ Disk I/O at every stage boundary — 3 disk operations per job
+                      </div>
+                    </div>
+
+                    {/* Properties */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      {[
+                        { label: 'Processing Model', value: 'Batch only (Map → Reduce)', highlight: 'model', color: '#ec4899' },
+                        { label: 'Speed', value: '~45 seconds (word count on 384MB)', highlight: 'speed', color: '#ef4444' },
+                        { label: 'Data Storage', value: 'Disk between every stage', highlight: 'data', color: '#ef4444' },
+                        { label: 'Fault Recovery', value: 'Re-run failed task from HDFS', highlight: 'fault', color: '#10b981' },
+                        { label: 'Multi-Pass', value: 'Requires chaining multiple jobs', highlight: 'model', color: '#f59e0b' },
+                        { label: 'Latency', value: 'High (JVM start + disk I/O)', highlight: 'speed', color: '#ef4444' }
+                      ].map((prop, i) => (
+                        <div key={i} style={{
+                          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                          padding: '8px 12px', borderRadius: '8px',
+                          background: comparisonHighlight === prop.highlight ? 'rgba(6, 182, 212, 0.1)' : 'transparent',
+                          border: comparisonHighlight === prop.highlight ? '1px solid rgba(6, 182, 212, 0.3)' : '1px solid transparent',
+                          transition: 'all 0.3s',
+                          opacity: !comparisonHighlight || comparisonHighlight === prop.highlight ? 1 : 0.4
+                        }}>
+                          <span style={{ fontSize: '12px', color: '#94a3b8' }}>{prop.label}</span>
+                          <span style={{ fontSize: '12px', color: prop.color, fontWeight: '600', textAlign: 'right' }}>{prop.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Spark Side */}
+                  <div style={{
+                    background: 'rgba(245, 158, 11, 0.08)',
+                    border: '1px solid rgba(245, 158, 11, 0.3)',
+                    borderRadius: '16px', padding: '24px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+                      <div style={{
+                        width: '40px', height: '40px', borderRadius: '10px',
+                        background: 'rgba(245, 158, 11, 0.2)', display: 'flex',
+                        alignItems: 'center', justifyContent: 'center'
+                      }}>
+                        <Zap size={22} color="#f59e0b" />
+                      </div>
+                      <div>
+                        <div style={{ color: '#f59e0b', fontSize: '18px', fontWeight: '700' }}>Apache Spark</div>
+                        <div style={{ color: '#94a3b8', fontSize: '11px' }}>Unified In-Memory Analytics</div>
+                      </div>
+                    </div>
+
+                    {/* Visual Flow: In-memory pipeline */}
+                    <div style={{
+                      background: 'rgba(0,0,0,0.3)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
+                    }}>
+                      <div style={{ fontSize: '10px', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
+                        Execution Flow
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                        {[
+                          { label: 'Source Read', color: '#3b82f6', icon: '📂' },
+                          { label: 'Transform', color: '#ec4899', icon: '⚡' },
+                          { label: 'In Memory', color: '#10b981', icon: '🧠' },
+                          { label: 'Shuffle', color: '#f59e0b', icon: '🌐' },
+                          { label: 'In Memory', color: '#10b981', icon: '🧠' },
+                          { label: 'Action', color: '#a855f7', icon: '🎯' },
+                          { label: 'Output', color: '#3b82f6', icon: '💾' }
+                        ].map((s, i) => (
+                          <React.Fragment key={i}>
+                            <div style={{
+                              padding: '4px 8px', borderRadius: '6px',
+                              background: `${s.color}22`, border: `1px solid ${s.color}44`,
+                              fontSize: '10px', color: s.color, fontWeight: '600',
+                              textAlign: 'center', whiteSpace: 'nowrap',
+                              opacity: comparisonHighlight === 'data' || !comparisonHighlight ? 1 : 0.3,
+                              transition: 'opacity 0.3s'
+                            }}>
+                              {s.icon} {s.label}
+                            </div>
+                            {i < 6 && <ChevronRight size={12} color="#475569" />}
+                          </React.Fragment>
+                        ))}
+                      </div>
+                      <div style={{
+                        marginTop: '10px', textAlign: 'center', fontSize: '10px', color: '#10b981',
+                        opacity: comparisonHighlight === 'speed' || !comparisonHighlight ? 1 : 0.3,
+                        transition: 'opacity 0.3s'
+                      }}>
+                        ✓ Data stays in memory — only shuffle writes to disk temporarily
+                      </div>
+                    </div>
+
+                    {/* Properties */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      {[
+                        { label: 'Processing Model', value: 'Batch + Stream + SQL + ML + Graph', highlight: 'model', color: '#10b981' },
+                        { label: 'Speed', value: '~2.3 seconds (same word count!)', highlight: 'speed', color: '#10b981' },
+                        { label: 'Data Storage', value: 'In-memory between stages', highlight: 'data', color: '#10b981' },
+                        { label: 'Fault Recovery', value: 'Recompute from lineage (DAG)', highlight: 'fault', color: '#f59e0b' },
+                        { label: 'Multi-Pass', value: 'Single job with chained stages', highlight: 'model', color: '#10b981' },
+                        { label: 'Latency', value: 'Low (reuse JVM + cached data)', highlight: 'speed', color: '#10b981' }
+                      ].map((prop, i) => (
+                        <div key={i} style={{
+                          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                          padding: '8px 12px', borderRadius: '8px',
+                          background: comparisonHighlight === prop.highlight ? 'rgba(6, 182, 212, 0.1)' : 'transparent',
+                          border: comparisonHighlight === prop.highlight ? '1px solid rgba(6, 182, 212, 0.3)' : '1px solid transparent',
+                          transition: 'all 0.3s',
+                          opacity: !comparisonHighlight || comparisonHighlight === prop.highlight ? 1 : 0.4
+                        }}>
+                          <span style={{ fontSize: '12px', color: '#94a3b8' }}>{prop.label}</span>
+                          <span style={{ fontSize: '12px', color: prop.color, fontWeight: '600', textAlign: 'right' }}>{prop.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Interactive Visual: Same Word Count — Two Approaches */}
+                <div style={{
+                  background: 'rgba(15, 23, 42, 0.6)',
+                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  borderRadius: '16px', padding: '24px', marginBottom: '24px'
+                }}>
+                  <h3 style={{ color: '#e2e8f0', fontSize: '16px', fontWeight: '700', marginBottom: '20px', textAlign: 'center' }}>
+                    Same Task, Different Approaches: Word Count on 384MB
+                  </h3>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+
+                    {/* MapReduce approach */}
+                    <div style={{ padding: '16px', background: 'rgba(236, 72, 153, 0.05)', borderRadius: '12px', border: '1px solid rgba(236, 72, 153, 0.2)' }}>
+                      <div style={{ color: '#ec4899', fontSize: '13px', fontWeight: '700', marginBottom: '12px', textAlign: 'center' }}>
+                        MapReduce Approach
+                      </div>
+                      <div style={{ fontFamily: 'Monaco, Consolas, monospace', fontSize: '10px', lineHeight: '1.8', color: '#cbd5e1' }}>
+                        <div style={{ color: '#64748b' }}>// Step 1: Read from HDFS (disk)</div>
+                        <div>InputSplit[] splits = getSplits(job);</div>
+                        <div style={{ color: '#64748b', marginTop: '4px' }}>// Step 2: Map — write output to disk</div>
+                        <div>map(key, val) {'{'} emit(word, 1); {'}'}</div>
+                        <div style={{ color: '#ef4444' }}>→ spill to local disk</div>
+                        <div style={{ color: '#64748b', marginTop: '4px' }}>// Step 3: Shuffle via network + disk</div>
+                        <div>sort + partition + transfer</div>
+                        <div style={{ color: '#ef4444' }}>→ merge-sort from disk</div>
+                        <div style={{ color: '#64748b', marginTop: '4px' }}>// Step 4: Reduce — write to HDFS</div>
+                        <div>reduce(key, vals) {'{'} sum(vals); {'}'}</div>
+                        <div style={{ color: '#ef4444' }}>→ write to HDFS (disk)</div>
+                        <div style={{ marginTop: '8px', padding: '6px 10px', background: 'rgba(239, 68, 68, 0.15)', borderRadius: '6px', color: '#fca5a5', textAlign: 'center' }}>
+                          ~45 seconds | 3x disk I/O | 1 JVM per task
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Spark approach */}
+                    <div style={{ padding: '16px', background: 'rgba(245, 158, 11, 0.05)', borderRadius: '12px', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
+                      <div style={{ color: '#f59e0b', fontSize: '13px', fontWeight: '700', marginBottom: '12px', textAlign: 'center' }}>
+                        Spark Approach
+                      </div>
+                      <div style={{ fontFamily: 'Monaco, Consolas, monospace', fontSize: '10px', lineHeight: '1.8', color: '#cbd5e1' }}>
+                        <div style={{ color: '#64748b' }}>// Entire pipeline in one expression:</div>
+                        <div>sc.textFile("/data/logs/*")</div>
+                        <div>&nbsp; .flatMap(_.split(" "))</div>
+                        <div style={{ color: '#10b981' }}>&nbsp; // pipelined in memory ↑</div>
+                        <div>&nbsp; .map(word =&gt; (word, 1))</div>
+                        <div style={{ color: '#10b981' }}>&nbsp; // still in memory ↑</div>
+                        <div>&nbsp; .reduceByKey(_ + _)</div>
+                        <div style={{ color: '#f59e0b' }}>&nbsp; // shuffle (only disk write)</div>
+                        <div>&nbsp; .saveAsTextFile("/results/")</div>
+                        <div style={{ color: '#10b981' }}>&nbsp; // one pass through DAG</div>
+                        <div style={{ marginTop: '8px', padding: '6px 10px', background: 'rgba(16, 185, 129, 0.15)', borderRadius: '6px', color: '#6ee7b7', textAlign: 'center' }}>
+                          ~2.3 seconds | in-memory | reusable JVMs
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Key Differences Table */}
+                <div style={{
+                  background: 'rgba(15, 23, 42, 0.6)',
+                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  borderRadius: '16px', padding: '24px', marginBottom: '24px'
+                }}>
+                  <h3 style={{ color: '#e2e8f0', fontSize: '16px', fontWeight: '700', marginBottom: '20px', textAlign: 'center' }}>
+                    Detailed Comparison
+                  </h3>
+
+                  <div style={{ overflow: 'hidden', borderRadius: '12px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+                    {/* Table Header */}
+                    <div style={{
+                      display: 'grid', gridTemplateColumns: '1.5fr 2fr 2fr',
+                      background: 'rgba(30, 41, 59, 0.8)', padding: '12px 16px',
+                      borderBottom: '1px solid rgba(71, 85, 105, 0.3)'
+                    }}>
+                      <div style={{ color: '#94a3b8', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>Aspect</div>
+                      <div style={{ color: '#ec4899', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>MapReduce</div>
+                      <div style={{ color: '#f59e0b', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>Spark</div>
+                    </div>
+
+                    {/* Table Rows */}
+                    {[
+                      { aspect: 'Year Introduced', mr: '2004 (Google paper)', spark: '2009 (UC Berkeley)', cat: null },
+                      { aspect: 'Processing Type', mr: 'Batch only', spark: 'Batch + Stream + SQL + ML', cat: 'model' },
+                      { aspect: 'Data Storage', mr: 'Disk (HDFS) between stages', spark: 'In-memory (RAM) between stages', cat: 'data' },
+                      { aspect: 'Speed (batch)', mr: '1x baseline', spark: '10-100x faster', cat: 'speed' },
+                      { aspect: 'Fault Tolerance', mr: 'Data replication (3x copies)', spark: 'Lineage recomputation (no copies)', cat: 'fault' },
+                      { aspect: 'Execution Model', mr: '2 rigid phases: Map → Reduce', spark: 'DAG of arbitrary stages', cat: 'model' },
+                      { aspect: 'Optimization', mr: 'Manual tuning', spark: 'Catalyst optimizer + Tungsten engine', cat: 'model' },
+                      { aspect: 'Iterative Algos', mr: 'Terrible (disk per iteration)', spark: 'Excellent (data cached in memory)', cat: 'speed' },
+                      { aspect: 'Shuffle', mr: 'Always writes to disk', spark: 'Writes to disk (but minimized)', cat: 'data' },
+                      { aspect: 'Language', mr: 'Java (mainly)', spark: 'Scala, Python, Java, R, SQL', cat: 'model' },
+                      { aspect: 'Memory Needs', mr: 'Low (disk-based)', spark: 'High (data in RAM)', cat: 'data' },
+                      { aspect: 'Best For', mr: 'Simple ETL, proven reliability', spark: 'Complex analytics, ML, real-time', cat: 'model' }
+                    ].map((row, i) => (
+                      <div key={i} style={{
+                        display: 'grid', gridTemplateColumns: '1.5fr 2fr 2fr',
+                        padding: '10px 16px',
+                        background: i % 2 === 0 ? 'rgba(15, 23, 42, 0.4)' : 'rgba(30, 41, 59, 0.4)',
+                        borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
+                        opacity: !comparisonHighlight || comparisonHighlight === row.cat || !row.cat ? 1 : 0.3,
+                        transition: 'opacity 0.3s'
+                      }}>
+                        <div style={{ color: '#e2e8f0', fontSize: '12px', fontWeight: '600' }}>{row.aspect}</div>
+                        <div style={{ color: '#cbd5e1', fontSize: '12px', textAlign: 'center' }}>{row.mr}</div>
+                        <div style={{ color: '#cbd5e1', fontSize: '12px', textAlign: 'center' }}>{row.spark}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* When to Use Which */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                  <div style={{
+                    background: 'rgba(236, 72, 153, 0.08)', border: '1px solid rgba(236, 72, 153, 0.25)',
+                    borderRadius: '12px', padding: '20px'
+                  }}>
+                    <div style={{ color: '#ec4899', fontSize: '14px', fontWeight: '700', marginBottom: '12px' }}>
+                      When to Choose MapReduce
+                    </div>
+                    <ul style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '2', paddingLeft: '20px' }}>
+                      <li>Budget constraints — runs on minimal memory</li>
+                      <li>Simple one-pass ETL jobs (no iteration)</li>
+                      <li>Extremely large datasets where disk I/O is acceptable</li>
+                      <li>Existing Hadoop ecosystem with heavy HDFS usage</li>
+                      <li>Guaranteed reliability over speed</li>
+                    </ul>
+                  </div>
+                  <div style={{
+                    background: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.25)',
+                    borderRadius: '12px', padding: '20px'
+                  }}>
+                    <div style={{ color: '#f59e0b', fontSize: '14px', fontWeight: '700', marginBottom: '12px' }}>
+                      When to Choose Spark
+                    </div>
+                    <ul style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '2', paddingLeft: '20px' }}>
+                      <li>Iterative algorithms (ML training, PageRank)</li>
+                      <li>Interactive SQL queries on large datasets</li>
+                      <li>Mixed workloads (batch + stream + ML)</li>
+                      <li>Speed is critical — need near real-time results</li>
+                      <li>Complex multi-stage pipelines in a single job</li>
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Bottom Summary */}
+                <div style={{
+                  marginTop: '24px', padding: '16px 20px', textAlign: 'center',
+                  background: 'rgba(6, 182, 212, 0.08)',
+                  border: '1px solid rgba(6, 182, 212, 0.25)',
+                  borderRadius: '12px'
+                }}>
+                  <div style={{ color: '#22d3ee', fontSize: '13px', lineHeight: '1.8' }}>
+                    <strong>The Evolution:</strong> MapReduce pioneered distributed data processing in 2004. Spark evolved the concept in 2009 by keeping data in memory and introducing a unified API. Today, Spark has largely replaced MapReduce for most workloads, but understanding MapReduce is essential — it established the fundamental patterns (map → shuffle → reduce) that all modern distributed systems build upon.
                   </div>
                 </div>
               </div>
