@@ -204,10 +204,10 @@ const BigDataArchitectureExplorer = () => {
       }
       @keyframes pulse {
         0%, 100% {
-          box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+          box-shadow: 0 0 0 0 rgba(74, 122, 155, 0.4);
         }
         50% {
-          box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+          box-shadow: 0 0 0 8px rgba(74, 122, 155, 0);
         }
       }
       @keyframes levelUnlock {
@@ -293,23 +293,23 @@ const BigDataArchitectureExplorer = () => {
   };
 
   const colorScheme = {
-    database:  { bg: 'rgba(59,130,246,0.10)',  border: '#93BFEF', icon: '#3b82f6', label: '#1e3a5f' },
-    queue:     { bg: 'rgba(139,92,246,0.10)',  border: '#B89FF5', icon: '#7c3aed', label: '#3b1f5e' },
-    cluster:   { bg: 'rgba(236,72,153,0.10)',  border: '#F5A3CE', icon: '#db2777', label: '#5c1f4a' },
-    stream:    { bg: 'rgba(245,158,11,0.10)',  border: '#F5CC7A', icon: '#d97706', label: '#5c3d1f' },
-    warehouse: { bg: 'rgba(16,185,129,0.10)',  border: '#80D5B5', icon: '#059669', label: '#1f4a3d' },
-    cache:     { bg: 'rgba(6,182,212,0.10)',   border: '#7DCFE8', icon: '#0891b2', label: '#1f4a5c' },
-    api:       { bg: 'rgba(168,85,247,0.10)',  border: '#C4A0F8', icon: '#9333ea', label: '#3d1f5c' },
-    cloud:     { bg: 'rgba(59,130,246,0.10)',  border: '#93BFEF', icon: '#3b82f6', label: '#1f2f5c' },
-    pipeline:  { bg: 'rgba(124,58,237,0.10)',  border: '#B089F5', icon: '#7c3aed', label: '#2f1f5c' },
-    dashboard: { bg: 'rgba(236,72,153,0.10)',  border: '#F5A3CE', icon: '#db2777', label: '#5c1f4a' },
-    log:       { bg: 'rgba(59,130,246,0.10)',  border: '#93BFEF', icon: '#3b82f6', label: '#1f2f5c' },
-    fact:      { bg: 'rgba(245,158,11,0.10)',  border: '#F5CC7A', icon: '#d97706', label: '#5c3d1f' },
-    dimension: { bg: 'rgba(59,130,246,0.10)',  border: '#93BFEF', icon: '#3b82f6', label: '#1e3a5f' },
-    bridge:    { bg: 'rgba(168,85,247,0.10)',  border: '#C4A0F8', icon: '#9333ea', label: '#3d1f5c' },
-    star:      { bg: 'rgba(245,158,11,0.10)',  border: '#F5CC7A', icon: '#d97706', label: '#5c3d1f' },
-    snowflake: { bg: 'rgba(6,182,212,0.10)',   border: '#7DCFE8', icon: '#0891b2', label: '#1f4a5c' },
-    aggregate: { bg: 'rgba(16,185,129,0.10)',  border: '#80D5B5', icon: '#059669', label: '#1f4a3d' }
+    database:  { bg: 'rgba(74,122,155,0.10)',  border: '#8AAACE', icon: '#4A7A9B', label: '#1E3A52' },
+    queue:     { bg: 'rgba(122,90,158,0.10)',  border: '#A896C8', icon: '#7A5A9E', label: '#34204A' },
+    cluster:   { bg: 'rgba(158,90,60,0.10)',   border: '#C8907A', icon: '#9E5A3C', label: '#4A2018' },
+    stream:    { bg: 'rgba(158,120,36,0.10)',  border: '#C8A84E', icon: '#9E7824', label: '#4A360E' },
+    warehouse: { bg: 'rgba(74,122,86,0.10)',   border: '#7AA888', icon: '#4A7A56', label: '#1E4228' },
+    cache:     { bg: 'rgba(58,128,128,0.10)',  border: '#78AAAA', icon: '#3A8080', label: '#1A3E3E' },
+    api:       { bg: 'rgba(122,90,158,0.10)',  border: '#A896C8', icon: '#7A5A9E', label: '#34204A' },
+    cloud:     { bg: 'rgba(74,122,155,0.10)',  border: '#8AAACE', icon: '#4A7A9B', label: '#1E2A4A' },
+    pipeline:  { bg: 'rgba(90,80,144,0.10)',   border: '#A896C8', icon: '#7A5A9E', label: '#221A4A' },
+    dashboard: { bg: 'rgba(158,90,60,0.10)',   border: '#C8907A', icon: '#9E5A3C', label: '#4A2018' },
+    log:       { bg: 'rgba(74,122,155,0.10)',  border: '#8AAACE', icon: '#4A7A9B', label: '#1E2A4A' },
+    fact:      { bg: 'rgba(158,120,36,0.10)',  border: '#C8A84E', icon: '#9E7824', label: '#4A360E' },
+    dimension: { bg: 'rgba(74,122,155,0.10)',  border: '#8AAACE', icon: '#4A7A9B', label: '#1E3A52' },
+    bridge:    { bg: 'rgba(122,90,158,0.10)',  border: '#A896C8', icon: '#7A5A9E', label: '#34204A' },
+    star:      { bg: 'rgba(158,120,36,0.10)',  border: '#C8A84E', icon: '#9E7824', label: '#4A360E' },
+    snowflake: { bg: 'rgba(58,128,128,0.10)',  border: '#78AAAA', icon: '#3A8080', label: '#1A3E3E' },
+    aggregate: { bg: 'rgba(74,122,86,0.10)',   border: '#7AA888', icon: '#4A7A56', label: '#1E4228' }
   };
 
   const architectures = {
@@ -1043,8 +1043,8 @@ const BigDataArchitectureExplorer = () => {
         subtitle: "Data Literacy",
         goal: "Understand the ecosystem before touching code",
         icon: "foundation",
-        color: "#3b82f6",
-        colorLight: "rgba(59, 130, 246, 0.15)",
+        color: "#4A7A9B",
+        colorLight: "rgba(74, 122, 155, 0.15)",
         levels: [
           {
             id: "1.1",
@@ -1102,8 +1102,8 @@ const BigDataArchitectureExplorer = () => {
         subtitle: "SQL & Python",
         goal: "Master the tools of the trade",
         icon: "tools",
-        color: "#10b981",
-        colorLight: "rgba(16, 185, 129, 0.15)",
+        color: "#4A7A56",
+        colorLight: "rgba(74, 122, 86, 0.15)",
         levels: [
           {
             id: "2.1",
@@ -1176,8 +1176,8 @@ df.to_json("weather_data.json", orient="records")`
         subtitle: "Core Engineering",
         goal: "Move data automatically",
         icon: "pipeline",
-        color: "#f59e0b",
-        colorLight: "rgba(245, 158, 11, 0.15)",
+        color: "#9E7824",
+        colorLight: "rgba(158, 120, 36, 0.15)",
         levels: [
           {
             id: "3.1",
@@ -1299,8 +1299,8 @@ CMD ["python", "weather_pipeline.py"]`
         subtitle: "The Pro Level",
         goal: "Move from laptop to cloud infrastructure",
         icon: "cloud",
-        color: "#8b5cf6",
-        colorLight: "rgba(139, 92, 246, 0.15)",
+        color: "#7A5A9E",
+        colorLight: "rgba(122, 90, 158, 0.15)",
         levels: [
           {
             id: "4.1",
@@ -1432,8 +1432,8 @@ SELECT * FROM enriched`
         subtitle: "Advanced Trends 2026",
         goal: "Niche specialization and modern best practices",
         icon: "rocket",
-        color: "#ec4899",
-        colorLight: "rgba(236, 72, 153, 0.15)",
+        color: "#9E5A3C",
+        colorLight: "rgba(158, 90, 60, 0.15)",
         levels: [
           {
             id: "5.1",
@@ -1538,11 +1538,11 @@ for message in consumer:
 
   // Phase colors for curriculum
   const phaseColors = {
-    1: { primary: '#3b82f6', light: 'rgba(59, 130, 246, 0.15)', border: 'rgba(59, 130, 246, 0.3)' },
-    2: { primary: '#10b981', light: 'rgba(16, 185, 129, 0.15)', border: 'rgba(16, 185, 129, 0.3)' },
-    3: { primary: '#f59e0b', light: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.3)' },
-    4: { primary: '#8b5cf6', light: 'rgba(139, 92, 246, 0.15)', border: 'rgba(139, 92, 246, 0.3)' },
-    5: { primary: '#ec4899', light: 'rgba(236, 72, 153, 0.15)', border: 'rgba(236, 72, 153, 0.3)' }
+    1: { primary: '#4A7A9B', light: 'rgba(74, 122, 155, 0.15)', border: 'rgba(74, 122, 155, 0.3)' },
+    2: { primary: '#4A7A56', light: 'rgba(74, 122, 86, 0.15)', border: 'rgba(74, 122, 86, 0.3)' },
+    3: { primary: '#9E7824', light: 'rgba(158, 120, 36, 0.15)', border: 'rgba(158, 120, 36, 0.3)' },
+    4: { primary: '#7A5A9E', light: 'rgba(122, 90, 158, 0.15)', border: 'rgba(122, 90, 158, 0.3)' },
+    5: { primary: '#9E5A3C', light: 'rgba(158, 90, 60, 0.15)', border: 'rgba(158, 90, 60, 0.3)' }
   };
 
   // Phase icons for curriculum
@@ -1555,11 +1555,11 @@ for message in consumer:
   };
 
   const connectionColors = {
-    stream: '#f59e0b',
-    batch: '#ec4899',
-    query: '#10b981',
-    fk: '#60a5fa',
-    normalize: '#a855f7'
+    stream: '#9E7824',
+    batch: '#9E5A3C',
+    query: '#4A7A56',
+    fk: '#4A7A9B',
+    normalize: '#7A5A9E'
   };
 
   // Case Studies Data - Real-world Big Data Architecture Examples
@@ -2318,7 +2318,7 @@ for message in consumer:
   };
 
   const ConnectionArrow = ({ type }) => {
-    const color = connectionColors[type] || '#60a5fa';
+    const color = connectionColors[type] || '#4A7A9B';
 
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 8px', minWidth: '80px', height: '180px' }}>
@@ -2351,7 +2351,7 @@ for message in consumer:
   };
 
   const VerticalConnectionArrow = ({ type, direction = 'down' }) => {
-    const color = connectionColors[type] || '#60a5fa';
+    const color = connectionColors[type] || '#4A7A9B';
     const rotation = direction === 'down' ? 'rotate(90deg)' : 'rotate(-90deg)';
 
     return (
@@ -2460,7 +2460,7 @@ for message in consumer:
   };
 
   const LBendArrow = ({ type, direction }) => {
-    const color = connectionColors[type] || '#60a5fa';
+    const color = connectionColors[type] || '#4A7A9B';
     const isCenter = direction === 'center';
     const isDown = direction === 'down';
 
@@ -2549,7 +2549,7 @@ for message in consumer:
   // Two sources -> one target: draw two lines from the two collector centers,
   // merge them, then continue as a single centered line into ClickHouse.
   const MergeToCenterArrow = ({ type }) => {
-    const color = connectionColors[type] || '#60a5fa';
+    const color = connectionColors[type] || '#4A7A9B';
 
     // This arrow column sits between the stacked collectors (180 + 100 + 180 = 460).
     const SVG_W = 120;
@@ -2665,12 +2665,13 @@ for message in consumer:
     );
   };
 
-  // MapReduce: Fan-out arrow (1 source splits down to 3 targets)
-  const MapReduceFanOutArrow = ({ color = '#ec4899', count = 3 }) => {
-    const SVG_W = (count * 180) + ((count - 1) * 40); // total width of target row
+  // MapReduce: Fan-out arrow (1 source splits down to N targets)
+  const MapReduceFanOutArrow = ({ color = '#9E5A3C', count = 3, cardGap = 40 }) => {
+    const cardWidth = 180;
+    const SVG_W = (count * cardWidth) + ((count - 1) * cardGap);
     const SVG_H = 80;
     const centerX = SVG_W / 2;
-    const spacing = 180 + 40; // card width + gap
+    const spacing = cardWidth + cardGap;
     const startOffset = centerX - ((count - 1) / 2) * spacing;
 
     return (
@@ -2702,7 +2703,7 @@ for message in consumer:
   };
 
   // MapReduce: Fan-in arrow (multiple sources merge to 1 target)
-  const MapReduceFanInArrow = ({ color = '#f59e0b', sourceCount = 3 }) => {
+  const MapReduceFanInArrow = ({ color = '#9E7824', sourceCount = 3 }) => {
     const SVG_W = (sourceCount * 180) + ((sourceCount - 1) * 40);
     const SVG_H = 80;
     const centerX = SVG_W / 2;
@@ -2747,7 +2748,7 @@ for message in consumer:
     const centerX = SVG_W / 2;
     const srcOffset = centerX - ((sourceCount - 1) / 2) * spacing;
     const tgtOffset = centerX - ((targetCount - 1) / 2) * spacing;
-    const shuffleColor = '#f59e0b';
+    const shuffleColor = '#9E7824';
 
     // Each source connects to each target with crossing lines
     const paths = [];
@@ -2841,7 +2842,7 @@ for message in consumer:
             borderRadius: '6px',
             padding: '4px 8px',
             fontSize: '10px',
-            color: '#fbbf24',
+            color: '#C8A84E',
             fontFamily: 'Monaco, Consolas, monospace',
             textAlign: 'center',
             marginTop: '2px',
@@ -2873,7 +2874,7 @@ for message in consumer:
       operation: { label: 'Submit to Cluster', detail: 'Client packages JAR + config and sends to ResourceManager via RPC' },
       after: { label: 'Job Queued', data: ['job_202601_0001 ACCEPTED', 'Requested: 3 mappers, 2 reducers', 'Priority: NORMAL'] },
       insight: 'The client never processes data itself — it only submits the job definition and waits for results.',
-      color: '#3b82f6'
+      color: '#4A7A9B'
     },
     2: {
       title: 'Data Location Discovery',
@@ -2881,7 +2882,7 @@ for message in consumer:
       operation: { label: 'NameNode Lookup', detail: 'ResourceManager queries NameNode metadata to find which DataNodes hold each block' },
       after: { label: 'Block Location Map', data: ['Block 1 (128MB) → Node-A, Node-C', 'Block 2 (128MB) → Node-B, Node-A', 'Block 3 (128MB) → Node-C, Node-B'] },
       insight: 'Data locality: Mappers are assigned to nodes where the data already lives, avoiding network transfer.',
-      color: '#10b981'
+      color: '#4A7A56'
     },
     3: {
       title: 'Input Splitting',
@@ -2889,7 +2890,7 @@ for message in consumer:
       operation: { label: 'InputFormat.getSplits()', detail: 'TextInputFormat splits files at line boundaries, one split per HDFS block (128MB default)' },
       after: { label: '3 Input Splits Created', data: ['Split-0: "hello world hello"', 'Split-1: "foo hello world"', 'Split-2: "bar world foo"'] },
       insight: 'Each split maps to exactly one Map task. More splits = more parallelism but more overhead.',
-      color: '#3b82f6'
+      color: '#4A7A9B'
     },
     4: {
       title: 'Map Phase — Parallel Transformation',
@@ -2897,7 +2898,7 @@ for message in consumer:
       operation: { label: 'map(key, value) → emit(word, 1)', detail: 'Each mapper reads one split line-by-line, tokenizes words, emits (word, 1) for each token' },
       after: { label: 'Intermediate Key-Value Pairs', data: ['Mapper-0: (hello,1)(world,1)(hello,1)', 'Mapper-1: (foo,1)(hello,1)(world,1)', 'Mapper-2: (bar,1)(world,1)(foo,1)'] },
       insight: 'Mappers run independently — no communication between them. Each processes only its local split.',
-      color: '#ec4899'
+      color: '#9E5A3C'
     },
     5: {
       title: 'Shuffle & Sort — The Network Storm',
@@ -2905,7 +2906,7 @@ for message in consumer:
       operation: { label: 'Hash Partition → Transfer → Merge Sort', detail: 'Each key is hashed to a reducer partition. Pairs are sent across the network and merge-sorted by key.' },
       after: { label: 'Grouped & Sorted by Key', data: ['→ Reducer-0: bar→[1], foo→[1,1], hello→[1,1,1]', '→ Reducer-1: world→[1,1,1]'] },
       insight: 'This is the most expensive step — all intermediate data crosses the network. The "shuffle" is why MapReduce is disk-heavy.',
-      color: '#f59e0b'
+      color: '#9E7824'
     },
     6: {
       title: 'Reduce Phase — Aggregation',
@@ -2913,7 +2914,7 @@ for message in consumer:
       operation: { label: 'reduce(key, values) → sum(values)', detail: 'Each reducer receives all values for its key range and applies the user-defined reduce function' },
       after: { label: 'Aggregated Results', data: ['Reducer-0: (bar,1) (foo,2) (hello,3)', 'Reducer-1: (world,3)'] },
       insight: 'Each reducer sees ALL values for a given key — this is guaranteed by the shuffle. sum([1,1,1]) = 3',
-      color: '#f59e0b'
+      color: '#9E7824'
     },
     7: {
       title: 'Output to HDFS',
@@ -2921,7 +2922,7 @@ for message in consumer:
       operation: { label: 'OutputFormat.write()', detail: 'Each reducer writes results to HDFS as a separate part file (one file per reducer)' },
       after: { label: 'HDFS Output Files', data: ['part-r-00000: bar\\t1, foo\\t2, hello\\t3', 'part-r-00001: world\\t3', 'Total: 4 unique words counted'] },
       insight: 'Results are split across part files. Use "hadoop fs -cat /results/*" or downstream tools (Hive) to read them.',
-      color: '#10b981'
+      color: '#4A7A56'
     }
   };
 
@@ -3000,11 +3001,11 @@ for message in consumer:
         <div style={{
           marginTop: '14px',
           padding: '10px 16px',
-          background: 'rgba(245, 158, 11, 0.08)',
-          border: '1px solid rgba(245, 158, 11, 0.2)',
+          background: 'rgba(158, 120, 36, 0.08)',
+          border: '1px solid rgba(158, 120, 36, 0.2)',
           borderRadius: '8px',
           fontSize: '12px',
-          color: '#fbbf24',
+          color: '#C8A84E',
           textAlign: 'center',
           lineHeight: '1.5'
         }}>
@@ -3109,10 +3110,10 @@ for message in consumer:
             }}
             style={{
               padding: '6px 14px',
-              background: mapReduceAnimating ? 'rgba(239, 68, 68, 0.2)' : 'rgba(59, 130, 246, 0.2)',
-              border: `1px solid ${mapReduceAnimating ? '#ef4444' : '#3b82f6'}`,
+              background: mapReduceAnimating ? 'rgba(239, 68, 68, 0.2)' : 'rgba(74, 122, 155, 0.2)',
+              border: `1px solid ${mapReduceAnimating ? '#ef4444' : '#4A7A9B'}`,
               borderRadius: '8px',
-              color: mapReduceAnimating ? '#ef4444' : '#60a5fa',
+              color: mapReduceAnimating ? '#ef4444' : '#4A7A9B',
               fontSize: '12px',
               fontWeight: '600',
               cursor: 'pointer',
@@ -3133,10 +3134,10 @@ for message in consumer:
                 title={s.description}
                 style={{
                   padding: '4px 10px',
-                  background: step === i ? 'rgba(59, 130, 246, 0.3)' : 'rgba(235,232,228,0.5)',
-                  border: `1px solid ${step === i ? '#3b82f6' : 'rgba(235,231,225,1)'}`,
+                  background: step === i ? 'rgba(74, 122, 155, 0.3)' : 'rgba(235,232,228,0.5)',
+                  border: `1px solid ${step === i ? '#4A7A9B' : 'rgba(235,231,225,1)'}`,
                   borderRadius: '6px',
-                  color: step === i ? '#60a5fa' : '#64748b',
+                  color: step === i ? '#4A7A9B' : '#64748b',
                   fontSize: '11px',
                   fontWeight: step === i ? '700' : '500',
                   cursor: 'pointer',
@@ -3156,10 +3157,10 @@ for message in consumer:
             onClick={() => setShowDataTransform(!showDataTransform)}
             style={{
               padding: '6px 14px',
-              background: showDataTransform ? 'rgba(16, 185, 129, 0.2)' : 'rgba(235,232,228,0.5)',
-              border: `1px solid ${showDataTransform ? '#10b981' : 'rgba(235,231,225,1)'}`,
+              background: showDataTransform ? 'rgba(74, 122, 86, 0.2)' : 'rgba(235,232,228,0.5)',
+              border: `1px solid ${showDataTransform ? '#4A7A56' : 'rgba(235,231,225,1)'}`,
               borderRadius: '8px',
-              color: showDataTransform ? '#34d399' : '#94a3b8',
+              color: showDataTransform ? '#4A7A56' : '#94a3b8',
               fontSize: '12px',
               fontWeight: '500',
               cursor: 'pointer',
@@ -3177,10 +3178,10 @@ for message in consumer:
             onClick={() => setShowMapReduceExample(!showMapReduceExample)}
             style={{
               padding: '6px 14px',
-              background: showMapReduceExample ? 'rgba(245, 158, 11, 0.2)' : 'rgba(235,232,228,0.5)',
-              border: `1px solid ${showMapReduceExample ? '#f59e0b' : 'rgba(235,231,225,1)'}`,
+              background: showMapReduceExample ? 'rgba(158, 120, 36, 0.2)' : 'rgba(235,232,228,0.5)',
+              border: `1px solid ${showMapReduceExample ? '#9E7824' : 'rgba(235,231,225,1)'}`,
               borderRadius: '8px',
-              color: showMapReduceExample ? '#fbbf24' : '#94a3b8',
+              color: showMapReduceExample ? '#C8A84E' : '#94a3b8',
               fontSize: '12px',
               fontWeight: '500',
               cursor: 'pointer',
@@ -3199,10 +3200,10 @@ for message in consumer:
           <div style={{
             marginBottom: '4px',
             padding: '8px 20px',
-            background: 'rgba(59, 130, 246, 0.1)',
-            border: '1px solid rgba(59, 130, 246, 0.3)',
+            background: 'rgba(74, 122, 155, 0.1)',
+            border: '1px solid rgba(74, 122, 155, 0.3)',
             borderRadius: '8px',
-            color: '#93c5fd',
+            color: '#8AAACE',
             fontSize: '13px',
             textAlign: 'center'
           }}>
@@ -3229,7 +3230,7 @@ for message in consumer:
               <div style={{
                 position: 'absolute', left: '50%', marginLeft: '110px', top: '50%', transform: 'translateY(-50%)',
                 background: 'rgba(200,195,188,0.7)', borderRadius: '8px', padding: '6px 10px',
-                fontSize: '10px', color: '#93c5fd', fontFamily: 'Monaco, Consolas, monospace',
+                fontSize: '10px', color: '#8AAACE', fontFamily: 'Monaco, Consolas, monospace',
                 border: '1px solid rgba(59,130,246,0.3)', animation: 'fadeInScale 0.3s ease-out',
                 whiteSpace: 'nowrap'
               }}>
@@ -3267,7 +3268,7 @@ for message in consumer:
               {step === 2 && showDataTransform && (
                 <div style={{
                   position: 'absolute', left: '50%', transform: 'translateX(-50%)', top: '-18px',
-                  fontSize: '9px', color: '#10b981', fontFamily: 'Monaco, Consolas, monospace',
+                  fontSize: '9px', color: '#4A7A56', fontFamily: 'Monaco, Consolas, monospace',
                   whiteSpace: 'nowrap'
                 }}>
                   "Where are blocks for /data/logs/*?"
@@ -3301,8 +3302,8 @@ for message in consumer:
                 key={i}
                 label={s.label}
                 icon={ScrollText}
-                color="rgba(59, 130, 246, 0.15)"
-                borderColor="#3b82f6"
+                color="rgba(74, 122, 155, 0.15)"
+                borderColor="#4A7A9B"
                 isActive={isStepActive([3])}
                 onClick={() => setSelectedComponent(input)}
                 exampleText={s.ex}
@@ -3348,10 +3349,10 @@ for message in consumer:
           }}>
             <div style={{
               padding: '4px 16px',
-              background: 'rgba(236, 72, 153, 0.15)',
-              border: '1px solid rgba(236, 72, 153, 0.3)',
+              background: 'rgba(158, 90, 60, 0.15)',
+              border: '1px solid rgba(158, 90, 60, 0.3)',
               borderRadius: '20px',
-              color: '#ec4899',
+              color: '#9E5A3C',
               fontSize: '11px',
               fontWeight: '700',
               letterSpacing: '2px',
@@ -3374,8 +3375,8 @@ for message in consumer:
                 key={i}
                 label={m.label}
                 icon={Cpu}
-                color="rgba(236, 72, 153, 0.15)"
-                borderColor="#ec4899"
+                color="rgba(158, 90, 60, 0.15)"
+                borderColor="#9E5A3C"
                 isActive={isStepActive([4])}
                 onClick={() => setSelectedComponent(map)}
                 exampleText={m.ex}
@@ -3391,10 +3392,10 @@ for message in consumer:
           }}>
             <div style={{
               padding: '4px 16px',
-              background: 'rgba(245, 158, 11, 0.15)',
-              border: '1px solid rgba(245, 158, 11, 0.3)',
+              background: 'rgba(158, 120, 36, 0.15)',
+              border: '1px solid rgba(158, 120, 36, 0.3)',
               borderRadius: '20px',
-              color: '#f59e0b',
+              color: '#9E7824',
               fontSize: '11px',
               fontWeight: '700',
               letterSpacing: '2px',
@@ -3420,8 +3421,8 @@ for message in consumer:
             <div
               onClick={() => setSelectedComponent(shuffle)}
               style={{
-                background: 'rgba(124, 58, 237, 0.15)',
-                border: '2px solid #7c3aed',
+                background: 'rgba(90, 80, 144, 0.15)',
+                border: '2px solid #7A5A9E',
                 borderRadius: '16px',
                 padding: '16px 40px',
                 display: 'flex',
@@ -3429,7 +3430,7 @@ for message in consumer:
                 gap: '16px',
                 cursor: 'pointer',
                 transition: 'all 0.3s',
-                boxShadow: (step === 5) ? '0 0 30px rgba(124, 58, 237, 0.4)' : '0 0 15px rgba(124, 58, 237, 0.2)'
+                boxShadow: (step === 5) ? '0 0 30px rgba(90, 80, 144, 0.4)' : '0 0 15px rgba(90, 80, 144, 0.2)'
               }}
               onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
               onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
@@ -3437,10 +3438,10 @@ for message in consumer:
               <div style={{
                 width: '50px', height: '50px', borderRadius: '12px',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'rgba(124, 58, 237, 0.2)',
-                border: '1px solid rgba(124, 58, 237, 0.4)'
+                background: 'rgba(90, 80, 144, 0.2)',
+                border: '1px solid rgba(90, 80, 144, 0.4)'
               }}>
-                <GitMerge size={28} color="#7c3aed" strokeWidth={1.5} />
+                <GitMerge size={28} color="#7A5A9E" strokeWidth={1.5} />
               </div>
               <div>
                 <div style={{ color: '#a78bfa', fontSize: '16px', fontWeight: '700' }}>Shuffle & Sort</div>
@@ -3449,7 +3450,7 @@ for message in consumer:
               {(showMapReduceExample || (step === 5 && showDataTransform)) && (
                 <div style={{
                   background: 'rgba(200,195,188,0.3)', borderRadius: '8px', padding: '8px 12px',
-                  fontSize: '11px', color: '#fbbf24', fontFamily: 'Monaco, Consolas, monospace',
+                  fontSize: '11px', color: '#C8A84E', fontFamily: 'Monaco, Consolas, monospace',
                   lineHeight: '1.5'
                 }}>
                   Group: hello→[1,1,1], world→[1,1,1], foo→[1,1], bar→[1]
@@ -3466,10 +3467,10 @@ for message in consumer:
           }}>
             <div style={{
               padding: '4px 16px',
-              background: 'rgba(245, 158, 11, 0.15)',
-              border: '1px solid rgba(245, 158, 11, 0.3)',
+              background: 'rgba(158, 120, 36, 0.15)',
+              border: '1px solid rgba(158, 120, 36, 0.3)',
               borderRadius: '20px',
-              color: '#f59e0b',
+              color: '#9E7824',
               fontSize: '11px',
               fontWeight: '700',
               letterSpacing: '2px',
@@ -3500,8 +3501,8 @@ for message in consumer:
                 key={i}
                 label={r.label}
                 icon={Activity}
-                color="rgba(245, 158, 11, 0.15)"
-                borderColor="#f59e0b"
+                color="rgba(158, 120, 36, 0.15)"
+                borderColor="#9E7824"
                 isActive={isStepActive([6])}
                 onClick={() => setSelectedComponent(reduce)}
                 exampleText={r.ex}
@@ -3531,8 +3532,8 @@ for message in consumer:
                   position: 'absolute', top: '50%', left: '100%', marginLeft: '12px',
                   transform: 'translateY(-50%)',
                   background: 'rgba(200,195,188,0.6)', borderRadius: '8px', padding: '8px 12px',
-                  fontSize: '11px', color: '#fbbf24', fontFamily: 'Monaco, Consolas, monospace',
-                  whiteSpace: 'nowrap', border: '1px solid rgba(245, 158, 11, 0.3)'
+                  fontSize: '11px', color: '#C8A84E', fontFamily: 'Monaco, Consolas, monospace',
+                  whiteSpace: 'nowrap', border: '1px solid rgba(158, 120, 36, 0.3)'
                 }}>
                   {exampleData.output}
                 </div>
@@ -3564,7 +3565,7 @@ for message in consumer:
       operation: { label: 'Connect to Cluster', detail: 'Driver connects to YARN/K8s, requests Executor containers with CPU + memory' },
       after: { label: 'Cluster Ready', data: ['SparkContext initialized', '4 Executors allocated (4 cores, 8GB each)', 'Application ID: app-20260101-001'] },
       insight: 'Unlike MapReduce, one SparkContext can run many jobs without re-negotiating resources each time.',
-      color: '#3b82f6'
+      color: '#4A7A9B'
     },
     2: {
       title: 'DAG Construction & Optimization',
@@ -3572,7 +3573,7 @@ for message in consumer:
       operation: { label: 'Catalyst + DAG Scheduler', detail: 'Builds a DAG of stages, optimizes query plan, pipelines narrow transforms into single stages' },
       after: { label: 'Optimized Execution Plan', data: ['Stage 0: textFile → flatMap → map', '  (pipelined — single pass!)', 'Stage 1: reduceByKey (shuffle)', '  2 stages, 4 tasks each'] },
       insight: 'Spark pipelines multiple transforms into one stage — map→filter→map runs as ONE pass over data, not three.',
-      color: '#a855f7'
+      color: '#7A5A9E'
     },
     3: {
       title: 'Data Loading into Memory',
@@ -3580,7 +3581,7 @@ for message in consumer:
       operation: { label: 'Parallel Read + Partition', detail: 'Each Executor reads its assigned partitions directly into JVM memory (or off-heap with Tungsten)' },
       after: { label: 'In-Memory RDD Partitions', data: ['Executor-0: Partition 0 → [IN MEMORY]', 'Executor-1: Partition 1 → [IN MEMORY]', 'Executor-2: Partition 2 → [IN MEMORY]', '.cache() keeps data for reuse!'] },
       insight: 'Data lives in memory across operations — no disk writes between steps. This is what makes Spark 100x faster.',
-      color: '#06b6d4'
+      color: '#3A8080'
     },
     4: {
       title: 'Lazy Transformations (Pipelined)',
@@ -3588,7 +3589,7 @@ for message in consumer:
       operation: { label: 'flatMap → map (pipelined)', detail: 'Narrow transforms execute in a single pass — no shuffle, no disk, no network' },
       after: { label: 'Transformed Partitions (still in memory)', data: ['P0: (hello,1)(world,1)(hello,1)', 'P1: (foo,1)(hello,1)(world,1)', 'P2: (bar,1)(world,1)(foo,1)'] },
       insight: 'These transforms are lazy! Nothing executes until an action (collect, save) is called. Spark just records the plan.',
-      color: '#ec4899'
+      color: '#9E5A3C'
     },
     5: {
       title: 'Shuffle Exchange (Stage Boundary)',
@@ -3596,7 +3597,7 @@ for message in consumer:
       operation: { label: 'Repartition by Key Hash', detail: 'Data redistributed across executors by key — shuffle files written to local disk temporarily' },
       after: { label: 'Partitions by Key', data: ['P0: hello→[1,1,1], foo→[1,1], bar→[1]', 'P1: world→[1,1,1]', '(reduceByKey combines locally first!)'] },
       insight: 'Shuffles are the bottleneck in Spark too — but Spark\'s combiner (map-side reduce) minimizes data transferred.',
-      color: '#f59e0b'
+      color: '#9E7824'
     },
     6: {
       title: 'Action Triggers Execution',
@@ -3604,7 +3605,7 @@ for message in consumer:
       operation: { label: '.saveAsTextFile() or .collect()', detail: 'Action triggers the entire DAG execution — all stages run, results materialized' },
       after: { label: 'Output Results', data: ['part-00000: bar 1, foo 2, hello 3', 'part-00001: world 3', 'Job completed in 2.3s (vs 45s MR)'] },
       insight: 'Only ONE pass through the DAG. MapReduce would need separate jobs chained together for complex pipelines.',
-      color: '#10b981'
+      color: '#4A7A56'
     }
   };
 
@@ -3662,9 +3663,9 @@ for message in consumer:
             }}
             style={{
               padding: '6px 14px',
-              background: sparkAnimating ? 'rgba(239, 68, 68, 0.2)' : 'rgba(59, 130, 246, 0.2)',
-              border: `1px solid ${sparkAnimating ? '#ef4444' : '#3b82f6'}`,
-              borderRadius: '8px', color: sparkAnimating ? '#ef4444' : '#60a5fa',
+              background: sparkAnimating ? 'rgba(239, 68, 68, 0.2)' : 'rgba(74, 122, 155, 0.2)',
+              border: `1px solid ${sparkAnimating ? '#ef4444' : '#4A7A9B'}`,
+              borderRadius: '8px', color: sparkAnimating ? '#ef4444' : '#4A7A9B',
               fontSize: '12px', fontWeight: '600', cursor: 'pointer',
               display: 'flex', alignItems: 'center', gap: '6px'
             }}
@@ -3680,9 +3681,9 @@ for message in consumer:
                 title={s.description}
                 style={{
                   padding: '4px 10px',
-                  background: step === i ? 'rgba(59, 130, 246, 0.3)' : 'rgba(235,232,228,0.5)',
-                  border: `1px solid ${step === i ? '#3b82f6' : 'rgba(235,231,225,1)'}`,
-                  borderRadius: '6px', color: step === i ? '#60a5fa' : '#64748b',
+                  background: step === i ? 'rgba(74, 122, 155, 0.3)' : 'rgba(235,232,228,0.5)',
+                  border: `1px solid ${step === i ? '#4A7A9B' : 'rgba(235,231,225,1)'}`,
+                  borderRadius: '6px', color: step === i ? '#4A7A9B' : '#64748b',
                   fontSize: '11px', fontWeight: step === i ? '700' : '500',
                   cursor: 'pointer', transition: 'all 0.2s'
                 }}
@@ -3698,9 +3699,9 @@ for message in consumer:
             onClick={() => setShowDataTransform(!showDataTransform)}
             style={{
               padding: '6px 14px',
-              background: showDataTransform ? 'rgba(16, 185, 129, 0.2)' : 'rgba(235,232,228,0.5)',
-              border: `1px solid ${showDataTransform ? '#10b981' : 'rgba(235,231,225,1)'}`,
-              borderRadius: '8px', color: showDataTransform ? '#34d399' : '#94a3b8',
+              background: showDataTransform ? 'rgba(74, 122, 86, 0.2)' : 'rgba(235,232,228,0.5)',
+              border: `1px solid ${showDataTransform ? '#4A7A56' : 'rgba(235,231,225,1)'}`,
+              borderRadius: '8px', color: showDataTransform ? '#4A7A56' : '#94a3b8',
               fontSize: '12px', fontWeight: '500', cursor: 'pointer',
               display: 'flex', alignItems: 'center', gap: '6px'
             }}
@@ -3714,8 +3715,8 @@ for message in consumer:
         {step > 0 && (
           <div style={{
             marginBottom: '4px', padding: '8px 20px',
-            background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)',
-            borderRadius: '8px', color: '#93c5fd', fontSize: '13px', textAlign: 'center'
+            background: 'rgba(74, 122, 155, 0.1)', border: '1px solid rgba(74, 122, 155, 0.3)',
+            borderRadius: '8px', color: '#8AAACE', fontSize: '13px', textAlign: 'center'
           }}>
             <strong>Step {step}:</strong> {sparkSteps[step]?.description}
           </div>
@@ -3744,7 +3745,7 @@ for message in consumer:
             opacity: isStepActive([1, 2]) ? 1 : (step > 0 ? 0.25 : 1),
             transition: 'opacity 0.5s'
           }}>
-            <MapReduceFanOutArrow color="#a855f7" count={2} />
+            <MapReduceFanOutArrow color="#7A5A9E" count={2} cardGap={60} />
           </div>
 
           {/* Row 2: Cluster Manager + DAG Scheduler */}
@@ -3781,7 +3782,7 @@ for message in consumer:
             opacity: isStepActive([3]) ? 1 : (step > 0 ? 0.25 : 1),
             transition: 'opacity 0.5s'
           }}>
-            <MapReduceFanOutArrow color="#06b6d4" count={3} />
+            <MapReduceFanOutArrow color="#3A8080" count={3} />
           </div>
 
           {/* Phase label: IN-MEMORY PARTITIONS */}
@@ -3791,9 +3792,9 @@ for message in consumer:
             transition: 'opacity 0.5s'
           }}>
             <div style={{
-              padding: '4px 16px', background: 'rgba(6, 182, 212, 0.15)',
-              border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px',
-              color: '#06b6d4', fontSize: '11px', fontWeight: '700',
+              padding: '4px 16px', background: 'rgba(58, 128, 128, 0.15)',
+              border: '1px solid rgba(58, 128, 128, 0.3)', borderRadius: '20px',
+              color: '#3A8080', fontSize: '11px', fontWeight: '700',
               letterSpacing: '2px', textTransform: 'uppercase'
             }}>In-Memory Partitions — No Disk I/O</div>
           </div>
@@ -3811,7 +3812,7 @@ for message in consumer:
             ].map((p, i) => (
               <MapReduceMiniCard
                 key={i} label={p.label} icon={Zap}
-                color="rgba(6, 182, 212, 0.15)" borderColor="#06b6d4"
+                color="rgba(58, 128, 128, 0.15)" borderColor="#3A8080"
                 isActive={isStepActive([3, 4])}
                 onClick={() => setSelectedComponent(rdd)}
                 exampleText={showDataTransform && step >= 3 ? p.ex : undefined}
@@ -3828,16 +3829,16 @@ for message in consumer:
             {[0, 1, 2].map(i => (
               <div key={i} style={{ width: '160px', display: 'flex', justifyContent: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px 0', height: '60px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#ec4899', transform: 'rotate(90deg)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#9E5A3C', transform: 'rotate(90deg)' }}>
                     <div style={{
                       width: '40px', height: '2px',
-                      background: `linear-gradient(90deg, transparent, #ec4899, #ec4899)`,
+                      background: `linear-gradient(90deg, transparent, #9E5A3C, #9E5A3C)`,
                       position: 'relative'
                     }}>
                       {showDataFlow && (
                         <div style={{
                           position: 'absolute', width: '8px', height: '8px', borderRadius: '50%',
-                          background: '#ec4899', boxShadow: '0 0 10px #ec4899',
+                          background: '#9E5A3C', boxShadow: '0 0 10px #9E5A3C',
                           animation: 'flowRight 1.2s infinite linear', top: '-3px'
                         }} />
                       )}
@@ -3856,9 +3857,9 @@ for message in consumer:
             transition: 'opacity 0.5s'
           }}>
             <div style={{
-              padding: '4px 16px', background: 'rgba(236, 72, 153, 0.15)',
-              border: '1px solid rgba(236, 72, 153, 0.3)', borderRadius: '20px',
-              color: '#ec4899', fontSize: '11px', fontWeight: '700',
+              padding: '4px 16px', background: 'rgba(158, 90, 60, 0.15)',
+              border: '1px solid rgba(158, 90, 60, 0.3)', borderRadius: '20px',
+              color: '#9E5A3C', fontSize: '11px', fontWeight: '700',
               letterSpacing: '2px', textTransform: 'uppercase'
             }}>Transform Phase — Pipelined In One Pass</div>
           </div>
@@ -3876,7 +3877,7 @@ for message in consumer:
             ].map((t, i) => (
               <MapReduceMiniCard
                 key={i} label={t.label} icon={Cpu}
-                color="rgba(236, 72, 153, 0.15)" borderColor="#ec4899"
+                color="rgba(158, 90, 60, 0.15)" borderColor="#9E5A3C"
                 isActive={isStepActive([4])}
                 onClick={() => setSelectedComponent(transform)}
                 exampleText={showDataTransform && step === 4 ? t.ex : undefined}
@@ -3891,9 +3892,9 @@ for message in consumer:
             transition: 'opacity 0.5s'
           }}>
             <div style={{
-              padding: '4px 16px', background: 'rgba(245, 158, 11, 0.15)',
-              border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '20px',
-              color: '#f59e0b', fontSize: '11px', fontWeight: '700',
+              padding: '4px 16px', background: 'rgba(158, 120, 36, 0.15)',
+              border: '1px solid rgba(158, 120, 36, 0.3)', borderRadius: '20px',
+              color: '#9E7824', fontSize: '11px', fontWeight: '700',
               letterSpacing: '2px', textTransform: 'uppercase'
             }}>Shuffle Exchange — Stage Boundary</div>
           </div>
@@ -3916,11 +3917,11 @@ for message in consumer:
             <div
               onClick={() => setSelectedComponent(shuffle)}
               style={{
-                background: 'rgba(245, 158, 11, 0.15)', border: '2px solid #f59e0b',
+                background: 'rgba(158, 120, 36, 0.15)', border: '2px solid #9E7824',
                 borderRadius: '16px', padding: '16px 40px',
                 display: 'flex', alignItems: 'center', gap: '16px',
                 cursor: 'pointer', transition: 'all 0.3s',
-                boxShadow: step === 5 ? '0 0 30px rgba(245, 158, 11, 0.4)' : '0 0 15px rgba(245, 158, 11, 0.2)'
+                boxShadow: step === 5 ? '0 0 30px rgba(158, 120, 36, 0.4)' : '0 0 15px rgba(158, 120, 36, 0.2)'
               }}
               onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
               onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
@@ -3928,18 +3929,18 @@ for message in consumer:
               <div style={{
                 width: '50px', height: '50px', borderRadius: '12px',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'rgba(245, 158, 11, 0.2)', border: '1px solid rgba(245, 158, 11, 0.4)'
+                background: 'rgba(158, 120, 36, 0.2)', border: '1px solid rgba(158, 120, 36, 0.4)'
               }}>
-                <GitMerge size={28} color="#f59e0b" strokeWidth={1.5} />
+                <GitMerge size={28} color="#9E7824" strokeWidth={1.5} />
               </div>
               <div>
-                <div style={{ color: '#fbbf24', fontSize: '16px', fontWeight: '700' }}>Shuffle Exchange</div>
+                <div style={{ color: '#C8A84E', fontSize: '16px', fontWeight: '700' }}>Shuffle Exchange</div>
                 <div style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>Hash partition → Network transfer → Local disk write (temporary)</div>
               </div>
               {step === 5 && showDataTransform && (
                 <div style={{
                   background: 'rgba(200,195,188,0.3)', borderRadius: '8px', padding: '8px 12px',
-                  fontSize: '11px', color: '#fbbf24', fontFamily: 'Monaco, Consolas, monospace',
+                  fontSize: '11px', color: '#C8A84E', fontFamily: 'Monaco, Consolas, monospace',
                   lineHeight: '1.5'
                 }}>
                   reduceByKey: hello→[1,1,1], world→[1,1,1]
@@ -3954,7 +3955,7 @@ for message in consumer:
             opacity: isStepActive([5, 6]) ? 1 : (step > 0 ? 0.25 : 1),
             transition: 'opacity 0.5s'
           }}>
-            <MapReduceFanOutArrow color="#10b981" count={2} />
+            <MapReduceFanOutArrow color="#4A7A56" count={2} />
           </div>
 
           {/* Phase label: ACTION & OUTPUT */}
@@ -3964,9 +3965,9 @@ for message in consumer:
             transition: 'opacity 0.5s'
           }}>
             <div style={{
-              padding: '4px 16px', background: 'rgba(16, 185, 129, 0.15)',
-              border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '20px',
-              color: '#10b981', fontSize: '11px', fontWeight: '700',
+              padding: '4px 16px', background: 'rgba(74, 122, 86, 0.15)',
+              border: '1px solid rgba(74, 122, 86, 0.3)', borderRadius: '20px',
+              color: '#4A7A56', fontSize: '11px', fontWeight: '700',
               letterSpacing: '2px', textTransform: 'uppercase'
             }}>Action & Output — Results Materialized</div>
           </div>
@@ -3983,7 +3984,7 @@ for message in consumer:
             ].map((r, i) => (
               <MapReduceMiniCard
                 key={i} label={r.label} icon={HardDrive}
-                color="rgba(16, 185, 129, 0.15)" borderColor="#10b981"
+                color="rgba(74, 122, 86, 0.15)" borderColor="#4A7A56"
                 isActive={isStepActive([6])}
                 onClick={() => setSelectedComponent(output)}
                 exampleText={showDataTransform && step === 6 ? r.ex : undefined}
@@ -3997,7 +3998,7 @@ for message in consumer:
             opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
             transition: 'opacity 0.5s'
           }}>
-            <MapReduceFanInArrow color="#10b981" sourceCount={2} />
+            <MapReduceFanInArrow color="#4A7A56" sourceCount={2} />
           </div>
 
           {/* Row 8: HDFS/S3 Output */}
@@ -4013,8 +4014,8 @@ for message in consumer:
                   position: 'absolute', top: '50%', left: '100%', marginLeft: '12px',
                   transform: 'translateY(-50%)',
                   background: 'rgba(200,195,188,0.6)', borderRadius: '8px', padding: '8px 12px',
-                  fontSize: '11px', color: '#34d399', fontFamily: 'Monaco, Consolas, monospace',
-                  whiteSpace: 'nowrap', border: '1px solid rgba(16, 185, 129, 0.3)'
+                  fontSize: '11px', color: '#4A7A56', fontFamily: 'Monaco, Consolas, monospace',
+                  whiteSpace: 'nowrap', border: '1px solid rgba(74, 122, 86, 0.3)'
                 }}>
                   Completed in 2.3s (vs 45s MapReduce)
                 </div>
@@ -4081,7 +4082,7 @@ for message in consumer:
 
   // Radial arrow for star/snowflake schemas: draws an SVG line from center to a position
   const RadialArrow = ({ type, angle, length = 120 }) => {
-    const color = connectionColors[type] || '#60a5fa';
+    const color = connectionColors[type] || '#4A7A9B';
     const radians = (angle * Math.PI) / 180;
     const endX = Math.cos(radians) * length;
     const endY = Math.sin(radians) * length;
@@ -4124,7 +4125,7 @@ for message in consumer:
 
   // Chain arrow for snowflake normalization branches (dimension → sub-dimension)
   const ChainArrow = ({ type, angle, innerLength = 120, outerLength = 80 }) => {
-    const color = connectionColors[type] || '#a855f7';
+    const color = connectionColors[type] || '#7A5A9E';
     const radians = (angle * Math.PI) / 180;
     const startX = Math.cos(radians) * innerLength;
     const startY = Math.sin(radians) * innerLength;
@@ -4169,7 +4170,7 @@ for message in consumer:
 
   // Branch arrow for snowflake: a chain that goes out at a slight angle from the main dimension direction
   const BranchArrow = ({ type, startAngle, branchAngle, innerLength = 120, outerLength = 80 }) => {
-    const color = connectionColors[type] || '#a855f7';
+    const color = connectionColors[type] || '#7A5A9E';
     const startRadians = (startAngle * Math.PI) / 180;
     const branchRadians = (branchAngle * Math.PI) / 180;
     const startX = Math.cos(startRadians) * innerLength;
@@ -4244,9 +4245,9 @@ for message in consumer:
   // ER Diagram Table component for schema visuals
   const ERTable = ({ title, type, columns, style: posStyle, onClick, id, highlightedColumns = [] }) => {
     const isFact = type === 'fact';
-    const headerBg = isFact ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 'linear-gradient(135deg, #3b82f6, #2563eb)';
-    const borderColor = isFact ? '#f59e0b' : '#60a5fa';
-    const glowColor = isFact ? 'rgba(245, 158, 11, 0.3)' : 'rgba(96, 165, 250, 0.2)';
+    const headerBg = isFact ? 'linear-gradient(135deg, #9E7824, #9E7824)' : 'linear-gradient(135deg, #4A7A9B, #2563eb)';
+    const borderColor = isFact ? '#9E7824' : '#4A7A9B';
+    const glowColor = isFact ? 'rgba(158, 120, 36, 0.3)' : 'rgba(96, 165, 250, 0.2)';
 
     return (
       <div
@@ -4298,29 +4299,29 @@ for message in consumer:
             >
               {col.pk && (
                 <span style={{
-                  background: isHL ? 'rgba(245, 158, 11, 0.4)' : 'rgba(245, 158, 11, 0.2)',
-                  color: '#fbbf24',
+                  background: isHL ? 'rgba(158, 120, 36, 0.4)' : 'rgba(158, 120, 36, 0.2)',
+                  color: '#C8A84E',
                   padding: '1px 5px',
                   borderRadius: '3px',
                   fontSize: '9px',
                   fontWeight: '700',
-                  border: '1px solid rgba(245, 158, 11, 0.4)',
+                  border: '1px solid rgba(158, 120, 36, 0.4)',
                   flexShrink: 0
                 }}>PK</span>
               )}
               {col.fk && (
                 <span style={{
-                  background: isHL ? 'rgba(59, 130, 246, 0.4)' : 'rgba(59, 130, 246, 0.2)',
-                  color: '#60a5fa',
+                  background: isHL ? 'rgba(74, 122, 155, 0.4)' : 'rgba(74, 122, 155, 0.2)',
+                  color: '#4A7A9B',
                   padding: '1px 5px',
                   borderRadius: '3px',
                   fontSize: '9px',
                   fontWeight: '700',
-                  border: '1px solid rgba(59, 130, 246, 0.4)',
+                  border: '1px solid rgba(74, 122, 155, 0.4)',
                   flexShrink: 0
                 }}>FK</span>
               )}
-              <span style={{ color: col.pk ? '#d97706' : col.fk ? '#3b82f6' : 'var(--text-body)', fontWeight: col.pk || col.fk ? '600' : '400', fontFamily: 'monospace' }}>
+              <span style={{ color: col.pk ? '#9E7824' : col.fk ? '#4A7A9B' : 'var(--text-body)', fontWeight: col.pk || col.fk ? '600' : '400', fontFamily: 'monospace' }}>
                 {col.name}
               </span>
               <span style={{ color: 'var(--text-muted)', marginLeft: 'auto', fontSize: '11px', fontFamily: 'monospace' }}>{col.type}</span>
@@ -4450,7 +4451,7 @@ for message in consumer:
                 <path
                   d={pathD}
                   fill="none"
-                  stroke={isHovered ? '#93c5fd' : '#60a5fa'}
+                  stroke={isHovered ? '#8AAACE' : '#4A7A9B'}
                   strokeWidth={isHovered ? 3 : 1.5}
                   strokeOpacity={isHovered ? 1 : 0.7}
                   filter={isHovered ? 'url(#glow-star)' : 'none'}
@@ -4467,8 +4468,8 @@ for message in consumer:
                   onMouseLeave={() => setHoveredConnection(null)}
                 />
                 {/* Endpoint dots */}
-                <circle cx={fkX} cy={fkY} r={isHovered ? 5 : 3.5} fill={isHovered ? '#93c5fd' : '#60a5fa'} style={{ transition: 'r 0.2s, fill 0.2s' }} />
-                <circle cx={pkX} cy={pkY} r={isHovered ? 5 : 3.5} fill={isHovered ? '#93c5fd' : '#60a5fa'} style={{ transition: 'r 0.2s, fill 0.2s' }} />
+                <circle cx={fkX} cy={fkY} r={isHovered ? 5 : 3.5} fill={isHovered ? '#8AAACE' : '#4A7A9B'} style={{ transition: 'r 0.2s, fill 0.2s' }} />
+                <circle cx={pkX} cy={pkY} r={isHovered ? 5 : 3.5} fill={isHovered ? '#8AAACE' : '#4A7A9B'} style={{ transition: 'r 0.2s, fill 0.2s' }} />
                 {/* FK label badge at midpoint */}
                 <rect
                   x={midX - labelW / 2}
@@ -4477,7 +4478,7 @@ for message in consumer:
                   height="22"
                   rx="6"
                   fill={isHovered ? 'rgba(30, 58, 138, 0.95)' : 'rgba(15, 23, 42, 0.9)'}
-                  stroke={isHovered ? '#93c5fd' : 'rgba(96, 165, 250, 0.4)'}
+                  stroke={isHovered ? '#8AAACE' : 'rgba(96, 165, 250, 0.4)'}
                   strokeWidth="1"
                   style={{ transition: 'fill 0.2s, stroke 0.2s' }}
                 />
@@ -4485,7 +4486,7 @@ for message in consumer:
                   x={midX}
                   y={midY + 4}
                   textAnchor="middle"
-                  fill={isHovered ? '#bfdbfe' : '#60a5fa'}
+                  fill={isHovered ? '#bfdbfe' : '#4A7A9B'}
                   fontSize="10"
                   fontWeight="700"
                   fontFamily="monospace"
@@ -4494,11 +4495,11 @@ for message in consumer:
                   {conn.fkCol}
                 </text>
                 {/* Cardinality: N at fact side, 1 at dim side */}
-                <text x={fkX + (conn.fromSide === 'left' ? -16 : 8)} y={fkY - 10} fill={isHovered ? '#3b82f6' : 'var(--text-secondary)'} fontSize="10" fontWeight="600" fontFamily="monospace">N</text>
-                <text x={pkX + (conn.toSide === 'left' ? -12 : 6)} y={pkY - 10} fill={isHovered ? '#3b82f6' : 'var(--text-secondary)'} fontSize="10" fontWeight="600" fontFamily="monospace">1</text>
+                <text x={fkX + (conn.fromSide === 'left' ? -16 : 8)} y={fkY - 10} fill={isHovered ? '#4A7A9B' : 'var(--text-secondary)'} fontSize="10" fontWeight="600" fontFamily="monospace">N</text>
+                <text x={pkX + (conn.toSide === 'left' ? -12 : 6)} y={pkY - 10} fill={isHovered ? '#4A7A9B' : 'var(--text-secondary)'} fontSize="10" fontWeight="600" fontFamily="monospace">1</text>
                 {/* Animated data flow dot */}
                 {showDataFlow && (
-                  <circle r="4" fill="#60a5fa" filter="drop-shadow(0 0 6px #60a5fa)">
+                  <circle r="4" fill="#4A7A9B" filter="drop-shadow(0 0 6px #4A7A9B)">
                     <animateMotion dur="2.5s" repeatCount="indefinite" path={pathD} />
                   </circle>
                 )}
@@ -4545,7 +4546,7 @@ for message in consumer:
           display: 'flex',
           alignItems: 'center',
           gap: '8px',
-          color: '#f59e0b',
+          color: '#9E7824',
           fontSize: '13px',
           fontWeight: '600',
           opacity: 0.8
@@ -4564,19 +4565,19 @@ for message in consumer:
         onClick={onClick}
         style={{
           background: 'rgba(245,243,239,0.95)',
-          border: '2px solid #a855f7',
+          border: '2px solid #7A5A9E',
           borderRadius: '8px',
           minWidth: '190px',
           cursor: 'pointer',
-          boxShadow: '0 4px 20px rgba(168, 85, 247, 0.2)',
+          boxShadow: '0 4px 20px rgba(122, 90, 158, 0.2)',
           transition: 'all 0.2s ease',
           ...posStyle
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 8px 32px rgba(168, 85, 247, 0.3), 0 0 20px rgba(168, 85, 247, 0.2)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-        onMouseLeave={(e) => { e.currentTarget.style.boxShadow = '0 4px 20px rgba(168, 85, 247, 0.2)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+        onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 8px 32px rgba(122, 90, 158, 0.3), 0 0 20px rgba(122, 90, 158, 0.2)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.boxShadow = '0 4px 20px rgba(122, 90, 158, 0.2)'; e.currentTarget.style.transform = 'translateY(0)'; }}
       >
         <div style={{
-          background: 'linear-gradient(135deg, #a855f7, #7c3aed)',
+          background: 'linear-gradient(135deg, #7A5A9E, #7A5A9E)',
           padding: '8px 12px',
           borderRadius: '6px 6px 0 0',
           display: 'flex',
@@ -4608,15 +4609,15 @@ for message in consumer:
                 padding: '4px 12px',
                 borderBottom: idx < columns.length - 1 ? '1px solid rgba(235,231,225,1)' : 'none',
                 fontSize: '11px',
-                background: isHL ? 'rgba(168, 85, 247, 0.15)' : 'transparent',
-                boxShadow: isHL ? 'inset 0 0 0 1px rgba(168, 85, 247, 0.4)' : 'none',
+                background: isHL ? 'rgba(122, 90, 158, 0.15)' : 'transparent',
+                boxShadow: isHL ? 'inset 0 0 0 1px rgba(122, 90, 158, 0.4)' : 'none',
                 borderRadius: isHL ? '4px' : '0',
                 transition: 'background 0.2s, box-shadow 0.2s'
               }}
             >
-              {col.pk && <span style={{ background: isHL ? 'rgba(245, 158, 11, 0.4)' : 'rgba(245, 158, 11, 0.2)', color: '#fbbf24', padding: '1px 4px', borderRadius: '3px', fontSize: '8px', fontWeight: '700', border: '1px solid rgba(245, 158, 11, 0.4)', flexShrink: 0 }}>PK</span>}
-              {col.fk && <span style={{ background: isHL ? 'rgba(168, 85, 247, 0.4)' : 'rgba(168, 85, 247, 0.2)', color: '#c084fc', padding: '1px 4px', borderRadius: '3px', fontSize: '8px', fontWeight: '700', border: '1px solid rgba(168, 85, 247, 0.4)', flexShrink: 0 }}>FK</span>}
-              <span style={{ color: col.pk ? '#d97706' : col.fk ? '#9333ea' : 'var(--text-body)', fontWeight: col.pk || col.fk ? '600' : '400', fontFamily: 'monospace', fontSize: '11px' }}>{col.name}</span>
+              {col.pk && <span style={{ background: isHL ? 'rgba(158, 120, 36, 0.4)' : 'rgba(158, 120, 36, 0.2)', color: '#C8A84E', padding: '1px 4px', borderRadius: '3px', fontSize: '8px', fontWeight: '700', border: '1px solid rgba(158, 120, 36, 0.4)', flexShrink: 0 }}>PK</span>}
+              {col.fk && <span style={{ background: isHL ? 'rgba(122, 90, 158, 0.4)' : 'rgba(122, 90, 158, 0.2)', color: '#c084fc', padding: '1px 4px', borderRadius: '3px', fontSize: '8px', fontWeight: '700', border: '1px solid rgba(122, 90, 158, 0.4)', flexShrink: 0 }}>FK</span>}
+              <span style={{ color: col.pk ? '#9E7824' : col.fk ? '#7A5A9E' : 'var(--text-body)', fontWeight: col.pk || col.fk ? '600' : '400', fontFamily: 'monospace', fontSize: '11px' }}>{col.name}</span>
               <span style={{ color: 'var(--text-muted)', marginLeft: 'auto', fontSize: '10px', fontFamily: 'monospace' }}>{col.type}</span>
             </div>
             );
@@ -4780,8 +4781,8 @@ for message in consumer:
           </defs>
           {snowConnections.map((conn) => {
             const isHovered = hoveredConnection && hoveredConnection.schema === 'snow' && hoveredConnection.id === conn.id;
-            const color = conn.isNorm ? '#a855f7' : '#60a5fa';
-            const hoverColor = conn.isNorm ? '#c084fc' : '#93c5fd';
+            const color = conn.isNorm ? '#7A5A9E' : '#4A7A9B';
+            const hoverColor = conn.isNorm ? '#c084fc' : '#8AAACE';
             const glowId = conn.isNorm ? 'glow-snow-norm' : 'glow-snow-fk';
 
             // FK row exit point
@@ -4903,16 +4904,16 @@ for message in consumer:
           fontSize: '12px'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <div style={{ width: '24px', height: '2px', background: '#60a5fa' }} />
-            <span style={{ color: '#60a5fa', fontWeight: '600' }}>FK (Foreign Key)</span>
+            <div style={{ width: '24px', height: '2px', background: '#4A7A9B' }} />
+            <span style={{ color: '#4A7A9B', fontWeight: '600' }}>FK (Foreign Key)</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <div style={{ width: '24px', height: '2px', background: '#a855f7', borderTop: '2px dashed #a855f7' }} />
-            <span style={{ color: '#a855f7', fontWeight: '600' }}>3NF Normalized</span>
+            <div style={{ width: '24px', height: '2px', background: '#7A5A9E', borderTop: '2px dashed #7A5A9E' }} />
+            <span style={{ color: '#7A5A9E', fontWeight: '600' }}>3NF Normalized</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Snowflake size={14} color="#06b6d4" />
-            <span style={{ color: '#06b6d4', fontWeight: '600' }}>Snowflake: Dimensions branch into sub-tables</span>
+            <Snowflake size={14} color="#3A8080" />
+            <span style={{ color: '#3A8080', fontWeight: '600' }}>Snowflake: Dimensions branch into sub-tables</span>
           </div>
         </div>
       </div>
@@ -4924,7 +4925,7 @@ for message in consumer:
     return (
       <div style={{
         padding: '18px 32px',
-        background: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)',
+        background: 'linear-gradient(135deg, #a78bfa 0%, #7A5A9E 100%)',
         border: '3px solid #a78bfa',
         borderRadius: '16px',
         color: 'var(--text-primary)',
@@ -4955,9 +4956,9 @@ for message in consumer:
       <div style={{
         padding: '18px 24px',
         background: isExpanded
-          ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.5) 0%, rgba(37, 99, 235, 0.4) 100%)'
-          : 'linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%)',
-        border: `3px solid ${isExpanded ? '#60a5fa' : '#3b82f6'}`,
+          ? 'linear-gradient(135deg, rgba(74, 122, 155, 0.5) 0%, rgba(37, 99, 235, 0.4) 100%)'
+          : 'linear-gradient(135deg, rgba(74, 122, 155, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%)',
+        border: `3px solid ${isExpanded ? '#4A7A9B' : '#4A7A9B'}`,
         borderRadius: '16px',
         color: 'var(--text-primary)',
         fontWeight: '600',
@@ -4965,8 +4966,8 @@ for message in consumer:
         cursor: 'pointer',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         boxShadow: isExpanded
-          ? '0 10px 30px rgba(59, 130, 246, 0.4), 0 0 0 1px rgba(59, 130, 246, 0.2)'
-          : '0 6px 16px rgba(59, 130, 246, 0.25)',
+          ? '0 10px 30px rgba(74, 122, 155, 0.4), 0 0 0 1px rgba(74, 122, 155, 0.2)'
+          : '0 6px 16px rgba(74, 122, 155, 0.25)',
         textAlign: 'center',
         width: '320px',
         height: '70px',
@@ -4978,14 +4979,14 @@ for message in consumer:
         <Handle
           type="target"
           position={Position.Top}
-          style={{ background: '#3b82f6', width: 12, height: 12, border: '2px solid #fff' }}
+          style={{ background: '#4A7A9B', width: 12, height: 12, border: '2px solid #fff' }}
         />
         {isExpanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
         <span>{data.label}</span>
         <Handle
           type="source"
           position={Position.Bottom}
-          style={{ background: '#3b82f6', width: 12, height: 12, border: '2px solid #fff' }}
+          style={{ background: '#4A7A9B', width: 12, height: 12, border: '2px solid #fff' }}
         />
       </div>
     );
@@ -4993,10 +4994,10 @@ for message in consumer:
 
   const ArchitectureNode = ({ data }) => {
     const colors = {
-      batch: { gradient: 'linear-gradient(135deg, #22c55e 0%, #059669 100%)', border: '#22c55e', shadow: 'rgba(34, 197, 94, 0.5)' },
+      batch: { gradient: 'linear-gradient(135deg, #22c55e 0%, #4A7A56 100%)', border: '#22c55e', shadow: 'rgba(34, 197, 94, 0.5)' },
       lambda: { gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)', border: '#ef4444', shadow: 'rgba(239, 68, 68, 0.5)' },
-      kappa: { gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)', border: '#3b82f6', shadow: 'rgba(59, 130, 246, 0.5)' },
-      streaming: { gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', border: '#f59e0b', shadow: 'rgba(245, 158, 11, 0.5)' }
+      kappa: { gradient: 'linear-gradient(135deg, #4A7A9B 0%, #2563eb 100%)', border: '#4A7A9B', shadow: 'rgba(74, 122, 155, 0.5)' },
+      streaming: { gradient: 'linear-gradient(135deg, #9E7824 0%, #9E7824 100%)', border: '#9E7824', shadow: 'rgba(158, 120, 36, 0.5)' }
     };
     const style = colors[data.architecture];
 
@@ -5171,7 +5172,7 @@ for message in consumer:
       target: 'realtimeYesQuestion',
       label: 'Yes',
       animated: true,
-      style: { stroke: '#60a5fa', strokeWidth: 3 },
+      style: { stroke: '#4A7A9B', strokeWidth: 3 },
       type: 'step',
       labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
       labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
@@ -5182,7 +5183,7 @@ for message in consumer:
       target: 'batchAnalyticsQuestion',
       label: 'No',
       animated: true,
-      style: { stroke: '#60a5fa', strokeWidth: 3 },
+      style: { stroke: '#4A7A9B', strokeWidth: 3 },
       type: 'step',
       labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
       labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
@@ -5204,7 +5205,7 @@ for message in consumer:
       target: 'reprocessingQuestion',
       label: 'No',
       animated: true,
-      style: { stroke: '#60a5fa', strokeWidth: 3 },
+      style: { stroke: '#4A7A9B', strokeWidth: 3 },
       type: 'step',
       labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
       labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
@@ -5237,7 +5238,7 @@ for message in consumer:
       target: 'kappa',
       label: 'Yes',
       animated: true,
-      style: { stroke: '#3b82f6', strokeWidth: 3 },
+      style: { stroke: '#4A7A9B', strokeWidth: 3 },
       type: 'step',
       labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
       labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
@@ -5248,7 +5249,7 @@ for message in consumer:
       target: 'streaming',
       label: 'No',
       animated: true,
-      style: { stroke: '#f59e0b', strokeWidth: 3 },
+      style: { stroke: '#9E7824', strokeWidth: 3 },
       type: 'step',
       labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
       labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
@@ -5386,14 +5387,14 @@ for message in consumer:
         <div style={{
           background: 'rgba(245,243,239,0.8)',
           
-          border: '1px solid rgba(245, 158, 11, 0.3)',
+          border: '1px solid rgba(158, 120, 36, 0.3)',
           borderRadius: '12px',
           padding: '24px',
           marginBottom: '24px'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', marginBottom: '16px' }}>
             <div>
-              <h2 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '4px', color: '#f59e0b' }}>
+              <h2 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '4px', color: '#9E7824' }}>
                 {curriculumData.title}
               </h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '16px' }}>
@@ -5401,7 +5402,7 @@ for message in consumer:
               </p>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#f59e0b' }}>
+              <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#9E7824' }}>
                 {progress}%
               </div>
               <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Overall Progress</div>
@@ -5409,13 +5410,13 @@ for message in consumer:
           </div>
           {/* Overall Progress Bar */}
           <div style={{
-            background: 'rgba(245, 158, 11, 0.1)',
+            background: 'rgba(158, 120, 36, 0.1)',
             borderRadius: '8px',
             height: '12px',
             overflow: 'hidden'
           }}>
             <div style={{
-              background: 'linear-gradient(90deg, #f59e0b, #d97706)',
+              background: 'linear-gradient(90deg, #9E7824, #9E7824)',
               height: '100%',
               width: `${progress}%`,
               borderRadius: '8px',
@@ -5556,7 +5557,7 @@ for message in consumer:
                       background: isSelected
                         ? `${phaseColors[activePhase].primary}22`
                         : 'rgba(245,243,239,0.8)',
-                      border: `2px solid ${isSelected ? phaseColors[activePhase].primary : isCompleted ? '#10b981' : 'rgba(235,231,225,1)'}`,
+                      border: `2px solid ${isSelected ? phaseColors[activePhase].primary : isCompleted ? '#4A7A56' : 'rgba(235,231,225,1)'}`,
                       borderRadius: '12px',
                       padding: '20px',
                       cursor: 'pointer',
@@ -5571,7 +5572,7 @@ for message in consumer:
                     }}
                     onMouseLeave={(e) => {
                       if (!isSelected) {
-                        e.currentTarget.style.borderColor = isCompleted ? '#10b981' : 'rgba(235,231,225,1)';
+                        e.currentTarget.style.borderColor = isCompleted ? '#4A7A56' : 'rgba(235,231,225,1)';
                         e.currentTarget.style.transform = 'translateX(0)';
                       }
                     }}
@@ -5580,18 +5581,18 @@ for message in consumer:
                       <div style={{ flex: 1 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                           <span style={{
-                            background: isCompleted ? 'rgba(16, 185, 129, 0.2)' : phaseColors[activePhase].light,
-                            border: `1px solid ${isCompleted ? '#10b981' : phaseColors[activePhase].border}`,
+                            background: isCompleted ? 'rgba(74, 122, 86, 0.2)' : phaseColors[activePhase].light,
+                            border: `1px solid ${isCompleted ? '#4A7A56' : phaseColors[activePhase].border}`,
                             borderRadius: '6px',
                             padding: '4px 10px',
                             fontSize: '12px',
                             fontWeight: '700',
-                            color: isCompleted ? '#10b981' : phaseColors[activePhase].primary
+                            color: isCompleted ? '#4A7A56' : phaseColors[activePhase].primary
                           }}>
                             Level {level.id}
                           </span>
                           {isCompleted && (
-                            <span style={{ color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <span style={{ color: '#4A7A56', display: 'flex', alignItems: 'center', gap: '4px' }}>
                               <Check size={16} strokeWidth={3} />
                             </span>
                           )}
@@ -5621,13 +5622,13 @@ for message in consumer:
                           )}
                           {hasMicroTask && (
                             <span style={{
-                              background: 'rgba(6, 182, 212, 0.15)',
-                              border: '1px solid rgba(6, 182, 212, 0.3)',
+                              background: 'rgba(58, 128, 128, 0.15)',
+                              border: '1px solid rgba(58, 128, 128, 0.3)',
                               borderRadius: '6px',
                               padding: '4px 10px',
                               fontSize: '11px',
                               fontWeight: '600',
-                              color: '#06b6d4',
+                              color: '#3A8080',
                               display: 'flex',
                               alignItems: 'center',
                               gap: '4px'
@@ -5694,13 +5695,13 @@ for message in consumer:
 
               {/* Concept Section */}
               <div style={{
-                background: 'rgba(59, 130, 246, 0.1)',
-                border: '1px solid rgba(59, 130, 246, 0.3)',
+                background: 'rgba(74, 122, 155, 0.1)',
+                border: '1px solid rgba(74, 122, 155, 0.3)',
                 borderRadius: '8px',
                 padding: '16px',
                 marginBottom: '16px'
               }}>
-                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#60a5fa', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#4A7A9B', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Database size={16} /> Concept
                 </h4>
                 <p style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.7' }}>
@@ -5710,13 +5711,13 @@ for message in consumer:
 
               {/* Why It Matters */}
               <div style={{
-                background: 'rgba(245, 158, 11, 0.1)',
-                border: '1px solid rgba(245, 158, 11, 0.3)',
+                background: 'rgba(158, 120, 36, 0.1)',
+                border: '1px solid rgba(158, 120, 36, 0.3)',
                 borderRadius: '8px',
                 padding: '16px',
                 marginBottom: '16px'
               }}>
-                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#f59e0b', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#9E7824', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Sparkles size={16} /> Why This Matters
                 </h4>
                 <p style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.7' }}>
@@ -5727,8 +5728,8 @@ for message in consumer:
               {/* Analogy */}
               {currentLevel.analogy && (
                 <div style={{
-                  background: 'rgba(139, 92, 246, 0.1)',
-                  border: '1px solid rgba(139, 92, 246, 0.3)',
+                  background: 'rgba(122, 90, 158, 0.1)',
+                  border: '1px solid rgba(122, 90, 158, 0.3)',
                   borderRadius: '8px',
                   padding: '16px',
                   marginBottom: '16px'
@@ -5751,7 +5752,7 @@ for message in consumer:
                   padding: '16px',
                   marginBottom: '16px'
                 }}>
-                  <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#fbbf24', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#C8A84E', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <ScrollText size={16} /> Code Example ({currentLevel.codeExample.language})
                   </h4>
                   <pre style={{
@@ -5771,13 +5772,13 @@ for message in consumer:
 
               {/* References */}
               <div style={{
-                background: 'rgba(16, 185, 129, 0.1)',
-                border: '1px solid rgba(16, 185, 129, 0.3)',
+                background: 'rgba(74, 122, 86, 0.1)',
+                border: '1px solid rgba(74, 122, 86, 0.3)',
                 borderRadius: '8px',
                 padding: '16px',
                 marginBottom: '16px'
               }}>
-                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#10b981', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#4A7A56', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Globe size={16} /> Learning Resources
                 </h4>
                 <ul style={{ margin: 0, paddingLeft: '0', listStyle: 'none' }}>
@@ -5788,7 +5789,7 @@ for message in consumer:
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{
-                          color: '#10b981',
+                          color: '#4A7A56',
                           textDecoration: 'none',
                           fontSize: '14px',
                           display: 'flex',
@@ -5796,8 +5797,8 @@ for message in consumer:
                           gap: '8px',
                           transition: 'color 0.2s'
                         }}
-                        onMouseEnter={(e) => e.currentTarget.style.color = '#34d399'}
-                        onMouseLeave={(e) => e.currentTarget.style.color = '#10b981'}
+                        onMouseEnter={(e) => e.currentTarget.style.color = '#4A7A56'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = '#4A7A56'}
                       >
                         <ChevronRight size={14} />
                         {ref.title}
@@ -5846,8 +5847,8 @@ for message in consumer:
               {/* Micro Task */}
               {currentLevel.microTask && (
                 <div style={{
-                  background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(8, 145, 178, 0.1) 100%)',
-                  border: '2px solid rgba(6, 182, 212, 0.4)',
+                  background: 'linear-gradient(135deg, rgba(58, 128, 128, 0.15) 0%, rgba(8, 145, 178, 0.1) 100%)',
+                  border: '2px solid rgba(58, 128, 128, 0.4)',
                   borderRadius: '12px',
                   padding: '20px',
                   marginBottom: '16px'
@@ -5855,7 +5856,7 @@ for message in consumer:
                   <h4 style={{
                     fontSize: '18px',
                     fontWeight: '700',
-                    color: '#06b6d4',
+                    color: '#3A8080',
                     marginBottom: '12px',
                     display: 'flex',
                     alignItems: 'center',
@@ -5886,9 +5887,9 @@ for message in consumer:
                   width: '100%',
                   padding: '16px',
                   background: isLevelCompleted(currentLevel.id)
-                    ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
-                    : 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.15) 100%)',
-                  border: `2px solid ${isLevelCompleted(currentLevel.id) ? '#10b981' : 'rgba(16, 185, 129, 0.5)'}`,
+                    ? 'linear-gradient(135deg, #4A7A56 0%, #4A7A56 100%)'
+                    : 'linear-gradient(135deg, rgba(74, 122, 86, 0.2) 0%, rgba(5, 150, 105, 0.15) 100%)',
+                  border: `2px solid ${isLevelCompleted(currentLevel.id) ? '#4A7A56' : 'rgba(74, 122, 86, 0.5)'}`,
                   borderRadius: '10px',
                   color: 'var(--text-primary)',
                   fontSize: '16px',
@@ -5902,7 +5903,7 @@ for message in consumer:
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'scale(1.02)';
-                  e.currentTarget.style.boxShadow = '0 4px 20px rgba(16, 185, 129, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 4px 20px rgba(74, 122, 86, 0.3)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'scale(1)';
@@ -6035,140 +6036,82 @@ for message in consumer:
                     Architecture Patterns
                   </span>
                 </div>
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  {/* Processing Architectures */}
-                  <div style={{
-                    display: 'flex',
-                    background: 'var(--bg-hover)',
-                    borderRadius: '10px',
-                    padding: '3px',
-                    gap: '2px',
-                    border: '1px solid var(--border)'
-                  }}>
-                    {['lambda', 'kappa', 'streaming', 'batch', 'mapreduce', 'spark'].map(key => {
-                      const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && !showComparison;
-                      const icons = { lambda: 'L', kappa: 'K', streaming: 'S', batch: 'B', mapreduce: 'MR', spark: 'SP' };
-                      return (
-                        <button
-                          key={key}
-                          onClick={() => {
-                            setActiveArchitecture(key);
-                            setSelectedComponent(null);
-                            setShowAdditionalInfo(false);
-                            setShowHandsOn(false);
-                            setShowCurriculum(false);
-                            setShowCaseStudies(false);
-                            setShowComparison(false);
-                          }}
-                          style={{
-                            padding: '8px 16px',
-                            background: isActive ? 'var(--text-primary)' : 'transparent',
-                            border: 'none',
-                            borderRadius: '8px',
-                            color: isActive ? 'var(--bg-page)' : 'var(--text-secondary)',
-                            fontSize: '13px',
-                            fontWeight: isActive ? '600' : '500',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s ease',
-                            whiteSpace: 'nowrap',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '6px'
-                          }}
-                          onMouseEnter={(e) => {
-                            if (!isActive) {
-                              e.currentTarget.style.color = 'var(--text-primary)';
-                              e.currentTarget.style.background = 'var(--bg-panel)';
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (!isActive) {
-                              e.currentTarget.style.color = 'var(--text-secondary)';
-                              e.currentTarget.style.background = 'transparent';
-                            }
-                          }}
-                        >
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
+                  {[
+                    { key: 'lambda',          icon: 'L',  schema: false },
+                    { key: 'kappa',           icon: 'K',  schema: false },
+                    { key: 'streaming',       icon: 'S',  schema: false },
+                    { key: 'batch',           icon: 'B',  schema: false },
+                    { key: 'mapreduce',       icon: 'MR', schema: false },
+                    { key: 'spark',           icon: 'SP', schema: false },
+                    { key: '__divider__' },
+                    { key: 'starSchema',      icon: null, schema: true },
+                    { key: 'snowflakeSchema', icon: null, schema: true },
+                  ].map(({ key, icon, schema }) => {
+                    if (key === '__divider__') return (
+                      <div key="div" style={{ width: '1px', height: '24px', background: 'var(--border)', margin: '0 4px', flexShrink: 0 }} />
+                    );
+                    const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && !showComparison;
+                    return (
+                      <button
+                        key={key}
+                        onClick={() => {
+                          setActiveArchitecture(key);
+                          setSelectedComponent(null);
+                          setShowAdditionalInfo(false);
+                          setShowHandsOn(false);
+                          setShowCurriculum(false);
+                          setShowCaseStudies(false);
+                          setShowComparison(false);
+                        }}
+                        style={{
+                          padding: '7px 14px',
+                          background: isActive ? 'var(--text-primary)' : 'var(--bg-hover)',
+                          border: `1px solid ${isActive ? 'var(--text-primary)' : 'var(--border)'}`,
+                          borderRadius: '8px',
+                          color: isActive ? 'var(--bg-page)' : 'var(--text-secondary)',
+                          fontSize: '13px',
+                          fontWeight: isActive ? '600' : '500',
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease',
+                          whiteSpace: 'nowrap',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          flexShrink: 0,
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isActive) {
+                            e.currentTarget.style.color = 'var(--text-primary)';
+                            e.currentTarget.style.borderColor = 'var(--text-muted)';
+                            e.currentTarget.style.background = 'var(--bg-panel)';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isActive) {
+                            e.currentTarget.style.color = 'var(--text-secondary)';
+                            e.currentTarget.style.borderColor = 'var(--border)';
+                            e.currentTarget.style.background = 'var(--bg-hover)';
+                          }
+                        }}
+                      >
+                        {icon && (
                           <span style={{
-                            width: '20px',
-                            height: '20px',
-                            borderRadius: '4px',
+                            width: '18px', height: '18px', borderRadius: '3px',
                             background: isActive ? 'rgba(255,255,255,0.15)' : 'var(--border)',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '10px',
-                            fontWeight: '700',
+                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: '9px', fontWeight: '700',
                             color: isActive ? 'var(--bg-page)' : 'var(--text-secondary)',
-                            flexShrink: 0
+                            flexShrink: 0,
                           }}>
-                            {icons[key]}
+                            {icon}
                           </span>
-                          {architectures[key].name}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Divider */}
-                  <div style={{ width: '1px', background: 'rgba(235,231,225,1)', margin: '4px 4px' }} />
-
-                  {/* Data Modeling */}
-                  <div style={{
-                    display: 'flex',
-                    background: 'var(--bg-hover)',
-                    borderRadius: '10px',
-                    padding: '3px',
-                    gap: '2px',
-                    border: '1px solid var(--border)'
-                  }}>
-                    {['starSchema', 'snowflakeSchema'].map(key => {
-                      const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && !showComparison;
-                      const icons = { starSchema: null, snowflakeSchema: null };
-                      return (
-                        <button
-                          key={key}
-                          onClick={() => {
-                            setActiveArchitecture(key);
-                            setSelectedComponent(null);
-                            setShowAdditionalInfo(false);
-                            setShowHandsOn(false);
-                            setShowCurriculum(false);
-                            setShowCaseStudies(false);
-                          }}
-                          style={{
-                            padding: '8px 16px',
-                            background: isActive ? 'var(--text-primary)' : 'transparent',
-                            border: 'none',
-                            borderRadius: '8px',
-                            color: isActive ? 'var(--bg-page)' : 'var(--text-secondary)',
-                            fontSize: '13px',
-                            fontWeight: isActive ? '600' : '500',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s ease',
-                            whiteSpace: 'nowrap',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '6px'
-                          }}
-                          onMouseEnter={(e) => {
-                            if (!isActive) {
-                              e.currentTarget.style.color = 'var(--text-primary)';
-                              e.currentTarget.style.background = 'var(--bg-panel)';
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (!isActive) {
-                              e.currentTarget.style.color = 'var(--text-secondary)';
-                              e.currentTarget.style.background = 'transparent';
-                            }
-                          }}
-                        >
-                          {key === 'starSchema' ? <Star size={14} /> : <Snowflake size={14} />}
-                          {architectures[key].name}
-                        </button>
-                      );
-                    })}
-                  </div>
+                        )}
+                        {!icon && (key === 'starSchema' ? <Star size={13} /> : <Snowflake size={13} />)}
+                        {architectures[key].name}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -6194,16 +6137,16 @@ for message in consumer:
                     { key: 'info', label: 'Compare & Glossary', color: '#a78bfa', bgColor: '139, 92, 246', state: showAdditionalInfo, setState: () => { setShowAdditionalInfo(!showAdditionalInfo); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); setShowComparison(false); if (!showAdditionalInfo) { setTimeout(() => { const el = document.getElementById('additional-info'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
                       icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                     },
-                    { key: 'handson', label: 'Hands-on Lab', color: '#10b981', bgColor: '16, 185, 129', state: showHandsOn, setState: () => { setShowHandsOn(!showHandsOn); setShowAdditionalInfo(false); setShowCurriculum(false); setShowCaseStudies(false); setShowComparison(false); if (!showHandsOn) { setTimeout(() => { const el = document.getElementById('hands-on'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
+                    { key: 'handson', label: 'Hands-on Lab', color: '#4A7A56', bgColor: '16, 185, 129', state: showHandsOn, setState: () => { setShowHandsOn(!showHandsOn); setShowAdditionalInfo(false); setShowCurriculum(false); setShowCaseStudies(false); setShowComparison(false); if (!showHandsOn) { setTimeout(() => { const el = document.getElementById('hands-on'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
                       icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
                     },
-                    { key: 'curriculum', label: 'Curriculum', color: '#f59e0b', bgColor: '245, 158, 11', state: showCurriculum, setState: () => { setShowCurriculum(!showCurriculum); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCaseStudies(false); setShowComparison(false); if (!showCurriculum) { setTimeout(() => { const el = document.getElementById('curriculum-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
+                    { key: 'curriculum', label: 'Curriculum', color: '#9E7824', bgColor: '245, 158, 11', state: showCurriculum, setState: () => { setShowCurriculum(!showCurriculum); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCaseStudies(false); setShowComparison(false); if (!showCurriculum) { setTimeout(() => { const el = document.getElementById('curriculum-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
                       icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
                     },
-                    { key: 'cases', label: 'Case Studies', color: '#ec4899', bgColor: '236, 72, 153', state: showCaseStudies, setState: () => { setShowCaseStudies(!showCaseStudies); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowComparison(false); if (!showCaseStudies) { setTimeout(() => { const el = document.getElementById('case-studies-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
+                    { key: 'cases', label: 'Case Studies', color: '#9E5A3C', bgColor: '236, 72, 153', state: showCaseStudies, setState: () => { setShowCaseStudies(!showCaseStudies); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowComparison(false); if (!showCaseStudies) { setTimeout(() => { const el = document.getElementById('case-studies-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
                       icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
                     },
-                    { key: 'comparison', label: 'Distributed vs Clustered', color: '#06b6d4', bgColor: '6, 182, 212', state: showComparison, setState: () => { setShowComparison(!showComparison); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); if (!showComparison) { setTimeout(() => { const el = document.getElementById('comparison-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
+                    { key: 'comparison', label: 'Distributed vs Clustered', color: '#3A8080', bgColor: '6, 182, 212', state: showComparison, setState: () => { setShowComparison(!showComparison); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); if (!showComparison) { setTimeout(() => { const el = document.getElementById('comparison-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
                       icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"></path></svg>
                     }
                   ].map(({ key, label, color, bgColor, state, setState, icon }) => (
@@ -6272,13 +6215,13 @@ for message in consumer:
                     fontSize: '12px',
                     fontWeight: '600',
                     background: currentArch.difficulty === 'Beginner' ? 'rgba(34, 197, 94, 0.2)' :
-                                currentArch.difficulty === 'Intermediate' ? 'rgba(59, 130, 246, 0.2)' :
+                                currentArch.difficulty === 'Intermediate' ? 'rgba(74, 122, 155, 0.2)' :
                                 'rgba(239, 68, 68, 0.2)',
                     color: currentArch.difficulty === 'Beginner' ? '#22c55e' :
-                           currentArch.difficulty === 'Intermediate' ? '#3b82f6' :
+                           currentArch.difficulty === 'Intermediate' ? '#4A7A9B' :
                            '#ef4444',
                     border: `1px solid ${currentArch.difficulty === 'Beginner' ? '#22c55e' :
-                                         currentArch.difficulty === 'Intermediate' ? '#3b82f6' :
+                                         currentArch.difficulty === 'Intermediate' ? '#4A7A9B' :
                                          '#ef4444'}`
                   }}>
                     {currentArch.difficulty}
@@ -6352,19 +6295,19 @@ for message in consumer:
           {showWarning && (
             <div
               style={{
-                background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.15) 100%)',
-                border: '2px solid rgba(245, 158, 11, 0.6)',
+                background: 'linear-gradient(135deg, rgba(158, 120, 36, 0.2) 0%, rgba(217, 119, 6, 0.15) 100%)',
+                border: '2px solid rgba(158, 120, 36, 0.6)',
                 borderRadius: '12px',
                 padding: '16px 24px',
                 marginBottom: '16px',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
-                color: '#fbbf24',
+                color: '#C8A84E',
                 fontSize: '14px',
                 fontWeight: '600',
                 
-                boxShadow: '0 0 20px rgba(245, 158, 11, 0.3)'
+                boxShadow: '0 0 20px rgba(158, 120, 36, 0.3)'
               }}
             >
               <Info size={20} />
@@ -6437,7 +6380,7 @@ for message in consumer:
                 fontSize: '24px',
                 fontWeight: 'bold',
                 marginBottom: '16px',
-                color: '#60a5fa'
+                color: '#4A7A9B'
               }}>
                 Overview
               </h3>
@@ -6446,15 +6389,15 @@ for message in consumer:
               </p>
 
               <div style={{
-                background: 'rgba(59, 130, 246, 0.1)',
-                border: '1px solid rgba(59, 130, 246, 0.3)',
+                background: 'rgba(74, 122, 155, 0.1)',
+                border: '1px solid rgba(74, 122, 155, 0.3)',
                 borderRadius: '12px',
                 padding: '20px',
                 marginBottom: '20px'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                  <Sparkles size={20} color="#60a5fa" />
-                  <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#60a5fa' }}>
+                  <Sparkles size={20} color="#4A7A9B" />
+                  <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#4A7A9B' }}>
                     Example Scenario: {currentArch.overview.scenario}
                   </h4>
                 </div>
@@ -6475,7 +6418,7 @@ for message in consumer:
                     key={idx}
                     style={{
                       background: 'rgba(235,232,228,0.6)',
-                      border: '1px solid rgba(59, 130, 246, 0.3)',
+                      border: '1px solid rgba(74, 122, 155, 0.3)',
                       borderRadius: '8px',
                       padding: '12px 16px'
                     }}
@@ -6515,14 +6458,14 @@ for message in consumer:
                 fontSize: '24px',
                 fontWeight: 'bold',
                 marginBottom: '16px',
-                color: '#34d399'
+                color: '#4A7A56'
               }}>
                 Advantages
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {currentArch.advantages.map((advantage, idx) => (
                   <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <Check size={18} color="#34d399" />
+                    <Check size={18} color="#4A7A56" />
                     <span style={{ color: 'var(--text-body)', fontSize: '15px' }}>{advantage}</span>
                   </div>
                 ))}
@@ -6534,7 +6477,7 @@ for message in consumer:
                 fontSize: '24px',
                 fontWeight: 'bold',
                 marginBottom: '16px',
-                color: '#fbbf24'
+                color: '#C8A84E'
               }}>
                 Challenges
               </h3>
@@ -6546,7 +6489,7 @@ for message in consumer:
                       width: '6px',
                       height: '6px',
                       borderRadius: '50%',
-                      background: '#fbbf24',
+                      background: '#C8A84E',
                       flexShrink: 0
                     }} />
                     <span style={{ color: 'var(--text-body)', fontSize: '15px' }}>{challenge}</span>
@@ -6661,7 +6604,7 @@ for message in consumer:
                               padding: '4px 12px',
                               fontSize: '11px',
                               fontFamily: 'monospace',
-                              color: col.includes('PK') ? '#d97706' : col.includes('FK') ? '#3b82f6' : 'var(--text-body)',
+                              color: col.includes('PK') ? '#9E7824' : col.includes('FK') ? '#4A7A9B' : 'var(--text-body)',
                               fontWeight: col.includes('PK') || col.includes('FK') ? '600' : '400',
                               borderBottom: cIdx < tbl.cols.length - 1 ? '1px solid rgba(71, 85, 105, 0.15)' : 'none'
                             }}>
@@ -6742,7 +6685,7 @@ for message in consumer:
                               padding: '4px 12px',
                               fontSize: '11px',
                               fontFamily: 'monospace',
-                              color: col.includes('PK') ? '#d97706' : col.includes('FK') ? '#3b82f6' : col.includes('BAD') || col.includes('NO MATCHING') || col.includes('UNNECESSARY') ? '#e11d48' : 'var(--text-body)',
+                              color: col.includes('PK') ? '#9E7824' : col.includes('FK') ? '#4A7A9B' : col.includes('BAD') || col.includes('NO MATCHING') || col.includes('UNNECESSARY') ? '#e11d48' : 'var(--text-body)',
                               fontWeight: col.includes('PK') || col.includes('FK') ? '600' : '400',
                               borderBottom: cIdx < tbl.cols.length - 1 ? '1px solid rgba(71, 85, 105, 0.15)' : 'none',
                               textDecoration: col.includes('BAD') || col.includes('NO MATCHING') ? 'line-through' : 'none',
@@ -6767,11 +6710,11 @@ for message in consumer:
                     </div>
                     {example.fix && (
                       <div style={{
-                        background: 'rgba(59, 130, 246, 0.08)',
+                        background: 'rgba(74, 122, 155, 0.08)',
                         borderRadius: '6px',
                         padding: '10px 14px',
                         fontSize: '12px',
-                        color: '#93c5fd',
+                        color: '#8AAACE',
                         lineHeight: '1.5'
                       }}>
                         <strong>How to fix:</strong> {example.fix}
@@ -6855,25 +6798,25 @@ for message in consumer:
                   overflowX: 'auto'
                 }}
               >
-            <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px', color: '#60a5fa' }}>
+            <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px', color: '#4A7A9B' }}>
               Architecture Comparison
             </h3>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
               <thead>
                 <tr>
                   <th style={{ padding: '12px', textAlign: 'left', color: 'var(--text-secondary)', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Feature</th>
-                  <th style={{ padding: '12px', textAlign: 'left', color: '#ec4899', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Lambda</th>
-                  <th style={{ padding: '12px', textAlign: 'left', color: '#8b5cf6', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Kappa</th>
-                  <th style={{ padding: '12px', textAlign: 'left', color: '#f59e0b', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Streaming</th>
-                  <th style={{ padding: '12px', textAlign: 'left', color: '#10b981', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Batch</th>
+                  <th style={{ padding: '12px', textAlign: 'left', color: '#9E5A3C', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Lambda</th>
+                  <th style={{ padding: '12px', textAlign: 'left', color: '#7A5A9E', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Kappa</th>
+                  <th style={{ padding: '12px', textAlign: 'left', color: '#9E7824', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Streaming</th>
+                  <th style={{ padding: '12px', textAlign: 'left', color: '#4A7A56', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Batch</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Difficulty</td>
                   <td style={{ padding: '10px 12px', color: '#ef4444', borderBottom: '1px solid rgba(235,231,225,1)', fontWeight: '600' }}>Advanced</td>
-                  <td style={{ padding: '10px 12px', color: '#3b82f6', borderBottom: '1px solid rgba(235,231,225,1)', fontWeight: '600' }}>Intermediate</td>
-                  <td style={{ padding: '10px 12px', color: '#3b82f6', borderBottom: '1px solid rgba(235,231,225,1)', fontWeight: '600' }}>Intermediate</td>
+                  <td style={{ padding: '10px 12px', color: '#4A7A9B', borderBottom: '1px solid rgba(235,231,225,1)', fontWeight: '600' }}>Intermediate</td>
+                  <td style={{ padding: '10px 12px', color: '#4A7A9B', borderBottom: '1px solid rgba(235,231,225,1)', fontWeight: '600' }}>Intermediate</td>
                   <td style={{ padding: '10px 12px', color: '#22c55e', borderBottom: '1px solid rgba(235,231,225,1)', fontWeight: '600' }}>Beginner</td>
                 </tr>
                 <tr>
@@ -6950,57 +6893,57 @@ for message in consumer:
               fontSize: '24px',
               fontWeight: 'bold',
               marginBottom: '16px',
-              color: '#fbbf24'
+              color: '#C8A84E'
             }}>
               Technical Glossary
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
               <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>OLAP</h4>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>OLAP</h4>
                 <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Online Analytical Processing - Database optimized for complex queries and analytics on large datasets.</p>
               </div>
               <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>OLTP</h4>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>OLTP</h4>
                 <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Online Transaction Processing - Database optimized for high-volume transactions and data modifications.</p>
               </div>
               <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>ETL</h4>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>ETL</h4>
                 <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Extract, Transform, Load - Process of extracting data from sources, transforming it, and loading into a data warehouse.</p>
               </div>
               <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Stateful Processing</h4>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Stateful Processing</h4>
                 <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Stream processing that maintains state across events, enabling windowing, aggregations, and joins.</p>
               </div>
               <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>MapReduce</h4>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>MapReduce</h4>
                 <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Programming model for processing large datasets in parallel across distributed clusters.</p>
               </div>
               <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Event Log</h4>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Event Log</h4>
                 <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Immutable, append-only sequence of events that can be replayed for reprocessing.</p>
               </div>
               <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Materialized View</h4>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Materialized View</h4>
                 <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Pre-computed query results stored for fast retrieval, continuously updated from source data.</p>
               </div>
               <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Partitioning</h4>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Partitioning</h4>
                 <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Dividing data across multiple nodes for parallel processing and scalability.</p>
               </div>
               <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Backpressure</h4>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Backpressure</h4>
                 <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Flow control mechanism to prevent overwhelming downstream systems when data arrives faster than it can be processed.</p>
               </div>
               <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Data Lake</h4>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Data Lake</h4>
                 <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Centralized repository for storing raw, unstructured data at scale in its native format.</p>
               </div>
               <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Windowing</h4>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Windowing</h4>
                 <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Grouping stream events into finite time or count-based windows for aggregation.</p>
               </div>
               <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Columnar Storage</h4>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Columnar Storage</h4>
                 <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Data storage format organizing by columns rather than rows, optimized for analytics.</p>
               </div>
             </div>
@@ -7079,7 +7022,7 @@ for message in consumer:
                   marginBottom: '24px'
                 }}
               >
-                <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px', color: '#10b981' }}>
+                <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px', color: '#4A7A56' }}>
                   Hands-on Lab: Blockchain Data Ingestion Pipeline
                 </h3>
 
@@ -7090,8 +7033,8 @@ for message in consumer:
                 </div>
 
                 <div style={{
-                  background: 'rgba(139, 92, 246, 0.1)',
-                  border: '1px solid rgba(139, 92, 246, 0.3)',
+                  background: 'rgba(122, 90, 158, 0.1)',
+                  border: '1px solid rgba(122, 90, 158, 0.3)',
                   borderRadius: '12px',
                   padding: '24px',
                   marginBottom: '24px',
@@ -7174,19 +7117,19 @@ for message in consumer:
                 {handsOnShowWarning && (
                   <div
                     style={{
-                      background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.15) 100%)',
-                      border: '2px solid rgba(245, 158, 11, 0.6)',
+                      background: 'linear-gradient(135deg, rgba(158, 120, 36, 0.2) 0%, rgba(217, 119, 6, 0.15) 100%)',
+                      border: '2px solid rgba(158, 120, 36, 0.6)',
                       borderRadius: '12px',
                       padding: '16px 24px',
                       marginBottom: '16px',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '12px',
-                      color: '#fbbf24',
+                      color: '#C8A84E',
                       fontSize: '14px',
                       fontWeight: '600',
                       
-                      boxShadow: '0 0 20px rgba(245, 158, 11, 0.3)'
+                      boxShadow: '0 0 20px rgba(158, 120, 36, 0.3)'
                     }}
                   >
                     <Info size={20} />
@@ -7209,7 +7152,7 @@ for message in consumer:
                     position: 'relative'
                   }}
                 >
-                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '24px', paddingTop: '24px', color: '#10b981', textAlign: 'center' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '24px', paddingTop: '24px', color: '#4A7A56', textAlign: 'center' }}>
                     System Architecture
                   </h4>
                   {(() => {
@@ -7275,8 +7218,8 @@ for message in consumer:
                   })()}
                 </div>
 
-                <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
-                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#10b981' }}>
+                <div style={{ background: 'rgba(74, 122, 86, 0.1)', border: '1px solid rgba(74, 122, 86, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#4A7A56' }}>
                     What You'll Learn
                   </h4>
                   <ul style={{ color: 'var(--text-body)', fontSize: '14px', marginLeft: '20px', lineHeight: '1.8' }}>
@@ -7290,20 +7233,20 @@ for message in consumer:
                   </ul>
                 </div>
 
-                <div style={{ background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
-                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#60a5fa' }}>
+                <div style={{ background: 'rgba(74, 122, 155, 0.1)', border: '1px solid rgba(74, 122, 155, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#4A7A9B' }}>
                     The 5Vs of Big Data in This Lab
                   </h4>
                   <div style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.8' }}>
-                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#60a5fa' }}>Volume:</strong> Solana generates 20,000+ transactions per block, demonstrating massive data scale</p>
-                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#60a5fa' }}>Velocity:</strong> Real-time collection with Solana's ~400ms block times vs Bitcoin's ~10 minutes</p>
-                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#60a5fa' }}>Variety:</strong> Handle heterogeneous blockchain architectures (UTXO vs account-based models)</p>
-                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#60a5fa' }}>Veracity:</strong> Data validation through blockchain consensus mechanisms</p>
-                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#60a5fa' }}>Value:</strong> Extract insights on network congestion and adoption patterns</p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#4A7A9B' }}>Volume:</strong> Solana generates 20,000+ transactions per block, demonstrating massive data scale</p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#4A7A9B' }}>Velocity:</strong> Real-time collection with Solana's ~400ms block times vs Bitcoin's ~10 minutes</p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#4A7A9B' }}>Variety:</strong> Handle heterogeneous blockchain architectures (UTXO vs account-based models)</p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#4A7A9B' }}>Veracity:</strong> Data validation through blockchain consensus mechanisms</p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#4A7A9B' }}>Value:</strong> Extract insights on network congestion and adoption patterns</p>
                   </div>
                 </div>
 
-                <div style={{ background: 'rgba(139, 92, 246, 0.1)', border: '1px solid rgba(139, 92, 246, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                <div style={{ background: 'rgba(122, 90, 158, 0.1)', border: '1px solid rgba(122, 90, 158, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
                   <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#a78bfa' }}>
                     Prerequisites
                   </h4>
@@ -7330,40 +7273,40 @@ for message in consumer:
                   </div>
                 </div>
 
-                <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
-                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#f59e0b' }}>
+                <div style={{ background: 'rgba(158, 120, 36, 0.1)', border: '1px solid rgba(158, 120, 36, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#9E7824' }}>
                     Quick Start Guide
                   </h4>
                   <div style={{ color: 'var(--text-body)', fontSize: '14px' }}>
                     <ol style={{ marginLeft: '20px', lineHeight: '1.8' }}>
                       <li style={{ marginBottom: '8px' }}>
-                        <strong style={{ color: '#f59e0b' }}>Clone the repository:</strong>
+                        <strong style={{ color: '#9E7824' }}>Clone the repository:</strong>
                         <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
                           <code>git clone https://github.com/maruthiprithivi/big_data_architecture.git{'\n'}cd big_data_architecture</code>
                         </pre>
                       </li>
                       <li style={{ marginBottom: '8px' }}>
-                        <strong style={{ color: '#f59e0b' }}>Configure environment (optional):</strong>
+                        <strong style={{ color: '#9E7824' }}>Configure environment (optional):</strong>
                         <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
                           <code>cp .env.example .env</code>
                         </pre>
                         <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Note: Default settings work for first-time users</span>
                       </li>
                       <li style={{ marginBottom: '8px' }}>
-                        <strong style={{ color: '#f59e0b' }}>Start services:</strong>
+                        <strong style={{ color: '#9E7824' }}>Start services:</strong>
                         <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
                           <code>./scripts/start.sh</code>
                         </pre>
                         <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Initial setup: 15-20 minutes (Docker downloads), subsequent starts: 30-60 seconds</span>
                       </li>
                       <li style={{ marginBottom: '8px' }}>
-                        <strong style={{ color: '#f59e0b' }}>Access dashboard:</strong> Open{' '}
-                        <a href="http://localhost:3001" target="_blank" rel="noopener noreferrer" style={{ color: '#10b981', textDecoration: 'underline' }}>
+                        <strong style={{ color: '#9E7824' }}>Access dashboard:</strong> Open{' '}
+                        <a href="http://localhost:3001" target="_blank" rel="noopener noreferrer" style={{ color: '#4A7A56', textDecoration: 'underline' }}>
                           http://localhost:3001
                         </a> in your browser
                       </li>
                       <li>
-                        <strong style={{ color: '#f59e0b' }}>Shutdown:</strong>
+                        <strong style={{ color: '#9E7824' }}>Shutdown:</strong>
                         <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
                           <code>docker compose down     # Stop services{'\n'}docker compose down -v  # Remove all data</code>
                         </pre>
@@ -7435,7 +7378,7 @@ for message in consumer:
                         href="https://github.com/maruthiprithivi/big_data_architecture"
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: '#10b981', textDecoration: 'underline' }}
+                        style={{ color: '#4A7A56', textDecoration: 'underline' }}
                       >
                         maruthiprithivi/big_data_architecture
                       </a>
@@ -7446,7 +7389,7 @@ for message in consumer:
                         href="https://github.com/maruthiprithivi/big_data_architecture/blob/main/docs/EXERCISES.md"
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: '#10b981', textDecoration: 'underline' }}
+                        style={{ color: '#4A7A56', textDecoration: 'underline' }}
                       >
                         Complete exercise instructions
                       </a>
@@ -7457,7 +7400,7 @@ for message in consumer:
                         href="https://github.com/maruthiprithivi/big_data_architecture/blob/main/docs/SAMPLE_QUERIES.md"
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: '#10b981', textDecoration: 'underline' }}
+                        style={{ color: '#4A7A56', textDecoration: 'underline' }}
                       >
                         SQL query examples
                       </a>
@@ -7468,7 +7411,7 @@ for message in consumer:
                         href="https://github.com/maruthiprithivi/big_data_architecture/blob/main/docs/GLOSSARY.md"
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: '#10b981', textDecoration: 'underline' }}
+                        style={{ color: '#4A7A56', textDecoration: 'underline' }}
                       >
                         Blockchain terminology reference
                       </a>
@@ -7479,7 +7422,7 @@ for message in consumer:
                         href="http://localhost:8000/docs"
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: '#10b981', textDecoration: 'underline' }}
+                        style={{ color: '#4A7A56', textDecoration: 'underline' }}
                       >
                         Interactive Swagger UI at localhost:8000/docs
                       </a>
@@ -7510,7 +7453,7 @@ for message in consumer:
                 }}
               >
                 <div style={{ marginBottom: '32px' }}>
-                  <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '12px', color: '#ec4899' }}>
+                  <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '12px', color: '#9E5A3C' }}>
                     Real-World Big Data Case Studies
                   </h2>
                   <p style={{ color: 'var(--text-secondary)', fontSize: '16px', lineHeight: '1.7', maxWidth: '900px' }}>
@@ -7610,7 +7553,7 @@ for message in consumer:
 
                       {/* Challenge */}
                       <div style={{ marginBottom: '16px' }}>
-                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#fbbf24', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#C8A84E', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <span style={{ fontSize: '16px' }}>🎯</span> Challenge
                         </h5>
                         <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
@@ -7620,7 +7563,7 @@ for message in consumer:
 
                       {/* Solution */}
                       <div style={{ marginBottom: '16px' }}>
-                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#10b981', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#4A7A56', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <span style={{ fontSize: '16px' }}>💡</span> Solution
                         </h5>
                         <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
@@ -7630,7 +7573,7 @@ for message in consumer:
 
                       {/* Implementation Details */}
                       <div style={{ marginBottom: '16px' }}>
-                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#60a5fa', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#4A7A9B', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <span style={{ fontSize: '16px' }}>🔧</span> Implementation
                         </h5>
                         <ul style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.8', paddingLeft: '16px', margin: 0 }}>
@@ -7665,9 +7608,9 @@ for message in consumer:
                               borderRadius: '6px',
                               fontSize: '11px',
                               fontWeight: '500',
-                              background: 'rgba(59, 130, 246, 0.15)',
-                              color: '#60a5fa',
-                              border: '1px solid rgba(59, 130, 246, 0.3)',
+                              background: 'rgba(74, 122, 155, 0.15)',
+                              color: '#4A7A9B',
+                              border: '1px solid rgba(74, 122, 155, 0.3)',
                               textDecoration: 'none',
                               transition: 'all 0.2s'
                             };
@@ -7679,7 +7622,7 @@ for message in consumer:
                                 rel="noopener noreferrer"
                                 style={techStyle}
                                 onMouseEnter={(e) => {
-                                  e.currentTarget.style.background = 'rgba(59, 130, 246, 0.3)';
+                                  e.currentTarget.style.background = 'rgba(74, 122, 155, 0.3)';
                                   e.currentTarget.style.transform = 'translateY(-1px)';
                                 }}
                                 onMouseLeave={(e) => {
@@ -7710,15 +7653,15 @@ for message in consumer:
                               rel="noopener noreferrer"
                               style={{
                                 fontSize: '12px',
-                                color: '#60a5fa',
+                                color: '#4A7A9B',
                                 textDecoration: 'none',
                                 transition: 'color 0.2s',
                                 display: 'inline-flex',
                                 alignItems: 'center',
                                 gap: '4px'
                               }}
-                              onMouseEnter={(e) => e.currentTarget.style.color = '#93c5fd'}
-                              onMouseLeave={(e) => e.currentTarget.style.color = '#60a5fa'}
+                              onMouseEnter={(e) => e.currentTarget.style.color = '#8AAACE'}
+                              onMouseLeave={(e) => e.currentTarget.style.color = '#4A7A9B'}
                             >
                               <ChevronRight size={12} />
                               {ref.title}
@@ -7734,17 +7677,17 @@ for message in consumer:
                 <div style={{
                   marginTop: '40px',
                   padding: '32px',
-                  background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)',
-                  border: '1px solid rgba(236, 72, 153, 0.3)',
+                  background: 'linear-gradient(135deg, rgba(158, 90, 60, 0.1) 0%, rgba(122, 90, 158, 0.1) 100%)',
+                  border: '1px solid rgba(158, 90, 60, 0.3)',
                   borderRadius: '16px'
                 }}>
-                  <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px', color: '#ec4899' }}>
+                  <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px', color: '#9E5A3C' }}>
                     Common Patterns Across Case Studies
                   </h3>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
                     <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
-                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#f59e0b', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#9E7824', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span>🔄</span> Event-Driven Architecture
                       </h4>
                       <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
@@ -7754,7 +7697,7 @@ for message in consumer:
                     </div>
 
                     <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
-                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#10b981', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#4A7A56', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span>⚡</span> Hybrid Batch + Stream
                       </h4>
                       <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
@@ -7764,7 +7707,7 @@ for message in consumer:
                     </div>
 
                     <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
-                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#60a5fa', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#4A7A9B', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span>🗄️</span> Separation of Storage & Compute
                       </h4>
                       <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
@@ -7784,7 +7727,7 @@ for message in consumer:
                     </div>
 
                     <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
-                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#ec4899', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#9E5A3C', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span>📊</span> Real-Time OLAP
                       </h4>
                       <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
@@ -7794,7 +7737,7 @@ for message in consumer:
                     </div>
 
                     <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
-                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#fbbf24', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#C8A84E', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span>🔒</span> Data Governance at Scale
                       </h4>
                       <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
@@ -7825,9 +7768,9 @@ for message in consumer:
                 {/* Header */}
                 <div style={{ textAlign: 'center', marginBottom: '32px' }}>
                   <h2 style={{ fontSize: '28px', fontWeight: '800', marginBottom: '8px' }}>
-                    <span style={{ color: '#ec4899' }}>MapReduce</span>
+                    <span style={{ color: '#9E5A3C' }}>MapReduce</span>
                     <span style={{ color: 'var(--text-muted)', margin: '0 16px' }}>vs</span>
-                    <span style={{ color: '#f59e0b' }}>Apache Spark</span>
+                    <span style={{ color: '#9E7824' }}>Apache Spark</span>
                   </h2>
                   <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
                     The Distributed Workhorse vs The Clustered Speedster — understanding the nuance
@@ -7850,13 +7793,13 @@ for message in consumer:
                   }}>
                     {/* Distributed = the umbrella */}
                     <div style={{
-                      background: 'rgba(139, 92, 246, 0.1)',
-                      border: '2px solid rgba(139, 92, 246, 0.4)',
+                      background: 'rgba(122, 90, 158, 0.1)',
+                      border: '2px solid rgba(122, 90, 158, 0.4)',
                       borderRadius: '16px', padding: '20px', width: '100%', position: 'relative'
                     }}>
                       <div style={{
                         position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)',
-                        background: 'rgba(139, 92, 246, 0.3)', border: '1px solid #8b5cf6',
+                        background: 'rgba(122, 90, 158, 0.3)', border: '1px solid #7A5A9E',
                         borderRadius: '20px', padding: '4px 16px',
                         fontSize: '11px', fontWeight: '700', color: '#c4b5fd',
                         textTransform: 'uppercase', letterSpacing: '1.5px', whiteSpace: 'nowrap'
@@ -7869,13 +7812,13 @@ for message in consumer:
 
                       {/* Clustered = a subset inside */}
                       <div style={{
-                        background: 'rgba(6, 182, 212, 0.1)',
-                        border: '2px solid rgba(6, 182, 212, 0.4)',
+                        background: 'rgba(58, 128, 128, 0.1)',
+                        border: '2px solid rgba(58, 128, 128, 0.4)',
                         borderRadius: '12px', padding: '16px', marginTop: '16px', position: 'relative'
                       }}>
                         <div style={{
                           position: 'absolute', top: '-10px', left: '50%', transform: 'translateX(-50%)',
-                          background: 'rgba(6, 182, 212, 0.3)', border: '1px solid #06b6d4',
+                          background: 'rgba(58, 128, 128, 0.3)', border: '1px solid #3A8080',
                           borderRadius: '20px', padding: '3px 14px',
                           fontSize: '10px', fontWeight: '700', color: '#67e8f9',
                           textTransform: 'uppercase', letterSpacing: '1.5px', whiteSpace: 'nowrap'
@@ -7892,15 +7835,15 @@ for message in consumer:
                         }}>
                           {/* MapReduce */}
                           <div style={{
-                            background: 'rgba(236, 72, 153, 0.1)',
-                            border: '1px solid rgba(236, 72, 153, 0.3)',
+                            background: 'rgba(158, 90, 60, 0.1)',
+                            border: '1px solid rgba(158, 90, 60, 0.3)',
                             borderRadius: '10px', padding: '14px', textAlign: 'center'
                           }}>
-                            <div style={{ color: '#ec4899', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
+                            <div style={{ color: '#9E5A3C', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
                               MapReduce
                             </div>
                             <div style={{
-                              background: 'rgba(236, 72, 153, 0.15)', borderRadius: '6px',
+                              background: 'rgba(158, 90, 60, 0.15)', borderRadius: '6px',
                               padding: '4px 10px', display: 'inline-block', marginBottom: '8px',
                               fontSize: '10px', fontWeight: '700', color: '#f9a8d4',
                               textTransform: 'uppercase', letterSpacing: '1px'
@@ -7914,15 +7857,15 @@ for message in consumer:
 
                           {/* Spark */}
                           <div style={{
-                            background: 'rgba(245, 158, 11, 0.1)',
-                            border: '1px solid rgba(245, 158, 11, 0.3)',
+                            background: 'rgba(158, 120, 36, 0.1)',
+                            border: '1px solid rgba(158, 120, 36, 0.3)',
                             borderRadius: '10px', padding: '14px', textAlign: 'center'
                           }}>
-                            <div style={{ color: '#f59e0b', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
+                            <div style={{ color: '#9E7824', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
                               Apache Spark
                             </div>
                             <div style={{
-                              background: 'rgba(245, 158, 11, 0.15)', borderRadius: '6px',
+                              background: 'rgba(158, 120, 36, 0.15)', borderRadius: '6px',
                               padding: '4px 10px', display: 'inline-block', marginBottom: '8px',
                               fontSize: '10px', fontWeight: '700', color: '#fde68a',
                               textTransform: 'uppercase', letterSpacing: '1px'
@@ -7944,12 +7887,12 @@ for message in consumer:
                   }}>
                     {/* Filing Cabinet */}
                     <div style={{
-                      background: 'rgba(236, 72, 153, 0.06)',
-                      border: '1px dashed rgba(236, 72, 153, 0.3)',
+                      background: 'rgba(158, 90, 60, 0.06)',
+                      border: '1px dashed rgba(158, 90, 60, 0.3)',
                       borderRadius: '12px', padding: '20px', textAlign: 'center'
                     }}>
                       <div style={{ fontSize: '32px', marginBottom: '8px' }}>🗄️</div>
-                      <div style={{ color: '#ec4899', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
+                      <div style={{ color: '#9E5A3C', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
                         "Giant Filing Cabinet"
                       </div>
                       <p style={{ color: 'var(--text-secondary)', fontSize: '11px', lineHeight: '1.6' }}>
@@ -7981,12 +7924,12 @@ for message in consumer:
 
                     {/* Pool of RAM */}
                     <div style={{
-                      background: 'rgba(245, 158, 11, 0.06)',
-                      border: '1px dashed rgba(245, 158, 11, 0.3)',
+                      background: 'rgba(158, 120, 36, 0.06)',
+                      border: '1px dashed rgba(158, 120, 36, 0.3)',
                       borderRadius: '12px', padding: '20px', textAlign: 'center'
                     }}>
                       <div style={{ fontSize: '32px', marginBottom: '8px' }}>🧠</div>
-                      <div style={{ color: '#f59e0b', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
+                      <div style={{ color: '#9E7824', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
                         "Massive Pool of RAM"
                       </div>
                       <p style={{ color: 'var(--text-secondary)', fontSize: '11px', lineHeight: '1.6' }}>
@@ -8008,8 +7951,8 @@ for message in consumer:
                   {/* Key takeaway */}
                   <div style={{
                     marginTop: '20px', padding: '12px 20px', textAlign: 'center',
-                    background: 'rgba(139, 92, 246, 0.08)',
-                    border: '1px solid rgba(139, 92, 246, 0.25)',
+                    background: 'rgba(122, 90, 158, 0.08)',
+                    border: '1px solid rgba(122, 90, 158, 0.25)',
                     borderRadius: '10px'
                   }}>
                     <div style={{ color: '#c4b5fd', fontSize: '12px', lineHeight: '1.7' }}>
@@ -8034,10 +7977,10 @@ for message in consumer:
                       onClick={() => setComparisonHighlight(h.key)}
                       style={{
                         padding: '8px 16px',
-                        background: comparisonHighlight === h.key ? 'rgba(6, 182, 212, 0.2)' : 'rgba(235,232,228,0.5)',
-                        border: `1px solid ${comparisonHighlight === h.key ? '#06b6d4' : 'rgba(235,231,225,1)'}`,
+                        background: comparisonHighlight === h.key ? 'rgba(58, 128, 128, 0.2)' : 'rgba(235,232,228,0.5)',
+                        border: `1px solid ${comparisonHighlight === h.key ? '#3A8080' : 'rgba(235,231,225,1)'}`,
                         borderRadius: '8px',
-                        color: comparisonHighlight === h.key ? '#0891b2' : 'var(--text-secondary)',
+                        color: comparisonHighlight === h.key ? '#3A8080' : 'var(--text-secondary)',
                         fontSize: '12px', fontWeight: '600', cursor: 'pointer',
                         transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '6px'
                       }}
@@ -8052,20 +7995,20 @@ for message in consumer:
 
                   {/* MapReduce Side */}
                   <div style={{
-                    background: 'rgba(236, 72, 153, 0.08)',
-                    border: '1px solid rgba(236, 72, 153, 0.3)',
+                    background: 'rgba(158, 90, 60, 0.08)',
+                    border: '1px solid rgba(158, 90, 60, 0.3)',
                     borderRadius: '16px', padding: '24px'
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
                       <div style={{
                         width: '40px', height: '40px', borderRadius: '10px',
-                        background: 'rgba(236, 72, 153, 0.2)', display: 'flex',
+                        background: 'rgba(158, 90, 60, 0.2)', display: 'flex',
                         alignItems: 'center', justifyContent: 'center'
                       }}>
-                        <Cpu size={22} color="#ec4899" />
+                        <Cpu size={22} color="#9E5A3C" />
                       </div>
                       <div>
-                        <div style={{ color: '#ec4899', fontSize: '18px', fontWeight: '700' }}>MapReduce</div>
+                        <div style={{ color: '#9E5A3C', fontSize: '18px', fontWeight: '700' }}>MapReduce</div>
                         <div style={{ color: 'var(--text-secondary)', fontSize: '11px' }}>The Distributed Workhorse — Disk-Centric</div>
                       </div>
                     </div>
@@ -8079,13 +8022,13 @@ for message in consumer:
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
                         {[
-                          { label: 'HDFS Read', color: '#3b82f6', icon: '💾' },
-                          { label: 'Map', color: '#ec4899', icon: '🔀' },
+                          { label: 'HDFS Read', color: '#4A7A9B', icon: '💾' },
+                          { label: 'Map', color: '#9E5A3C', icon: '🔀' },
                           { label: 'Disk Write', color: '#ef4444', icon: '💾' },
-                          { label: 'Shuffle', color: '#f59e0b', icon: '🌐' },
+                          { label: 'Shuffle', color: '#9E7824', icon: '🌐' },
                           { label: 'Disk Read', color: '#ef4444', icon: '💾' },
-                          { label: 'Reduce', color: '#10b981', icon: '📊' },
-                          { label: 'HDFS Write', color: '#3b82f6', icon: '💾' }
+                          { label: 'Reduce', color: '#4A7A56', icon: '📊' },
+                          { label: 'HDFS Write', color: '#4A7A9B', icon: '💾' }
                         ].map((s, i) => (
                           <React.Fragment key={i}>
                             <div style={{
@@ -8114,18 +8057,18 @@ for message in consumer:
                     {/* Properties */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                       {[
-                        { label: 'Processing Model', value: 'Batch only (Map → Reduce)', highlight: 'model', color: '#ec4899' },
+                        { label: 'Processing Model', value: 'Batch only (Map → Reduce)', highlight: 'model', color: '#9E5A3C' },
                         { label: 'Speed', value: '~45 seconds (word count on 384MB)', highlight: 'speed', color: '#ef4444' },
                         { label: 'Data Storage', value: 'Disk between every stage', highlight: 'data', color: '#ef4444' },
-                        { label: 'Fault Recovery', value: 'Re-run failed task from HDFS', highlight: 'fault', color: '#10b981' },
-                        { label: 'Multi-Pass', value: 'Requires chaining multiple jobs', highlight: 'model', color: '#f59e0b' },
+                        { label: 'Fault Recovery', value: 'Re-run failed task from HDFS', highlight: 'fault', color: '#4A7A56' },
+                        { label: 'Multi-Pass', value: 'Requires chaining multiple jobs', highlight: 'model', color: '#9E7824' },
                         { label: 'Latency', value: 'High (JVM start + disk I/O)', highlight: 'speed', color: '#ef4444' }
                       ].map((prop, i) => (
                         <div key={i} style={{
                           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                           padding: '8px 12px', borderRadius: '8px',
-                          background: comparisonHighlight === prop.highlight ? 'rgba(6, 182, 212, 0.1)' : 'transparent',
-                          border: comparisonHighlight === prop.highlight ? '1px solid rgba(6, 182, 212, 0.3)' : '1px solid transparent',
+                          background: comparisonHighlight === prop.highlight ? 'rgba(58, 128, 128, 0.1)' : 'transparent',
+                          border: comparisonHighlight === prop.highlight ? '1px solid rgba(58, 128, 128, 0.3)' : '1px solid transparent',
                           transition: 'all 0.3s',
                           opacity: !comparisonHighlight || comparisonHighlight === prop.highlight ? 1 : 0.4
                         }}>
@@ -8138,20 +8081,20 @@ for message in consumer:
 
                   {/* Spark Side */}
                   <div style={{
-                    background: 'rgba(245, 158, 11, 0.08)',
-                    border: '1px solid rgba(245, 158, 11, 0.3)',
+                    background: 'rgba(158, 120, 36, 0.08)',
+                    border: '1px solid rgba(158, 120, 36, 0.3)',
                     borderRadius: '16px', padding: '24px'
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
                       <div style={{
                         width: '40px', height: '40px', borderRadius: '10px',
-                        background: 'rgba(245, 158, 11, 0.2)', display: 'flex',
+                        background: 'rgba(158, 120, 36, 0.2)', display: 'flex',
                         alignItems: 'center', justifyContent: 'center'
                       }}>
-                        <Zap size={22} color="#f59e0b" />
+                        <Zap size={22} color="#9E7824" />
                       </div>
                       <div>
-                        <div style={{ color: '#f59e0b', fontSize: '18px', fontWeight: '700' }}>Apache Spark</div>
+                        <div style={{ color: '#9E7824', fontSize: '18px', fontWeight: '700' }}>Apache Spark</div>
                         <div style={{ color: 'var(--text-secondary)', fontSize: '11px' }}>The Clustered Speedster — Memory-Centric</div>
                       </div>
                     </div>
@@ -8165,13 +8108,13 @@ for message in consumer:
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
                         {[
-                          { label: 'Source Read', color: '#3b82f6', icon: '📂' },
-                          { label: 'Transform', color: '#ec4899', icon: '⚡' },
-                          { label: 'In Memory', color: '#10b981', icon: '🧠' },
-                          { label: 'Shuffle', color: '#f59e0b', icon: '🌐' },
-                          { label: 'In Memory', color: '#10b981', icon: '🧠' },
-                          { label: 'Action', color: '#a855f7', icon: '🎯' },
-                          { label: 'Output', color: '#3b82f6', icon: '💾' }
+                          { label: 'Source Read', color: '#4A7A9B', icon: '📂' },
+                          { label: 'Transform', color: '#9E5A3C', icon: '⚡' },
+                          { label: 'In Memory', color: '#4A7A56', icon: '🧠' },
+                          { label: 'Shuffle', color: '#9E7824', icon: '🌐' },
+                          { label: 'In Memory', color: '#4A7A56', icon: '🧠' },
+                          { label: 'Action', color: '#7A5A9E', icon: '🎯' },
+                          { label: 'Output', color: '#4A7A9B', icon: '💾' }
                         ].map((s, i) => (
                           <React.Fragment key={i}>
                             <div style={{
@@ -8189,7 +8132,7 @@ for message in consumer:
                         ))}
                       </div>
                       <div style={{
-                        marginTop: '10px', textAlign: 'center', fontSize: '10px', color: '#10b981',
+                        marginTop: '10px', textAlign: 'center', fontSize: '10px', color: '#4A7A56',
                         opacity: comparisonHighlight === 'speed' || !comparisonHighlight ? 1 : 0.3,
                         transition: 'opacity 0.3s'
                       }}>
@@ -8200,18 +8143,18 @@ for message in consumer:
                     {/* Properties */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                       {[
-                        { label: 'Processing Model', value: 'Batch + Stream + SQL + ML + Graph', highlight: 'model', color: '#10b981' },
-                        { label: 'Speed', value: '~2.3 seconds (same word count!)', highlight: 'speed', color: '#10b981' },
-                        { label: 'Data Storage', value: 'In-memory between stages', highlight: 'data', color: '#10b981' },
-                        { label: 'Fault Recovery', value: 'Recompute from lineage (DAG)', highlight: 'fault', color: '#f59e0b' },
-                        { label: 'Multi-Pass', value: 'Single job with chained stages', highlight: 'model', color: '#10b981' },
-                        { label: 'Latency', value: 'Low (reuse JVM + cached data)', highlight: 'speed', color: '#10b981' }
+                        { label: 'Processing Model', value: 'Batch + Stream + SQL + ML + Graph', highlight: 'model', color: '#4A7A56' },
+                        { label: 'Speed', value: '~2.3 seconds (same word count!)', highlight: 'speed', color: '#4A7A56' },
+                        { label: 'Data Storage', value: 'In-memory between stages', highlight: 'data', color: '#4A7A56' },
+                        { label: 'Fault Recovery', value: 'Recompute from lineage (DAG)', highlight: 'fault', color: '#9E7824' },
+                        { label: 'Multi-Pass', value: 'Single job with chained stages', highlight: 'model', color: '#4A7A56' },
+                        { label: 'Latency', value: 'Low (reuse JVM + cached data)', highlight: 'speed', color: '#4A7A56' }
                       ].map((prop, i) => (
                         <div key={i} style={{
                           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                           padding: '8px 12px', borderRadius: '8px',
-                          background: comparisonHighlight === prop.highlight ? 'rgba(6, 182, 212, 0.1)' : 'transparent',
-                          border: comparisonHighlight === prop.highlight ? '1px solid rgba(6, 182, 212, 0.3)' : '1px solid transparent',
+                          background: comparisonHighlight === prop.highlight ? 'rgba(58, 128, 128, 0.1)' : 'transparent',
+                          border: comparisonHighlight === prop.highlight ? '1px solid rgba(58, 128, 128, 0.3)' : '1px solid transparent',
                           transition: 'all 0.3s',
                           opacity: !comparisonHighlight || comparisonHighlight === prop.highlight ? 1 : 0.4
                         }}>
@@ -8239,8 +8182,8 @@ for message in consumer:
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
 
                     {/* MapReduce approach */}
-                    <div style={{ padding: '16px', background: 'rgba(236, 72, 153, 0.05)', borderRadius: '12px', border: '1px solid rgba(236, 72, 153, 0.2)' }}>
-                      <div style={{ color: '#ec4899', fontSize: '13px', fontWeight: '700', marginBottom: '4px', textAlign: 'center' }}>
+                    <div style={{ padding: '16px', background: 'rgba(158, 90, 60, 0.05)', borderRadius: '12px', border: '1px solid rgba(158, 90, 60, 0.2)' }}>
+                      <div style={{ color: '#9E5A3C', fontSize: '13px', fontWeight: '700', marginBottom: '4px', textAlign: 'center' }}>
                         MapReduce — The Filing Cabinet
                       </div>
                       <div style={{ color: 'var(--text-secondary)', fontSize: '10px', textAlign: 'center', marginBottom: '12px' }}>
@@ -8265,8 +8208,8 @@ for message in consumer:
                     </div>
 
                     {/* Spark approach */}
-                    <div style={{ padding: '16px', background: 'rgba(245, 158, 11, 0.05)', borderRadius: '12px', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-                      <div style={{ color: '#f59e0b', fontSize: '13px', fontWeight: '700', marginBottom: '4px', textAlign: 'center' }}>
+                    <div style={{ padding: '16px', background: 'rgba(158, 120, 36, 0.05)', borderRadius: '12px', border: '1px solid rgba(158, 120, 36, 0.2)' }}>
+                      <div style={{ color: '#9E7824', fontSize: '13px', fontWeight: '700', marginBottom: '4px', textAlign: 'center' }}>
                         Spark — The Supercomputer
                       </div>
                       <div style={{ color: 'var(--text-secondary)', fontSize: '10px', textAlign: 'center', marginBottom: '12px' }}>
@@ -8276,14 +8219,14 @@ for message in consumer:
                         <div style={{ color: 'var(--text-muted)' }}>// Entire pipeline in one expression:</div>
                         <div>sc.textFile("/data/logs/*")</div>
                         <div>&nbsp; .flatMap(_.split(" "))</div>
-                        <div style={{ color: '#10b981' }}>&nbsp; // pipelined in memory ↑</div>
+                        <div style={{ color: '#4A7A56' }}>&nbsp; // pipelined in memory ↑</div>
                         <div>&nbsp; .map(word =&gt; (word, 1))</div>
-                        <div style={{ color: '#10b981' }}>&nbsp; // still in memory ↑</div>
+                        <div style={{ color: '#4A7A56' }}>&nbsp; // still in memory ↑</div>
                         <div>&nbsp; .reduceByKey(_ + _)</div>
-                        <div style={{ color: '#f59e0b' }}>&nbsp; // shuffle (only disk write)</div>
+                        <div style={{ color: '#9E7824' }}>&nbsp; // shuffle (only disk write)</div>
                         <div>&nbsp; .saveAsTextFile("/results/")</div>
-                        <div style={{ color: '#10b981' }}>&nbsp; // one pass through DAG</div>
-                        <div style={{ marginTop: '8px', padding: '6px 10px', background: 'rgba(16, 185, 129, 0.15)', borderRadius: '6px', color: '#6ee7b7', textAlign: 'center' }}>
+                        <div style={{ color: '#4A7A56' }}>&nbsp; // one pass through DAG</div>
+                        <div style={{ marginTop: '8px', padding: '6px 10px', background: 'rgba(74, 122, 86, 0.15)', borderRadius: '6px', color: '#6ee7b7', textAlign: 'center' }}>
                           ~2.3 seconds | in-memory | reusable JVMs
                         </div>
                       </div>
@@ -8309,8 +8252,8 @@ for message in consumer:
                       borderBottom: '1px solid rgba(235,231,225,1)'
                     }}>
                       <div style={{ color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>Aspect</div>
-                      <div style={{ color: '#ec4899', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>MapReduce</div>
-                      <div style={{ color: '#f59e0b', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>Spark</div>
+                      <div style={{ color: '#9E5A3C', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>MapReduce</div>
+                      <div style={{ color: '#9E7824', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>Spark</div>
                     </div>
 
                     {/* Table Rows */}
@@ -8348,10 +8291,10 @@ for message in consumer:
                 {/* When to Use Which */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div style={{
-                    background: 'rgba(236, 72, 153, 0.08)', border: '1px solid rgba(236, 72, 153, 0.25)',
+                    background: 'rgba(158, 90, 60, 0.08)', border: '1px solid rgba(158, 90, 60, 0.25)',
                     borderRadius: '12px', padding: '20px'
                   }}>
-                    <div style={{ color: '#ec4899', fontSize: '14px', fontWeight: '700', marginBottom: '12px' }}>
+                    <div style={{ color: '#9E5A3C', fontSize: '14px', fontWeight: '700', marginBottom: '12px' }}>
                       When to Choose MapReduce
                     </div>
                     <ul style={{ color: 'var(--text-body)', fontSize: '12px', lineHeight: '2', paddingLeft: '20px' }}>
@@ -8363,10 +8306,10 @@ for message in consumer:
                     </ul>
                   </div>
                   <div style={{
-                    background: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.25)',
+                    background: 'rgba(158, 120, 36, 0.08)', border: '1px solid rgba(158, 120, 36, 0.25)',
                     borderRadius: '12px', padding: '20px'
                   }}>
-                    <div style={{ color: '#f59e0b', fontSize: '14px', fontWeight: '700', marginBottom: '12px' }}>
+                    <div style={{ color: '#9E7824', fontSize: '14px', fontWeight: '700', marginBottom: '12px' }}>
                       When to Choose Spark
                     </div>
                     <ul style={{ color: 'var(--text-body)', fontSize: '12px', lineHeight: '2', paddingLeft: '20px' }}>
@@ -8382,8 +8325,8 @@ for message in consumer:
                 {/* Bottom Summary */}
                 <div style={{
                   marginTop: '24px', padding: '16px 20px', textAlign: 'center',
-                  background: 'rgba(6, 182, 212, 0.08)',
-                  border: '1px solid rgba(6, 182, 212, 0.25)',
+                  background: 'rgba(58, 128, 128, 0.08)',
+                  border: '1px solid rgba(58, 128, 128, 0.25)',
                   borderRadius: '12px'
                 }}>
                   <div style={{ color: '#22d3ee', fontSize: '13px', lineHeight: '1.8' }}>
@@ -8456,7 +8399,7 @@ for message in consumer:
             </div>
 
             <div style={{ marginBottom: '24px' }}>
-              <h3 style={{ color: '#60a5fa', fontSize: '16px', fontWeight: '600', marginBottom: '8px' }}>
+              <h3 style={{ color: '#4A7A9B', fontSize: '16px', fontWeight: '600', marginBottom: '8px' }}>
                 Details
               </h3>
               <p style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.6' }}>
@@ -8475,7 +8418,7 @@ for message in consumer:
 
                   const pillStyle = {
                     background: 'rgba(235,232,228,0.8)',
-                    border: '1px solid rgba(139, 92, 246, 0.3)',
+                    border: '1px solid rgba(122, 90, 158, 0.3)',
                     borderRadius: '6px',
                     padding: '6px 12px',
                     fontSize: '13px',
@@ -8496,13 +8439,13 @@ for message in consumer:
                         rel="noopener noreferrer"
                         style={pillStyle}
                         onMouseEnter={(e) => {
-                          e.target.style.background = 'rgba(139, 92, 246, 0.2)';
-                          e.target.style.borderColor = 'rgba(139, 92, 246, 0.6)';
+                          e.target.style.background = 'rgba(122, 90, 158, 0.2)';
+                          e.target.style.borderColor = 'rgba(122, 90, 158, 0.6)';
                           e.target.style.transform = 'translateY(-2px)';
                         }}
                         onMouseLeave={(e) => {
                           e.target.style.background = 'rgba(235,232,228,0.8)';
-                          e.target.style.borderColor = 'rgba(139, 92, 246, 0.3)';
+                          e.target.style.borderColor = 'rgba(122, 90, 158, 0.3)';
                           e.target.style.transform = 'translateY(0)';
                         }}
                       >
@@ -8522,7 +8465,7 @@ for message in consumer:
 
             {/* Code Examples Section */}
             <div style={{ marginBottom: '24px' }}>
-              <h3 style={{ color: '#fbbf24', fontSize: '16px', fontWeight: '600', marginBottom: '12px' }}>
+              <h3 style={{ color: '#C8A84E', fontSize: '16px', fontWeight: '600', marginBottom: '12px' }}>
                 Code Examples
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -8748,7 +8691,7 @@ extract >> transform >> load`
                         padding: '10px 14px',
                         background: 'rgba(245,243,239,0.8)',
                         borderBottom: '1px solid rgba(235,231,225,1)',
-                        color: '#fbbf24',
+                        color: '#C8A84E',
                         fontSize: '13px',
                         fontWeight: '600'
                       }}>
@@ -8778,7 +8721,7 @@ extract >> transform >> load`
               style={{
                 width: '100%',
                 padding: '12px',
-                background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                background: 'linear-gradient(135deg, #4A7A9B 0%, #2563eb 100%)',
                 border: 'none',
                 borderRadius: '8px',
                 color: 'var(--text-primary)',
