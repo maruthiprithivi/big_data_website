@@ -2516,17 +2516,10 @@ for message in consumer:
 
           {/* Animated dataflow dots */}
           {showDataFlow && (
-            <>
-              <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-                <animateMotion dur="1.5s" repeatCount="indefinite">
-                  <mpath href={`#lbend-path-${type}-${direction}`} />
-                </animateMotion>
-              </circle>
-            </>
+            <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
+              <animateMotion path={pathD} dur="1.5s" repeatCount="indefinite" />
+            </circle>
           )}
-
-          {/* Hidden path for animation reference */}
-          <path id={`lbend-path-${type}-${direction}`} d={pathD} stroke="none" fill="none" />
         </svg>
 
         {/* Use the SAME chevron icon as `ConnectionArrow` (reference chevron style). */}
@@ -2587,13 +2580,6 @@ for message in consumer:
         }}
       >
         <svg width={SVG_W} height={SVG_H} style={{ overflow: 'hidden' }}>
-          <defs>
-            {/* Hidden paths for animation motion */}
-            <path id={`merge-top-path-${type}`} d={topPath} stroke="none" fill="none" />
-            <path id={`merge-bottom-path-${type}`} d={bottomPath} stroke="none" fill="none" />
-            <path id={`merge-main-path-${type}`} d={mainPath} stroke="none" fill="none" />
-          </defs>
-
           {/* Branches from both sources */}
           <path
             d={topPath}
@@ -2622,28 +2608,17 @@ for message in consumer:
             strokeLinejoin="round"
           />
 
-          {/* Animated dataflow dots (match other arrows) */}
+          {/* Animated dataflow dots */}
           {showDataFlow && (
             <>
-              {/* Top branch dot */}
               <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-                <animateMotion dur="1.5s" repeatCount="indefinite">
-                  <mpath href={`#merge-top-path-${type}`} />
-                </animateMotion>
+                <animateMotion path={topPath} dur="1.5s" repeatCount="indefinite" />
               </circle>
-
-              {/* Bottom branch dot */}
               <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-                <animateMotion dur="1.5s" repeatCount="indefinite">
-                  <mpath href={`#merge-bottom-path-${type}`} />
-                </animateMotion>
+                <animateMotion path={bottomPath} dur="1.5s" repeatCount="indefinite" />
               </circle>
-
-              {/* Merged line dot (slight delay so it feels like it continues after merge) */}
               <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-                <animateMotion begin="0.6s" dur="1.5s" repeatCount="indefinite">
-                  <mpath href={`#merge-main-path-${type}`} />
-                </animateMotion>
+                <animateMotion path={mainPath} begin="0.6s" dur="1.5s" repeatCount="indefinite" />
               </circle>
             </>
           )}
@@ -2679,20 +2654,17 @@ for message in consumer:
         <svg width={SVG_W} height={SVG_H} style={{ overflow: 'visible' }}>
           {Array.from({ length: count }).map((_, i) => {
             const targetX = startOffset + i * spacing;
-            const pathId = `fanout-path-${i}`;
             const d = `M ${centerX} 0 Q ${centerX} ${SVG_H * 0.5}, ${targetX} ${SVG_H}`;
             return (
               <g key={i}>
-                <path id={pathId} d={d} stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" />
+                <path d={d} stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" />
                 {showDataFlow && (
                   <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-                    <animateMotion dur="1.2s" repeatCount="indefinite" begin={`${i * 0.15}s`}>
-                      <mpath href={`#${pathId}`} />
-                    </animateMotion>
+                    <animateMotion path={d} dur="1.2s" repeatCount="indefinite" begin={`${i * 0.15}s`} />
                   </circle>
                 )}
-                <g transform={`translate(${targetX}, ${SVG_H - 6})`}>
-                  <polyline points="-5,-5 0,2 5,-5" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <g transform={`translate(${targetX}, ${SVG_H - 2})`}>
+                  <polyline points="-5,-7 0,0 5,-7" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </g>
               </g>
             );
@@ -2715,23 +2687,20 @@ for message in consumer:
         <svg width={SVG_W} height={SVG_H} style={{ overflow: 'visible' }}>
           {Array.from({ length: sourceCount }).map((_, i) => {
             const sourceX = startOffset + i * spacing;
-            const pathId = `fanin-path-${i}`;
             const d = `M ${sourceX} 0 Q ${sourceX} ${SVG_H * 0.5}, ${centerX} ${SVG_H}`;
             return (
               <g key={i}>
-                <path id={pathId} d={d} stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" />
+                <path d={d} stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" />
                 {showDataFlow && (
                   <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-                    <animateMotion dur="1.2s" repeatCount="indefinite" begin={`${i * 0.15}s`}>
-                      <mpath href={`#${pathId}`} />
-                    </animateMotion>
+                    <animateMotion path={d} dur="1.2s" repeatCount="indefinite" begin={`${i * 0.15}s`} />
                   </circle>
                 )}
               </g>
             );
           })}
-          <g transform={`translate(${centerX}, ${SVG_H - 6})`}>
-            <polyline points="-5,-5 0,2 5,-5" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <g transform={`translate(${centerX}, ${SVG_H - 2})`}>
+            <polyline points="-5,-7 0,0 5,-7" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </g>
         </svg>
       </div>
@@ -2757,12 +2726,11 @@ for message in consumer:
       for (let t = 0; t < targetCount; t++) {
         const sx = srcOffset + s * spacing;
         const tx = tgtOffset + t * spacing;
-        const pathId = `shuffle-path-${s}-${t}`;
+          const shuffleD = `M ${sx} 0 C ${sx} ${SVG_H * 0.4}, ${tx} ${SVG_H * 0.6}, ${tx} ${SVG_H}`;
         paths.push(
           <g key={idx}>
             <path
-              id={pathId}
-              d={`M ${sx} 0 C ${sx} ${SVG_H * 0.4}, ${tx} ${SVG_H * 0.6}, ${tx} ${SVG_H}`}
+              d={shuffleD}
               stroke={shuffleColor}
               strokeWidth="1.5"
               fill="none"
@@ -2771,9 +2739,7 @@ for message in consumer:
             />
             {showDataFlow && (
               <circle r="4" fill={shuffleColor} filter={`drop-shadow(0 0 4px ${shuffleColor})`}>
-                <animateMotion dur={`${1.0 + idx * 0.2}s`} repeatCount="indefinite" begin={`${idx * 0.12}s`}>
-                  <mpath href={`#${pathId}`} />
-                </animateMotion>
+                <animateMotion path={shuffleD} dur={`${1.0 + idx * 0.2}s`} repeatCount="indefinite" begin={`${idx * 0.12}s`} />
               </circle>
             )}
           </g>
@@ -2790,8 +2756,8 @@ for message in consumer:
           {Array.from({ length: targetCount }).map((_, t) => {
             const tx = tgtOffset + t * spacing;
             return (
-              <g key={t} transform={`translate(${tx}, ${SVG_H - 6})`}>
-                <polyline points="-5,-5 0,2 5,-5" fill="none" stroke={shuffleColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <g key={t} transform={`translate(${tx}, ${SVG_H - 2})`}>
+                <polyline points="-5,-7 0,0 5,-7" fill="none" stroke={shuffleColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </g>
             );
           })}
