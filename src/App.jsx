@@ -293,23 +293,23 @@ const BigDataArchitectureExplorer = () => {
   };
 
   const colorScheme = {
-    database: { bg: 'rgba(59, 130, 246, 0.15)', border: '#60a5fa', icon: '#60a5fa', label: '#1e3a5f' },
-    queue: { bg: 'rgba(139, 92, 246, 0.15)', border: '#8b5cf6', icon: '#8b5cf6', label: '#3b1f5e' },
-    cluster: { bg: 'rgba(236, 72, 153, 0.15)', border: '#ec4899', icon: '#ec4899', label: '#5c1f4a' },
-    stream: { bg: 'rgba(245, 158, 11, 0.15)', border: '#f59e0b', icon: '#f59e0b', label: '#5c3d1f' },
-    warehouse: { bg: 'rgba(16, 185, 129, 0.15)', border: '#10b981', icon: '#10b981', label: '#1f4a3d' },
-    cache: { bg: 'rgba(6, 182, 212, 0.15)', border: '#06b6d4', icon: '#06b6d4', label: '#1f4a5c' },
-    api: { bg: 'rgba(168, 85, 247, 0.15)', border: '#a855f7', icon: '#a855f7', label: '#3d1f5c' },
-    cloud: { bg: 'rgba(59, 130, 246, 0.15)', border: '#3b82f6', icon: '#3b82f6', label: '#1f2f5c' },
-    pipeline: { bg: 'rgba(124, 58, 237, 0.15)', border: '#7c3aed', icon: '#7c3aed', label: '#2f1f5c' },
-    dashboard: { bg: 'rgba(236, 72, 153, 0.15)', border: '#ec4899', icon: '#ec4899', label: '#5c1f4a' },
-    log: { bg: 'rgba(59, 130, 246, 0.15)', border: '#3b82f6', icon: '#3b82f6', label: '#1f2f5c' },
-    fact: { bg: 'rgba(245, 158, 11, 0.15)', border: '#f59e0b', icon: '#f59e0b', label: '#5c3d1f' },
-    dimension: { bg: 'rgba(59, 130, 246, 0.15)', border: '#60a5fa', icon: '#60a5fa', label: '#1e3a5f' },
-    bridge: { bg: 'rgba(168, 85, 247, 0.15)', border: '#a855f7', icon: '#a855f7', label: '#3d1f5c' },
-    star: { bg: 'rgba(245, 158, 11, 0.15)', border: '#f59e0b', icon: '#f59e0b', label: '#5c3d1f' },
-    snowflake: { bg: 'rgba(6, 182, 212, 0.15)', border: '#06b6d4', icon: '#06b6d4', label: '#1f4a5c' },
-    aggregate: { bg: 'rgba(16, 185, 129, 0.15)', border: '#10b981', icon: '#10b981', label: '#1f4a3d' }
+    database:  { bg: 'rgba(59,130,246,0.10)',  border: '#93BFEF', icon: '#3b82f6', label: '#1e3a5f' },
+    queue:     { bg: 'rgba(139,92,246,0.10)',  border: '#B89FF5', icon: '#7c3aed', label: '#3b1f5e' },
+    cluster:   { bg: 'rgba(236,72,153,0.10)',  border: '#F5A3CE', icon: '#db2777', label: '#5c1f4a' },
+    stream:    { bg: 'rgba(245,158,11,0.10)',  border: '#F5CC7A', icon: '#d97706', label: '#5c3d1f' },
+    warehouse: { bg: 'rgba(16,185,129,0.10)',  border: '#80D5B5', icon: '#059669', label: '#1f4a3d' },
+    cache:     { bg: 'rgba(6,182,212,0.10)',   border: '#7DCFE8', icon: '#0891b2', label: '#1f4a5c' },
+    api:       { bg: 'rgba(168,85,247,0.10)',  border: '#C4A0F8', icon: '#9333ea', label: '#3d1f5c' },
+    cloud:     { bg: 'rgba(59,130,246,0.10)',  border: '#93BFEF', icon: '#3b82f6', label: '#1f2f5c' },
+    pipeline:  { bg: 'rgba(124,58,237,0.10)',  border: '#B089F5', icon: '#7c3aed', label: '#2f1f5c' },
+    dashboard: { bg: 'rgba(236,72,153,0.10)',  border: '#F5A3CE', icon: '#db2777', label: '#5c1f4a' },
+    log:       { bg: 'rgba(59,130,246,0.10)',  border: '#93BFEF', icon: '#3b82f6', label: '#1f2f5c' },
+    fact:      { bg: 'rgba(245,158,11,0.10)',  border: '#F5CC7A', icon: '#d97706', label: '#5c3d1f' },
+    dimension: { bg: 'rgba(59,130,246,0.10)',  border: '#93BFEF', icon: '#3b82f6', label: '#1e3a5f' },
+    bridge:    { bg: 'rgba(168,85,247,0.10)',  border: '#C4A0F8', icon: '#9333ea', label: '#3d1f5c' },
+    star:      { bg: 'rgba(245,158,11,0.10)',  border: '#F5CC7A', icon: '#d97706', label: '#5c3d1f' },
+    snowflake: { bg: 'rgba(6,182,212,0.10)',   border: '#7DCFE8', icon: '#0891b2', label: '#1f4a5c' },
+    aggregate: { bg: 'rgba(16,185,129,0.10)',  border: '#80D5B5', icon: '#059669', label: '#1f4a3d' }
   };
 
   const architectures = {
@@ -2208,12 +2208,12 @@ for message in consumer:
             transform: 'translateX(-50%)',
             [tooltipPosition === 'bottom' ? 'marginTop' : 'marginBottom']: '12px',
             width: '280px',
-            background: 'rgba(15, 23, 42, 0.98)',
+            background: 'rgba(245,243,239,0.98)',
             border: `2px solid ${colors.border}`,
             borderRadius: '12px',
             padding: '16px',
             zIndex: 100,
-            boxShadow: `0 8px 32px rgba(0,0,0,0.6), 0 0 20px ${colors.border}33`,
+            boxShadow: `0 8px 32px rgba(200,195,188,0.6), 0 0 20px ${colors.border}33`,
             animation: 'fadeInScale 0.2s ease-out',
             pointerEvents: 'none'
           }}>
@@ -2243,14 +2243,14 @@ for message in consumer:
             </div>
             <div style={{
               fontSize: '12px',
-              color: '#cbd5e1',
+              color: 'var(--text-body)',
               lineHeight: '1.6'
             }}>
               {tooltip.tip}
             </div>
             <div style={{
               fontSize: '11px',
-              color: '#64748b',
+              color: 'var(--text-muted)',
               marginTop: '8px',
               fontStyle: 'italic'
             }}>
@@ -2837,7 +2837,7 @@ for message in consumer:
         }}>{label}</span>
         {showMapReduceExample && exampleText && (
           <div style={{
-            background: 'rgba(0,0,0,0.4)',
+            background: 'rgba(200,195,188,0.3)',
             borderRadius: '6px',
             padding: '4px 8px',
             fontSize: '10px',
@@ -2932,7 +2932,7 @@ for message in consumer:
       <div style={{
         margin: '0 0 20px 0',
         padding: '20px',
-        background: 'rgba(15, 23, 42, 0.8)',
+        background: 'rgba(245,243,239,0.8)',
         border: `1px solid ${stageData.color}44`,
         borderRadius: '16px',
         animation: 'fadeInScale 0.3s ease-out'
@@ -2946,15 +2946,15 @@ for message in consumer:
           {/* BEFORE */}
           <div style={{
             flex: '1', minWidth: '200px', maxWidth: '280px',
-            background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '14px',
-            border: '1px solid rgba(71, 85, 105, 0.3)'
+            background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '14px',
+            border: '1px solid rgba(235,231,225,1)'
           }}>
-            <div style={{ fontSize: '10px', fontWeight: '700', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '8px' }}>
+            <div style={{ fontSize: '10px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '8px' }}>
               Input
             </div>
             <div style={{ fontFamily: 'Monaco, Consolas, monospace', fontSize: '11px', lineHeight: '1.8' }}>
               {stageData.before.data.map((line, i) => (
-                <div key={i} style={{ color: '#cbd5e1', padding: '2px 0' }}>{line}</div>
+                <div key={i} style={{ color: 'var(--text-body)', padding: '2px 0' }}>{line}</div>
               ))}
             </div>
           </div>
@@ -2974,7 +2974,7 @@ for message in consumer:
               <div style={{ width: '20px', height: '2px', background: stageData.color }} />
               <ArrowRight size={16} color={stageData.color} />
             </div>
-            <div style={{ fontSize: '10px', color: '#64748b', textAlign: 'center', maxWidth: '180px', lineHeight: '1.4' }}>
+            <div style={{ fontSize: '10px', color: 'var(--text-muted)', textAlign: 'center', maxWidth: '180px', lineHeight: '1.4' }}>
               {stageData.operation.detail}
             </div>
           </div>
@@ -2990,7 +2990,7 @@ for message in consumer:
             </div>
             <div style={{ fontFamily: 'Monaco, Consolas, monospace', fontSize: '11px', lineHeight: '1.8' }}>
               {stageData.after.data.map((line, i) => (
-                <div key={i} style={{ color: '#e2e8f0', padding: '2px 0' }}>{line}</div>
+                <div key={i} style={{ color: 'var(--text-body)', padding: '2px 0' }}>{line}</div>
               ))}
             </div>
           </div>
@@ -3071,7 +3071,7 @@ for message in consumer:
       return (
         <div style={{
           position: 'absolute', right: '-180px', top: '50%', transform: 'translateY(-50%)',
-          background: 'rgba(0,0,0,0.7)', borderRadius: '6px', padding: '4px 8px',
+          background: 'rgba(200,195,188,0.7)', borderRadius: '6px', padding: '4px 8px',
           fontSize: '9px', color: color, fontFamily: 'Monaco, Consolas, monospace',
           whiteSpace: 'nowrap', border: `1px solid ${color}33`, zIndex: 5,
           animation: 'fadeInScale 0.3s ease-out'
@@ -3091,9 +3091,9 @@ for message in consumer:
           gap: '12px',
           marginBottom: '24px',
           padding: '12px 20px',
-          background: 'rgba(30, 41, 59, 0.8)',
+          background: 'rgba(235,232,228,0.8)',
           borderRadius: '12px',
-          border: '1px solid rgba(71, 85, 105, 0.3)',
+          border: '1px solid rgba(235,231,225,1)',
           flexWrap: 'wrap',
           justifyContent: 'center'
         }}>
@@ -3133,8 +3133,8 @@ for message in consumer:
                 title={s.description}
                 style={{
                   padding: '4px 10px',
-                  background: step === i ? 'rgba(59, 130, 246, 0.3)' : 'rgba(30, 41, 59, 0.5)',
-                  border: `1px solid ${step === i ? '#3b82f6' : 'rgba(71, 85, 105, 0.3)'}`,
+                  background: step === i ? 'rgba(59, 130, 246, 0.3)' : 'rgba(235,232,228,0.5)',
+                  border: `1px solid ${step === i ? '#3b82f6' : 'rgba(235,231,225,1)'}`,
                   borderRadius: '6px',
                   color: step === i ? '#60a5fa' : '#64748b',
                   fontSize: '11px',
@@ -3149,15 +3149,15 @@ for message in consumer:
           </div>
 
           {/* Divider */}
-          <div style={{ width: '1px', height: '24px', background: 'rgba(71, 85, 105, 0.3)' }} />
+          <div style={{ width: '1px', height: '24px', background: 'rgba(235,231,225,1)' }} />
 
           {/* Data Transform toggle */}
           <button
             onClick={() => setShowDataTransform(!showDataTransform)}
             style={{
               padding: '6px 14px',
-              background: showDataTransform ? 'rgba(16, 185, 129, 0.2)' : 'rgba(30, 41, 59, 0.5)',
-              border: `1px solid ${showDataTransform ? '#10b981' : 'rgba(71, 85, 105, 0.3)'}`,
+              background: showDataTransform ? 'rgba(16, 185, 129, 0.2)' : 'rgba(235,232,228,0.5)',
+              border: `1px solid ${showDataTransform ? '#10b981' : 'rgba(235,231,225,1)'}`,
               borderRadius: '8px',
               color: showDataTransform ? '#34d399' : '#94a3b8',
               fontSize: '12px',
@@ -3177,8 +3177,8 @@ for message in consumer:
             onClick={() => setShowMapReduceExample(!showMapReduceExample)}
             style={{
               padding: '6px 14px',
-              background: showMapReduceExample ? 'rgba(245, 158, 11, 0.2)' : 'rgba(30, 41, 59, 0.5)',
-              border: `1px solid ${showMapReduceExample ? '#f59e0b' : 'rgba(71, 85, 105, 0.3)'}`,
+              background: showMapReduceExample ? 'rgba(245, 158, 11, 0.2)' : 'rgba(235,232,228,0.5)',
+              border: `1px solid ${showMapReduceExample ? '#f59e0b' : 'rgba(235,231,225,1)'}`,
               borderRadius: '8px',
               color: showMapReduceExample ? '#fbbf24' : '#94a3b8',
               fontSize: '12px',
@@ -3228,7 +3228,7 @@ for message in consumer:
             {step === 1 && showDataTransform && (
               <div style={{
                 position: 'absolute', left: '50%', marginLeft: '110px', top: '50%', transform: 'translateY(-50%)',
-                background: 'rgba(0,0,0,0.7)', borderRadius: '8px', padding: '6px 10px',
+                background: 'rgba(200,195,188,0.7)', borderRadius: '8px', padding: '6px 10px',
                 fontSize: '10px', color: '#93c5fd', fontFamily: 'Monaco, Consolas, monospace',
                 border: '1px solid rgba(59,130,246,0.3)', animation: 'fadeInScale 0.3s ease-out',
                 whiteSpace: 'nowrap'
@@ -3248,7 +3248,7 @@ for message in consumer:
             {step === 1 && showDataTransform && (
               <div style={{
                 position: 'absolute', left: '50%', marginLeft: '40px', top: '50%', transform: 'translateY(-50%)',
-                fontSize: '9px', color: '#64748b', fontStyle: 'italic'
+                fontSize: '9px', color: 'var(--text-muted)', fontStyle: 'italic'
               }}>
                 submit job via RPC
               </div>
@@ -3444,11 +3444,11 @@ for message in consumer:
               </div>
               <div>
                 <div style={{ color: '#a78bfa', fontSize: '16px', fontWeight: '700' }}>Shuffle & Sort</div>
-                <div style={{ color: '#94a3b8', fontSize: '12px' }}>Partition by key → Transfer → Merge sort</div>
+                <div style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>Partition by key → Transfer → Merge sort</div>
               </div>
               {(showMapReduceExample || (step === 5 && showDataTransform)) && (
                 <div style={{
-                  background: 'rgba(0,0,0,0.4)', borderRadius: '8px', padding: '8px 12px',
+                  background: 'rgba(200,195,188,0.3)', borderRadius: '8px', padding: '8px 12px',
                   fontSize: '11px', color: '#fbbf24', fontFamily: 'Monaco, Consolas, monospace',
                   lineHeight: '1.5'
                 }}>
@@ -3530,7 +3530,7 @@ for message in consumer:
                 <div style={{
                   position: 'absolute', top: '50%', left: '100%', marginLeft: '12px',
                   transform: 'translateY(-50%)',
-                  background: 'rgba(0,0,0,0.6)', borderRadius: '8px', padding: '8px 12px',
+                  background: 'rgba(200,195,188,0.6)', borderRadius: '8px', padding: '8px 12px',
                   fontSize: '11px', color: '#fbbf24', fontFamily: 'Monaco, Consolas, monospace',
                   whiteSpace: 'nowrap', border: '1px solid rgba(245, 158, 11, 0.3)'
                 }}>
@@ -3651,8 +3651,8 @@ for message in consumer:
         {/* Step-by-step animation controls */}
         <div style={{
           display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px',
-          padding: '12px 20px', background: 'rgba(30, 41, 59, 0.8)',
-          borderRadius: '12px', border: '1px solid rgba(71, 85, 105, 0.3)',
+          padding: '12px 20px', background: 'rgba(235,232,228,0.8)',
+          borderRadius: '12px', border: '1px solid rgba(235,231,225,1)',
           flexWrap: 'wrap', justifyContent: 'center'
         }}>
           <button
@@ -3680,8 +3680,8 @@ for message in consumer:
                 title={s.description}
                 style={{
                   padding: '4px 10px',
-                  background: step === i ? 'rgba(59, 130, 246, 0.3)' : 'rgba(30, 41, 59, 0.5)',
-                  border: `1px solid ${step === i ? '#3b82f6' : 'rgba(71, 85, 105, 0.3)'}`,
+                  background: step === i ? 'rgba(59, 130, 246, 0.3)' : 'rgba(235,232,228,0.5)',
+                  border: `1px solid ${step === i ? '#3b82f6' : 'rgba(235,231,225,1)'}`,
                   borderRadius: '6px', color: step === i ? '#60a5fa' : '#64748b',
                   fontSize: '11px', fontWeight: step === i ? '700' : '500',
                   cursor: 'pointer', transition: 'all 0.2s'
@@ -3692,14 +3692,14 @@ for message in consumer:
             ))}
           </div>
 
-          <div style={{ width: '1px', height: '24px', background: 'rgba(71, 85, 105, 0.3)' }} />
+          <div style={{ width: '1px', height: '24px', background: 'rgba(235,231,225,1)' }} />
 
           <button
             onClick={() => setShowDataTransform(!showDataTransform)}
             style={{
               padding: '6px 14px',
-              background: showDataTransform ? 'rgba(16, 185, 129, 0.2)' : 'rgba(30, 41, 59, 0.5)',
-              border: `1px solid ${showDataTransform ? '#10b981' : 'rgba(71, 85, 105, 0.3)'}`,
+              background: showDataTransform ? 'rgba(16, 185, 129, 0.2)' : 'rgba(235,232,228,0.5)',
+              border: `1px solid ${showDataTransform ? '#10b981' : 'rgba(235,231,225,1)'}`,
               borderRadius: '8px', color: showDataTransform ? '#34d399' : '#94a3b8',
               fontSize: '12px', fontWeight: '500', cursor: 'pointer',
               display: 'flex', alignItems: 'center', gap: '6px'
@@ -3934,11 +3934,11 @@ for message in consumer:
               </div>
               <div>
                 <div style={{ color: '#fbbf24', fontSize: '16px', fontWeight: '700' }}>Shuffle Exchange</div>
-                <div style={{ color: '#94a3b8', fontSize: '12px' }}>Hash partition → Network transfer → Local disk write (temporary)</div>
+                <div style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>Hash partition → Network transfer → Local disk write (temporary)</div>
               </div>
               {step === 5 && showDataTransform && (
                 <div style={{
-                  background: 'rgba(0,0,0,0.4)', borderRadius: '8px', padding: '8px 12px',
+                  background: 'rgba(200,195,188,0.3)', borderRadius: '8px', padding: '8px 12px',
                   fontSize: '11px', color: '#fbbf24', fontFamily: 'Monaco, Consolas, monospace',
                   lineHeight: '1.5'
                 }}>
@@ -4012,7 +4012,7 @@ for message in consumer:
                 <div style={{
                   position: 'absolute', top: '50%', left: '100%', marginLeft: '12px',
                   transform: 'translateY(-50%)',
-                  background: 'rgba(0,0,0,0.6)', borderRadius: '8px', padding: '8px 12px',
+                  background: 'rgba(200,195,188,0.6)', borderRadius: '8px', padding: '8px 12px',
                   fontSize: '11px', color: '#34d399', fontFamily: 'Monaco, Consolas, monospace',
                   whiteSpace: 'nowrap', border: '1px solid rgba(16, 185, 129, 0.3)'
                 }}>
@@ -4252,7 +4252,7 @@ for message in consumer:
       <div
         onClick={onClick}
         style={{
-          background: 'rgba(15, 23, 42, 0.95)',
+          background: 'rgba(245,243,239,0.95)',
           border: `2px solid ${borderColor}`,
           borderRadius: '8px',
           minWidth: '220px',
@@ -4288,7 +4288,7 @@ for message in consumer:
                 alignItems: 'center',
                 gap: '8px',
                 padding: '5px 14px',
-                borderBottom: idx < columns.length - 1 ? '1px solid rgba(71, 85, 105, 0.2)' : 'none',
+                borderBottom: idx < columns.length - 1 ? '1px solid rgba(235,231,225,1)' : 'none',
                 fontSize: '12px',
                 background: isHL ? 'rgba(96, 165, 250, 0.15)' : 'transparent',
                 boxShadow: isHL ? 'inset 0 0 0 1px rgba(96, 165, 250, 0.4)' : 'none',
@@ -4320,10 +4320,10 @@ for message in consumer:
                   flexShrink: 0
                 }}>FK</span>
               )}
-              <span style={{ color: col.pk ? '#fbbf24' : col.fk ? '#93c5fd' : '#cbd5e1', fontWeight: col.pk || col.fk ? '600' : '400', fontFamily: 'monospace' }}>
+              <span style={{ color: col.pk ? '#d97706' : col.fk ? '#3b82f6' : 'var(--text-body)', fontWeight: col.pk || col.fk ? '600' : '400', fontFamily: 'monospace' }}>
                 {col.name}
               </span>
-              <span style={{ color: '#64748b', marginLeft: 'auto', fontSize: '11px', fontFamily: 'monospace' }}>{col.type}</span>
+              <span style={{ color: 'var(--text-muted)', marginLeft: 'auto', fontSize: '11px', fontFamily: 'monospace' }}>{col.type}</span>
             </div>
             );
           })}
@@ -4494,8 +4494,8 @@ for message in consumer:
                   {conn.fkCol}
                 </text>
                 {/* Cardinality: N at fact side, 1 at dim side */}
-                <text x={fkX + (conn.fromSide === 'left' ? -16 : 8)} y={fkY - 10} fill={isHovered ? '#bfdbfe' : '#94a3b8'} fontSize="10" fontWeight="600" fontFamily="monospace">N</text>
-                <text x={pkX + (conn.toSide === 'left' ? -12 : 6)} y={pkY - 10} fill={isHovered ? '#bfdbfe' : '#94a3b8'} fontSize="10" fontWeight="600" fontFamily="monospace">1</text>
+                <text x={fkX + (conn.fromSide === 'left' ? -16 : 8)} y={fkY - 10} fill={isHovered ? '#3b82f6' : 'var(--text-secondary)'} fontSize="10" fontWeight="600" fontFamily="monospace">N</text>
+                <text x={pkX + (conn.toSide === 'left' ? -12 : 6)} y={pkY - 10} fill={isHovered ? '#3b82f6' : 'var(--text-secondary)'} fontSize="10" fontWeight="600" fontFamily="monospace">1</text>
                 {/* Animated data flow dot */}
                 {showDataFlow && (
                   <circle r="4" fill="#60a5fa" filter="drop-shadow(0 0 6px #60a5fa)">
@@ -4563,7 +4563,7 @@ for message in consumer:
       <div
         onClick={onClick}
         style={{
-          background: 'rgba(15, 23, 42, 0.95)',
+          background: 'rgba(245,243,239,0.95)',
           border: '2px solid #a855f7',
           borderRadius: '8px',
           minWidth: '190px',
@@ -4606,7 +4606,7 @@ for message in consumer:
                 alignItems: 'center',
                 gap: '6px',
                 padding: '4px 12px',
-                borderBottom: idx < columns.length - 1 ? '1px solid rgba(71, 85, 105, 0.2)' : 'none',
+                borderBottom: idx < columns.length - 1 ? '1px solid rgba(235,231,225,1)' : 'none',
                 fontSize: '11px',
                 background: isHL ? 'rgba(168, 85, 247, 0.15)' : 'transparent',
                 boxShadow: isHL ? 'inset 0 0 0 1px rgba(168, 85, 247, 0.4)' : 'none',
@@ -4616,8 +4616,8 @@ for message in consumer:
             >
               {col.pk && <span style={{ background: isHL ? 'rgba(245, 158, 11, 0.4)' : 'rgba(245, 158, 11, 0.2)', color: '#fbbf24', padding: '1px 4px', borderRadius: '3px', fontSize: '8px', fontWeight: '700', border: '1px solid rgba(245, 158, 11, 0.4)', flexShrink: 0 }}>PK</span>}
               {col.fk && <span style={{ background: isHL ? 'rgba(168, 85, 247, 0.4)' : 'rgba(168, 85, 247, 0.2)', color: '#c084fc', padding: '1px 4px', borderRadius: '3px', fontSize: '8px', fontWeight: '700', border: '1px solid rgba(168, 85, 247, 0.4)', flexShrink: 0 }}>FK</span>}
-              <span style={{ color: col.pk ? '#fbbf24' : col.fk ? '#c084fc' : '#cbd5e1', fontWeight: col.pk || col.fk ? '600' : '400', fontFamily: 'monospace', fontSize: '11px' }}>{col.name}</span>
-              <span style={{ color: '#64748b', marginLeft: 'auto', fontSize: '10px', fontFamily: 'monospace' }}>{col.type}</span>
+              <span style={{ color: col.pk ? '#d97706' : col.fk ? '#9333ea' : 'var(--text-body)', fontWeight: col.pk || col.fk ? '600' : '400', fontFamily: 'monospace', fontSize: '11px' }}>{col.name}</span>
+              <span style={{ color: 'var(--text-muted)', marginLeft: 'auto', fontSize: '10px', fontFamily: 'monospace' }}>{col.type}</span>
             </div>
             );
           })}
@@ -4927,7 +4927,7 @@ for message in consumer:
         background: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)',
         border: '3px solid #a78bfa',
         borderRadius: '16px',
-        color: '#ffffff',
+        color: 'var(--text-primary)',
         fontWeight: '700',
         fontSize: '15px',
         boxShadow: '0 10px 30px rgba(167, 139, 250, 0.5), 0 0 0 1px rgba(167, 139, 250, 0.2)',
@@ -4959,7 +4959,7 @@ for message in consumer:
           : 'linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%)',
         border: `3px solid ${isExpanded ? '#60a5fa' : '#3b82f6'}`,
         borderRadius: '16px',
-        color: '#ffffff',
+        color: 'var(--text-primary)',
         fontWeight: '600',
         fontSize: '14px',
         cursor: 'pointer',
@@ -5022,7 +5022,7 @@ for message in consumer:
           position={Position.Top}
           style={{ background: style.border, width: 12, height: 12, border: '2px solid #fff' }}
         />
-        <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#ffffff', marginBottom: '4px' }}>
+        <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '4px' }}>
           {data.label}
         </div>
         <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.9)', fontWeight: '500' }}>
@@ -5173,8 +5173,8 @@ for message in consumer:
       animated: true,
       style: { stroke: '#60a5fa', strokeWidth: 3 },
       type: 'step',
-      labelStyle: { fill: '#ffffff', fontWeight: 600, fontSize: 13 },
-      labelBgStyle: { fill: '#1e293b', fillOpacity: 0.8 }
+      labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
+      labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
     },
     {
       id: 'realtime-no',
@@ -5184,8 +5184,8 @@ for message in consumer:
       animated: true,
       style: { stroke: '#60a5fa', strokeWidth: 3 },
       type: 'step',
-      labelStyle: { fill: '#ffffff', fontWeight: 600, fontSize: 13 },
-      labelBgStyle: { fill: '#1e293b', fillOpacity: 0.8 }
+      labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
+      labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
     },
     {
       id: 'realtimeYes-lambda1',
@@ -5195,8 +5195,8 @@ for message in consumer:
       animated: true,
       style: { stroke: '#ef4444', strokeWidth: 3 },
       type: 'step',
-      labelStyle: { fill: '#ffffff', fontWeight: 600, fontSize: 13 },
-      labelBgStyle: { fill: '#1e293b', fillOpacity: 0.8 }
+      labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
+      labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
     },
     {
       id: 'realtimeYes-reprocessing',
@@ -5206,8 +5206,8 @@ for message in consumer:
       animated: true,
       style: { stroke: '#60a5fa', strokeWidth: 3 },
       type: 'step',
-      labelStyle: { fill: '#ffffff', fontWeight: 600, fontSize: 13 },
-      labelBgStyle: { fill: '#1e293b', fillOpacity: 0.8 }
+      labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
+      labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
     },
     {
       id: 'batchAnalytics-batch',
@@ -5217,8 +5217,8 @@ for message in consumer:
       animated: true,
       style: { stroke: '#22c55e', strokeWidth: 3 },
       type: 'step',
-      labelStyle: { fill: '#ffffff', fontWeight: 600, fontSize: 13 },
-      labelBgStyle: { fill: '#1e293b', fillOpacity: 0.8 }
+      labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
+      labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
     },
     {
       id: 'batchAnalytics-batch2',
@@ -5228,8 +5228,8 @@ for message in consumer:
       animated: true,
       style: { stroke: '#22c55e', strokeWidth: 3 },
       type: 'step',
-      labelStyle: { fill: '#ffffff', fontWeight: 600, fontSize: 13 },
-      labelBgStyle: { fill: '#1e293b', fillOpacity: 0.8 }
+      labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
+      labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
     },
     {
       id: 'reprocessing-kappa',
@@ -5239,8 +5239,8 @@ for message in consumer:
       animated: true,
       style: { stroke: '#3b82f6', strokeWidth: 3 },
       type: 'step',
-      labelStyle: { fill: '#ffffff', fontWeight: 600, fontSize: 13 },
-      labelBgStyle: { fill: '#1e293b', fillOpacity: 0.8 }
+      labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
+      labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
     },
     {
       id: 'reprocessing-streaming',
@@ -5250,8 +5250,8 @@ for message in consumer:
       animated: true,
       style: { stroke: '#f59e0b', strokeWidth: 3 },
       type: 'step',
-      labelStyle: { fill: '#ffffff', fontWeight: 600, fontSize: 13 },
-      labelBgStyle: { fill: '#1e293b', fillOpacity: 0.8 }
+      labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
+      labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
     }
   ];
 
@@ -5384,8 +5384,8 @@ for message in consumer:
       <div id="curriculum-section" style={{ animation: 'fadeInSlideDown 0.5s ease-out' }}>
         {/* Curriculum Header */}
         <div style={{
-          background: 'rgba(15, 23, 42, 0.8)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(245,243,239,0.8)',
+          
           border: '1px solid rgba(245, 158, 11, 0.3)',
           borderRadius: '12px',
           padding: '24px',
@@ -5396,7 +5396,7 @@ for message in consumer:
               <h2 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '4px', color: '#f59e0b' }}>
                 {curriculumData.title}
               </h2>
-              <p style={{ color: '#94a3b8', fontSize: '16px' }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '16px' }}>
                 {curriculumData.subtitle}
               </p>
             </div>
@@ -5404,7 +5404,7 @@ for message in consumer:
               <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#f59e0b' }}>
                 {progress}%
               </div>
-              <div style={{ fontSize: '12px', color: '#94a3b8' }}>Overall Progress</div>
+              <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Overall Progress</div>
             </div>
           </div>
           {/* Overall Progress Bar */}
@@ -5447,12 +5447,12 @@ for message in consumer:
                     : colors.light,
                   border: `2px solid ${isActive ? colors.primary : colors.border}`,
                   borderRadius: '12px',
-                  color: '#ffffff',
+                  color: 'var(--text-primary)',
                   fontSize: '13px',
                   fontWeight: '600',
                   cursor: 'pointer',
                   transition: 'all 0.3s',
-                  backdropFilter: 'blur(10px)',
+                  
                   position: 'relative',
                   overflow: 'hidden'
                 }}
@@ -5480,7 +5480,7 @@ for message in consumer:
                   overflow: 'hidden'
                 }}>
                   <div style={{
-                    background: '#ffffff',
+                    background: 'var(--bg-page)',
                     height: '100%',
                     width: `${pProgress}%`,
                     borderRadius: '4px',
@@ -5507,10 +5507,10 @@ for message in consumer:
                 <h3 style={{ fontSize: '22px', fontWeight: 'bold', color: phaseColors[activePhase].primary }}>
                   Phase {currentPhase.id}: {currentPhase.name}
                 </h3>
-                <p style={{ fontSize: '14px', color: '#94a3b8' }}>{currentPhase.subtitle}</p>
+                <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{currentPhase.subtitle}</p>
               </div>
             </div>
-            <p style={{ color: '#cbd5e1', fontSize: '15px', marginBottom: '12px' }}>
+            <p style={{ color: 'var(--text-body)', fontSize: '15px', marginBottom: '12px' }}>
               <strong style={{ color: phaseColors[activePhase].primary }}>Goal:</strong> {currentPhase.goal}
             </p>
             {/* Phase Progress */}
@@ -5555,8 +5555,8 @@ for message in consumer:
                     style={{
                       background: isSelected
                         ? `${phaseColors[activePhase].primary}22`
-                        : 'rgba(15, 23, 42, 0.8)',
-                      border: `2px solid ${isSelected ? phaseColors[activePhase].primary : isCompleted ? '#10b981' : 'rgba(71, 85, 105, 0.3)'}`,
+                        : 'rgba(245,243,239,0.8)',
+                      border: `2px solid ${isSelected ? phaseColors[activePhase].primary : isCompleted ? '#10b981' : 'rgba(235,231,225,1)'}`,
                       borderRadius: '12px',
                       padding: '20px',
                       cursor: 'pointer',
@@ -5571,7 +5571,7 @@ for message in consumer:
                     }}
                     onMouseLeave={(e) => {
                       if (!isSelected) {
-                        e.currentTarget.style.borderColor = isCompleted ? '#10b981' : 'rgba(71, 85, 105, 0.3)';
+                        e.currentTarget.style.borderColor = isCompleted ? '#10b981' : 'rgba(235,231,225,1)';
                         e.currentTarget.style.transform = 'translateX(0)';
                       }
                     }}
@@ -5596,10 +5596,10 @@ for message in consumer:
                             </span>
                           )}
                         </div>
-                        <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '8px', color: '#ffffff' }}>
+                        <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '8px', color: 'var(--text-primary)' }}>
                           {level.name}
                         </h4>
-                        <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.5', marginBottom: '12px' }}>
+                        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.5', marginBottom: '12px' }}>
                           {level.concept.substring(0, 120)}...
                         </p>
                         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -5650,7 +5650,7 @@ for message in consumer:
             <div style={{
               flex: '1',
               minWidth: '400px',
-              background: 'rgba(15, 23, 42, 0.9)',
+              background: 'var(--bg-panel)',
               border: `1px solid ${phaseColors[activePhase].border}`,
               borderRadius: '12px',
               padding: '24px',
@@ -5674,7 +5674,7 @@ for message in consumer:
                   }}>
                     Level {currentLevel.id}
                   </span>
-                  <h3 style={{ fontSize: '24px', fontWeight: 'bold', color: '#ffffff', marginTop: '8px' }}>
+                  <h3 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)', marginTop: '8px' }}>
                     {currentLevel.name}
                   </h3>
                 </div>
@@ -5683,7 +5683,7 @@ for message in consumer:
                   style={{
                     background: 'transparent',
                     border: 'none',
-                    color: '#64748b',
+                    color: 'var(--text-muted)',
                     cursor: 'pointer',
                     padding: '8px'
                   }}
@@ -5703,7 +5703,7 @@ for message in consumer:
                 <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#60a5fa', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Database size={16} /> Concept
                 </h4>
-                <p style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.7' }}>
+                <p style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.7' }}>
                   {currentLevel.concept}
                 </p>
               </div>
@@ -5719,7 +5719,7 @@ for message in consumer:
                 <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#f59e0b', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Sparkles size={16} /> Why This Matters
                 </h4>
-                <p style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.7' }}>
+                <p style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.7' }}>
                   {currentLevel.whyItMatters}
                 </p>
               </div>
@@ -5736,7 +5736,7 @@ for message in consumer:
                   <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#a78bfa', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Info size={16} /> Think of it like...
                   </h4>
-                  <p style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.7', fontStyle: 'italic' }}>
+                  <p style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.7', fontStyle: 'italic' }}>
                     "{currentLevel.analogy}"
                   </p>
                 </div>
@@ -5745,7 +5745,7 @@ for message in consumer:
               {/* Code Example */}
               {currentLevel.codeExample && (
                 <div style={{
-                  background: 'rgba(30, 41, 59, 0.8)',
+                  background: 'rgba(235,232,228,0.8)',
                   border: '1px solid rgba(71, 85, 105, 0.5)',
                   borderRadius: '8px',
                   padding: '16px',
@@ -5755,13 +5755,13 @@ for message in consumer:
                     <ScrollText size={16} /> Code Example ({currentLevel.codeExample.language})
                   </h4>
                   <pre style={{
-                    background: 'rgba(0, 0, 0, 0.4)',
+                    background: 'rgba(200,195,188,0.3)',
                     borderRadius: '6px',
                     padding: '16px',
                     overflow: 'auto',
                     fontSize: '12px',
                     lineHeight: '1.6',
-                    color: '#e2e8f0',
+                    color: 'var(--text-body)',
                     fontFamily: 'monospace'
                   }}>
                     <code>{currentLevel.codeExample.code}</code>
@@ -5890,7 +5890,7 @@ for message in consumer:
                     : 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.15) 100%)',
                   border: `2px solid ${isLevelCompleted(currentLevel.id) ? '#10b981' : 'rgba(16, 185, 129, 0.5)'}`,
                   borderRadius: '10px',
-                  color: '#ffffff',
+                  color: 'var(--text-primary)',
                   fontSize: '16px',
                   fontWeight: '700',
                   cursor: 'pointer',
@@ -5927,7 +5927,7 @@ for message in consumer:
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0f', color: '#ffffff' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg-page)', color: 'var(--text-primary)', fontFamily: 'var(--font-sans)' }}>
       <style>{`
         @keyframes flowRight {
           0% { left: 0; opacity: 0; }
@@ -5954,8 +5954,8 @@ for message in consumer:
           {showBanner && (
             <div
               style={{
-                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%)',
-                border: '1px solid rgba(59, 130, 246, 0.3)',
+                background: 'var(--bg-panel)',
+                border: '1px solid var(--border)',
                 borderRadius: '12px',
                 padding: '16px 20px',
                 marginBottom: '24px',
@@ -5963,14 +5963,13 @@ for message in consumer:
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 gap: '16px',
-                backdropFilter: 'blur(10px)',
-                boxShadow: '0 4px 12px rgba(59, 130, 246, 0.1)'
+                boxShadow: 'none'
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
-                <Info size={20} style={{ color: '#60a5fa', flexShrink: 0 }} />
-                <p style={{ color: '#e2e8f0', fontSize: '14px', lineHeight: '1.6', margin: 0 }}>
-                  <strong style={{ color: '#ffffff' }}>Work in Progress:</strong> This project is actively evolving and will be updated regularly. The content is provided as-is for educational and reference purposes. Feel free to explore and learn from the architecture patterns presented here.
+                <Info size={20} style={{ color: 'var(--text-secondary)', flexShrink: 0 }} />
+                <p style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.6', margin: 0 }}>
+                  <strong style={{ color: 'var(--text-primary)' }}>Work in Progress:</strong> This project is actively evolving and will be updated regularly. The content is provided as-is for educational and reference purposes. Feel free to explore and learn from the architecture patterns presented here.
                 </p>
               </div>
               <button
@@ -5978,7 +5977,7 @@ for message in consumer:
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  color: '#94a3b8',
+                  color: 'var(--text-muted)',
                   cursor: 'pointer',
                   padding: '4px',
                   display: 'flex',
@@ -5989,12 +5988,12 @@ for message in consumer:
                   flexShrink: 0
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(148, 163, 184, 0.1)';
-                  e.currentTarget.style.color = '#e2e8f0';
+                  e.currentTarget.style.background = 'var(--bg-hover)';
+                  e.currentTarget.style.color = 'var(--text-primary)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent';
-                  e.currentTarget.style.color = '#94a3b8';
+                  e.currentTarget.style.color = 'var(--text-muted)';
                 }}
                 aria-label="Dismiss banner"
               >
@@ -6004,10 +6003,10 @@ for message in consumer:
           )}
 
           <div style={{ marginBottom: '32px' }}>
-            <h1 style={{ fontSize: '36px', fontWeight: 'bold', marginBottom: '8px' }}>
+            <h1 style={{ fontSize: '36px', fontWeight: '300', marginBottom: '8px', fontFamily: 'var(--font-serif)', color: 'var(--text-primary)' }}>
               Big Data Architecture Explorer
             </h1>
-            <p style={{ color: '#94a3b8', fontSize: '16px' }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '16px' }}>
               Interactive 2D visualization of data engineering patterns
             </p>
           </div>
@@ -6015,11 +6014,10 @@ for message in consumer:
           {/* Navigation Section - Organized by Category */}
           <div style={{
             marginBottom: '24px',
-            background: 'rgba(15, 23, 42, 0.6)',
-            border: '1px solid rgba(71, 85, 105, 0.3)',
+            background: 'var(--bg-panel)',
+            border: '1px solid var(--border)',
             borderRadius: '16px',
             padding: '20px 24px',
-            backdropFilter: 'blur(10px)'
           }}>
             {/* Two-row layout: Architecture topics on top, Resources below */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -6031,9 +6029,9 @@ for message in consumer:
                     width: '4px',
                     height: '16px',
                     borderRadius: '2px',
-                    background: 'linear-gradient(180deg, #3b82f6, #60a5fa)'
+                    background: 'var(--text-muted)'
                   }} />
-                  <span style={{ fontSize: '11px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1.5px' }}>
+                  <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1.5px' }}>
                     Architecture Patterns
                   </span>
                 </div>
@@ -6041,11 +6039,11 @@ for message in consumer:
                   {/* Processing Architectures */}
                   <div style={{
                     display: 'flex',
-                    background: 'rgba(30, 41, 59, 0.5)',
+                    background: 'var(--bg-hover)',
                     borderRadius: '10px',
                     padding: '3px',
                     gap: '2px',
-                    border: '1px solid rgba(71, 85, 105, 0.2)'
+                    border: '1px solid var(--border)'
                   }}>
                     {['lambda', 'kappa', 'streaming', 'batch', 'mapreduce', 'spark'].map(key => {
                       const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && !showComparison;
@@ -6064,10 +6062,10 @@ for message in consumer:
                           }}
                           style={{
                             padding: '8px 16px',
-                            background: isActive ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' : 'transparent',
+                            background: isActive ? 'var(--text-primary)' : 'transparent',
                             border: 'none',
                             borderRadius: '8px',
-                            color: isActive ? '#ffffff' : '#94a3b8',
+                            color: isActive ? 'var(--bg-page)' : 'var(--text-secondary)',
                             fontSize: '13px',
                             fontWeight: isActive ? '600' : '500',
                             cursor: 'pointer',
@@ -6079,13 +6077,13 @@ for message in consumer:
                           }}
                           onMouseEnter={(e) => {
                             if (!isActive) {
-                              e.currentTarget.style.color = '#ffffff';
-                              e.currentTarget.style.background = 'rgba(59, 130, 246, 0.15)';
+                              e.currentTarget.style.color = 'var(--text-primary)';
+                              e.currentTarget.style.background = 'var(--bg-panel)';
                             }
                           }}
                           onMouseLeave={(e) => {
                             if (!isActive) {
-                              e.currentTarget.style.color = '#94a3b8';
+                              e.currentTarget.style.color = 'var(--text-secondary)';
                               e.currentTarget.style.background = 'transparent';
                             }
                           }}
@@ -6094,13 +6092,13 @@ for message in consumer:
                             width: '20px',
                             height: '20px',
                             borderRadius: '4px',
-                            background: isActive ? 'rgba(255,255,255,0.2)' : 'rgba(59, 130, 246, 0.15)',
+                            background: isActive ? 'rgba(255,255,255,0.15)' : 'var(--border)',
                             display: 'inline-flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             fontSize: '10px',
                             fontWeight: '700',
-                            color: isActive ? '#ffffff' : '#60a5fa',
+                            color: isActive ? 'var(--bg-page)' : 'var(--text-secondary)',
                             flexShrink: 0
                           }}>
                             {icons[key]}
@@ -6112,16 +6110,16 @@ for message in consumer:
                   </div>
 
                   {/* Divider */}
-                  <div style={{ width: '1px', background: 'rgba(71, 85, 105, 0.3)', margin: '4px 4px' }} />
+                  <div style={{ width: '1px', background: 'rgba(235,231,225,1)', margin: '4px 4px' }} />
 
                   {/* Data Modeling */}
                   <div style={{
                     display: 'flex',
-                    background: 'rgba(30, 41, 59, 0.5)',
+                    background: 'var(--bg-hover)',
                     borderRadius: '10px',
                     padding: '3px',
                     gap: '2px',
-                    border: '1px solid rgba(71, 85, 105, 0.2)'
+                    border: '1px solid var(--border)'
                   }}>
                     {['starSchema', 'snowflakeSchema'].map(key => {
                       const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && !showComparison;
@@ -6139,10 +6137,10 @@ for message in consumer:
                           }}
                           style={{
                             padding: '8px 16px',
-                            background: isActive ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'transparent',
+                            background: isActive ? 'var(--text-primary)' : 'transparent',
                             border: 'none',
                             borderRadius: '8px',
-                            color: isActive ? '#ffffff' : '#94a3b8',
+                            color: isActive ? 'var(--bg-page)' : 'var(--text-secondary)',
                             fontSize: '13px',
                             fontWeight: isActive ? '600' : '500',
                             cursor: 'pointer',
@@ -6154,13 +6152,13 @@ for message in consumer:
                           }}
                           onMouseEnter={(e) => {
                             if (!isActive) {
-                              e.currentTarget.style.color = '#fbbf24';
-                              e.currentTarget.style.background = 'rgba(245, 158, 11, 0.12)';
+                              e.currentTarget.style.color = 'var(--text-primary)';
+                              e.currentTarget.style.background = 'var(--bg-panel)';
                             }
                           }}
                           onMouseLeave={(e) => {
                             if (!isActive) {
-                              e.currentTarget.style.color = '#94a3b8';
+                              e.currentTarget.style.color = 'var(--text-secondary)';
                               e.currentTarget.style.background = 'transparent';
                             }
                           }}
@@ -6175,7 +6173,7 @@ for message in consumer:
               </div>
 
               {/* Separator */}
-              <div style={{ height: '1px', background: 'rgba(71, 85, 105, 0.2)' }} />
+              <div style={{ height: '1px', background: 'rgba(235,231,225,1)' }} />
 
               {/* Row 2: Learning Resources */}
               <div>
@@ -6184,9 +6182,9 @@ for message in consumer:
                     width: '4px',
                     height: '16px',
                     borderRadius: '2px',
-                    background: 'linear-gradient(180deg, #a78bfa, #7c3aed)'
+                    background: 'var(--text-muted)'
                   }} />
-                  <span style={{ fontSize: '11px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1.5px' }}>
+                  <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1.5px' }}>
                     Learning Resources
                   </span>
                 </div>
@@ -6217,10 +6215,10 @@ for message in consumer:
                         alignItems: 'center',
                         gap: '8px',
                         padding: '8px 16px',
-                        background: state ? `rgba(${bgColor}, 0.2)` : 'rgba(30, 41, 59, 0.5)',
-                        border: state ? `1px solid rgba(${bgColor}, 0.5)` : '1px solid rgba(71, 85, 105, 0.2)',
+                        background: state ? `rgba(${bgColor}, 0.12)` : 'var(--bg-hover)',
+                        border: state ? `1px solid rgba(${bgColor}, 0.4)` : '1px solid var(--border)',
                         borderRadius: '10px',
-                        color: state ? color : '#94a3b8',
+                        color: state ? color : 'var(--text-secondary)',
                         fontSize: '13px',
                         fontWeight: '500',
                         cursor: 'pointer',
@@ -6228,16 +6226,16 @@ for message in consumer:
                       }}
                       onMouseEnter={(e) => {
                         if (!state) {
-                          e.currentTarget.style.background = `rgba(${bgColor}, 0.1)`;
-                          e.currentTarget.style.borderColor = `rgba(${bgColor}, 0.3)`;
+                          e.currentTarget.style.background = `rgba(${bgColor}, 0.08)`;
+                          e.currentTarget.style.borderColor = `rgba(${bgColor}, 0.25)`;
                           e.currentTarget.style.color = color;
                         }
                       }}
                       onMouseLeave={(e) => {
                         if (!state) {
-                          e.currentTarget.style.background = 'rgba(30, 41, 59, 0.5)';
-                          e.currentTarget.style.borderColor = 'rgba(71, 85, 105, 0.2)';
-                          e.currentTarget.style.color = '#94a3b8';
+                          e.currentTarget.style.background = 'var(--bg-hover)';
+                          e.currentTarget.style.borderColor = 'var(--border)';
+                          e.currentTarget.style.color = 'var(--text-secondary)';
                         }
                       }}
                     >
@@ -6254,9 +6252,9 @@ for message in consumer:
           <>
           <div
             style={{
-              background: 'rgba(15, 23, 42, 0.8)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(71, 85, 105, 0.3)',
+              background: 'rgba(245,243,239,0.8)',
+              
+              border: '1px solid rgba(235,231,225,1)',
               borderRadius: '12px',
               padding: '20px',
               marginBottom: '24px'
@@ -6286,10 +6284,10 @@ for message in consumer:
                     {currentArch.difficulty}
                   </span>
                 </div>
-                <p style={{ color: '#94a3b8', fontSize: '14px', marginBottom: '8px' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '8px' }}>
                   {currentArch.tagline}
                 </p>
-                <p style={{ color: '#cbd5e1', fontSize: '14px' }}>
+                <p style={{ color: 'var(--text-body)', fontSize: '14px' }}>
                   {currentArch.description}
                 </p>
               </div>
@@ -6297,10 +6295,10 @@ for message in consumer:
                 onClick={() => setShowDataFlow(!showDataFlow)}
                 style={{
                   padding: '10px 20px',
-                  background: 'rgba(30, 41, 59, 0.6)',
-                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  background: 'rgba(235,232,228,0.6)',
+                  border: '1px solid rgba(235,231,225,1)',
                   borderRadius: '8px',
-                  color: '#ffffff',
+                  color: 'var(--text-primary)',
                   fontSize: '14px',
                   fontWeight: '600',
                   cursor: 'pointer',
@@ -6309,8 +6307,8 @@ for message in consumer:
                   gap: '8px',
                   transition: 'all 0.3s'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(30, 41, 59, 0.8)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(30, 41, 59, 0.6)'}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(235,232,228,0.8)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(235,232,228,0.6)'}
               >
                 <Sparkles size={18} />
                 <span>Data Flow {showDataFlow ? 'ON' : 'OFF'}</span>
@@ -6320,16 +6318,16 @@ for message in consumer:
 
           <div
             style={{
-              background: 'rgba(15, 23, 42, 0.9)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(71, 85, 105, 0.3)',
+              background: 'var(--bg-panel)',
+              
+              border: '1px solid rgba(235,231,225,1)',
               borderRadius: '12px',
               padding: '16px 24px',
               marginBottom: '24px'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '32px', flexWrap: 'wrap' }}>
-              <span style={{ color: '#94a3b8', fontSize: '14px', fontWeight: '600' }}>
+              <span style={{ color: 'var(--text-secondary)', fontSize: '14px', fontWeight: '600' }}>
                 Connection Types:
               </span>
               {Object.entries(connectionColors).map(([type, color]) => {
@@ -6342,7 +6340,7 @@ for message in consumer:
                       background: color,
                       borderRadius: '2px'
                     }} />
-                    <span style={{ color: '#e2e8f0', fontSize: '14px' }}>
+                    <span style={{ color: 'var(--text-body)', fontSize: '14px' }}>
                       {labels[type] || type}
                     </span>
                   </div>
@@ -6365,7 +6363,7 @@ for message in consumer:
                 color: '#fbbf24',
                 fontSize: '14px',
                 fontWeight: '600',
-                backdropFilter: 'blur(10px)',
+                
                 boxShadow: '0 0 20px rgba(245, 158, 11, 0.3)'
               }}
             >
@@ -6380,9 +6378,9 @@ for message in consumer:
           <div
             ref={diagramContainerRef}
             style={{
-              background: 'rgba(15, 23, 42, 0.4)',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(71, 85, 105, 0.3)',
+              background: 'rgba(245,243,239,0.4)',
+              
+              border: '1px solid rgba(235,231,225,1)',
               borderRadius: '12px',
               padding: '60px 40px',
               marginBottom: '24px',
@@ -6412,11 +6410,11 @@ for message in consumer:
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              color: '#94a3b8',
+              color: 'var(--text-secondary)',
               fontSize: '12px',
               marginTop: '48px',
               paddingTop: '24px',
-              borderTop: '1px solid rgba(71, 85, 105, 0.3)',
+              borderTop: '1px solid rgba(235,231,225,1)',
               justifyContent: 'center'
             }}>
               <Info size={16} />
@@ -6426,9 +6424,9 @@ for message in consumer:
 
           <div
             style={{
-              background: 'rgba(15, 23, 42, 0.6)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(71, 85, 105, 0.3)',
+              background: 'rgba(245,243,239,0.6)',
+              
+              border: '1px solid rgba(235,231,225,1)',
               borderRadius: '12px',
               padding: '32px',
               marginBottom: '24px'
@@ -6443,7 +6441,7 @@ for message in consumer:
               }}>
                 Overview
               </h3>
-              <p style={{ color: '#cbd5e1', fontSize: '15px', lineHeight: '1.6', marginBottom: '20px' }}>
+              <p style={{ color: 'var(--text-body)', fontSize: '15px', lineHeight: '1.6', marginBottom: '20px' }}>
                 {currentArch.overview.text}
               </p>
 
@@ -6460,15 +6458,15 @@ for message in consumer:
                     Example Scenario: {currentArch.overview.scenario}
                   </h4>
                 </div>
-                <p style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.7', marginBottom: '8px' }}>
+                <p style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.7', marginBottom: '8px' }}>
                   {currentArch.overview.scenarioDescription}
                 </p>
-                <p style={{ color: '#94a3b8', fontSize: '12px', fontStyle: 'italic' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '12px', fontStyle: 'italic' }}>
                   Note: This is a fictional example based on patterns observed in the market to illustrate real-world applications.
                 </p>
               </div>
 
-              <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#e2e8f0', marginBottom: '12px' }}>
+              <h4 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-body)', marginBottom: '12px' }}>
                 Components in This Scenario
               </h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }}>
@@ -6476,16 +6474,16 @@ for message in consumer:
                   <div
                     key={idx}
                     style={{
-                      background: 'rgba(30, 41, 59, 0.6)',
+                      background: 'rgba(235,232,228,0.6)',
                       border: '1px solid rgba(59, 130, 246, 0.3)',
                       borderRadius: '8px',
                       padding: '12px 16px'
                     }}
                   >
-                    <div style={{ fontSize: '13px', fontWeight: '600', color: '#e2e8f0', marginBottom: '4px' }}>
+                    <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-body)', marginBottom: '4px' }}>
                       {comp.name}
                     </div>
-                    <div style={{ fontSize: '12px', color: '#94a3b8', lineHeight: '1.5' }}>
+                    <div style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
                       {comp.metric}
                     </div>
                   </div>
@@ -6506,7 +6504,7 @@ for message in consumer:
                 {currentArch.useCases.map((useCase, idx) => (
                   <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <ChevronRight size={18} color="#a78bfa" />
-                    <span style={{ color: '#cbd5e1', fontSize: '15px' }}>{useCase}</span>
+                    <span style={{ color: 'var(--text-body)', fontSize: '15px' }}>{useCase}</span>
                   </div>
                 ))}
               </div>
@@ -6525,7 +6523,7 @@ for message in consumer:
                 {currentArch.advantages.map((advantage, idx) => (
                   <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <Check size={18} color="#34d399" />
-                    <span style={{ color: '#cbd5e1', fontSize: '15px' }}>{advantage}</span>
+                    <span style={{ color: 'var(--text-body)', fontSize: '15px' }}>{advantage}</span>
                   </div>
                 ))}
               </div>
@@ -6551,7 +6549,7 @@ for message in consumer:
                       background: '#fbbf24',
                       flexShrink: 0
                     }} />
-                    <span style={{ color: '#cbd5e1', fontSize: '15px' }}>{challenge}</span>
+                    <span style={{ color: 'var(--text-body)', fontSize: '15px' }}>{challenge}</span>
                   </div>
                 ))}
               </div>
@@ -6567,7 +6565,7 @@ for message in consumer:
               }}>
                 Gotchas & Common Mistakes
               </h3>
-              <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '16px', fontStyle: 'italic' }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '16px', fontStyle: 'italic' }}>
                 Pitfalls that trip up beginners and experienced engineers alike
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -6596,7 +6594,7 @@ for message in consumer:
                     }}>
                       !
                     </div>
-                    <span style={{ color: '#e2e8f0', fontSize: '14px', lineHeight: '1.6' }}>{gotcha}</span>
+                    <span style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.6' }}>{gotcha}</span>
                   </div>
                 ))}
               </div>
@@ -6619,7 +6617,7 @@ for message in consumer:
                 <Check size={24} color="#22c55e" />
                 Good Design Patterns
               </h3>
-              <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '16px', fontStyle: 'italic' }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '16px', fontStyle: 'italic' }}>
                 Follow these patterns for a well-designed schema
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
@@ -6634,14 +6632,14 @@ for message in consumer:
                     <div style={{ fontSize: '15px', fontWeight: '700', color: '#4ade80', marginBottom: '8px' }}>
                       {example.title}
                     </div>
-                    <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6', marginBottom: '12px' }}>
+                    <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6', marginBottom: '12px' }}>
                       {example.description}
                     </p>
                     {/* Visual table representation */}
                     <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '12px' }}>
                       {example.columns.map((tbl, tIdx) => (
                         <div key={tIdx} style={{
-                          background: 'rgba(15, 23, 42, 0.8)',
+                          background: 'rgba(245,243,239,0.8)',
                           border: '1px solid rgba(34, 197, 94, 0.3)',
                           borderRadius: '8px',
                           minWidth: '200px',
@@ -6663,7 +6661,7 @@ for message in consumer:
                               padding: '4px 12px',
                               fontSize: '11px',
                               fontFamily: 'monospace',
-                              color: col.includes('PK') ? '#fbbf24' : col.includes('FK') ? '#93c5fd' : '#94a3b8',
+                              color: col.includes('PK') ? '#d97706' : col.includes('FK') ? '#3b82f6' : 'var(--text-body)',
                               fontWeight: col.includes('PK') || col.includes('FK') ? '600' : '400',
                               borderBottom: cIdx < tbl.cols.length - 1 ? '1px solid rgba(71, 85, 105, 0.15)' : 'none'
                             }}>
@@ -6700,7 +6698,7 @@ for message in consumer:
                 <X size={24} color="#ef4444" />
                 Anti-Patterns to Avoid
               </h3>
-              <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '16px', fontStyle: 'italic' }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '16px', fontStyle: 'italic' }}>
                 Common mistakes that lead to performance issues, data quality problems, or maintenance headaches
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -6715,14 +6713,14 @@ for message in consumer:
                     <div style={{ fontSize: '15px', fontWeight: '700', color: '#f87171', marginBottom: '8px' }}>
                       {example.title}
                     </div>
-                    <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6', marginBottom: '12px' }}>
+                    <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6', marginBottom: '12px' }}>
                       {example.description}
                     </p>
                     {/* Visual table representation */}
                     <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '12px' }}>
                       {example.columns.map((tbl, tIdx) => (
                         <div key={tIdx} style={{
-                          background: 'rgba(15, 23, 42, 0.8)',
+                          background: 'rgba(245,243,239,0.8)',
                           border: '1px solid rgba(239, 68, 68, 0.3)',
                           borderRadius: '8px',
                           minWidth: '200px',
@@ -6744,7 +6742,7 @@ for message in consumer:
                               padding: '4px 12px',
                               fontSize: '11px',
                               fontFamily: 'monospace',
-                              color: col.includes('PK') ? '#fbbf24' : col.includes('FK') ? '#93c5fd' : col.includes('BAD') || col.includes('NO MATCHING') || col.includes('UNNECESSARY') ? '#f87171' : '#94a3b8',
+                              color: col.includes('PK') ? '#d97706' : col.includes('FK') ? '#3b82f6' : col.includes('BAD') || col.includes('NO MATCHING') || col.includes('UNNECESSARY') ? '#e11d48' : 'var(--text-body)',
                               fontWeight: col.includes('PK') || col.includes('FK') ? '600' : '400',
                               borderBottom: cIdx < tbl.cols.length - 1 ? '1px solid rgba(71, 85, 105, 0.15)' : 'none',
                               textDecoration: col.includes('BAD') || col.includes('NO MATCHING') ? 'line-through' : 'none',
@@ -6818,7 +6816,7 @@ for message in consumer:
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{
-                        color: '#cbd5e1',
+                        color: 'var(--text-body)',
                         fontSize: '15px',
                         textDecoration: 'none',
                         borderBottom: '1px solid #f472b644',
@@ -6829,7 +6827,7 @@ for message in consumer:
                         e.currentTarget.style.borderBottom = '1px solid #f472b6';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.color = '#cbd5e1';
+                        e.currentTarget.style.color = 'var(--text-body)';
                         e.currentTarget.style.borderBottom = '1px solid #f472b644';
                       }}
                     >
@@ -6848,9 +6846,9 @@ for message in consumer:
               <div
                 id="additional-info"
                 style={{
-                  background: 'rgba(15, 23, 42, 0.8)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  background: 'rgba(245,243,239,0.8)',
+                  
+                  border: '1px solid rgba(235,231,225,1)',
                   borderRadius: '12px',
                   padding: '24px',
                   marginBottom: '24px',
@@ -6863,7 +6861,7 @@ for message in consumer:
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
               <thead>
                 <tr>
-                  <th style={{ padding: '12px', textAlign: 'left', color: '#94a3b8', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Feature</th>
+                  <th style={{ padding: '12px', textAlign: 'left', color: 'var(--text-secondary)', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Feature</th>
                   <th style={{ padding: '12px', textAlign: 'left', color: '#ec4899', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Lambda</th>
                   <th style={{ padding: '12px', textAlign: 'left', color: '#8b5cf6', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Kappa</th>
                   <th style={{ padding: '12px', textAlign: 'left', color: '#f59e0b', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Streaming</th>
@@ -6872,67 +6870,67 @@ for message in consumer:
               </thead>
               <tbody>
                 <tr>
-                  <td style={{ padding: '10px 12px', color: '#94a3b8', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Difficulty</td>
-                  <td style={{ padding: '10px 12px', color: '#ef4444', borderBottom: '1px solid rgba(71, 85, 105, 0.3)', fontWeight: '600' }}>Advanced</td>
-                  <td style={{ padding: '10px 12px', color: '#3b82f6', borderBottom: '1px solid rgba(71, 85, 105, 0.3)', fontWeight: '600' }}>Intermediate</td>
-                  <td style={{ padding: '10px 12px', color: '#3b82f6', borderBottom: '1px solid rgba(71, 85, 105, 0.3)', fontWeight: '600' }}>Intermediate</td>
-                  <td style={{ padding: '10px 12px', color: '#22c55e', borderBottom: '1px solid rgba(71, 85, 105, 0.3)', fontWeight: '600' }}>Beginner</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Difficulty</td>
+                  <td style={{ padding: '10px 12px', color: '#ef4444', borderBottom: '1px solid rgba(235,231,225,1)', fontWeight: '600' }}>Advanced</td>
+                  <td style={{ padding: '10px 12px', color: '#3b82f6', borderBottom: '1px solid rgba(235,231,225,1)', fontWeight: '600' }}>Intermediate</td>
+                  <td style={{ padding: '10px 12px', color: '#3b82f6', borderBottom: '1px solid rgba(235,231,225,1)', fontWeight: '600' }}>Intermediate</td>
+                  <td style={{ padding: '10px 12px', color: '#22c55e', borderBottom: '1px solid rgba(235,231,225,1)', fontWeight: '600' }}>Beginner</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '10px 12px', color: '#94a3b8', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Complexity</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>High</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Medium</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Low</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Low</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Complexity</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>High</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Medium</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Low</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Low</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '10px 12px', color: '#94a3b8', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Real-time Support</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Yes</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Yes</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Yes</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>No</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Real-time Support</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Yes</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Yes</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Yes</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>No</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '10px 12px', color: '#94a3b8', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Data Consistency</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>High</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Medium</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Medium</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>High</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Data Consistency</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>High</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Medium</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Medium</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>High</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '10px 12px', color: '#94a3b8', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Latency</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Low (speed layer)</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Low</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Very Low</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>High (hours/days)</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Latency</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Low (speed layer)</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Low</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Very Low</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>High (hours/days)</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '10px 12px', color: '#94a3b8', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Processing Layers</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Batch + Speed + Serving</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Stream only</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Stream only</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Batch only</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Processing Layers</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Batch + Speed + Serving</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Stream only</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Stream only</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Batch only</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '10px 12px', color: '#94a3b8', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Data Reprocessing</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Easy (batch layer)</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Possible (replay log)</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Limited</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Easy (re-run ETL)</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Data Reprocessing</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Easy (batch layer)</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Possible (replay log)</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Limited</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Easy (re-run ETL)</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '10px 12px', color: '#94a3b8', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Operational Overhead</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>High</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Medium</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Low</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Low</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Operational Overhead</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>High</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Medium</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Low</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Low</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '10px 12px', color: '#94a3b8' }}>Best For</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1' }}>Mission-critical systems needing both accuracy and speed</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1' }}>Event-driven systems with replay requirements</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1' }}>Real-time applications with minimal latency needs</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1' }}>Reporting, analytics, and historical insights</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-secondary)' }}>Best For</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)' }}>Mission-critical systems needing both accuracy and speed</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)' }}>Event-driven systems with replay requirements</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)' }}>Real-time applications with minimal latency needs</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)' }}>Reporting, analytics, and historical insights</td>
                 </tr>
               </tbody>
             </table>
@@ -6940,9 +6938,9 @@ for message in consumer:
 
           <div
             style={{
-              background: 'rgba(15, 23, 42, 0.6)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(71, 85, 105, 0.3)',
+              background: 'rgba(245,243,239,0.6)',
+              
+              border: '1px solid rgba(235,231,225,1)',
               borderRadius: '12px',
               padding: '32px',
               marginBottom: '24px'
@@ -6957,53 +6955,53 @@ for message in consumer:
               Technical Glossary
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
                 <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>OLAP</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Online Analytical Processing - Database optimized for complex queries and analytics on large datasets.</p>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Online Analytical Processing - Database optimized for complex queries and analytics on large datasets.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
                 <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>OLTP</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Online Transaction Processing - Database optimized for high-volume transactions and data modifications.</p>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Online Transaction Processing - Database optimized for high-volume transactions and data modifications.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
                 <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>ETL</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Extract, Transform, Load - Process of extracting data from sources, transforming it, and loading into a data warehouse.</p>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Extract, Transform, Load - Process of extracting data from sources, transforming it, and loading into a data warehouse.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
                 <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Stateful Processing</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Stream processing that maintains state across events, enabling windowing, aggregations, and joins.</p>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Stream processing that maintains state across events, enabling windowing, aggregations, and joins.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
                 <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>MapReduce</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Programming model for processing large datasets in parallel across distributed clusters.</p>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Programming model for processing large datasets in parallel across distributed clusters.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
                 <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Event Log</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Immutable, append-only sequence of events that can be replayed for reprocessing.</p>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Immutable, append-only sequence of events that can be replayed for reprocessing.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
                 <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Materialized View</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Pre-computed query results stored for fast retrieval, continuously updated from source data.</p>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Pre-computed query results stored for fast retrieval, continuously updated from source data.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
                 <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Partitioning</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Dividing data across multiple nodes for parallel processing and scalability.</p>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Dividing data across multiple nodes for parallel processing and scalability.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
                 <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Backpressure</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Flow control mechanism to prevent overwhelming downstream systems when data arrives faster than it can be processed.</p>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Flow control mechanism to prevent overwhelming downstream systems when data arrives faster than it can be processed.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
                 <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Data Lake</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Centralized repository for storing raw, unstructured data at scale in its native format.</p>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Centralized repository for storing raw, unstructured data at scale in its native format.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
                 <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Windowing</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Grouping stream events into finite time or count-based windows for aggregation.</p>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Grouping stream events into finite time or count-based windows for aggregation.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
                 <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Columnar Storage</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Data storage format organizing by columns rather than rows, optimized for analytics.</p>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Data storage format organizing by columns rather than rows, optimized for analytics.</p>
               </div>
             </div>
           </div>
@@ -7011,9 +7009,9 @@ for message in consumer:
           {/* Decision Flowchart */}
           <div
             style={{
-              background: 'rgba(15, 23, 42, 0.6)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(71, 85, 105, 0.3)',
+              background: 'rgba(245,243,239,0.6)',
+              
+              border: '1px solid rgba(235,231,225,1)',
               borderRadius: '12px',
               padding: '32px',
               marginBottom: '24px'
@@ -7027,13 +7025,13 @@ for message in consumer:
             }}>
               Which Architecture Should I Use?
             </h3>
-            <p style={{ color: '#94a3b8', fontSize: '14px', marginBottom: '24px' }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '24px' }}>
               Click on nodes to expand the decision tree and find the best architecture for your requirements
             </p>
 
             <div style={{
-              background: 'rgba(30, 41, 59, 0.6)',
-              border: '1px solid rgba(71, 85, 105, 0.3)',
+              background: 'rgba(235,232,228,0.6)',
+              border: '1px solid rgba(235,231,225,1)',
               borderRadius: '12px',
               padding: '24px',
               height: '1000px',
@@ -7073,9 +7071,9 @@ for message in consumer:
               <div
                 id="hands-on"
                 style={{
-                  background: 'rgba(15, 23, 42, 0.8)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  background: 'rgba(245,243,239,0.8)',
+                  
+                  border: '1px solid rgba(235,231,225,1)',
                   borderRadius: '12px',
                   padding: '24px',
                   marginBottom: '24px'
@@ -7086,7 +7084,7 @@ for message in consumer:
                 </h3>
 
                 <div style={{ marginBottom: '24px' }}>
-                  <p style={{ color: '#94a3b8', fontSize: '16px', marginBottom: '12px' }}>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '16px', marginBottom: '12px' }}>
                     Build a real-time blockchain data pipeline that demonstrates big data architecture patterns through practical implementation.
                   </p>
                 </div>
@@ -7104,10 +7102,10 @@ for message in consumer:
                   </h4>
 
                   <div style={{ marginBottom: '20px' }}>
-                    <p style={{ color: '#cbd5e1', fontSize: '15px', marginBottom: '12px', lineHeight: '1.6' }}>
+                    <p style={{ color: 'var(--text-body)', fontSize: '15px', marginBottom: '12px', lineHeight: '1.6' }}>
                       {architectures.blockchain.overview.text}
                     </p>
-                    <p style={{ color: '#94a3b8', fontSize: '14px', fontStyle: 'italic', lineHeight: '1.6' }}>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '14px', fontStyle: 'italic', lineHeight: '1.6' }}>
                       {architectures.blockchain.overview.scenarioDescription}
                     </p>
                   </div>
@@ -7116,7 +7114,7 @@ for message in consumer:
                     <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '10px', color: '#c4b5fd' }}>
                       Use Cases in Production
                     </h5>
-                    <ul style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px' }}>
+                    <ul style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px' }}>
                       {architectures.blockchain.useCases.map((useCase, index) => (
                         <li key={index} style={{ marginBottom: '4px' }}>{useCase}</li>
                       ))}
@@ -7128,7 +7126,7 @@ for message in consumer:
                       <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '10px', color: '#c4b5fd' }}>
                         Advantages
                       </h5>
-                      <ul style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px' }}>
+                      <ul style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px' }}>
                         {architectures.blockchain.advantages.map((advantage, index) => (
                           <li key={index} style={{ marginBottom: '4px' }}>{advantage}</li>
                         ))}
@@ -7138,7 +7136,7 @@ for message in consumer:
                       <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '10px', color: '#c4b5fd' }}>
                         Challenges
                       </h5>
-                      <ul style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px' }}>
+                      <ul style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px' }}>
                         {architectures.blockchain.challenges.map((challenge, index) => (
                           <li key={index} style={{ marginBottom: '4px' }}>{challenge}</li>
                         ))}
@@ -7187,7 +7185,7 @@ for message in consumer:
                       color: '#fbbf24',
                       fontSize: '14px',
                       fontWeight: '600',
-                      backdropFilter: 'blur(10px)',
+                      
                       boxShadow: '0 0 20px rgba(245, 158, 11, 0.3)'
                     }}
                   >
@@ -7202,9 +7200,9 @@ for message in consumer:
                 <div
                   ref={handsOnDiagramRef}
                   style={{
-                    background: 'rgba(15, 23, 42, 0.8)',
-                    backdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(71, 85, 105, 0.3)',
+                    background: 'rgba(245,243,239,0.8)',
+                    
+                    border: '1px solid rgba(235,231,225,1)',
                     borderRadius: '12px',
                     marginBottom: '32px',
                     overflow: 'hidden',
@@ -7281,7 +7279,7 @@ for message in consumer:
                   <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#10b981' }}>
                     What You'll Learn
                   </h4>
-                  <ul style={{ color: '#cbd5e1', fontSize: '14px', marginLeft: '20px', lineHeight: '1.8' }}>
+                  <ul style={{ color: 'var(--text-body)', fontSize: '14px', marginLeft: '20px', lineHeight: '1.8' }}>
                     <li>Design and implement real-time data ingestion pipelines</li>
                     <li>Work with multi-blockchain architectures (Bitcoin & Solana)</li>
                     <li>Use ClickHouse columnar database for analytical queries</li>
@@ -7296,7 +7294,7 @@ for message in consumer:
                   <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#60a5fa' }}>
                     The 5Vs of Big Data in This Lab
                   </h4>
-                  <div style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.8' }}>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.8' }}>
                     <p style={{ marginBottom: '8px' }}><strong style={{ color: '#60a5fa' }}>Volume:</strong> Solana generates 20,000+ transactions per block, demonstrating massive data scale</p>
                     <p style={{ marginBottom: '8px' }}><strong style={{ color: '#60a5fa' }}>Velocity:</strong> Real-time collection with Solana's ~400ms block times vs Bitcoin's ~10 minutes</p>
                     <p style={{ marginBottom: '8px' }}><strong style={{ color: '#60a5fa' }}>Variety:</strong> Handle heterogeneous blockchain architectures (UTXO vs account-based models)</p>
@@ -7309,21 +7307,21 @@ for message in consumer:
                   <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#a78bfa' }}>
                     Prerequisites
                   </h4>
-                  <div style={{ color: '#cbd5e1', fontSize: '14px' }}>
-                    <p style={{ fontWeight: '600', marginBottom: '8px', color: '#e2e8f0' }}>Required:</p>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px' }}>
+                    <p style={{ fontWeight: '600', marginBottom: '8px', color: 'var(--text-body)' }}>Required:</p>
                     <ul style={{ marginLeft: '20px', marginBottom: '12px', lineHeight: '1.8' }}>
                       <li>Docker Desktop 20.10+</li>
                       <li>10GB free disk space minimum</li>
                       <li>Internet connectivity</li>
                       <li>Basic command-line knowledge</li>
                     </ul>
-                    <p style={{ fontWeight: '600', marginBottom: '8px', color: '#e2e8f0' }}>Recommended:</p>
+                    <p style={{ fontWeight: '600', marginBottom: '8px', color: 'var(--text-body)' }}>Recommended:</p>
                     <ul style={{ marginLeft: '20px', marginBottom: '12px', lineHeight: '1.8' }}>
                       <li>SQL knowledge (SELECT, WHERE, GROUP BY)</li>
                       <li>Basic REST API familiarity</li>
                       <li>8GB RAM minimum (16GB recommended)</li>
                     </ul>
-                    <p style={{ fontWeight: '600', marginBottom: '8px', color: '#e2e8f0' }}>Time Estimate:</p>
+                    <p style={{ fontWeight: '600', marginBottom: '8px', color: 'var(--text-body)' }}>Time Estimate:</p>
                     <ul style={{ marginLeft: '20px', lineHeight: '1.8' }}>
                       <li>Exercises 1-6: 1.5-2 hours</li>
                       <li>Exercises 7-9: 1-1.5 hours</li>
@@ -7336,7 +7334,7 @@ for message in consumer:
                   <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#f59e0b' }}>
                     Quick Start Guide
                   </h4>
-                  <div style={{ color: '#cbd5e1', fontSize: '14px' }}>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px' }}>
                     <ol style={{ marginLeft: '20px', lineHeight: '1.8' }}>
                       <li style={{ marginBottom: '8px' }}>
                         <strong style={{ color: '#f59e0b' }}>Clone the repository:</strong>
@@ -7349,14 +7347,14 @@ for message in consumer:
                         <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
                           <code>cp .env.example .env</code>
                         </pre>
-                        <span style={{ fontSize: '13px', color: '#94a3b8' }}>Note: Default settings work for first-time users</span>
+                        <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Note: Default settings work for first-time users</span>
                       </li>
                       <li style={{ marginBottom: '8px' }}>
                         <strong style={{ color: '#f59e0b' }}>Start services:</strong>
                         <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
                           <code>./scripts/start.sh</code>
                         </pre>
-                        <span style={{ fontSize: '13px', color: '#94a3b8' }}>Initial setup: 15-20 minutes (Docker downloads), subsequent starts: 30-60 seconds</span>
+                        <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Initial setup: 15-20 minutes (Docker downloads), subsequent starts: 30-60 seconds</span>
                       </li>
                       <li style={{ marginBottom: '8px' }}>
                         <strong style={{ color: '#f59e0b' }}>Access dashboard:</strong> Open{' '}
@@ -7378,7 +7376,7 @@ for message in consumer:
                   <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#14b8a6' }}>
                     Exercises Structure
                   </h4>
-                  <div style={{ color: '#cbd5e1', fontSize: '14px' }}>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px' }}>
                     <div style={{ marginBottom: '16px' }}>
                       <p style={{ fontWeight: '600', color: '#14b8a6', marginBottom: '8px' }}>Getting Started (Exercises 1-3)</p>
                       <ul style={{ marginLeft: '20px', lineHeight: '1.8' }}>
@@ -7418,7 +7416,7 @@ for message in consumer:
                   <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#ef4444' }}>
                     Common Issues & Troubleshooting
                   </h4>
-                  <div style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.8' }}>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.8' }}>
                     <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>Container startup failures:</strong> Check logs with <code style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '2px 6px', borderRadius: '3px' }}>docker compose logs [service]</code></p>
                     <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>RPC connection errors:</strong> Public endpoints have rate limits. Reduce COLLECTION_INTERVAL_SECONDS or use dedicated providers</p>
                     <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>Database connection issues:</strong> Restart collector after ClickHouse initialization: <code style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '2px 6px', borderRadius: '3px' }}>docker compose restart collector</code></p>
@@ -7430,7 +7428,7 @@ for message in consumer:
                   <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#6366f1' }}>
                     Additional Resources
                   </h4>
-                  <div style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.8' }}>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.8' }}>
                     <p style={{ marginBottom: '8px' }}>
                       <strong style={{ color: '#6366f1' }}>GitHub Repository:</strong>{' '}
                       <a
@@ -7503,9 +7501,9 @@ for message in consumer:
             >
               <div
                 style={{
-                  background: 'rgba(15, 23, 42, 0.8)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  background: 'rgba(245,243,239,0.8)',
+                  
+                  border: '1px solid rgba(235,231,225,1)',
                   borderRadius: '12px',
                   padding: '32px',
                   marginBottom: '24px'
@@ -7515,7 +7513,7 @@ for message in consumer:
                   <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '12px', color: '#ec4899' }}>
                     Real-World Big Data Case Studies
                   </h2>
-                  <p style={{ color: '#94a3b8', fontSize: '16px', lineHeight: '1.7', maxWidth: '900px' }}>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '16px', lineHeight: '1.7', maxWidth: '900px' }}>
                     Learn how industry leaders like Netflix, Uber, Airbnb, Google, and more have built and scaled their big data architectures.
                     These case studies provide insights into real production systems processing billions of events daily,
                     offering valuable lessons in architecture patterns, technology choices, and operational best practices.
@@ -7531,7 +7529,7 @@ for message in consumer:
                     <div
                       key={study.id}
                       style={{
-                        background: 'rgba(30, 41, 59, 0.6)',
+                        background: 'rgba(235,232,228,0.6)',
                         border: `2px solid ${study.color}33`,
                         borderRadius: '16px',
                         padding: '24px',
@@ -7564,10 +7562,10 @@ for message in consumer:
                             {study.logo}
                           </div>
                           <div>
-                            <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#ffffff', marginBottom: '2px' }}>
+                            <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '2px' }}>
                               {study.company}
                             </h3>
-                            <span style={{ fontSize: '12px', color: '#94a3b8' }}>{study.industry}</span>
+                            <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{study.industry}</span>
                           </div>
                         </div>
                         <span style={{
@@ -7585,7 +7583,7 @@ for message in consumer:
                       </div>
 
                       {/* Title & Subtitle */}
-                      <h4 style={{ fontSize: '18px', fontWeight: '600', color: '#e2e8f0', marginBottom: '4px' }}>
+                      <h4 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-body)', marginBottom: '4px' }}>
                         {study.title}
                       </h4>
                       <p style={{ fontSize: '14px', color: study.color, marginBottom: '16px', fontWeight: '500' }}>
@@ -7605,7 +7603,7 @@ for message in consumer:
                         {study.keyMetrics.map((metric, idx) => (
                           <div key={idx} style={{ textAlign: 'center' }}>
                             <div style={{ fontSize: '18px', fontWeight: '700', color: study.color }}>{metric.value}</div>
-                            <div style={{ fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{metric.label}</div>
+                            <div style={{ fontSize: '10px', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{metric.label}</div>
                           </div>
                         ))}
                       </div>
@@ -7615,7 +7613,7 @@ for message in consumer:
                         <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#fbbf24', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <span style={{ fontSize: '16px' }}>🎯</span> Challenge
                         </h5>
-                        <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                        <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                           {study.challenge}
                         </p>
                       </div>
@@ -7625,7 +7623,7 @@ for message in consumer:
                         <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#10b981', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <span style={{ fontSize: '16px' }}>💡</span> Solution
                         </h5>
-                        <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                        <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                           {study.solution}
                         </p>
                       </div>
@@ -7635,7 +7633,7 @@ for message in consumer:
                         <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#60a5fa', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <span style={{ fontSize: '16px' }}>🔧</span> Implementation
                         </h5>
-                        <ul style={{ fontSize: '12px', color: '#94a3b8', lineHeight: '1.8', paddingLeft: '16px', margin: 0 }}>
+                        <ul style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.8', paddingLeft: '16px', margin: 0 }}>
                           {study.implementation.map((item, idx) => (
                             <li key={idx} style={{ marginBottom: '4px' }}>{item}</li>
                           ))}
@@ -7647,7 +7645,7 @@ for message in consumer:
                         <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#a78bfa', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <span style={{ fontSize: '16px' }}>📚</span> Key Learnings
                         </h5>
-                        <ul style={{ fontSize: '12px', color: '#94a3b8', lineHeight: '1.8', paddingLeft: '16px', margin: 0 }}>
+                        <ul style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.8', paddingLeft: '16px', margin: 0 }}>
                           {study.keyLearnings.map((learning, idx) => (
                             <li key={idx} style={{ marginBottom: '4px' }}>{learning}</li>
                           ))}
@@ -7685,7 +7683,7 @@ for message in consumer:
                                   e.currentTarget.style.transform = 'translateY(-1px)';
                                 }}
                                 onMouseLeave={(e) => {
-                                  e.currentTarget.style.background = 'rgba(59, 130, 246, 0.15)';
+                                  e.currentTarget.style.background = 'var(--bg-hover)';
                                   e.currentTarget.style.transform = 'translateY(0)';
                                 }}
                               >
@@ -7700,7 +7698,7 @@ for message in consumer:
 
                       {/* References */}
                       <div>
-                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#94a3b8', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <span style={{ fontSize: '16px' }}>🔗</span> References
                         </h5>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -7745,61 +7743,61 @@ for message in consumer:
                   </h3>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-                    <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+                    <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
                       <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#f59e0b', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span>🔄</span> Event-Driven Architecture
                       </h4>
-                      <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                      <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                         Nearly all case studies leverage Apache Kafka as a central event backbone. Event-driven patterns enable loose coupling,
                         real-time processing, and replay capabilities for reprocessing historical data.
                       </p>
                     </div>
 
-                    <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+                    <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
                       <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#10b981', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span>⚡</span> Hybrid Batch + Stream
                       </h4>
-                      <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                      <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                         Most companies combine batch processing (Spark) for ML training and historical analysis with stream processing (Flink/Kafka Streams)
                         for real-time features, following Lambda or Kappa architecture patterns.
                       </p>
                     </div>
 
-                    <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+                    <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
                       <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#60a5fa', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span>🗄️</span> Separation of Storage & Compute
                       </h4>
-                      <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                      <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                         Cloud data lakes (S3, GCS, ADLS) separate storage from compute, enabling independent scaling, cost optimization,
                         and flexibility in choosing processing engines for different workloads.
                       </p>
                     </div>
 
-                    <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+                    <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
                       <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#a78bfa', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span>🤖</span> ML-Integrated Pipelines
                       </h4>
-                      <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                      <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                         Data pipelines are designed with ML in mind: feature stores bridge batch training and real-time inference,
                         while experimentation platforms enable rapid iteration on models and algorithms.
                       </p>
                     </div>
 
-                    <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+                    <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
                       <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#ec4899', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span>📊</span> Real-Time OLAP
                       </h4>
-                      <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                      <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                         Apache Druid, Pinot, and ClickHouse appear frequently for real-time analytics, providing sub-second query latency
                         on streaming data for dashboards and user-facing features.
                       </p>
                     </div>
 
-                    <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+                    <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
                       <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#fbbf24', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span>🔒</span> Data Governance at Scale
                       </h4>
-                      <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                      <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                         As data volumes grow, governance becomes critical. Companies invest in data catalogs, schema registries,
                         data contracts, and access controls to maintain data quality and compliance.
                       </p>
@@ -7817,9 +7815,9 @@ for message in consumer:
               style={{ animation: 'fadeInScale 0.3s ease-out forwards' }}
             >
               <div style={{
-                background: 'rgba(15, 23, 42, 0.8)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(71, 85, 105, 0.3)',
+                background: 'rgba(245,243,239,0.8)',
+                
+                border: '1px solid rgba(235,231,225,1)',
                 borderRadius: '12px',
                 padding: '32px',
                 marginBottom: '24px'
@@ -7828,21 +7826,21 @@ for message in consumer:
                 <div style={{ textAlign: 'center', marginBottom: '32px' }}>
                   <h2 style={{ fontSize: '28px', fontWeight: '800', marginBottom: '8px' }}>
                     <span style={{ color: '#ec4899' }}>MapReduce</span>
-                    <span style={{ color: '#64748b', margin: '0 16px' }}>vs</span>
+                    <span style={{ color: 'var(--text-muted)', margin: '0 16px' }}>vs</span>
                     <span style={{ color: '#f59e0b' }}>Apache Spark</span>
                   </h2>
-                  <p style={{ color: '#94a3b8', fontSize: '14px' }}>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
                     The Distributed Workhorse vs The Clustered Speedster — understanding the nuance
                   </p>
                 </div>
 
                 {/* Distributed vs Clustered: The Nuance */}
                 <div style={{
-                  background: 'rgba(15, 23, 42, 0.6)',
-                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  background: 'rgba(245,243,239,0.6)',
+                  border: '1px solid rgba(235,231,225,1)',
                   borderRadius: '16px', padding: '28px', marginBottom: '28px'
                 }}>
-                  <h3 style={{ color: '#e2e8f0', fontSize: '17px', fontWeight: '700', marginBottom: '20px', textAlign: 'center' }}>
+                  <h3 style={{ color: 'var(--text-body)', fontSize: '17px', fontWeight: '700', marginBottom: '20px', textAlign: 'center' }}>
                     Distributed vs. Clustered Computing: The Nuance
                   </h3>
 
@@ -7909,7 +7907,7 @@ for message in consumer:
                             }}>
                               Disk-Centric
                             </div>
-                            <p style={{ color: '#cbd5e1', fontSize: '11px', lineHeight: '1.6' }}>
+                            <p style={{ color: 'var(--text-body)', fontSize: '11px', lineHeight: '1.6' }}>
                               Runs on a Hadoop cluster, but <em>feels</em> more "distributed" — it breaks jobs into tiny pieces, sends them out, <strong>writes results to disk</strong>, and repeats. A literal distribution of a massive batch job across a vast sea of commodity hardware.
                             </p>
                           </div>
@@ -7931,7 +7929,7 @@ for message in consumer:
                             }}>
                               Memory-Centric
                             </div>
-                            <p style={{ color: '#cbd5e1', fontSize: '11px', lineHeight: '1.6' }}>
+                            <p style={{ color: 'var(--text-body)', fontSize: '11px', lineHeight: '1.6' }}>
                               The poster child for "clustered" computing — it treats the cluster like a <strong>single, massive pool of RAM</strong> using RDDs. Data stays in-memory, making it feel like one cohesive <strong>"Supercomputer"</strong> rather than a collection of independent workers.
                             </p>
                           </div>
@@ -7954,7 +7952,7 @@ for message in consumer:
                       <div style={{ color: '#ec4899', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
                         "Giant Filing Cabinet"
                       </div>
-                      <p style={{ color: '#94a3b8', fontSize: '11px', lineHeight: '1.6' }}>
+                      <p style={{ color: 'var(--text-secondary)', fontSize: '11px', lineHeight: '1.6' }}>
                         MapReduce treats the cluster like a filing cabinet — <strong>read a file, process it, put it back, pick up the next</strong>. Every step involves opening a drawer (disk I/O).
                       </p>
                       <div style={{
@@ -7972,13 +7970,13 @@ for message in consumer:
                     <div style={{
                       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px'
                     }}>
-                      <div style={{ width: '2px', height: '30px', background: 'rgba(71, 85, 105, 0.3)' }} />
+                      <div style={{ width: '2px', height: '30px', background: 'rgba(235,231,225,1)' }} />
                       <div style={{
                         padding: '8px 14px', borderRadius: '10px',
-                        background: 'rgba(30, 41, 59, 0.8)', border: '1px solid rgba(71, 85, 105, 0.3)',
-                        color: '#64748b', fontSize: '13px', fontWeight: '700'
+                        background: 'rgba(235,232,228,0.8)', border: '1px solid rgba(235,231,225,1)',
+                        color: 'var(--text-muted)', fontSize: '13px', fontWeight: '700'
                       }}>VS</div>
-                      <div style={{ width: '2px', height: '30px', background: 'rgba(71, 85, 105, 0.3)' }} />
+                      <div style={{ width: '2px', height: '30px', background: 'rgba(235,231,225,1)' }} />
                     </div>
 
                     {/* Pool of RAM */}
@@ -7991,7 +7989,7 @@ for message in consumer:
                       <div style={{ color: '#f59e0b', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
                         "Massive Pool of RAM"
                       </div>
-                      <p style={{ color: '#94a3b8', fontSize: '11px', lineHeight: '1.6' }}>
+                      <p style={{ color: 'var(--text-secondary)', fontSize: '11px', lineHeight: '1.6' }}>
                         Spark treats the cluster like one giant brain — data stays <strong>in-memory across all nodes</strong>. No filing cabinet drawers to open. The RDD keeps data alive and accessible.
                       </p>
                       <div style={{
@@ -8036,10 +8034,10 @@ for message in consumer:
                       onClick={() => setComparisonHighlight(h.key)}
                       style={{
                         padding: '8px 16px',
-                        background: comparisonHighlight === h.key ? 'rgba(6, 182, 212, 0.2)' : 'rgba(30, 41, 59, 0.5)',
-                        border: `1px solid ${comparisonHighlight === h.key ? '#06b6d4' : 'rgba(71, 85, 105, 0.3)'}`,
+                        background: comparisonHighlight === h.key ? 'rgba(6, 182, 212, 0.2)' : 'rgba(235,232,228,0.5)',
+                        border: `1px solid ${comparisonHighlight === h.key ? '#06b6d4' : 'rgba(235,231,225,1)'}`,
                         borderRadius: '8px',
-                        color: comparisonHighlight === h.key ? '#22d3ee' : '#94a3b8',
+                        color: comparisonHighlight === h.key ? '#0891b2' : 'var(--text-secondary)',
                         fontSize: '12px', fontWeight: '600', cursor: 'pointer',
                         transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '6px'
                       }}
@@ -8068,7 +8066,7 @@ for message in consumer:
                       </div>
                       <div>
                         <div style={{ color: '#ec4899', fontSize: '18px', fontWeight: '700' }}>MapReduce</div>
-                        <div style={{ color: '#94a3b8', fontSize: '11px' }}>The Distributed Workhorse — Disk-Centric</div>
+                        <div style={{ color: 'var(--text-secondary)', fontSize: '11px' }}>The Distributed Workhorse — Disk-Centric</div>
                       </div>
                     </div>
 
@@ -8076,7 +8074,7 @@ for message in consumer:
                     <div style={{
                       background: 'rgba(0,0,0,0.3)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
                     }}>
-                      <div style={{ fontSize: '10px', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
+                      <div style={{ fontSize: '10px', color: 'var(--text-secondary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
                         Execution Flow
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -8131,7 +8129,7 @@ for message in consumer:
                           transition: 'all 0.3s',
                           opacity: !comparisonHighlight || comparisonHighlight === prop.highlight ? 1 : 0.4
                         }}>
-                          <span style={{ fontSize: '12px', color: '#94a3b8' }}>{prop.label}</span>
+                          <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{prop.label}</span>
                           <span style={{ fontSize: '12px', color: prop.color, fontWeight: '600', textAlign: 'right' }}>{prop.value}</span>
                         </div>
                       ))}
@@ -8154,7 +8152,7 @@ for message in consumer:
                       </div>
                       <div>
                         <div style={{ color: '#f59e0b', fontSize: '18px', fontWeight: '700' }}>Apache Spark</div>
-                        <div style={{ color: '#94a3b8', fontSize: '11px' }}>The Clustered Speedster — Memory-Centric</div>
+                        <div style={{ color: 'var(--text-secondary)', fontSize: '11px' }}>The Clustered Speedster — Memory-Centric</div>
                       </div>
                     </div>
 
@@ -8162,7 +8160,7 @@ for message in consumer:
                     <div style={{
                       background: 'rgba(0,0,0,0.3)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
                     }}>
-                      <div style={{ fontSize: '10px', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
+                      <div style={{ fontSize: '10px', color: 'var(--text-secondary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
                         Execution Flow
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -8217,7 +8215,7 @@ for message in consumer:
                           transition: 'all 0.3s',
                           opacity: !comparisonHighlight || comparisonHighlight === prop.highlight ? 1 : 0.4
                         }}>
-                          <span style={{ fontSize: '12px', color: '#94a3b8' }}>{prop.label}</span>
+                          <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{prop.label}</span>
                           <span style={{ fontSize: '12px', color: prop.color, fontWeight: '600', textAlign: 'right' }}>{prop.value}</span>
                         </div>
                       ))}
@@ -8227,14 +8225,14 @@ for message in consumer:
 
                 {/* Interactive Visual: Same Word Count — Two Approaches */}
                 <div style={{
-                  background: 'rgba(15, 23, 42, 0.6)',
-                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  background: 'rgba(245,243,239,0.6)',
+                  border: '1px solid rgba(235,231,225,1)',
                   borderRadius: '16px', padding: '24px', marginBottom: '24px'
                 }}>
-                  <h3 style={{ color: '#e2e8f0', fontSize: '16px', fontWeight: '700', marginBottom: '6px', textAlign: 'center' }}>
+                  <h3 style={{ color: 'var(--text-body)', fontSize: '16px', fontWeight: '700', marginBottom: '6px', textAlign: 'center' }}>
                     Same Task, Different Philosophy: Word Count on 384MB
                   </h3>
-                  <p style={{ color: '#64748b', fontSize: '12px', textAlign: 'center', marginBottom: '20px' }}>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '12px', textAlign: 'center', marginBottom: '20px' }}>
                     Filing cabinet (read/write/read/write) vs. shared memory (read once, transform in place)
                   </p>
 
@@ -8245,19 +8243,19 @@ for message in consumer:
                       <div style={{ color: '#ec4899', fontSize: '13px', fontWeight: '700', marginBottom: '4px', textAlign: 'center' }}>
                         MapReduce — The Filing Cabinet
                       </div>
-                      <div style={{ color: '#94a3b8', fontSize: '10px', textAlign: 'center', marginBottom: '12px' }}>
+                      <div style={{ color: 'var(--text-secondary)', fontSize: '10px', textAlign: 'center', marginBottom: '12px' }}>
                         Every step opens a drawer (disk I/O)
                       </div>
-                      <div style={{ fontFamily: 'Monaco, Consolas, monospace', fontSize: '10px', lineHeight: '1.8', color: '#cbd5e1' }}>
-                        <div style={{ color: '#64748b' }}>// Step 1: Read from HDFS (disk)</div>
+                      <div style={{ fontFamily: 'Monaco, Consolas, monospace', fontSize: '10px', lineHeight: '1.8', color: 'var(--text-body)' }}>
+                        <div style={{ color: 'var(--text-muted)' }}>// Step 1: Read from HDFS (disk)</div>
                         <div>InputSplit[] splits = getSplits(job);</div>
-                        <div style={{ color: '#64748b', marginTop: '4px' }}>// Step 2: Map — write output to disk</div>
+                        <div style={{ color: 'var(--text-muted)', marginTop: '4px' }}>// Step 2: Map — write output to disk</div>
                         <div>map(key, val) {'{'} emit(word, 1); {'}'}</div>
                         <div style={{ color: '#ef4444' }}>→ spill to local disk</div>
-                        <div style={{ color: '#64748b', marginTop: '4px' }}>// Step 3: Shuffle via network + disk</div>
+                        <div style={{ color: 'var(--text-muted)', marginTop: '4px' }}>// Step 3: Shuffle via network + disk</div>
                         <div>sort + partition + transfer</div>
                         <div style={{ color: '#ef4444' }}>→ merge-sort from disk</div>
-                        <div style={{ color: '#64748b', marginTop: '4px' }}>// Step 4: Reduce — write to HDFS</div>
+                        <div style={{ color: 'var(--text-muted)', marginTop: '4px' }}>// Step 4: Reduce — write to HDFS</div>
                         <div>reduce(key, vals) {'{'} sum(vals); {'}'}</div>
                         <div style={{ color: '#ef4444' }}>→ write to HDFS (disk)</div>
                         <div style={{ marginTop: '8px', padding: '6px 10px', background: 'rgba(239, 68, 68, 0.15)', borderRadius: '6px', color: '#fca5a5', textAlign: 'center' }}>
@@ -8271,11 +8269,11 @@ for message in consumer:
                       <div style={{ color: '#f59e0b', fontSize: '13px', fontWeight: '700', marginBottom: '4px', textAlign: 'center' }}>
                         Spark — The Supercomputer
                       </div>
-                      <div style={{ color: '#94a3b8', fontSize: '10px', textAlign: 'center', marginBottom: '12px' }}>
+                      <div style={{ color: 'var(--text-secondary)', fontSize: '10px', textAlign: 'center', marginBottom: '12px' }}>
                         Everything stays in one giant pool of RAM
                       </div>
-                      <div style={{ fontFamily: 'Monaco, Consolas, monospace', fontSize: '10px', lineHeight: '1.8', color: '#cbd5e1' }}>
-                        <div style={{ color: '#64748b' }}>// Entire pipeline in one expression:</div>
+                      <div style={{ fontFamily: 'Monaco, Consolas, monospace', fontSize: '10px', lineHeight: '1.8', color: 'var(--text-body)' }}>
+                        <div style={{ color: 'var(--text-muted)' }}>// Entire pipeline in one expression:</div>
                         <div>sc.textFile("/data/logs/*")</div>
                         <div>&nbsp; .flatMap(_.split(" "))</div>
                         <div style={{ color: '#10b981' }}>&nbsp; // pipelined in memory ↑</div>
@@ -8295,22 +8293,22 @@ for message in consumer:
 
                 {/* Key Differences Table */}
                 <div style={{
-                  background: 'rgba(15, 23, 42, 0.6)',
-                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  background: 'rgba(245,243,239,0.6)',
+                  border: '1px solid rgba(235,231,225,1)',
                   borderRadius: '16px', padding: '24px', marginBottom: '24px'
                 }}>
-                  <h3 style={{ color: '#e2e8f0', fontSize: '16px', fontWeight: '700', marginBottom: '20px', textAlign: 'center' }}>
+                  <h3 style={{ color: 'var(--text-body)', fontSize: '16px', fontWeight: '700', marginBottom: '20px', textAlign: 'center' }}>
                     Detailed Comparison
                   </h3>
 
-                  <div style={{ overflow: 'hidden', borderRadius: '12px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+                  <div style={{ overflow: 'hidden', borderRadius: '12px', border: '1px solid rgba(235,231,225,1)' }}>
                     {/* Table Header */}
                     <div style={{
                       display: 'grid', gridTemplateColumns: '1.5fr 2fr 2fr',
-                      background: 'rgba(30, 41, 59, 0.8)', padding: '12px 16px',
-                      borderBottom: '1px solid rgba(71, 85, 105, 0.3)'
+                      background: 'rgba(235,232,228,0.8)', padding: '12px 16px',
+                      borderBottom: '1px solid rgba(235,231,225,1)'
                     }}>
-                      <div style={{ color: '#94a3b8', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>Aspect</div>
+                      <div style={{ color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>Aspect</div>
                       <div style={{ color: '#ec4899', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>MapReduce</div>
                       <div style={{ color: '#f59e0b', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>Spark</div>
                     </div>
@@ -8334,14 +8332,14 @@ for message in consumer:
                       <div key={i} style={{
                         display: 'grid', gridTemplateColumns: '1.5fr 2fr 2fr',
                         padding: '10px 16px',
-                        background: i % 2 === 0 ? 'rgba(15, 23, 42, 0.4)' : 'rgba(30, 41, 59, 0.4)',
+                        background: i % 2 === 0 ? 'rgba(245,243,239,0.4)' : 'rgba(235,232,228,0.4)',
                         borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
                         opacity: !comparisonHighlight || comparisonHighlight === row.cat || !row.cat ? 1 : 0.3,
                         transition: 'opacity 0.3s'
                       }}>
-                        <div style={{ color: '#e2e8f0', fontSize: '12px', fontWeight: '600' }}>{row.aspect}</div>
-                        <div style={{ color: '#cbd5e1', fontSize: '12px', textAlign: 'center' }}>{row.mr}</div>
-                        <div style={{ color: '#cbd5e1', fontSize: '12px', textAlign: 'center' }}>{row.spark}</div>
+                        <div style={{ color: 'var(--text-body)', fontSize: '12px', fontWeight: '600' }}>{row.aspect}</div>
+                        <div style={{ color: 'var(--text-body)', fontSize: '12px', textAlign: 'center' }}>{row.mr}</div>
+                        <div style={{ color: 'var(--text-body)', fontSize: '12px', textAlign: 'center' }}>{row.spark}</div>
                       </div>
                     ))}
                   </div>
@@ -8356,7 +8354,7 @@ for message in consumer:
                     <div style={{ color: '#ec4899', fontSize: '14px', fontWeight: '700', marginBottom: '12px' }}>
                       When to Choose MapReduce
                     </div>
-                    <ul style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '2', paddingLeft: '20px' }}>
+                    <ul style={{ color: 'var(--text-body)', fontSize: '12px', lineHeight: '2', paddingLeft: '20px' }}>
                       <li>Budget constraints — runs on minimal memory</li>
                       <li>Simple one-pass ETL jobs (no iteration)</li>
                       <li>Extremely large datasets where disk I/O is acceptable</li>
@@ -8371,7 +8369,7 @@ for message in consumer:
                     <div style={{ color: '#f59e0b', fontSize: '14px', fontWeight: '700', marginBottom: '12px' }}>
                       When to Choose Spark
                     </div>
-                    <ul style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '2', paddingLeft: '20px' }}>
+                    <ul style={{ color: 'var(--text-body)', fontSize: '12px', lineHeight: '2', paddingLeft: '20px' }}>
                       <li>Iterative algorithms (ML training, PageRank)</li>
                       <li>Interactive SQL queries on large datasets</li>
                       <li>Mixed workloads (batch + stream + ML)</li>
@@ -8408,7 +8406,7 @@ for message in consumer:
             right: 0,
             bottom: 0,
             background: 'rgba(0, 0, 0, 0.85)',
-            backdropFilter: 'blur(10px)',
+            
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -8419,8 +8417,8 @@ for message in consumer:
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              background: 'rgba(15, 23, 42, 0.95)',
-              backdropFilter: 'blur(20px)',
+              background: 'rgba(245,243,239,0.95)',
+              
               border: '1px solid rgba(71, 85, 105, 0.5)',
               borderRadius: '16px',
               padding: '32px',
@@ -8451,7 +8449,7 @@ for message in consumer:
                 <h2 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '4px' }}>
                   {selectedComponent.name}
                 </h2>
-                <p style={{ color: '#94a3b8', fontSize: '14px' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
                   {selectedComponent.description}
                 </p>
               </div>
@@ -8461,7 +8459,7 @@ for message in consumer:
               <h3 style={{ color: '#60a5fa', fontSize: '16px', fontWeight: '600', marginBottom: '8px' }}>
                 Details
               </h3>
-              <p style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.6' }}>
+              <p style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.6' }}>
                 {selectedComponent.details}
               </p>
             </div>
@@ -8476,12 +8474,12 @@ for message in consumer:
                   const isClickable = !!url;
 
                   const pillStyle = {
-                    background: 'rgba(30, 41, 59, 0.8)',
+                    background: 'rgba(235,232,228,0.8)',
                     border: '1px solid rgba(139, 92, 246, 0.3)',
                     borderRadius: '6px',
                     padding: '6px 12px',
                     fontSize: '13px',
-                    color: '#e2e8f0',
+                    color: 'var(--text-body)',
                     fontWeight: '500',
                     textDecoration: 'none',
                     display: 'inline-block',
@@ -8503,7 +8501,7 @@ for message in consumer:
                           e.target.style.transform = 'translateY(-2px)';
                         }}
                         onMouseLeave={(e) => {
-                          e.target.style.background = 'rgba(30, 41, 59, 0.8)';
+                          e.target.style.background = 'rgba(235,232,228,0.8)';
                           e.target.style.borderColor = 'rgba(139, 92, 246, 0.3)';
                           e.target.style.transform = 'translateY(0)';
                         }}
@@ -8741,15 +8739,15 @@ extract >> transform >> load`
 
                   return examples.map((example, idx) => (
                     <div key={idx} style={{
-                      background: 'rgba(30, 41, 59, 0.6)',
-                      border: '1px solid rgba(71, 85, 105, 0.3)',
+                      background: 'rgba(235,232,228,0.6)',
+                      border: '1px solid rgba(235,231,225,1)',
                       borderRadius: '8px',
                       overflow: 'hidden'
                     }}>
                       <div style={{
                         padding: '10px 14px',
-                        background: 'rgba(15, 23, 42, 0.8)',
-                        borderBottom: '1px solid rgba(71, 85, 105, 0.3)',
+                        background: 'rgba(245,243,239,0.8)',
+                        borderBottom: '1px solid rgba(235,231,225,1)',
                         color: '#fbbf24',
                         fontSize: '13px',
                         fontWeight: '600'
@@ -8761,7 +8759,7 @@ extract >> transform >> load`
                         padding: '14px',
                         fontSize: '12px',
                         lineHeight: '1.6',
-                        color: '#e2e8f0',
+                        color: 'var(--text-body)',
                         fontFamily: 'Monaco, Consolas, "Courier New", monospace',
                         overflowX: 'auto',
                         whiteSpace: 'pre-wrap',
@@ -8783,7 +8781,7 @@ extract >> transform >> load`
                 background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
                 border: 'none',
                 borderRadius: '8px',
-                color: '#ffffff',
+                color: 'var(--text-primary)',
                 fontSize: '14px',
                 fontWeight: '600',
                 cursor: 'pointer',
