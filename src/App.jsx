@@ -2780,7 +2780,7 @@ for message in consumer:
           {/* Row 1: Client */}
           <div style={{
             display: 'flex', justifyContent: 'center', position: 'relative',
-            opacity: isStepActive([1]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([1]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <ComponentCard component={client} onClick={setSelectedComponent} />
@@ -2800,7 +2800,7 @@ for message in consumer:
           {/* Arrow: Client → ResourceManager */}
           <div style={{
             display: 'flex', justifyContent: 'center', padding: '4px 0', position: 'relative',
-            opacity: isStepActive([1]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([1]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <VerticalConnectionArrow type="query" direction="down" />
@@ -2817,7 +2817,7 @@ for message in consumer:
           {/* Row 2: ResourceManager + NameNode */}
           <div style={{
             display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0px', position: 'relative',
-            opacity: isStepActive([1, 2]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([1, 2]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <ComponentCard component={jobtracker} onClick={setSelectedComponent} />
@@ -2839,7 +2839,7 @@ for message in consumer:
           {/* Arrow: ResourceManager → Input Splits (fan out to 3) */}
           <div style={{
             padding: '8px 0',
-            opacity: isStepActive([2, 3]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([2, 3]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <MapReduceFanOutArrow color={connectionColors.batch} count={3} />
@@ -2848,7 +2848,7 @@ for message in consumer:
           {/* Row 3: Input Splits (3x mini cards) */}
           <div style={{
             display: 'flex', justifyContent: 'center', gap: '40px',
-            opacity: isStepActive([3]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([3]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             {[
@@ -2871,7 +2871,7 @@ for message in consumer:
           {/* Arrows: Split → Map (vertical, 3x parallel) */}
           <div style={{
             display: 'flex', justifyContent: 'center', gap: '40px', padding: '0',
-            opacity: isStepActive([3, 4]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([3, 4]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             {[0, 1, 2].map(i => (
@@ -2884,7 +2884,7 @@ for message in consumer:
           {/* Phase label: MAP PHASE */}
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px',
-            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div style={{
@@ -2903,7 +2903,7 @@ for message in consumer:
           {/* Row 4: Map Tasks (3x mini cards) */}
           <div style={{
             display: 'flex', justifyContent: 'center', gap: '40px',
-            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             {[
@@ -2926,7 +2926,7 @@ for message in consumer:
           {/* Phase label: SHUFFLE & SORT */}
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '12px 0 4px 0',
-            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div style={{
@@ -2945,7 +2945,7 @@ for message in consumer:
           {/* Shuffle cross-connect arrows */}
           <div style={{
             padding: '8px 0',
-            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <MapReduceShuffleArrows />
@@ -2954,7 +2954,7 @@ for message in consumer:
           {/* Row 5: Shuffle & Sort wide card */}
           <div style={{
             display: 'flex', justifyContent: 'center',
-            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div
@@ -2985,7 +2985,7 @@ for message in consumer:
           {/* Phase label: REDUCE PHASE */}
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '12px 0 4px 0',
-            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div style={{
@@ -3004,7 +3004,7 @@ for message in consumer:
           {/* Arrows: Shuffle → Reducers (fan out to 2) */}
           <div style={{
             padding: '8px 0',
-            opacity: isStepActive([5, 6]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([5, 6]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <MapReduceFanOutArrow color={connectionColors.stream} count={2} />
@@ -3013,7 +3013,7 @@ for message in consumer:
           {/* Row 6: Reduce Tasks (2x mini cards) */}
           <div style={{
             display: 'flex', justifyContent: 'center', gap: '40px',
-            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             {[
@@ -3035,7 +3035,7 @@ for message in consumer:
           {/* Arrows: Reducers → Output (fan in to 1) */}
           <div style={{
             padding: '8px 0',
-            opacity: isStepActive([6, 7]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([6, 7]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <MapReduceFanInArrow color={connectionColors.batch} sourceCount={2} />
@@ -3044,7 +3044,7 @@ for message in consumer:
           {/* Row 7: HDFS Output */}
           <div style={{
             display: 'flex', justifyContent: 'center',
-            opacity: isStepActive([7]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([7]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div style={{ position: 'relative' }}>
@@ -3197,7 +3197,7 @@ for message in consumer:
           {/* Row 1: Driver Program */}
           <div style={{
             display: 'flex', justifyContent: 'center',
-            opacity: isStepActive([1]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([1]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <ComponentCard component={driver} onClick={setSelectedComponent} />
@@ -3206,7 +3206,7 @@ for message in consumer:
           {/* Arrow: Driver → Cluster Manager + DAG */}
           <div style={{
             display: 'flex', justifyContent: 'center', padding: '4px 0',
-            opacity: isStepActive([1, 2]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([1, 2]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <MapReduceFanOutArrow color="#7A5A9E" count={2} cardGap={60} />
@@ -3215,7 +3215,7 @@ for message in consumer:
           {/* Row 2: Cluster Manager + DAG Scheduler */}
           <div style={{
             display: 'flex', justifyContent: 'center', gap: '60px',
-            opacity: isStepActive([1, 2]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([1, 2]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <ComponentCard component={clusterMgr} onClick={setSelectedComponent} />
@@ -3225,7 +3225,7 @@ for message in consumer:
           {/* Arrow: down to Data Source */}
           <div style={{
             display: 'flex', justifyContent: 'center', padding: '4px 0',
-            opacity: isStepActive([2, 3]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([2, 3]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <VerticalConnectionArrow type="batch" direction="down" />
@@ -3234,7 +3234,7 @@ for message in consumer:
           {/* Row 3: Data Source */}
           <div style={{
             display: 'flex', justifyContent: 'center',
-            opacity: isStepActive([3]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([3]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <ComponentCard component={source} onClick={setSelectedComponent} />
@@ -3243,7 +3243,7 @@ for message in consumer:
           {/* Arrow: Data Source → RDD (fan out to 3 partitions) */}
           <div style={{
             padding: '8px 0',
-            opacity: isStepActive([3]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([3]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <MapReduceFanOutArrow color="#3A8080" count={3} />
@@ -3252,7 +3252,7 @@ for message in consumer:
           {/* Phase label: IN-MEMORY PARTITIONS */}
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px',
-            opacity: isStepActive([3, 4]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([3, 4]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div style={{
@@ -3266,7 +3266,7 @@ for message in consumer:
           {/* Row 4: RDD / DataFrame partitions (3x mini cards) */}
           <div style={{
             display: 'flex', justifyContent: 'center', gap: '40px',
-            opacity: isStepActive([3, 4]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([3, 4]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             {[
@@ -3287,7 +3287,7 @@ for message in consumer:
           {/* Arrow: partitions → Transformations (parallel) */}
           <div style={{
             display: 'flex', justifyContent: 'center', gap: '40px', padding: '0',
-            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             {[0, 1, 2].map(i => (
@@ -3300,7 +3300,7 @@ for message in consumer:
           {/* Phase label: TRANSFORM PHASE */}
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px',
-            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div style={{
@@ -3314,7 +3314,7 @@ for message in consumer:
           {/* Row 5: Transformation tasks (3x mini cards) */}
           <div style={{
             display: 'flex', justifyContent: 'center', gap: '40px',
-            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             {[
@@ -3335,7 +3335,7 @@ for message in consumer:
           {/* Phase label: SHUFFLE EXCHANGE */}
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '12px 0 4px 0',
-            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div style={{
@@ -3349,7 +3349,7 @@ for message in consumer:
           {/* Shuffle cross-connect arrows (reuse MapReduce shuffle arrows) */}
           <div style={{
             padding: '8px 0',
-            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <MapReduceShuffleArrows />
@@ -3358,7 +3358,7 @@ for message in consumer:
           {/* Row 6: Shuffle Exchange wide card */}
           <div style={{
             display: 'flex', justifyContent: 'center',
-            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div
@@ -3384,7 +3384,7 @@ for message in consumer:
           {/* Arrow: Shuffle → Output (fan out to 2 result partitions) */}
           <div style={{
             padding: '8px 0',
-            opacity: isStepActive([5, 6]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([5, 6]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <MapReduceFanOutArrow color="#4A7A56" count={2} />
@@ -3393,7 +3393,7 @@ for message in consumer:
           {/* Phase label: ACTION & OUTPUT */}
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px',
-            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div style={{
@@ -3407,7 +3407,7 @@ for message in consumer:
           {/* Row 7: Output partitions (2x mini cards) */}
           <div style={{
             display: 'flex', justifyContent: 'center', gap: '40px',
-            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             {[
@@ -3427,7 +3427,7 @@ for message in consumer:
           {/* Fan-in to final output */}
           <div style={{
             padding: '8px 0',
-            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <MapReduceFanInArrow color="#4A7A56" sourceCount={2} />
@@ -3436,7 +3436,7 @@ for message in consumer:
           {/* Row 8: HDFS/S3 Output */}
           <div style={{
             display: 'flex', justifyContent: 'center',
-            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div style={{ position: 'relative' }}>
@@ -3470,7 +3470,7 @@ for message in consumer:
     const browser = currentArch.components.find(c => c.id === 'browser');
 
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px', padding: '40px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px', padding: '40px', minWidth: 'fit-content' }}>
         {/* Column 1: External APIs stacked */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '100px' }}>
           <ComponentCard component={bitcoinApi} onClick={setSelectedComponent} />
@@ -5055,8 +5055,6 @@ for message in consumer:
               borderRadius: '12px',
               padding: '24px',
               animation: 'fadeInScale 0.3s ease-out',
-              maxHeight: 'calc(100vh - 300px)',
-              overflowY: 'auto'
             }}>
               {/* Level Header */}
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '20px' }}>
@@ -5227,17 +5225,17 @@ for message in consumer:
                   }}>
                     <Sparkles size={20} /> BOSS FIGHT: {currentLevel.bossFight.name}
                   </h4>
-                  <p style={{ color: '#fca5a5', fontSize: '14px', lineHeight: '1.7', marginBottom: '16px' }}>
+                  <p style={{ color: '#9f1239', fontSize: '14px', lineHeight: '1.7', marginBottom: '16px' }}>
                     {currentLevel.bossFight.description}
                   </p>
                   <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
                     <div style={{ flex: '1', minWidth: '200px' }}>
-                      <h5 style={{ fontSize: '12px', fontWeight: '600', color: '#f87171', marginBottom: '6px' }}>INPUT</h5>
-                      <p style={{ color: '#fecaca', fontSize: '13px' }}>{currentLevel.bossFight.input}</p>
+                      <h5 style={{ fontSize: '12px', fontWeight: '600', color: '#b91c1c', marginBottom: '6px' }}>INPUT</h5>
+                      <p style={{ color: '#7f1d1d', fontSize: '13px' }}>{currentLevel.bossFight.input}</p>
                     </div>
                     <div style={{ flex: '1', minWidth: '200px' }}>
-                      <h5 style={{ fontSize: '12px', fontWeight: '600', color: '#f87171', marginBottom: '6px' }}>EXPECTED OUTPUT</h5>
-                      <p style={{ color: '#fecaca', fontSize: '13px' }}>{currentLevel.bossFight.expectedOutput}</p>
+                      <h5 style={{ fontSize: '12px', fontWeight: '600', color: '#b91c1c', marginBottom: '6px' }}>EXPECTED OUTPUT</h5>
+                      <p style={{ color: '#7f1d1d', fontSize: '13px' }}>{currentLevel.bossFight.expectedOutput}</p>
                     </div>
                   </div>
                 </div>
@@ -5502,8 +5500,15 @@ for message in consumer:
             style={{
               padding: '32px',
               marginBottom: '24px',
-              minHeight: '500px',
-              overflow: 'hidden',
+              minHeight: (() => {
+                const l = currentArch.layout;
+                if (l === 'lambda' || l === 'blockchain') return '320px';
+                if (l === 'mapreduce' || l === 'spark') return '560px';
+                if (l === 'star' || l === 'snowflake') return '420px';
+                return '120px'; // linear: kappa, streaming, batch
+              })(),
+              overflowX: 'auto',
+              overflowY: 'hidden',
               position: 'relative',
               borderRadius: '12px',
               display: 'block',
@@ -5514,7 +5519,6 @@ for message in consumer:
                 transform: `scale(${scale})`,
                 transformOrigin: 'top center',
                 transition: 'transform 0.3s ease-out',
-                minHeight: scale < 1 ? `${500 / scale}px` : '500px'
               }}
             >
               {currentArch.layout === 'lambda' ? renderLambdaLayout() :
@@ -5792,11 +5796,11 @@ for message in consumer:
                       ))}
                     </div>
                     <div style={{
-                      background: 'rgba(34, 197, 94, 0.08)',
+                      background: 'rgba(34, 197, 94, 0.1)',
                       borderRadius: '6px',
                       padding: '10px 14px',
                       fontSize: '12px',
-                      color: '#86efac',
+                      color: '#166534',
                       lineHeight: '1.5'
                     }}>
                       <strong>Why this works:</strong> {example.why}
@@ -5875,11 +5879,11 @@ for message in consumer:
                       ))}
                     </div>
                     <div style={{
-                      background: 'rgba(239, 68, 68, 0.08)',
+                      background: 'rgba(239, 68, 68, 0.1)',
                       borderRadius: '6px',
                       padding: '10px 14px',
                       fontSize: '12px',
-                      color: '#fca5a5',
+                      color: '#991b1b',
                       lineHeight: '1.5',
                       marginBottom: example.fix ? '8px' : '0'
                     }}>
@@ -5887,11 +5891,11 @@ for message in consumer:
                     </div>
                     {example.fix && (
                       <div style={{
-                        background: 'rgba(74, 122, 155, 0.08)',
+                        background: 'rgba(74, 122, 155, 0.1)',
                         borderRadius: '6px',
                         padding: '10px 14px',
                         fontSize: '12px',
-                        color: '#8AAACE',
+                        color: '#1e3a5f',
                         lineHeight: '1.5'
                       }}>
                         <strong>How to fix:</strong> {example.fix}
@@ -6154,7 +6158,7 @@ for message in consumer:
               border: '1px solid rgba(235,231,225,1)',
               borderRadius: '12px',
               padding: '24px',
-              height: '1000px',
+              height: '620px',
               width: '100%'
             }}>
               <ReactFlow
