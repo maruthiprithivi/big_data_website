@@ -2654,7 +2654,7 @@ for message in consumer:
         <svg width={SVG_W} height={SVG_H} style={{ overflow: 'visible' }}>
           {Array.from({ length: count }).map((_, i) => {
             const targetX = startOffset + i * spacing;
-            const d = `M ${centerX} 0 Q ${centerX} ${SVG_H * 0.5}, ${targetX} ${SVG_H}`;
+            const d = `M ${centerX} 0 Q ${centerX} ${SVG_H * 0.5}, ${targetX} ${SVG_H + 8}`;
             return (
               <g key={i}>
                 <path d={d} stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" />
@@ -2663,7 +2663,7 @@ for message in consumer:
                     <animateMotion path={d} dur="1.2s" repeatCount="indefinite" begin={`${i * 0.15}s`} />
                   </circle>
                 )}
-                <g transform={`translate(${targetX}, ${SVG_H - 2})`}>
+                <g transform={`translate(${targetX}, ${SVG_H + 8})`}>
                   <polyline points="-5,-7 0,0 5,-7" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </g>
               </g>
@@ -2687,7 +2687,7 @@ for message in consumer:
         <svg width={SVG_W} height={SVG_H} style={{ overflow: 'visible' }}>
           {Array.from({ length: sourceCount }).map((_, i) => {
             const sourceX = startOffset + i * spacing;
-            const d = `M ${sourceX} 0 Q ${sourceX} ${SVG_H * 0.5}, ${centerX} ${SVG_H}`;
+            const d = `M ${sourceX} 0 Q ${sourceX} ${SVG_H * 0.5}, ${centerX} ${SVG_H + 8}`;
             return (
               <g key={i}>
                 <path d={d} stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" />
@@ -2699,7 +2699,7 @@ for message in consumer:
               </g>
             );
           })}
-          <g transform={`translate(${centerX}, ${SVG_H - 2})`}>
+          <g transform={`translate(${centerX}, ${SVG_H + 8})`}>
             <polyline points="-5,-7 0,0 5,-7" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </g>
         </svg>
@@ -2726,7 +2726,7 @@ for message in consumer:
       for (let t = 0; t < targetCount; t++) {
         const sx = srcOffset + s * spacing;
         const tx = tgtOffset + t * spacing;
-          const shuffleD = `M ${sx} 0 C ${sx} ${SVG_H * 0.4}, ${tx} ${SVG_H * 0.6}, ${tx} ${SVG_H}`;
+          const shuffleD = `M ${sx} 0 C ${sx} ${SVG_H * 0.4}, ${tx} ${SVG_H * 0.6}, ${tx} ${SVG_H + 8}`;
         paths.push(
           <g key={idx}>
             <path
@@ -2756,7 +2756,7 @@ for message in consumer:
           {Array.from({ length: targetCount }).map((_, t) => {
             const tx = tgtOffset + t * spacing;
             return (
-              <g key={t} transform={`translate(${tx}, ${SVG_H - 2})`}>
+              <g key={t} transform={`translate(${tx}, ${SVG_H + 8})`}>
                 <polyline points="-5,-7 0,0 5,-7" fill="none" stroke={shuffleColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </g>
             );
