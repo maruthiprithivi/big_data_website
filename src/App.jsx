@@ -2344,24 +2344,32 @@ for message in consumer:
     );
   };
 
-  const MergeToCenterArrow = ({ type }) => {
+  // HorizontalMergeArrow: two vertically-stacked nodes → one right-pointing arrow
+  // Used in horizontal flex layouts (blockchain diagram) where two rows merge into one.
+  // Cubic bezier with P2 and P3 sharing the same Y gives a perfectly horizontal tangent
+  // at the arrowhead tip, so the arrow points cleanly rightward.
+  const HorizontalMergeArrow = ({ type, cardHeight = 72, gap = 100 }) => {
     const color = connectionColors[type] || '#2C2A28';
-    const SVG_W = 300, SVG_H = 80;
-    // Two source points merge to center bottom
-    const cx = SVG_W / 2;
-    const topPath = `M ${cx * 0.25} 0 Q ${cx * 0.25} ${SVG_H * 0.6}, ${cx} ${SVG_H}`;
-    const bottomPath = `M ${cx * 1.75} 0 Q ${cx * 1.75} ${SVG_H * 0.6}, ${cx} ${SVG_H}`;
-    const markerId = `arr-merge-${type}`;
+    const totalH = 2 * cardHeight + gap;       // 244px — matches stacked collectors height
+    const topY    = cardHeight / 2;             // 36 — center of top card
+    const bottomY = totalH - cardHeight / 2;    // 208 — center of bottom card
+    const centerY = totalH / 2;                 // 122 — merge point (vert. center)
+    const SVG_W   = 80;
+    const markerId = `arr-hmerge-${type}`;
+    // Cubic bezier: horizontal departure, S-curve meeting at centerY, horizontal arrival
+    const topPath    = `M 0 ${topY}    C ${SVG_W * 0.5} ${topY},    ${SVG_W * 0.8} ${centerY}, ${SVG_W} ${centerY}`;
+    const bottomPath = `M 0 ${bottomY} C ${SVG_W * 0.5} ${bottomY}, ${SVG_W * 0.8} ${centerY}, ${SVG_W} ${centerY}`;
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-        <svg width={SVG_W} height={SVG_H} style={{ overflow: 'visible' }}>
+      <div style={{ flexShrink: 0, width: SVG_W + 'px', height: totalH + 'px' }}>
+        <svg width={SVG_W} height={totalH} style={{ overflow: 'visible', display: 'block' }}>
           <defs>
             <marker id={markerId} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
               <polygon points="0,0 6,3 0,6" fill={color} />
             </marker>
           </defs>
-          <path d={topPath} fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="5,4" strokeLinecap="round" markerEnd={`url(#${markerId})`} />
-          <path d={bottomPath} fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="5,4" strokeLinecap="round" />
+          <path d={topPath}    fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="5,4" strokeLinecap="round" />
+          <path d={bottomPath} fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="5,4" strokeLinecap="round"
+            markerEnd={`url(#${markerId})`} />
         </svg>
       </div>
     );
@@ -3481,8 +3489,8 @@ for message in consumer:
           <ComponentCard component={solanaCollector} onClick={setSelectedComponent} />
         </div>
 
-        {/* Two sources -> one target (merge into a single centered arrow to ClickHouse) */}
-        <MergeToCenterArrow type="batch" />
+        {/* Two sources → one right-pointing arrow to ClickHouse */}
+        <HorizontalMergeArrow type="batch" />
 
         {/* Column 3: ClickHouse centered */}
         <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -6362,8 +6370,8 @@ for message in consumer:
                           <ComponentCard component={solanaCollector} onClick={(comp) => setSelectedComponent(comp)} />
                         </div>
 
-                        {/* Two sources -> one target (merge into a single centered arrow to ClickHouse) */}
-                        <MergeToCenterArrow type="batch" />
+                        {/* Two sources → one right-pointing arrow to ClickHouse */}
+                        <HorizontalMergeArrow type="batch" />
 
                         {/* Column 3: ClickHouse centered */}
                         <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -6450,20 +6458,20 @@ for message in consumer:
                     <ol style={{ marginLeft: '20px', lineHeight: '1.8' }}>
                       <li style={{ marginBottom: '8px' }}>
                         <strong style={{ color: '#9E7824' }}>Clone the repository:</strong>
-                        <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
+                        <pre style={{ background: 'rgba(0,0,0,0.06)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto', color: 'var(--near-black)' }}>
                           <code>git clone https://github.com/maruthiprithivi/big_data_architecture.git{'\n'}cd big_data_architecture</code>
                         </pre>
                       </li>
                       <li style={{ marginBottom: '8px' }}>
                         <strong style={{ color: '#9E7824' }}>Configure environment (optional):</strong>
-                        <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
+                        <pre style={{ background: 'rgba(0,0,0,0.06)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto', color: 'var(--near-black)' }}>
                           <code>cp .env.example .env</code>
                         </pre>
                         <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Note: Default settings work for first-time users</span>
                       </li>
                       <li style={{ marginBottom: '8px' }}>
                         <strong style={{ color: '#9E7824' }}>Start services:</strong>
-                        <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
+                        <pre style={{ background: 'rgba(0,0,0,0.06)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto', color: 'var(--near-black)' }}>
                           <code>./scripts/start.sh</code>
                         </pre>
                         <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Initial setup: 15-20 minutes (Docker downloads), subsequent starts: 30-60 seconds</span>
@@ -6476,7 +6484,7 @@ for message in consumer:
                       </li>
                       <li>
                         <strong style={{ color: '#9E7824' }}>Shutdown:</strong>
-                        <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
+                        <pre style={{ background: 'rgba(0,0,0,0.06)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto', color: 'var(--near-black)' }}>
                           <code>docker compose down     # Stop services{'\n'}docker compose down -v  # Remove all data</code>
                         </pre>
                       </li>
@@ -6529,9 +6537,9 @@ for message in consumer:
                     Common Issues & Troubleshooting
                   </h4>
                   <div style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.8' }}>
-                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>Container startup failures:</strong> Check logs with <code style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '2px 6px', borderRadius: '3px' }}>docker compose logs [service]</code></p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>Container startup failures:</strong> Check logs with <code style={{ background: 'rgba(0,0,0,0.06)', padding: '2px 6px', borderRadius: '3px', color: 'var(--near-black)' }}>docker compose logs [service]</code></p>
                     <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>RPC connection errors:</strong> Public endpoints have rate limits. Reduce COLLECTION_INTERVAL_SECONDS or use dedicated providers</p>
-                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>Database connection issues:</strong> Restart collector after ClickHouse initialization: <code style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '2px 6px', borderRadius: '3px' }}>docker compose restart collector</code></p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>Database connection issues:</strong> Restart collector after ClickHouse initialization: <code style={{ background: 'rgba(0,0,0,0.06)', padding: '2px 6px', borderRadius: '3px', color: 'var(--near-black)' }}>docker compose restart collector</code></p>
                     <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>Dashboard shows no data:</strong> Verify collection started via dashboard button, then check collector logs</p>
                   </div>
                 </div>
