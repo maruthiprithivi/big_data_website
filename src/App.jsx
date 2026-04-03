@@ -66,7 +66,6 @@ const useResponsiveScale = (layoutType, containerRef) => {
 const BigDataArchitectureExplorer = () => {
   const [activeArchitecture, setActiveArchitecture] = useState('lambda');
   const [selectedComponent, setSelectedComponent] = useState(null);
-  const [showDataFlow, setShowDataFlow] = useState(true);
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const [showHandsOn, setShowHandsOn] = useState(false);
   const [showBanner, setShowBanner] = useState(() => {
@@ -92,14 +91,12 @@ const BigDataArchitectureExplorer = () => {
   });
 
   // MapReduce interactive states
-  const [mapReduceStep, setMapReduceStep] = useState(0); // 0 = show all, 1-8 = specific step
-  const [mapReduceAnimating, setMapReduceAnimating] = useState(false);
+  const [mapReduceStep, setMapReduceStep] = useState(0); // 0 = show all, 1-7 = specific step
   const [showMapReduceExample, setShowMapReduceExample] = useState(false);
-  const [showDataTransform, setShowDataTransform] = useState(true); // data flow transformation panel
+  const showDataTransform = true; // always show contextual step annotations
 
   // Spark interactive states
   const [sparkStep, setSparkStep] = useState(0);
-  const [sparkAnimating, setSparkAnimating] = useState(false);
 
   // MapReduce vs Spark comparison state
   const [showComparison, setShowComparison] = useState(false);
@@ -2662,26 +2659,10 @@ for message in consumer:
     );
   };
 
-  // Auto-advance animation effect
-  useEffect(() => {
-    if (!mapReduceAnimating) return;
-    const timer = setInterval(() => {
-      setMapReduceStep(prev => {
-        if (prev >= 7) {
-          setMapReduceAnimating(false);
-          return 0;
-        }
-        return prev + 1;
-      });
-    }, 2000);
-    return () => clearInterval(timer);
-  }, [mapReduceAnimating]);
-
   // Reset step when switching away from mapreduce
   useEffect(() => {
     if (activeArchitecture !== 'mapreduce') {
       setMapReduceStep(0);
-      setMapReduceAnimating(false);
       setShowMapReduceExample(false);
     }
   }, [activeArchitecture]);
@@ -2732,135 +2713,53 @@ for message in consumer:
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0px', position: 'relative' }}>
 
-        {/* Step-by-step animation controls */}
+        {/* Step selector */}
         <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          marginBottom: '24px',
-          padding: '12px 20px',
-          background: 'rgba(235,232,228,0.8)',
-          borderRadius: '12px',
-          border: '1px solid rgba(235,231,225,1)',
-          flexWrap: 'wrap',
-          justifyContent: 'center'
+          display: 'flex', gap: '6px', alignItems: 'center', justifyContent: 'center',
+          marginBottom: '20px', flexWrap: 'wrap'
         }}>
-          {/* Play/Reset */}
-          <button
-            onClick={() => {
-              if (mapReduceAnimating) {
-                setMapReduceAnimating(false);
-              } else {
-                setMapReduceStep(1);
-                setMapReduceAnimating(true);
-              }
-            }}
-            style={{
-              padding: '6px 14px',
-              background: mapReduceAnimating ? 'rgba(239, 68, 68, 0.2)' : 'rgba(74, 122, 155, 0.2)',
-              border: `1px solid ${mapReduceAnimating ? '#ef4444' : '#4A7A9B'}`,
-              borderRadius: '8px',
-              color: mapReduceAnimating ? '#ef4444' : '#4A7A9B',
-              fontSize: '12px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-          >
-            {mapReduceAnimating ? '⏸ Pause' : '▶ Play Flow'}
-          </button>
-
-          {/* Step indicators */}
-          <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-            {mapReduceSteps.map((s, i) => (
-              <button
-                key={i}
-                onClick={() => { setMapReduceStep(i); setMapReduceAnimating(false); }}
-                title={s.description}
-                style={{
-                  padding: '4px 10px',
-                  background: step === i ? 'rgba(74, 122, 155, 0.3)' : 'rgba(235,232,228,0.5)',
-                  border: `1px solid ${step === i ? '#4A7A9B' : 'rgba(235,231,225,1)'}`,
-                  borderRadius: '6px',
-                  color: step === i ? '#4A7A9B' : '#64748b',
-                  fontSize: '11px',
-                  fontWeight: step === i ? '700' : '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}
-              >
-                {i === 0 ? 'All' : i}
-              </button>
-            ))}
-          </div>
-
-          {/* Divider */}
-          <div style={{ width: '1px', height: '24px', background: 'rgba(235,231,225,1)' }} />
-
-          {/* Data Transform toggle */}
-          <button
-            onClick={() => setShowDataTransform(!showDataTransform)}
-            style={{
-              padding: '6px 14px',
-              background: showDataTransform ? 'rgba(74, 122, 86, 0.2)' : 'rgba(235,232,228,0.5)',
-              border: `1px solid ${showDataTransform ? '#4A7A56' : 'rgba(235,231,225,1)'}`,
-              borderRadius: '8px',
-              color: showDataTransform ? '#4A7A56' : '#94a3b8',
-              fontSize: '12px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-          >
-            {showDataTransform ? <Eye size={14} /> : <EyeOff size={14} />}
-            {showDataTransform ? 'Data Flow On' : 'Data Flow Off'}
-          </button>
-
-          {/* Example toggle */}
+          {mapReduceSteps.map((s, i) => (
+            <button key={i}
+              onClick={() => setMapReduceStep(i)}
+              title={s.description}
+              style={{
+                padding: '5px 14px',
+                background: step === i ? '#0075de' : '#ffffff',
+                border: `1px solid ${step === i ? '#0075de' : 'rgba(0,0,0,0.1)'}`,
+                borderRadius: '20px',
+                color: step === i ? '#ffffff' : 'rgba(0,0,0,0.5)',
+                fontSize: '12px', fontWeight: step === i ? '600' : '400',
+                cursor: 'pointer', transition: 'all 0.15s',
+                boxShadow: step === i ? '0 1px 4px rgba(0,117,222,0.25)' : 'none'
+              }}
+            >
+              {i === 0 ? 'All' : `Step ${i}`}
+            </button>
+          ))}
           <button
             onClick={() => setShowMapReduceExample(!showMapReduceExample)}
             style={{
-              padding: '6px 14px',
-              background: showMapReduceExample ? 'rgba(158, 120, 36, 0.2)' : 'rgba(235,232,228,0.5)',
-              border: `1px solid ${showMapReduceExample ? '#9E7824' : 'rgba(235,231,225,1)'}`,
-              borderRadius: '8px',
-              color: showMapReduceExample ? '#C8A84E' : '#94a3b8',
-              fontSize: '12px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
+              padding: '5px 14px', marginLeft: '8px',
+              background: showMapReduceExample ? 'rgba(0,117,222,0.08)' : '#ffffff',
+              border: `1px solid ${showMapReduceExample ? 'rgba(0,117,222,0.3)' : 'rgba(0,0,0,0.1)'}`,
+              borderRadius: '20px',
+              color: showMapReduceExample ? '#0075de' : 'rgba(0,0,0,0.5)',
+              fontSize: '12px', fontWeight: '400', cursor: 'pointer', transition: 'all 0.15s'
             }}
           >
-            <Sparkles size={14} />
-            {showMapReduceExample ? 'Hide Example' : 'Word Count Example'}
+            Word Count Example
           </button>
         </div>
 
         {/* Step description */}
         {step > 0 && (
           <div style={{
-            marginBottom: '4px',
-            padding: '8px 20px',
-            background: 'rgba(74, 122, 155, 0.1)',
-            border: '1px solid rgba(74, 122, 155, 0.3)',
-            borderRadius: '8px',
-            color: '#8AAACE',
-            fontSize: '13px',
-            textAlign: 'center'
+            marginBottom: '16px', padding: '8px 16px',
+            background: 'rgba(0,117,222,0.06)', border: '1px solid rgba(0,117,222,0.15)',
+            borderRadius: '8px', color: 'rgba(0,0,0,0.85)', fontSize: '13px', textAlign: 'center'
           }}>
-            <strong>Step {step}:</strong> {mapReduceSteps[step]?.description}
+            <strong style={{ color: '#0075de' }}>Step {step}:</strong> {mapReduceSteps[step]?.description}
           </div>
-        )}
-
-        {/* Data Transformation Panel */}
-        {step > 0 && showDataTransform && dataTransformStages[step] && (
-          <DataTransformPanel stageData={dataTransformStages[step]} />
         )}
 
         {/* Phase labels alongside the diagram */}
@@ -2949,11 +2848,10 @@ for message in consumer:
                 key={i}
                 label={s.label}
                 icon={ScrollText}
-                color="rgba(74, 122, 155, 0.15)"
-                borderColor="#4A7A9B"
+                color="#4A5FE3"
                 isActive={isStepActive([3])}
                 onClick={() => setSelectedComponent(input)}
-                exampleText={s.ex}
+                exampleText={showMapReduceExample ? s.ex : undefined}
               />
             ))}
           </div>
@@ -2965,25 +2863,8 @@ for message in consumer:
             transition: 'opacity 0.5s'
           }}>
             {[0, 1, 2].map(i => (
-              <div key={i} style={{ width: '160px', display: 'flex', justifyContent: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px 0', height: '60px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: connectionColors.batch, transform: 'rotate(90deg)' }}>
-                    <div style={{
-                      width: '40px', height: '2px',
-                      background: `linear-gradient(90deg, transparent, ${connectionColors.batch}, ${connectionColors.batch})`,
-                      position: 'relative'
-                    }}>
-                      {showDataFlow && (
-                        <div style={{
-                          position: 'absolute', width: '8px', height: '8px', borderRadius: '50%',
-                          background: connectionColors.batch, boxShadow: `0 0 10px ${connectionColors.batch}`,
-                          animation: 'flowRight 1.2s infinite linear', top: '-3px'
-                        }} />
-                      )}
-                    </div>
-                    <ChevronRight size={14} />
-                  </div>
-                </div>
+              <div key={i} style={{ width: '120px', display: 'flex', justifyContent: 'center' }}>
+                <VerticalConnectionArrow type="batch" direction="down" />
               </div>
             ))}
           </div>
@@ -2996,10 +2877,10 @@ for message in consumer:
           }}>
             <div style={{
               padding: '4px 16px',
-              background: 'rgba(158, 90, 60, 0.15)',
-              border: '1px solid rgba(158, 90, 60, 0.3)',
+              background: 'rgba(232,101,74,0.08)',
+              border: '1px solid rgba(232,101,74,0.25)',
               borderRadius: '20px',
-              color: '#9E5A3C',
+              color: '#E8654A',
               fontSize: '11px',
               fontWeight: '700',
               letterSpacing: '2px',
@@ -3022,11 +2903,10 @@ for message in consumer:
                 key={i}
                 label={m.label}
                 icon={Cpu}
-                color="rgba(158, 90, 60, 0.15)"
-                borderColor="#9E5A3C"
+                color="#E8654A"
                 isActive={isStepActive([4])}
                 onClick={() => setSelectedComponent(map)}
-                exampleText={m.ex}
+                exampleText={showMapReduceExample ? m.ex : undefined}
               />
             ))}
           </div>
@@ -3039,10 +2919,10 @@ for message in consumer:
           }}>
             <div style={{
               padding: '4px 16px',
-              background: 'rgba(158, 120, 36, 0.15)',
-              border: '1px solid rgba(158, 120, 36, 0.3)',
+              background: 'rgba(192,127,212,0.08)',
+              border: '1px solid rgba(192,127,212,0.25)',
               borderRadius: '20px',
-              color: '#9E7824',
+              color: '#C07FD4',
               fontSize: '11px',
               fontWeight: '700',
               letterSpacing: '2px',
@@ -3067,40 +2947,24 @@ for message in consumer:
           }}>
             <div
               onClick={() => setSelectedComponent(shuffle)}
+              className="cohere-node"
               style={{
-                background: 'rgba(90, 80, 144, 0.15)',
-                border: '2px solid #7A5A9E',
-                borderRadius: '16px',
-                padding: '16px 40px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '16px',
-                cursor: 'pointer',
-                transition: 'all 0.3s',
-                boxShadow: (step === 5) ? '0 0 30px rgba(90, 80, 144, 0.4)' : '0 0 15px rgba(90, 80, 144, 0.2)'
+                background: selectedComponent?.id === shuffle?.id ? '#B06FC4' : '#C07FD4',
+                width: '320px', minHeight: '64px', padding: '10px 20px',
+                cursor: 'pointer', flexDirection: 'column',
+                outline: selectedComponent?.id === shuffle?.id ? '3px solid rgba(0,0,0,0.2)' : 'none',
+                outlineOffset: '2px'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
             >
-              <div style={{
-                width: '50px', height: '50px', borderRadius: '12px',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'rgba(90, 80, 144, 0.2)',
-                border: '1px solid rgba(90, 80, 144, 0.4)'
-              }}>
-                <GitMerge size={28} color="#7A5A9E" strokeWidth={1.5} />
+              <div style={{ color: 'white', fontSize: '13px', fontWeight: '700', textAlign: 'center' }}>
+                Shuffle &amp; Sort
               </div>
-              <div>
-                <div style={{ color: '#a78bfa', fontSize: '16px', fontWeight: '700' }}>Shuffle & Sort</div>
-                <div style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>Partition by key → Transfer → Merge sort</div>
+              <div style={{ color: 'rgba(255,255,255,0.72)', fontSize: '10px', textAlign: 'center', marginTop: '3px' }}>
+                Partition by key → Transfer → Merge sort
               </div>
-              {(showMapReduceExample || (step === 5 && showDataTransform)) && (
-                <div style={{
-                  background: 'rgba(200,195,188,0.3)', borderRadius: '8px', padding: '8px 12px',
-                  fontSize: '11px', color: '#C8A84E', fontFamily: 'Monaco, Consolas, monospace',
-                  lineHeight: '1.5'
-                }}>
-                  Group: hello→[1,1,1], world→[1,1,1], foo→[1,1], bar→[1]
+              {showMapReduceExample && (
+                <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '9px', textAlign: 'center', marginTop: '3px', fontFamily: 'monospace' }}>
+                  Group: hello→[1,1,1], world→[1,1,1]
                 </div>
               )}
             </div>
@@ -3114,10 +2978,10 @@ for message in consumer:
           }}>
             <div style={{
               padding: '4px 16px',
-              background: 'rgba(158, 120, 36, 0.15)',
-              border: '1px solid rgba(158, 120, 36, 0.3)',
+              background: 'rgba(42,157,153,0.08)',
+              border: '1px solid rgba(42,157,153,0.25)',
               borderRadius: '20px',
-              color: '#9E7824',
+              color: '#2A9D99',
               fontSize: '11px',
               fontWeight: '700',
               letterSpacing: '2px',
@@ -3148,11 +3012,10 @@ for message in consumer:
                 key={i}
                 label={r.label}
                 icon={Activity}
-                color="rgba(158, 120, 36, 0.15)"
-                borderColor="#9E7824"
+                color="#2A9D99"
                 isActive={isStepActive([6])}
                 onClick={() => setSelectedComponent(reduce)}
-                exampleText={r.ex}
+                exampleText={showMapReduceExample ? r.ex : undefined}
               />
             ))}
           </div>
@@ -3178,9 +3041,9 @@ for message in consumer:
                 <div style={{
                   position: 'absolute', top: '50%', left: '100%', marginLeft: '12px',
                   transform: 'translateY(-50%)',
-                  background: 'rgba(200,195,188,0.6)', borderRadius: '8px', padding: '8px 12px',
-                  fontSize: '11px', color: '#C8A84E', fontFamily: 'Monaco, Consolas, monospace',
-                  whiteSpace: 'nowrap', border: '1px solid rgba(158, 120, 36, 0.3)'
+                  background: 'rgba(42,157,153,0.08)', borderRadius: '8px', padding: '6px 10px',
+                  fontSize: '11px', color: '#2A9D99', fontFamily: 'monospace',
+                  whiteSpace: 'nowrap', border: '1px solid rgba(42,157,153,0.2)'
                 }}>
                   {exampleData.output}
                 </div>
@@ -3256,26 +3119,10 @@ for message in consumer:
     }
   };
 
-  // Auto-advance animation for Spark
-  useEffect(() => {
-    if (!sparkAnimating) return;
-    const timer = setInterval(() => {
-      setSparkStep(prev => {
-        if (prev >= 6) {
-          setSparkAnimating(false);
-          return 0;
-        }
-        return prev + 1;
-      });
-    }, 2500);
-    return () => clearInterval(timer);
-  }, [sparkAnimating]);
-
   // Reset Spark step when switching away
   useEffect(() => {
     if (activeArchitecture !== 'spark') {
       setSparkStep(0);
-      setSparkAnimating(false);
     }
   }, [activeArchitecture]);
 
@@ -3296,82 +3143,40 @@ for message in consumer:
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0px', position: 'relative' }}>
 
-        {/* Step-by-step animation controls */}
+        {/* Step selector */}
         <div style={{
-          display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px',
-          padding: '12px 20px', background: 'rgba(235,232,228,0.8)',
-          borderRadius: '12px', border: '1px solid rgba(235,231,225,1)',
-          flexWrap: 'wrap', justifyContent: 'center'
+          display: 'flex', gap: '6px', alignItems: 'center', justifyContent: 'center',
+          marginBottom: '20px', flexWrap: 'wrap'
         }}>
-          <button
-            onClick={() => {
-              if (sparkAnimating) { setSparkAnimating(false); }
-              else { setSparkStep(1); setSparkAnimating(true); }
-            }}
-            style={{
-              padding: '6px 14px',
-              background: sparkAnimating ? 'rgba(239, 68, 68, 0.2)' : 'rgba(74, 122, 155, 0.2)',
-              border: `1px solid ${sparkAnimating ? '#ef4444' : '#4A7A9B'}`,
-              borderRadius: '8px', color: sparkAnimating ? '#ef4444' : '#4A7A9B',
-              fontSize: '12px', fontWeight: '600', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: '6px'
-            }}
-          >
-            {sparkAnimating ? '⏸ Pause' : '▶ Play Flow'}
-          </button>
-
-          <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-            {sparkSteps.map((s, i) => (
-              <button
-                key={i}
-                onClick={() => { setSparkStep(i); setSparkAnimating(false); }}
-                title={s.description}
-                style={{
-                  padding: '4px 10px',
-                  background: step === i ? 'rgba(74, 122, 155, 0.3)' : 'rgba(235,232,228,0.5)',
-                  border: `1px solid ${step === i ? '#4A7A9B' : 'rgba(235,231,225,1)'}`,
-                  borderRadius: '6px', color: step === i ? '#4A7A9B' : '#64748b',
-                  fontSize: '11px', fontWeight: step === i ? '700' : '500',
-                  cursor: 'pointer', transition: 'all 0.2s'
-                }}
-              >
-                {i === 0 ? 'All' : i}
-              </button>
-            ))}
-          </div>
-
-          <div style={{ width: '1px', height: '24px', background: 'rgba(235,231,225,1)' }} />
-
-          <button
-            onClick={() => setShowDataTransform(!showDataTransform)}
-            style={{
-              padding: '6px 14px',
-              background: showDataTransform ? 'rgba(74, 122, 86, 0.2)' : 'rgba(235,232,228,0.5)',
-              border: `1px solid ${showDataTransform ? '#4A7A56' : 'rgba(235,231,225,1)'}`,
-              borderRadius: '8px', color: showDataTransform ? '#4A7A56' : '#94a3b8',
-              fontSize: '12px', fontWeight: '500', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: '6px'
-            }}
-          >
-            {showDataTransform ? <Eye size={14} /> : <EyeOff size={14} />}
-            {showDataTransform ? 'Data Flow On' : 'Data Flow Off'}
-          </button>
+          {sparkSteps.map((s, i) => (
+            <button key={i}
+              onClick={() => setSparkStep(i)}
+              title={s.description}
+              style={{
+                padding: '5px 14px',
+                background: step === i ? '#0075de' : '#ffffff',
+                border: `1px solid ${step === i ? '#0075de' : 'rgba(0,0,0,0.1)'}`,
+                borderRadius: '20px',
+                color: step === i ? '#ffffff' : 'rgba(0,0,0,0.5)',
+                fontSize: '12px', fontWeight: step === i ? '600' : '400',
+                cursor: 'pointer', transition: 'all 0.15s',
+                boxShadow: step === i ? '0 1px 4px rgba(0,117,222,0.25)' : 'none'
+              }}
+            >
+              {i === 0 ? 'All' : `Step ${i}`}
+            </button>
+          ))}
         </div>
 
         {/* Step description */}
         {step > 0 && (
           <div style={{
-            marginBottom: '4px', padding: '8px 20px',
-            background: 'rgba(74, 122, 155, 0.1)', border: '1px solid rgba(74, 122, 155, 0.3)',
-            borderRadius: '8px', color: '#8AAACE', fontSize: '13px', textAlign: 'center'
+            marginBottom: '16px', padding: '8px 16px',
+            background: 'rgba(0,117,222,0.06)', border: '1px solid rgba(0,117,222,0.15)',
+            borderRadius: '8px', color: 'rgba(0,0,0,0.85)', fontSize: '13px', textAlign: 'center'
           }}>
-            <strong>Step {step}:</strong> {sparkSteps[step]?.description}
+            <strong style={{ color: '#0075de' }}>Step {step}:</strong> {sparkSteps[step]?.description}
           </div>
-        )}
-
-        {/* Data Transformation Panel for Spark */}
-        {step > 0 && showDataTransform && sparkDataTransformStages[step] && (
-          <DataTransformPanel stageData={sparkDataTransformStages[step]} />
         )}
 
         {/* Phase labels alongside the diagram */}
@@ -3439,9 +3244,9 @@ for message in consumer:
             transition: 'opacity 0.5s'
           }}>
             <div style={{
-              padding: '4px 16px', background: 'rgba(58, 128, 128, 0.15)',
-              border: '1px solid rgba(58, 128, 128, 0.3)', borderRadius: '20px',
-              color: '#3A8080', fontSize: '11px', fontWeight: '700',
+              padding: '4px 16px', background: 'rgba(42,157,153,0.08)',
+              border: '1px solid rgba(42,157,153,0.25)', borderRadius: '20px',
+              color: '#2A9D99', fontSize: '11px', fontWeight: '700',
               letterSpacing: '2px', textTransform: 'uppercase'
             }}>In-Memory Partitions — No Disk I/O</div>
           </div>
@@ -3459,7 +3264,7 @@ for message in consumer:
             ].map((p, i) => (
               <MapReduceMiniCard
                 key={i} label={p.label} icon={Zap}
-                color="rgba(58, 128, 128, 0.15)" borderColor="#3A8080"
+                color="#2A9D99"
                 isActive={isStepActive([3, 4])}
                 onClick={() => setSelectedComponent(rdd)}
                 exampleText={showDataTransform && step >= 3 ? p.ex : undefined}
@@ -3474,25 +3279,8 @@ for message in consumer:
             transition: 'opacity 0.5s'
           }}>
             {[0, 1, 2].map(i => (
-              <div key={i} style={{ width: '160px', display: 'flex', justifyContent: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px 0', height: '60px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#9E5A3C', transform: 'rotate(90deg)' }}>
-                    <div style={{
-                      width: '40px', height: '2px',
-                      background: `linear-gradient(90deg, transparent, #9E5A3C, #9E5A3C)`,
-                      position: 'relative'
-                    }}>
-                      {showDataFlow && (
-                        <div style={{
-                          position: 'absolute', width: '8px', height: '8px', borderRadius: '50%',
-                          background: '#9E5A3C', boxShadow: '0 0 10px #9E5A3C',
-                          animation: 'flowRight 1.2s infinite linear', top: '-3px'
-                        }} />
-                      )}
-                    </div>
-                    <ChevronRight size={14} />
-                  </div>
-                </div>
+              <div key={i} style={{ width: '120px', display: 'flex', justifyContent: 'center' }}>
+                <VerticalConnectionArrow type="batch" direction="down" />
               </div>
             ))}
           </div>
@@ -3504,9 +3292,9 @@ for message in consumer:
             transition: 'opacity 0.5s'
           }}>
             <div style={{
-              padding: '4px 16px', background: 'rgba(158, 90, 60, 0.15)',
-              border: '1px solid rgba(158, 90, 60, 0.3)', borderRadius: '20px',
-              color: '#9E5A3C', fontSize: '11px', fontWeight: '700',
+              padding: '4px 16px', background: 'rgba(232,101,74,0.08)',
+              border: '1px solid rgba(232,101,74,0.25)', borderRadius: '20px',
+              color: '#E8654A', fontSize: '11px', fontWeight: '700',
               letterSpacing: '2px', textTransform: 'uppercase'
             }}>Transform Phase — Pipelined In One Pass</div>
           </div>
@@ -3524,7 +3312,7 @@ for message in consumer:
             ].map((t, i) => (
               <MapReduceMiniCard
                 key={i} label={t.label} icon={Cpu}
-                color="rgba(158, 90, 60, 0.15)" borderColor="#9E5A3C"
+                color="#E8654A"
                 isActive={isStepActive([4])}
                 onClick={() => setSelectedComponent(transform)}
                 exampleText={showDataTransform && step === 4 ? t.ex : undefined}
@@ -3539,9 +3327,9 @@ for message in consumer:
             transition: 'opacity 0.5s'
           }}>
             <div style={{
-              padding: '4px 16px', background: 'rgba(158, 120, 36, 0.15)',
-              border: '1px solid rgba(158, 120, 36, 0.3)', borderRadius: '20px',
-              color: '#9E7824', fontSize: '11px', fontWeight: '700',
+              padding: '4px 16px', background: 'rgba(192,127,212,0.08)',
+              border: '1px solid rgba(192,127,212,0.25)', borderRadius: '20px',
+              color: '#C07FD4', fontSize: '11px', fontWeight: '700',
               letterSpacing: '2px', textTransform: 'uppercase'
             }}>Shuffle Exchange — Stage Boundary</div>
           </div>
@@ -3563,36 +3351,21 @@ for message in consumer:
           }}>
             <div
               onClick={() => setSelectedComponent(shuffle)}
+              className="cohere-node"
               style={{
-                background: 'rgba(158, 120, 36, 0.15)', border: '2px solid #9E7824',
-                borderRadius: '16px', padding: '16px 40px',
-                display: 'flex', alignItems: 'center', gap: '16px',
-                cursor: 'pointer', transition: 'all 0.3s',
-                boxShadow: step === 5 ? '0 0 30px rgba(158, 120, 36, 0.4)' : '0 0 15px rgba(158, 120, 36, 0.2)'
+                background: selectedComponent?.id === shuffle?.id ? '#B06FC4' : '#C07FD4',
+                width: '380px', minHeight: '64px', padding: '10px 20px',
+                cursor: 'pointer', flexDirection: 'column',
+                outline: selectedComponent?.id === shuffle?.id ? '3px solid rgba(0,0,0,0.2)' : 'none',
+                outlineOffset: '2px'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
             >
-              <div style={{
-                width: '50px', height: '50px', borderRadius: '12px',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'rgba(158, 120, 36, 0.2)', border: '1px solid rgba(158, 120, 36, 0.4)'
-              }}>
-                <GitMerge size={28} color="#9E7824" strokeWidth={1.5} />
+              <div style={{ color: 'white', fontSize: '13px', fontWeight: '700', textAlign: 'center' }}>
+                Shuffle Exchange
               </div>
-              <div>
-                <div style={{ color: '#C8A84E', fontSize: '16px', fontWeight: '700' }}>Shuffle Exchange</div>
-                <div style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>Hash partition → Network transfer → Local disk write (temporary)</div>
+              <div style={{ color: 'rgba(255,255,255,0.72)', fontSize: '10px', textAlign: 'center', marginTop: '3px' }}>
+                Hash partition → Network transfer → Local disk write (temporary)
               </div>
-              {step === 5 && showDataTransform && (
-                <div style={{
-                  background: 'rgba(200,195,188,0.3)', borderRadius: '8px', padding: '8px 12px',
-                  fontSize: '11px', color: '#C8A84E', fontFamily: 'Monaco, Consolas, monospace',
-                  lineHeight: '1.5'
-                }}>
-                  reduceByKey: hello→[1,1,1], world→[1,1,1]
-                </div>
-              )}
             </div>
           </div>
 
@@ -3612,9 +3385,9 @@ for message in consumer:
             transition: 'opacity 0.5s'
           }}>
             <div style={{
-              padding: '4px 16px', background: 'rgba(74, 122, 86, 0.15)',
-              border: '1px solid rgba(74, 122, 86, 0.3)', borderRadius: '20px',
-              color: '#4A7A56', fontSize: '11px', fontWeight: '700',
+              padding: '4px 16px', background: 'rgba(74,95,227,0.08)',
+              border: '1px solid rgba(74,95,227,0.25)', borderRadius: '20px',
+              color: '#4A5FE3', fontSize: '11px', fontWeight: '700',
               letterSpacing: '2px', textTransform: 'uppercase'
             }}>Action & Output — Results Materialized</div>
           </div>
@@ -3631,7 +3404,7 @@ for message in consumer:
             ].map((r, i) => (
               <MapReduceMiniCard
                 key={i} label={r.label} icon={HardDrive}
-                color="rgba(74, 122, 86, 0.15)" borderColor="#4A7A56"
+                color="#4A5FE3"
                 isActive={isStepActive([6])}
                 onClick={() => setSelectedComponent(output)}
                 exampleText={showDataTransform && step === 6 ? r.ex : undefined}
@@ -3656,13 +3429,13 @@ for message in consumer:
           }}>
             <div style={{ position: 'relative' }}>
               <ComponentCard component={output} onClick={setSelectedComponent} />
-              {step === 6 && showDataTransform && (
+              {step === 6 && (
                 <div style={{
                   position: 'absolute', top: '50%', left: '100%', marginLeft: '12px',
                   transform: 'translateY(-50%)',
-                  background: 'rgba(200,195,188,0.6)', borderRadius: '8px', padding: '8px 12px',
-                  fontSize: '11px', color: '#4A7A56', fontFamily: 'Monaco, Consolas, monospace',
-                  whiteSpace: 'nowrap', border: '1px solid rgba(74, 122, 86, 0.3)'
+                  background: 'rgba(74,95,227,0.08)', borderRadius: '8px', padding: '6px 10px',
+                  fontSize: '11px', color: '#4A5FE3', fontFamily: 'monospace',
+                  whiteSpace: 'nowrap', border: '1px solid rgba(74,95,227,0.2)'
                 }}>
                   Completed in 2.3s (vs 45s MapReduce)
                 </div>
@@ -3749,13 +3522,6 @@ for message in consumer:
           fill="none"
           strokeLinecap="round"
         />
-        {showDataFlow && (
-          <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-            <animateMotion dur="1.5s" repeatCount="indefinite">
-              <mpath href={`#${pathId}`} />
-            </animateMotion>
-          </circle>
-        )}
         <g transform={`translate(${chevronX}, ${chevronY}) rotate(${chevronRotation})`}>
           <polyline
             points="-6,-6 4,0 -6,6"
@@ -3794,13 +3560,6 @@ for message in consumer:
           strokeLinecap="round"
           strokeDasharray="6 4"
         />
-        {showDataFlow && (
-          <circle r="4" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-            <animateMotion dur="1.2s" repeatCount="indefinite">
-              <mpath href={`#${pathId}`} />
-            </animateMotion>
-          </circle>
-        )}
         <g transform={`translate(${chevronX}, ${chevronY}) rotate(${angle})`}>
           <polyline
             points="-5,-5 3,0 -5,5"
@@ -3840,13 +3599,6 @@ for message in consumer:
           strokeLinecap="round"
           strokeDasharray="6 4"
         />
-        {showDataFlow && (
-          <circle r="4" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-            <animateMotion dur="1.2s" repeatCount="indefinite">
-              <mpath href={`#${pathId}`} />
-            </animateMotion>
-          </circle>
-        )}
         <g transform={`translate(${chevronX}, ${chevronY}) rotate(${branchAngle})`}>
           <polyline
             points="-5,-5 3,0 -5,5"
@@ -4144,12 +3896,6 @@ for message in consumer:
                 {/* Cardinality: N at fact side, 1 at dim side */}
                 <text x={fkX + (conn.fromSide === 'left' ? -16 : 8)} y={fkY - 10} fill={isHovered ? '#4A7A9B' : 'var(--text-secondary)'} fontSize="10" fontWeight="600" fontFamily="monospace">N</text>
                 <text x={pkX + (conn.toSide === 'left' ? -12 : 6)} y={pkY - 10} fill={isHovered ? '#4A7A9B' : 'var(--text-secondary)'} fontSize="10" fontWeight="600" fontFamily="monospace">1</text>
-                {/* Animated data flow dot */}
-                {showDataFlow && (
-                  <circle r="4" fill="#4A7A9B" filter="drop-shadow(0 0 6px #4A7A9B)">
-                    <animateMotion dur="2.5s" repeatCount="indefinite" path={pathD} />
-                  </circle>
-                )}
               </g>
             );
           })}
@@ -4495,12 +4241,6 @@ for message in consumer:
                 >
                   {conn.fkCol}
                 </text>
-                {/* Animated data flow */}
-                {showDataFlow && (
-                  <circle r="3" fill={color} filter={`drop-shadow(0 0 4px ${color})`}>
-                    <animateMotion dur="2.5s" repeatCount="indefinite" path={pathD} />
-                  </circle>
-                )}
               </g>
             );
           })}
