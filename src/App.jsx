@@ -2256,49 +2256,70 @@ for message in consumer:
     const serving = comps.find(c => c.id === 'serving');
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0px' }}>
-        {/* Top Row - Batch Layer */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ width: '180px' }}></div>
-          <div style={{ width: '96px', minWidth: '96px' }}></div>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '140px 64px 140px 64px 140px',
+        gridTemplateRows: 'auto auto auto auto auto',
+        justifyContent: 'center',
+        justifyItems: 'center',
+        alignItems: 'center',
+      }}>
+        {/* Row 1: Batch Layer (col 3–5) */}
+        <div style={{ gridColumn: '1 / 3', gridRow: '1' }} />
+        <div style={{ gridColumn: '3', gridRow: '1' }}>
           <ComponentCard component={batch} onClick={setSelectedComponent} />
+        </div>
+        <div style={{ gridColumn: '4', gridRow: '1' }}>
           <ConnectionArrow type="batch" />
+        </div>
+        <div style={{ gridColumn: '5', gridRow: '1' }}>
           <ComponentCard component={batchStorage} onClick={setSelectedComponent} />
         </div>
 
-        {/* Vertical connectors: Message Queue to Batch, Batch Views to Serving */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ width: '180px' }}></div>
-          <div style={{ width: '96px', minWidth: '96px' }}></div>
+        {/* Row 2: Vertical arrows (col 3 up to Batch, col 5 down to Serving) */}
+        <div style={{ gridColumn: '1 / 3', gridRow: '2' }} />
+        <div style={{ gridColumn: '3', gridRow: '2' }}>
           <VerticalConnectionArrow type="batch" direction="up" />
-          <div style={{ width: '96px', minWidth: '96px' }}></div>
+        </div>
+        <div style={{ gridColumn: '4', gridRow: '2' }} />
+        <div style={{ gridColumn: '5', gridRow: '2' }}>
           <VerticalConnectionArrow type="query" direction="down" />
         </div>
 
-        {/* Middle Row - Source & Ingestion & Serving */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {/* Row 3: Source → Message Queue ... Serving */}
+        <div style={{ gridColumn: '1', gridRow: '3' }}>
           <ComponentCard component={source} onClick={setSelectedComponent} />
+        </div>
+        <div style={{ gridColumn: '2', gridRow: '3' }}>
           <ConnectionArrow type="stream" />
+        </div>
+        <div style={{ gridColumn: '3', gridRow: '3' }}>
           <ComponentCard component={ingestion} onClick={setSelectedComponent} />
-          <div style={{ width: '96px', minWidth: '96px' }}></div>
+        </div>
+        <div style={{ gridColumn: '4', gridRow: '3' }} />
+        <div style={{ gridColumn: '5', gridRow: '3' }}>
           <ComponentCard component={serving} onClick={setSelectedComponent} />
         </div>
 
-        {/* Vertical connectors: Message Queue to Speed, Real-time Views to Serving */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ width: '180px' }}></div>
-          <div style={{ width: '96px', minWidth: '96px' }}></div>
+        {/* Row 4: Vertical arrows (col 3 down to Speed, col 5 up to Serving) */}
+        <div style={{ gridColumn: '1 / 3', gridRow: '4' }} />
+        <div style={{ gridColumn: '3', gridRow: '4' }}>
           <VerticalConnectionArrow type="stream" direction="down" />
-          <div style={{ width: '96px', minWidth: '96px' }}></div>
+        </div>
+        <div style={{ gridColumn: '4', gridRow: '4' }} />
+        <div style={{ gridColumn: '5', gridRow: '4' }}>
           <VerticalConnectionArrow type="query" direction="up" />
         </div>
 
-        {/* Bottom Row - Speed Layer */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ width: '180px' }}></div>
-          <div style={{ width: '96px', minWidth: '96px' }}></div>
+        {/* Row 5: Speed Layer (col 3–5) */}
+        <div style={{ gridColumn: '1 / 3', gridRow: '5' }} />
+        <div style={{ gridColumn: '3', gridRow: '5' }}>
           <ComponentCard component={speed} onClick={setSelectedComponent} />
+        </div>
+        <div style={{ gridColumn: '4', gridRow: '5' }}>
           <ConnectionArrow type="stream" />
+        </div>
+        <div style={{ gridColumn: '5', gridRow: '5' }}>
           <ComponentCard component={speedStorage} onClick={setSelectedComponent} />
         </div>
       </div>
