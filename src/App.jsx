@@ -4,7 +4,11 @@ import {
   Globe, Cloud, GitMerge, LayoutDashboard, ScrollText,
   ChevronRight, Check, Sparkles, Info, ChevronDown, ChevronUp, X,
   Table2, Layers, Link, Star, Snowflake, Box,
-  ArrowRight, Eye, EyeOff
+  ArrowRight, Eye, EyeOff,
+  Target, Lightbulb, Wrench, BookOpen, RefreshCw, Shield, Monitor,
+  BarChart2, Brain, Shuffle, FolderOpen, Bot, Briefcase, MapPin,
+  Hammer, Rocket, Settings2, Server, Music, Play, Car, Home,
+  Users, Search, MessageSquare, BookMarked, Navigation, Hash, Film, Pin
 } from 'lucide-react';
 import { ReactFlow, Background, useNodesState, useEdgesState, Handle, Position, useReactFlow } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -1544,11 +1548,11 @@ for message in consumer:
 
   // Phase icons for curriculum
   const phaseIcons = {
-    foundation: '🏗️',
-    tools: '🛠️',
-    pipeline: '🔄',
-    cloud: '☁️',
-    rocket: '🚀'
+    foundation: Hammer,
+    tools: Settings2,
+    pipeline: RefreshCw,
+    cloud: Cloud,
+    rocket: Rocket
   };
 
   const connectionColors = {
@@ -1565,7 +1569,7 @@ for message in consumer:
       id: 'netflix',
       company: 'Netflix',
       industry: 'Streaming Entertainment',
-      logo: '🎬',
+      logo: Film,
       color: '#e50914',
       title: 'Real-Time Personalization at Scale',
       subtitle: 'Processing 500+ billion events daily',
@@ -1601,7 +1605,7 @@ for message in consumer:
       id: 'uber',
       company: 'Uber',
       industry: 'Transportation & Logistics',
-      logo: '🚗',
+      logo: Car,
       color: '#000000',
       title: 'Real-Time Marketplace Matching',
       subtitle: 'Sub-second rider-driver matching across 10,000+ cities',
@@ -1637,7 +1641,7 @@ for message in consumer:
       id: 'airbnb',
       company: 'Airbnb',
       industry: 'Travel & Hospitality',
-      logo: '🏠',
+      logo: Home,
       color: '#ff5a5f',
       title: 'Search Ranking & Dynamic Pricing',
       subtitle: 'ML-powered search across 7M+ listings',
@@ -1673,7 +1677,7 @@ for message in consumer:
       id: 'meta',
       company: 'Meta (Facebook)',
       industry: 'Social Media',
-      logo: '👥',
+      logo: Users,
       color: '#1877f2',
       title: 'Unified Data Warehouse at Exabyte Scale',
       subtitle: 'Largest Hadoop/Presto deployment in the world',
@@ -1709,7 +1713,7 @@ for message in consumer:
       id: 'google',
       company: 'Google',
       industry: 'Technology',
-      logo: '🔍',
+      logo: Search,
       color: '#4285f4',
       title: 'Global-Scale Data Processing',
       subtitle: 'Pioneers of MapReduce, BigQuery, and Dataflow',
@@ -1745,7 +1749,7 @@ for message in consumer:
       id: 'linkedin',
       company: 'LinkedIn',
       industry: 'Professional Networking',
-      logo: '💼',
+      logo: Briefcase,
       color: '#0077b5',
       title: 'Real-Time Activity Tracking',
       subtitle: 'Creators of Apache Kafka',
@@ -1781,7 +1785,7 @@ for message in consumer:
       id: 'twitter',
       company: 'X (Twitter)',
       industry: 'Social Media',
-      logo: '🐦',
+      logo: MessageSquare,
       color: '#1da1f2',
       title: 'Real-Time Tweet Processing',
       subtitle: 'Processing 500M+ tweets daily',
@@ -1817,7 +1821,7 @@ for message in consumer:
       id: 'pinterest',
       company: 'Pinterest',
       industry: 'Social Discovery',
-      logo: '📌',
+      logo: Pin,
       color: '#e60023',
       title: 'Visual Discovery at Scale',
       subtitle: 'Processing billions of Pins for personalized discovery',
@@ -1853,7 +1857,7 @@ for message in consumer:
       id: 'grab',
       company: 'Grab',
       industry: 'Super App (Ride-hailing, Food, Payments)',
-      logo: '🚕',
+      logo: Navigation,
       color: '#00b14f',
       title: 'Southeast Asia\'s Super App Data Platform',
       subtitle: 'Unified data platform for ride-hailing, food delivery, and fintech',
@@ -1889,7 +1893,7 @@ for message in consumer:
       id: 'reddit',
       company: 'Reddit',
       industry: 'Social Media & Community',
-      logo: '🤖',
+      logo: Hash,
       color: '#ff4500',
       title: 'Community-Scale Content Processing',
       subtitle: 'Real-time content ranking and moderation',
@@ -1925,7 +1929,7 @@ for message in consumer:
       id: 'microsoft',
       company: 'Microsoft',
       industry: 'Technology',
-      logo: '🪟',
+      logo: Monitor,
       color: '#00a4ef',
       title: 'Azure Synapse Analytics',
       subtitle: 'Unified analytics service for enterprises',
@@ -1961,7 +1965,7 @@ for message in consumer:
       id: 'tesla',
       company: 'Tesla',
       industry: 'Automotive & Energy',
-      logo: '🚗',
+      logo: Zap,
       color: '#cc0000',
       title: 'Autonomous Driving Data Pipeline',
       subtitle: 'Petabytes of video data for AI training',
@@ -1997,7 +2001,7 @@ for message in consumer:
       id: 'anthropic',
       company: 'Anthropic',
       industry: 'AI Research',
-      logo: '🧠',
+      logo: Brain,
       color: '#d4a574',
       title: 'Large Language Model Training Infrastructure',
       subtitle: 'Constitutional AI training at scale',
@@ -2033,7 +2037,7 @@ for message in consumer:
       id: 'openai',
       company: 'OpenAI',
       industry: 'AI Research',
-      logo: '🤖',
+      logo: Bot,
       color: '#00a67e',
       title: 'GPT Training Infrastructure',
       subtitle: 'Scaling language models to trillions of parameters',
@@ -2069,7 +2073,7 @@ for message in consumer:
       id: 'spotify',
       company: 'Spotify',
       industry: 'Music Streaming',
-      logo: '🎵',
+      logo: Music,
       color: '#1db954',
       title: 'Personalized Music Discovery',
       subtitle: 'Discover Weekly reaching 500M+ users',
@@ -4856,7 +4860,7 @@ for message in consumer:
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                  <span style={{ fontSize: '16px' }}>{phaseIcons[phase.icon]}</span>
+                  {React.createElement(phaseIcons[phase.icon] || Hammer, { size: 16 })}
                   <span>Phase {phase.id}</span>
                 </div>
                 <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '8px' }}>{phase.name}</div>
@@ -4890,7 +4894,7 @@ for message in consumer:
             marginBottom: '24px'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-              <span style={{ fontSize: '32px' }}>{phaseIcons[currentPhase.icon]}</span>
+              {React.createElement(phaseIcons[currentPhase.icon] || Hammer, { size: 32 })}
               <div>
                 <h3 style={{ fontSize: '22px', fontWeight: 'bold', color: phaseColors[activePhase].primary }}>
                   Phase {currentPhase.id}: {currentPhase.name}
@@ -6657,7 +6661,6 @@ for message in consumer:
                       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                           <div style={{
-                            fontSize: '32px',
                             width: '56px',
                             height: '56px',
                             display: 'flex',
@@ -6667,7 +6670,7 @@ for message in consumer:
                             borderRadius: '12px',
                             border: `1px solid ${study.color}44`
                           }}>
-                            {study.logo}
+                            <study.logo size={28} color={study.color} />
                           </div>
                           <div>
                             <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '2px' }}>
@@ -6719,7 +6722,7 @@ for message in consumer:
                       {/* Challenge */}
                       <div style={{ marginBottom: '16px' }}>
                         <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#C8A84E', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span style={{ fontSize: '16px' }}>🎯</span> Challenge
+                          <Target size={14} /> Challenge
                         </h5>
                         <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                           {study.challenge}
@@ -6729,7 +6732,7 @@ for message in consumer:
                       {/* Solution */}
                       <div style={{ marginBottom: '16px' }}>
                         <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#4A7A56', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span style={{ fontSize: '16px' }}>💡</span> Solution
+                          <Lightbulb size={14} /> Solution
                         </h5>
                         <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                           {study.solution}
@@ -6739,7 +6742,7 @@ for message in consumer:
                       {/* Implementation Details */}
                       <div style={{ marginBottom: '16px' }}>
                         <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#4A7A9B', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span style={{ fontSize: '16px' }}>🔧</span> Implementation
+                          <Wrench size={14} /> Implementation
                         </h5>
                         <ul style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.8', paddingLeft: '16px', margin: 0 }}>
                           {study.implementation.map((item, idx) => (
@@ -6751,7 +6754,7 @@ for message in consumer:
                       {/* Key Learnings */}
                       <div style={{ marginBottom: '16px' }}>
                         <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#a78bfa', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span style={{ fontSize: '16px' }}>📚</span> Key Learnings
+                          <BookOpen size={14} /> Key Learnings
                         </h5>
                         <ul style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.8', paddingLeft: '16px', margin: 0 }}>
                           {study.keyLearnings.map((learning, idx) => (
@@ -6763,7 +6766,7 @@ for message in consumer:
                       {/* Technologies */}
                       <div style={{ marginBottom: '16px' }}>
                         <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#f472b6', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span style={{ fontSize: '16px' }}>🛠️</span> Technologies
+                          <Settings2 size={14} /> Technologies
                         </h5>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                           {study.technologies.map((tech, idx) => {
@@ -6807,7 +6810,7 @@ for message in consumer:
                       {/* References */}
                       <div>
                         <h5 style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span style={{ fontSize: '16px' }}>🔗</span> References
+                          <Link size={14} /> References
                         </h5>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                           {study.references.map((ref, idx) => (
@@ -6853,7 +6856,7 @@ for message in consumer:
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
                     <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
                       <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#9E7824', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span>🔄</span> Event-Driven Architecture
+                        <RefreshCw size={15} /> Event-Driven Architecture
                       </h4>
                       <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                         Nearly all case studies leverage Apache Kafka as a central event backbone. Event-driven patterns enable loose coupling,
@@ -6863,7 +6866,7 @@ for message in consumer:
 
                     <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
                       <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#4A7A56', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span>⚡</span> Hybrid Batch + Stream
+                        <Zap size={15} /> Hybrid Batch + Stream
                       </h4>
                       <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                         Most companies combine batch processing (Spark) for ML training and historical analysis with stream processing (Flink/Kafka Streams)
@@ -6873,7 +6876,7 @@ for message in consumer:
 
                     <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
                       <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#4A7A9B', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span>🗄️</span> Separation of Storage & Compute
+                        <Database size={15} /> Separation of Storage & Compute
                       </h4>
                       <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                         Cloud data lakes (S3, GCS, ADLS) separate storage from compute, enabling independent scaling, cost optimization,
@@ -6883,7 +6886,7 @@ for message in consumer:
 
                     <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
                       <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#a78bfa', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span>🤖</span> ML-Integrated Pipelines
+                        <Bot size={15} /> ML-Integrated Pipelines
                       </h4>
                       <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                         Data pipelines are designed with ML in mind: feature stores bridge batch training and real-time inference,
@@ -6893,7 +6896,7 @@ for message in consumer:
 
                     <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
                       <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#9E5A3C', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span>📊</span> Real-Time OLAP
+                        <BarChart2 size={15} /> Real-Time OLAP
                       </h4>
                       <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                         Apache Druid, Pinot, and ClickHouse appear frequently for real-time analytics, providing sub-second query latency
@@ -6903,7 +6906,7 @@ for message in consumer:
 
                     <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
                       <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#C8A84E', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span>🔒</span> Data Governance at Scale
+                        <Shield size={15} /> Data Governance at Scale
                       </h4>
                       <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                         As data volumes grow, governance becomes critical. Companies invest in data catalogs, schema registries,
@@ -6944,11 +6947,11 @@ for message in consumer:
 
                 {/* Distributed vs Clustered: The Nuance */}
                 <div style={{
-                  background: 'rgba(245,243,239,0.6)',
-                  border: '1px solid rgba(235,231,225,1)',
+                  background: 'var(--white)',
+                  border: '1px solid rgba(0,0,0,0.1)',
                   borderRadius: '16px', padding: '28px', marginBottom: '28px'
                 }}>
-                  <h3 style={{ color: 'var(--text-body)', fontSize: '17px', fontWeight: '700', marginBottom: '20px', textAlign: 'center' }}>
+                  <h3 style={{ color: 'var(--near-black)', fontSize: '17px', fontWeight: '700', marginBottom: '20px', textAlign: 'center' }}>
                     Distributed vs. Clustered Computing: The Nuance
                   </h3>
 
@@ -6958,39 +6961,37 @@ for message in consumer:
                   }}>
                     {/* Distributed = the umbrella */}
                     <div style={{
-                      background: 'rgba(122, 90, 158, 0.1)',
-                      border: '2px solid rgba(122, 90, 158, 0.4)',
+                      background: '#f3f0ff',
+                      border: '2px solid #7A5A9E',
                       borderRadius: '16px', padding: '20px', width: '100%', position: 'relative'
                     }}>
                       <div style={{
                         position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)',
-                        background: 'rgba(122, 90, 158, 0.3)', border: '1px solid #7A5A9E',
-                        borderRadius: '20px', padding: '4px 16px',
-                        fontSize: '11px', fontWeight: '700', color: '#c4b5fd',
+                        background: '#7A5A9E', borderRadius: '20px', padding: '4px 16px',
+                        fontSize: '11px', fontWeight: '700', color: '#ffffff',
                         textTransform: 'uppercase', letterSpacing: '1.5px', whiteSpace: 'nowrap'
                       }}>
                         Distributed Computing — The Broad Umbrella
                       </div>
-                      <p style={{ color: '#c4b5fd', fontSize: '13px', textAlign: 'center', lineHeight: '1.7', marginTop: '8px' }}>
+                      <p style={{ color: 'var(--near-black)', fontSize: '13px', textAlign: 'center', lineHeight: '1.7', marginTop: '8px' }}>
                         Any system where components on <strong>networked computers</strong> communicate and coordinate by <strong>passing messages</strong>.
                       </p>
 
                       {/* Clustered = a subset inside */}
                       <div style={{
-                        background: 'rgba(58, 128, 128, 0.1)',
-                        border: '2px solid rgba(58, 128, 128, 0.4)',
+                        background: '#e8f7f7',
+                        border: '2px solid #2A9D99',
                         borderRadius: '12px', padding: '16px', marginTop: '16px', position: 'relative'
                       }}>
                         <div style={{
                           position: 'absolute', top: '-10px', left: '50%', transform: 'translateX(-50%)',
-                          background: 'rgba(58, 128, 128, 0.3)', border: '1px solid #3A8080',
-                          borderRadius: '20px', padding: '3px 14px',
-                          fontSize: '10px', fontWeight: '700', color: '#67e8f9',
+                          background: '#2A9D99', borderRadius: '20px', padding: '3px 14px',
+                          fontSize: '10px', fontWeight: '700', color: '#ffffff',
                           textTransform: 'uppercase', letterSpacing: '1.5px', whiteSpace: 'nowrap'
                         }}>
                           Clustered Computing — A Specific Type
                         </div>
-                        <p style={{ color: '#67e8f9', fontSize: '13px', textAlign: 'center', lineHeight: '1.7', marginTop: '4px' }}>
+                        <p style={{ color: 'var(--near-black)', fontSize: '13px', textAlign: 'center', lineHeight: '1.7', marginTop: '4px' }}>
                           A set of connected nodes working <strong>so closely together</strong> that they can be viewed as a <strong>single system</strong>.
                         </p>
 
@@ -7000,45 +7001,43 @@ for message in consumer:
                         }}>
                           {/* MapReduce */}
                           <div style={{
-                            background: 'rgba(158, 90, 60, 0.1)',
-                            border: '1px solid rgba(158, 90, 60, 0.3)',
+                            background: '#E8654A',
                             borderRadius: '10px', padding: '14px', textAlign: 'center'
                           }}>
-                            <div style={{ color: '#9E5A3C', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
+                            <div style={{ color: '#ffffff', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
                               MapReduce
                             </div>
                             <div style={{
-                              background: 'rgba(158, 90, 60, 0.15)', borderRadius: '6px',
+                              background: 'rgba(255,255,255,0.25)', borderRadius: '6px',
                               padding: '4px 10px', display: 'inline-block', marginBottom: '8px',
-                              fontSize: '10px', fontWeight: '700', color: '#f9a8d4',
+                              fontSize: '10px', fontWeight: '700', color: '#ffffff',
                               textTransform: 'uppercase', letterSpacing: '1px'
                             }}>
                               Disk-Centric
                             </div>
-                            <p style={{ color: 'var(--text-body)', fontSize: '11px', lineHeight: '1.6' }}>
-                              Runs on a Hadoop cluster, but <em>feels</em> more "distributed" — it breaks jobs into tiny pieces, sends them out, <strong>writes results to disk</strong>, and repeats. A literal distribution of a massive batch job across a vast sea of commodity hardware.
+                            <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '11px', lineHeight: '1.6' }}>
+                              Runs on a Hadoop cluster, but <em>feels</em> more "distributed" — it breaks jobs into tiny pieces, sends them out, <strong>writes results to disk</strong>, and repeats.
                             </p>
                           </div>
 
                           {/* Spark */}
                           <div style={{
-                            background: 'rgba(158, 120, 36, 0.1)',
-                            border: '1px solid rgba(158, 120, 36, 0.3)',
+                            background: '#2A9D99',
                             borderRadius: '10px', padding: '14px', textAlign: 'center'
                           }}>
-                            <div style={{ color: '#9E7824', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
+                            <div style={{ color: '#ffffff', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
                               Apache Spark
                             </div>
                             <div style={{
-                              background: 'rgba(158, 120, 36, 0.15)', borderRadius: '6px',
+                              background: 'rgba(255,255,255,0.25)', borderRadius: '6px',
                               padding: '4px 10px', display: 'inline-block', marginBottom: '8px',
-                              fontSize: '10px', fontWeight: '700', color: '#fde68a',
+                              fontSize: '10px', fontWeight: '700', color: '#ffffff',
                               textTransform: 'uppercase', letterSpacing: '1px'
                             }}>
                               Memory-Centric
                             </div>
-                            <p style={{ color: 'var(--text-body)', fontSize: '11px', lineHeight: '1.6' }}>
-                              The poster child for "clustered" computing — it treats the cluster like a <strong>single, massive pool of RAM</strong> using RDDs. Data stays in-memory, making it feel like one cohesive <strong>"Supercomputer"</strong> rather than a collection of independent workers.
+                            <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '11px', lineHeight: '1.6' }}>
+                              The poster child for "clustered" computing — treats the cluster like a <strong>single, massive pool of RAM</strong> using RDDs. Data stays in-memory, feeling like one cohesive <strong>"Supercomputer"</strong>.
                             </p>
                           </div>
                         </div>
@@ -7052,21 +7051,26 @@ for message in consumer:
                   }}>
                     {/* Filing Cabinet */}
                     <div style={{
-                      background: 'rgba(158, 90, 60, 0.06)',
-                      border: '1px dashed rgba(158, 90, 60, 0.3)',
+                      background: 'var(--warm-white)',
+                      border: '1px solid rgba(0,0,0,0.1)',
                       borderRadius: '12px', padding: '20px', textAlign: 'center'
                     }}>
-                      <div style={{ fontSize: '32px', marginBottom: '8px' }}>🗄️</div>
-                      <div style={{ color: '#9E5A3C', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
+                      <div style={{
+                        width: '48px', height: '48px', borderRadius: '10px', margin: '0 auto 10px',
+                        background: '#E8654A', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                      }}>
+                        <HardDrive size={24} color="#ffffff" />
+                      </div>
+                      <div style={{ color: 'var(--near-black)', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
                         "Giant Filing Cabinet"
                       </div>
-                      <p style={{ color: 'var(--text-secondary)', fontSize: '11px', lineHeight: '1.6' }}>
+                      <p style={{ color: 'var(--gray-500)', fontSize: '11px', lineHeight: '1.6' }}>
                         MapReduce treats the cluster like a filing cabinet — <strong>read a file, process it, put it back, pick up the next</strong>. Every step involves opening a drawer (disk I/O).
                       </p>
                       <div style={{
-                        marginTop: '10px', fontFamily: 'Monaco, Consolas, monospace', fontSize: '10px',
-                        color: '#f9a8d4', background: 'rgba(0,0,0,0.3)', borderRadius: '8px', padding: '8px',
-                        lineHeight: '1.6'
+                        marginTop: '10px', fontFamily: 'var(--font-mono)', fontSize: '10px',
+                        color: 'var(--near-black)', background: 'rgba(0,0,0,0.06)', borderRadius: '8px', padding: '8px',
+                        lineHeight: '1.6', textAlign: 'left'
                       }}>
                         Read → Process → Write to disk<br/>
                         Read from disk → Shuffle → Write to disk<br/>
@@ -7078,32 +7082,37 @@ for message in consumer:
                     <div style={{
                       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px'
                     }}>
-                      <div style={{ width: '2px', height: '30px', background: 'rgba(235,231,225,1)' }} />
+                      <div style={{ width: '2px', height: '30px', background: 'rgba(0,0,0,0.1)' }} />
                       <div style={{
                         padding: '8px 14px', borderRadius: '10px',
-                        background: 'rgba(235,232,228,0.8)', border: '1px solid rgba(235,231,225,1)',
-                        color: 'var(--text-muted)', fontSize: '13px', fontWeight: '700'
+                        background: 'var(--warm-white)', border: '1px solid rgba(0,0,0,0.1)',
+                        color: 'var(--gray-300)', fontSize: '13px', fontWeight: '700'
                       }}>VS</div>
-                      <div style={{ width: '2px', height: '30px', background: 'rgba(235,231,225,1)' }} />
+                      <div style={{ width: '2px', height: '30px', background: 'rgba(0,0,0,0.1)' }} />
                     </div>
 
                     {/* Pool of RAM */}
                     <div style={{
-                      background: 'rgba(158, 120, 36, 0.06)',
-                      border: '1px dashed rgba(158, 120, 36, 0.3)',
+                      background: 'var(--warm-white)',
+                      border: '1px solid rgba(0,0,0,0.1)',
                       borderRadius: '12px', padding: '20px', textAlign: 'center'
                     }}>
-                      <div style={{ fontSize: '32px', marginBottom: '8px' }}>🧠</div>
-                      <div style={{ color: '#9E7824', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
+                      <div style={{
+                        width: '48px', height: '48px', borderRadius: '10px', margin: '0 auto 10px',
+                        background: '#2A9D99', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                      }}>
+                        <Cpu size={24} color="#ffffff" />
+                      </div>
+                      <div style={{ color: 'var(--near-black)', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
                         "Massive Pool of RAM"
                       </div>
-                      <p style={{ color: 'var(--text-secondary)', fontSize: '11px', lineHeight: '1.6' }}>
+                      <p style={{ color: 'var(--gray-500)', fontSize: '11px', lineHeight: '1.6' }}>
                         Spark treats the cluster like one giant brain — data stays <strong>in-memory across all nodes</strong>. No filing cabinet drawers to open. The RDD keeps data alive and accessible.
                       </p>
                       <div style={{
-                        marginTop: '10px', fontFamily: 'Monaco, Consolas, monospace', fontSize: '10px',
-                        color: '#fde68a', background: 'rgba(0,0,0,0.3)', borderRadius: '8px', padding: '8px',
-                        lineHeight: '1.6'
+                        marginTop: '10px', fontFamily: 'var(--font-mono)', fontSize: '10px',
+                        color: 'var(--near-black)', background: 'rgba(0,0,0,0.06)', borderRadius: '8px', padding: '8px',
+                        lineHeight: '1.6', textAlign: 'left'
                       }}>
                         Read → Transform (in memory)<br/>
                         → Transform (still in memory)<br/>
@@ -7116,11 +7125,11 @@ for message in consumer:
                   {/* Key takeaway */}
                   <div style={{
                     marginTop: '20px', padding: '12px 20px', textAlign: 'center',
-                    background: 'rgba(122, 90, 158, 0.08)',
-                    border: '1px solid rgba(122, 90, 158, 0.25)',
+                    background: '#f3f0ff',
+                    border: '1px solid rgba(122,90,158,0.3)',
                     borderRadius: '10px'
                   }}>
-                    <div style={{ color: '#c4b5fd', fontSize: '12px', lineHeight: '1.7' }}>
+                    <div style={{ color: 'var(--near-black)', fontSize: '12px', lineHeight: '1.7' }}>
                       <strong>Both run on clusters.</strong> The difference is <em>how</em> they use the cluster. MapReduce treats each node as an independent worker with a shared filing system (HDFS). Spark treats all nodes as parts of one unified computational engine, sharing memory through RDDs.
                     </div>
                   </div>
@@ -7131,26 +7140,26 @@ for message in consumer:
                   display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '28px', flexWrap: 'wrap'
                 }}>
                   {[
-                    { key: null, label: 'Overview', icon: '📊' },
-                    { key: 'speed', label: 'Speed', icon: '⚡' },
-                    { key: 'fault', label: 'Fault Tolerance', icon: '🛡️' },
-                    { key: 'data', label: 'Data Flow', icon: '🔄' },
-                    { key: 'model', label: 'Programming', icon: '💻' }
+                    { key: null, label: 'Overview', Icon: BarChart2 },
+                    { key: 'speed', label: 'Speed', Icon: Zap },
+                    { key: 'fault', label: 'Fault Tolerance', Icon: Shield },
+                    { key: 'data', label: 'Data Flow', Icon: RefreshCw },
+                    { key: 'model', label: 'Programming', Icon: Monitor }
                   ].map(h => (
                     <button
                       key={h.key || 'overview'}
                       onClick={() => setComparisonHighlight(h.key)}
                       style={{
                         padding: '8px 16px',
-                        background: comparisonHighlight === h.key ? 'rgba(58, 128, 128, 0.2)' : 'rgba(235,232,228,0.5)',
-                        border: `1px solid ${comparisonHighlight === h.key ? '#3A8080' : 'rgba(235,231,225,1)'}`,
+                        background: comparisonHighlight === h.key ? 'rgba(0,117,222,0.1)' : 'var(--warm-white)',
+                        border: `1px solid ${comparisonHighlight === h.key ? 'var(--blue)' : 'rgba(0,0,0,0.1)'}`,
                         borderRadius: '8px',
-                        color: comparisonHighlight === h.key ? '#3A8080' : 'var(--text-secondary)',
+                        color: comparisonHighlight === h.key ? 'var(--blue)' : 'var(--gray-500)',
                         fontSize: '12px', fontWeight: '600', cursor: 'pointer',
                         transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '6px'
                       }}
                     >
-                      <span>{h.icon}</span> {h.label}
+                      <h.Icon size={13} /> {h.label}
                     </button>
                   ))}
                 </div>
@@ -7160,53 +7169,54 @@ for message in consumer:
 
                   {/* MapReduce Side */}
                   <div style={{
-                    background: 'rgba(158, 90, 60, 0.08)',
-                    border: '1px solid rgba(158, 90, 60, 0.3)',
+                    background: 'var(--white)',
+                    border: '1px solid rgba(0,0,0,0.1)',
                     borderRadius: '16px', padding: '24px'
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
                       <div style={{
                         width: '40px', height: '40px', borderRadius: '10px',
-                        background: 'rgba(158, 90, 60, 0.2)', display: 'flex',
+                        background: '#E8654A', display: 'flex',
                         alignItems: 'center', justifyContent: 'center'
                       }}>
-                        <Cpu size={22} color="#9E5A3C" />
+                        <Cpu size={22} color="#ffffff" />
                       </div>
                       <div>
-                        <div style={{ color: '#9E5A3C', fontSize: '18px', fontWeight: '700' }}>MapReduce</div>
-                        <div style={{ color: 'var(--text-secondary)', fontSize: '11px' }}>The Distributed Workhorse — Disk-Centric</div>
+                        <div style={{ color: 'var(--near-black)', fontSize: '18px', fontWeight: '700' }}>MapReduce</div>
+                        <div style={{ color: 'var(--gray-500)', fontSize: '11px' }}>The Distributed Workhorse — Disk-Centric</div>
                       </div>
                     </div>
 
                     {/* Visual Flow: Disk-heavy pipeline */}
                     <div style={{
-                      background: 'rgba(0,0,0,0.3)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
+                      background: 'var(--warm-white)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
                     }}>
-                      <div style={{ fontSize: '10px', color: 'var(--text-secondary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
+                      <div style={{ fontSize: '10px', color: 'var(--gray-300)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
                         Execution Flow
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
                         {[
-                          { label: 'HDFS Read', color: '#4A7A9B', icon: '💾' },
-                          { label: 'Map', color: '#9E5A3C', icon: '🔀' },
-                          { label: 'Disk Write', color: '#ef4444', icon: '💾' },
-                          { label: 'Shuffle', color: '#9E7824', icon: '🌐' },
-                          { label: 'Disk Read', color: '#ef4444', icon: '💾' },
-                          { label: 'Reduce', color: '#4A7A56', icon: '📊' },
-                          { label: 'HDFS Write', color: '#4A7A9B', icon: '💾' }
+                          { label: 'HDFS Read', color: '#4A5FE3', Icon: HardDrive },
+                          { label: 'Map', color: '#E8654A', Icon: Shuffle },
+                          { label: 'Disk Write', color: '#ef4444', Icon: HardDrive },
+                          { label: 'Shuffle', color: '#C07FD4', Icon: Globe },
+                          { label: 'Disk Read', color: '#ef4444', Icon: HardDrive },
+                          { label: 'Reduce', color: '#2A9D99', Icon: BarChart2 },
+                          { label: 'HDFS Write', color: '#4A5FE3', Icon: HardDrive }
                         ].map((s, i) => (
                           <React.Fragment key={i}>
                             <div style={{
                               padding: '4px 8px', borderRadius: '6px',
-                              background: `${s.color}22`, border: `1px solid ${s.color}44`,
+                              background: `${s.color}18`, border: `1px solid ${s.color}44`,
                               fontSize: '10px', color: s.color, fontWeight: '600',
                               textAlign: 'center', whiteSpace: 'nowrap',
+                              display: 'flex', alignItems: 'center', gap: '4px',
                               opacity: comparisonHighlight === 'data' || !comparisonHighlight ? 1 : 0.3,
                               transition: 'opacity 0.3s'
                             }}>
-                              {s.icon} {s.label}
+                              <s.Icon size={10} /> {s.label}
                             </div>
-                            {i < 6 && <ChevronRight size={12} color="#475569" />}
+                            {i < 6 && <ChevronRight size={12} color="var(--gray-300)" />}
                           </React.Fragment>
                         ))}
                       </div>
@@ -7215,7 +7225,7 @@ for message in consumer:
                         opacity: comparisonHighlight === 'speed' || !comparisonHighlight ? 1 : 0.3,
                         transition: 'opacity 0.3s'
                       }}>
-                        ⚠ Opens the filing cabinet at every stage — 3 disk round-trips per job
+                        Opens the filing cabinet at every stage — 3 disk round-trips per job
                       </div>
                     </div>
 
@@ -7246,62 +7256,63 @@ for message in consumer:
 
                   {/* Spark Side */}
                   <div style={{
-                    background: 'rgba(158, 120, 36, 0.08)',
-                    border: '1px solid rgba(158, 120, 36, 0.3)',
+                    background: 'var(--white)',
+                    border: '1px solid rgba(0,0,0,0.1)',
                     borderRadius: '16px', padding: '24px'
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
                       <div style={{
                         width: '40px', height: '40px', borderRadius: '10px',
-                        background: 'rgba(158, 120, 36, 0.2)', display: 'flex',
+                        background: '#2A9D99', display: 'flex',
                         alignItems: 'center', justifyContent: 'center'
                       }}>
-                        <Zap size={22} color="#9E7824" />
+                        <Zap size={22} color="#ffffff" />
                       </div>
                       <div>
-                        <div style={{ color: '#9E7824', fontSize: '18px', fontWeight: '700' }}>Apache Spark</div>
-                        <div style={{ color: 'var(--text-secondary)', fontSize: '11px' }}>The Clustered Speedster — Memory-Centric</div>
+                        <div style={{ color: 'var(--near-black)', fontSize: '18px', fontWeight: '700' }}>Apache Spark</div>
+                        <div style={{ color: 'var(--gray-500)', fontSize: '11px' }}>The Clustered Speedster — Memory-Centric</div>
                       </div>
                     </div>
 
                     {/* Visual Flow: In-memory pipeline */}
                     <div style={{
-                      background: 'rgba(0,0,0,0.3)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
+                      background: 'var(--warm-white)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
                     }}>
-                      <div style={{ fontSize: '10px', color: 'var(--text-secondary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
+                      <div style={{ fontSize: '10px', color: 'var(--gray-300)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
                         Execution Flow
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
                         {[
-                          { label: 'Source Read', color: '#4A7A9B', icon: '📂' },
-                          { label: 'Transform', color: '#9E5A3C', icon: '⚡' },
-                          { label: 'In Memory', color: '#4A7A56', icon: '🧠' },
-                          { label: 'Shuffle', color: '#9E7824', icon: '🌐' },
-                          { label: 'In Memory', color: '#4A7A56', icon: '🧠' },
-                          { label: 'Action', color: '#7A5A9E', icon: '🎯' },
-                          { label: 'Output', color: '#4A7A9B', icon: '💾' }
+                          { label: 'Source Read', color: '#4A5FE3', Icon: FolderOpen },
+                          { label: 'Transform', color: '#E8654A', Icon: Zap },
+                          { label: 'In Memory', color: '#2A9D99', Icon: Cpu },
+                          { label: 'Shuffle', color: '#C07FD4', Icon: Globe },
+                          { label: 'In Memory', color: '#2A9D99', Icon: Cpu },
+                          { label: 'Action', color: '#7A5A9E', Icon: Target },
+                          { label: 'Output', color: '#4A5FE3', Icon: HardDrive }
                         ].map((s, i) => (
                           <React.Fragment key={i}>
                             <div style={{
                               padding: '4px 8px', borderRadius: '6px',
-                              background: `${s.color}22`, border: `1px solid ${s.color}44`,
+                              background: `${s.color}18`, border: `1px solid ${s.color}44`,
                               fontSize: '10px', color: s.color, fontWeight: '600',
                               textAlign: 'center', whiteSpace: 'nowrap',
+                              display: 'flex', alignItems: 'center', gap: '4px',
                               opacity: comparisonHighlight === 'data' || !comparisonHighlight ? 1 : 0.3,
                               transition: 'opacity 0.3s'
                             }}>
-                              {s.icon} {s.label}
+                              <s.Icon size={10} /> {s.label}
                             </div>
-                            {i < 6 && <ChevronRight size={12} color="#475569" />}
+                            {i < 6 && <ChevronRight size={12} color="var(--gray-300)" />}
                           </React.Fragment>
                         ))}
                       </div>
                       <div style={{
-                        marginTop: '10px', textAlign: 'center', fontSize: '10px', color: '#4A7A56',
+                        marginTop: '10px', textAlign: 'center', fontSize: '10px', color: '#2A9D99',
                         opacity: comparisonHighlight === 'speed' || !comparisonHighlight ? 1 : 0.3,
                         transition: 'opacity 0.3s'
                       }}>
-                        ✓ One giant pool of RAM — data stays in-memory, no filing cabinet needed
+                        One giant pool of RAM — data stays in-memory, no filing cabinet needed
                       </div>
                     </div>
 
@@ -7333,65 +7344,65 @@ for message in consumer:
 
                 {/* Interactive Visual: Same Word Count — Two Approaches */}
                 <div style={{
-                  background: 'rgba(245,243,239,0.6)',
-                  border: '1px solid rgba(235,231,225,1)',
+                  background: 'var(--white)',
+                  border: '1px solid rgba(0,0,0,0.1)',
                   borderRadius: '16px', padding: '24px', marginBottom: '24px'
                 }}>
-                  <h3 style={{ color: 'var(--text-body)', fontSize: '16px', fontWeight: '700', marginBottom: '6px', textAlign: 'center' }}>
+                  <h3 style={{ color: 'var(--near-black)', fontSize: '16px', fontWeight: '700', marginBottom: '6px', textAlign: 'center' }}>
                     Same Task, Different Philosophy: Word Count on 384MB
                   </h3>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '12px', textAlign: 'center', marginBottom: '20px' }}>
+                  <p style={{ color: 'var(--gray-300)', fontSize: '12px', textAlign: 'center', marginBottom: '20px' }}>
                     Filing cabinet (read/write/read/write) vs. shared memory (read once, transform in place)
                   </p>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
 
                     {/* MapReduce approach */}
-                    <div style={{ padding: '16px', background: 'rgba(158, 90, 60, 0.05)', borderRadius: '12px', border: '1px solid rgba(158, 90, 60, 0.2)' }}>
-                      <div style={{ color: '#9E5A3C', fontSize: '13px', fontWeight: '700', marginBottom: '4px', textAlign: 'center' }}>
+                    <div style={{ padding: '16px', background: 'var(--warm-white)', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.08)' }}>
+                      <div style={{ color: 'var(--near-black)', fontSize: '13px', fontWeight: '700', marginBottom: '4px', textAlign: 'center' }}>
                         MapReduce — The Filing Cabinet
                       </div>
-                      <div style={{ color: 'var(--text-secondary)', fontSize: '10px', textAlign: 'center', marginBottom: '12px' }}>
+                      <div style={{ color: 'var(--gray-500)', fontSize: '10px', textAlign: 'center', marginBottom: '12px' }}>
                         Every step opens a drawer (disk I/O)
                       </div>
-                      <div style={{ fontFamily: 'Monaco, Consolas, monospace', fontSize: '10px', lineHeight: '1.8', color: 'var(--text-body)' }}>
-                        <div style={{ color: 'var(--text-muted)' }}>// Step 1: Read from HDFS (disk)</div>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', lineHeight: '1.8', color: 'var(--near-black)' }}>
+                        <div style={{ color: 'var(--gray-300)' }}>// Step 1: Read from HDFS (disk)</div>
                         <div>InputSplit[] splits = getSplits(job);</div>
-                        <div style={{ color: 'var(--text-muted)', marginTop: '4px' }}>// Step 2: Map — write output to disk</div>
+                        <div style={{ color: 'var(--gray-300)', marginTop: '4px' }}>// Step 2: Map — write output to disk</div>
                         <div>map(key, val) {'{'} emit(word, 1); {'}'}</div>
                         <div style={{ color: '#ef4444' }}>→ spill to local disk</div>
-                        <div style={{ color: 'var(--text-muted)', marginTop: '4px' }}>// Step 3: Shuffle via network + disk</div>
+                        <div style={{ color: 'var(--gray-300)', marginTop: '4px' }}>// Step 3: Shuffle via network + disk</div>
                         <div>sort + partition + transfer</div>
                         <div style={{ color: '#ef4444' }}>→ merge-sort from disk</div>
-                        <div style={{ color: 'var(--text-muted)', marginTop: '4px' }}>// Step 4: Reduce — write to HDFS</div>
+                        <div style={{ color: 'var(--gray-300)', marginTop: '4px' }}>// Step 4: Reduce — write to HDFS</div>
                         <div>reduce(key, vals) {'{'} sum(vals); {'}'}</div>
                         <div style={{ color: '#ef4444' }}>→ write to HDFS (disk)</div>
-                        <div style={{ marginTop: '8px', padding: '6px 10px', background: 'rgba(239, 68, 68, 0.15)', borderRadius: '6px', color: '#fca5a5', textAlign: 'center' }}>
+                        <div style={{ marginTop: '8px', padding: '6px 10px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '6px', color: '#dc2626', textAlign: 'center' }}>
                           ~45 seconds | 3x disk I/O | 1 JVM per task
                         </div>
                       </div>
                     </div>
 
                     {/* Spark approach */}
-                    <div style={{ padding: '16px', background: 'rgba(158, 120, 36, 0.05)', borderRadius: '12px', border: '1px solid rgba(158, 120, 36, 0.2)' }}>
-                      <div style={{ color: '#9E7824', fontSize: '13px', fontWeight: '700', marginBottom: '4px', textAlign: 'center' }}>
+                    <div style={{ padding: '16px', background: 'var(--warm-white)', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.08)' }}>
+                      <div style={{ color: 'var(--near-black)', fontSize: '13px', fontWeight: '700', marginBottom: '4px', textAlign: 'center' }}>
                         Spark — The Supercomputer
                       </div>
-                      <div style={{ color: 'var(--text-secondary)', fontSize: '10px', textAlign: 'center', marginBottom: '12px' }}>
+                      <div style={{ color: 'var(--gray-500)', fontSize: '10px', textAlign: 'center', marginBottom: '12px' }}>
                         Everything stays in one giant pool of RAM
                       </div>
-                      <div style={{ fontFamily: 'Monaco, Consolas, monospace', fontSize: '10px', lineHeight: '1.8', color: 'var(--text-body)' }}>
-                        <div style={{ color: 'var(--text-muted)' }}>// Entire pipeline in one expression:</div>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', lineHeight: '1.8', color: 'var(--near-black)' }}>
+                        <div style={{ color: 'var(--gray-300)' }}>// Entire pipeline in one expression:</div>
                         <div>sc.textFile("/data/logs/*")</div>
                         <div>&nbsp; .flatMap(_.split(" "))</div>
-                        <div style={{ color: '#4A7A56' }}>&nbsp; // pipelined in memory ↑</div>
+                        <div style={{ color: '#2A9D99' }}>&nbsp; // pipelined in memory ↑</div>
                         <div>&nbsp; .map(word =&gt; (word, 1))</div>
-                        <div style={{ color: '#4A7A56' }}>&nbsp; // still in memory ↑</div>
+                        <div style={{ color: '#2A9D99' }}>&nbsp; // still in memory ↑</div>
                         <div>&nbsp; .reduceByKey(_ + _)</div>
-                        <div style={{ color: '#9E7824' }}>&nbsp; // shuffle (only disk write)</div>
+                        <div style={{ color: 'var(--gray-300)' }}>&nbsp; // shuffle (only disk write)</div>
                         <div>&nbsp; .saveAsTextFile("/results/")</div>
-                        <div style={{ color: '#4A7A56' }}>&nbsp; // one pass through DAG</div>
-                        <div style={{ marginTop: '8px', padding: '6px 10px', background: 'rgba(74, 122, 86, 0.15)', borderRadius: '6px', color: '#6ee7b7', textAlign: 'center' }}>
+                        <div style={{ color: '#2A9D99' }}>&nbsp; // one pass through DAG</div>
+                        <div style={{ marginTop: '8px', padding: '6px 10px', background: 'rgba(42,157,153,0.1)', border: '1px solid rgba(42,157,153,0.25)', borderRadius: '6px', color: '#2A9D99', textAlign: 'center' }}>
                           ~2.3 seconds | in-memory | reusable JVMs
                         </div>
                       </div>
@@ -7401,24 +7412,24 @@ for message in consumer:
 
                 {/* Key Differences Table */}
                 <div style={{
-                  background: 'rgba(245,243,239,0.6)',
-                  border: '1px solid rgba(235,231,225,1)',
+                  background: 'var(--white)',
+                  border: '1px solid rgba(0,0,0,0.1)',
                   borderRadius: '16px', padding: '24px', marginBottom: '24px'
                 }}>
-                  <h3 style={{ color: 'var(--text-body)', fontSize: '16px', fontWeight: '700', marginBottom: '20px', textAlign: 'center' }}>
+                  <h3 style={{ color: 'var(--near-black)', fontSize: '16px', fontWeight: '700', marginBottom: '20px', textAlign: 'center' }}>
                     Detailed Comparison
                   </h3>
 
-                  <div style={{ overflow: 'hidden', borderRadius: '12px', border: '1px solid rgba(235,231,225,1)' }}>
+                  <div style={{ overflow: 'hidden', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.1)' }}>
                     {/* Table Header */}
                     <div style={{
                       display: 'grid', gridTemplateColumns: '1.5fr 2fr 2fr',
-                      background: 'rgba(235,232,228,0.8)', padding: '12px 16px',
-                      borderBottom: '1px solid rgba(235,231,225,1)'
+                      background: 'var(--warm-white)', padding: '12px 16px',
+                      borderBottom: '1px solid rgba(0,0,0,0.08)'
                     }}>
-                      <div style={{ color: 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>Aspect</div>
-                      <div style={{ color: '#9E5A3C', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>MapReduce</div>
-                      <div style={{ color: '#9E7824', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>Spark</div>
+                      <div style={{ color: 'var(--gray-300)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>Aspect</div>
+                      <div style={{ color: '#E8654A', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>MapReduce</div>
+                      <div style={{ color: '#2A9D99', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>Spark</div>
                     </div>
 
                     {/* Table Rows */}
@@ -7440,14 +7451,14 @@ for message in consumer:
                       <div key={i} style={{
                         display: 'grid', gridTemplateColumns: '1.5fr 2fr 2fr',
                         padding: '10px 16px',
-                        background: i % 2 === 0 ? 'rgba(245,243,239,0.4)' : 'rgba(235,232,228,0.4)',
-                        borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
+                        background: i % 2 === 0 ? 'var(--white)' : 'var(--warm-white)',
+                        borderBottom: '1px solid rgba(0,0,0,0.06)',
                         opacity: !comparisonHighlight || comparisonHighlight === row.cat || !row.cat ? 1 : 0.3,
                         transition: 'opacity 0.3s'
                       }}>
-                        <div style={{ color: 'var(--text-body)', fontSize: '12px', fontWeight: '600' }}>{row.aspect}</div>
-                        <div style={{ color: 'var(--text-body)', fontSize: '12px', textAlign: 'center' }}>{row.mr}</div>
-                        <div style={{ color: 'var(--text-body)', fontSize: '12px', textAlign: 'center' }}>{row.spark}</div>
+                        <div style={{ color: 'var(--near-black)', fontSize: '12px', fontWeight: '600' }}>{row.aspect}</div>
+                        <div style={{ color: 'var(--gray-500)', fontSize: '12px', textAlign: 'center' }}>{row.mr}</div>
+                        <div style={{ color: 'var(--gray-500)', fontSize: '12px', textAlign: 'center' }}>{row.spark}</div>
                       </div>
                     ))}
                   </div>
@@ -7456,10 +7467,10 @@ for message in consumer:
                 {/* When to Use Which */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div style={{
-                    background: 'rgba(158, 90, 60, 0.08)', border: '1px solid rgba(158, 90, 60, 0.25)',
+                    background: 'var(--white)', border: '1px solid rgba(232,101,74,0.3)',
                     borderRadius: '12px', padding: '20px'
                   }}>
-                    <div style={{ color: '#9E5A3C', fontSize: '14px', fontWeight: '700', marginBottom: '12px' }}>
+                    <div style={{ color: '#E8654A', fontSize: '14px', fontWeight: '700', marginBottom: '12px' }}>
                       When to Choose MapReduce
                     </div>
                     <ul style={{ color: 'var(--text-body)', fontSize: '12px', lineHeight: '2', paddingLeft: '20px' }}>
@@ -7471,10 +7482,10 @@ for message in consumer:
                     </ul>
                   </div>
                   <div style={{
-                    background: 'rgba(158, 120, 36, 0.08)', border: '1px solid rgba(158, 120, 36, 0.25)',
+                    background: 'var(--white)', border: '1px solid rgba(42,157,153,0.3)',
                     borderRadius: '12px', padding: '20px'
                   }}>
-                    <div style={{ color: '#9E7824', fontSize: '14px', fontWeight: '700', marginBottom: '12px' }}>
+                    <div style={{ color: '#2A9D99', fontSize: '14px', fontWeight: '700', marginBottom: '12px' }}>
                       When to Choose Spark
                     </div>
                     <ul style={{ color: 'var(--text-body)', fontSize: '12px', lineHeight: '2', paddingLeft: '20px' }}>
@@ -7490,11 +7501,11 @@ for message in consumer:
                 {/* Bottom Summary */}
                 <div style={{
                   marginTop: '24px', padding: '16px 20px', textAlign: 'center',
-                  background: 'rgba(58, 128, 128, 0.08)',
-                  border: '1px solid rgba(58, 128, 128, 0.25)',
+                  background: '#f3f0ff',
+                  border: '1px solid rgba(122,90,158,0.25)',
                   borderRadius: '12px'
                 }}>
-                  <div style={{ color: '#22d3ee', fontSize: '13px', lineHeight: '1.8' }}>
+                  <div style={{ color: 'var(--near-black)', fontSize: '13px', lineHeight: '1.8' }}>
                     <strong>The Evolution:</strong> Both MapReduce and Spark are <em>clustered</em> technologies under the <em>distributed computing</em> umbrella — but they treat the cluster differently. MapReduce (2004) pioneered the "distributed workhorse" pattern: break a job into tiny pieces, file results to disk, repeat. Spark (2009) reimagined the cluster as a unified "supercomputer" — one massive pool of RAM where data stays alive between operations. Today Spark has largely replaced MapReduce for most workloads, but understanding MapReduce is essential — it established the fundamental map → shuffle → reduce pattern that all modern distributed systems build upon.
                   </div>
                 </div>
