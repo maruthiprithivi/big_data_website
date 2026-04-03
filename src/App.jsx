@@ -4120,25 +4120,30 @@ for message in consumer:
       { name: 'group_name', type: 'VARCHAR' }
     ];
 
-    const SVG_W = 1040;
+    const SVG_W = 1060;
     const SVG_H = 900;
     const SNOW_TW = 220;   // ERTable width
     const SNOW_SW = 190;   // ERSubTable width
 
-    // Positions — organized as a clear ER diagram layout
+    // Three-column layout: sub-dims stacked above/below their parent dims
+    // Left column (x=0): insurance → patient → date
+    // Center column (x=400): fact → diagnosis → dxCategory
+    // Right column (x=740): department → physician → hospital
     const tables = {
-      fact:       { x: 390, y: 320 },
-      patient:    { x: 40,  y: 160 },
-      physician:  { x: 690, y: 160 },
-      diagnosis:  { x: 390, y: 630 },
-      date:       { x: 40,  y: 540 },
-      insurance:  { x: 40,  y: 0 },
-      department: { x: 690, y: 0 },
-      hospital:   { x: 790, y: 330 },
-      dxCategory: { x: 390, y: 810 }
+      insurance:  { x: 0,   y: 0 },
+      patient:    { x: 0,   y: 210 },
+      date:       { x: 0,   y: 530 },
+      fact:       { x: 400, y: 280 },
+      diagnosis:  { x: 400, y: 590 },
+      dxCategory: { x: 400, y: 770 },
+      department: { x: 740, y: 0 },
+      physician:  { x: 740, y: 210 },
+      hospital:   { x: 740, y: 460 }
     };
 
     // Column-level connection definitions for snowflake schema
+    // Cross-column connections use clean C-curves (opposite sides).
+    // Same-column vertical connections use sameSide bows into clear inter-column gaps.
     const snowConnections = [
       // FK connections: fact → dimensions
       { id: 'patient_key', fkCol: 'patient_key', isNorm: false,
@@ -4152,12 +4157,12 @@ for message in consumer:
       { id: 'diagnosis_key', fkCol: 'diagnosis_key', isNorm: false,
         fkIdx: 3, fromPos: tables.fact, fromW: SNOW_TW, fromSub: false,
         pkIdx: 0, toPos: tables.diagnosis, toW: SNOW_TW, toSub: false,
-        fromSide: 'right', toSide: 'right', sameSide: true, bowSide: 'right' },
+        fromSide: 'left', toSide: 'left', sameSide: true, bowSide: 'left' },
       { id: 'date_key', fkCol: 'date_key', isNorm: false,
         fkIdx: 4, fromPos: tables.fact, fromW: SNOW_TW, fromSub: false,
         pkIdx: 0, toPos: tables.date, toW: SNOW_TW, toSub: false,
         fromSide: 'left', toSide: 'right' },
-      // Normalization connections: dim → sub-dim
+      // Normalization connections: dim → sub-dim (same column, bow into gap)
       { id: 'insurance_key', fkCol: 'insurance_key', isNorm: true,
         fkIdx: 4, fromPos: tables.patient, fromW: SNOW_TW, fromSub: false,
         pkIdx: 0, toPos: tables.insurance, toW: SNOW_SW, toSub: true,
@@ -4169,7 +4174,7 @@ for message in consumer:
       { id: 'hospital_key', fkCol: 'hospital_key', isNorm: true,
         fkIdx: 2, fromPos: tables.department, fromW: SNOW_SW, fromSub: true,
         pkIdx: 0, toPos: tables.hospital, toW: SNOW_SW, toSub: true,
-        fromSide: 'right', toSide: 'left' },
+        fromSide: 'left', toSide: 'left', sameSide: true, bowSide: 'left' },
       { id: 'category_key', fkCol: 'category_key', isNorm: true,
         fkIdx: 3, fromPos: tables.diagnosis, fromW: SNOW_TW, fromSub: false,
         pkIdx: 0, toPos: tables.dxCategory, toW: SNOW_SW, toSub: true,
