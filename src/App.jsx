@@ -293,23 +293,23 @@ const BigDataArchitectureExplorer = () => {
   };
 
   const colorScheme = {
-    database:  { bg: 'rgba(74,122,155,0.10)',  border: '#8AAACE', icon: '#4A7A9B', label: '#1E3A52' },
-    queue:     { bg: 'rgba(122,90,158,0.10)',  border: '#A896C8', icon: '#7A5A9E', label: '#34204A' },
-    cluster:   { bg: 'rgba(158,90,60,0.10)',   border: '#C8907A', icon: '#9E5A3C', label: '#4A2018' },
-    stream:    { bg: 'rgba(158,120,36,0.10)',  border: '#C8A84E', icon: '#9E7824', label: '#4A360E' },
-    warehouse: { bg: 'rgba(74,122,86,0.10)',   border: '#7AA888', icon: '#4A7A56', label: '#1E4228' },
-    cache:     { bg: 'rgba(58,128,128,0.10)',  border: '#78AAAA', icon: '#3A8080', label: '#1A3E3E' },
-    api:       { bg: 'rgba(122,90,158,0.10)',  border: '#A896C8', icon: '#7A5A9E', label: '#34204A' },
-    cloud:     { bg: 'rgba(74,122,155,0.10)',  border: '#8AAACE', icon: '#4A7A9B', label: '#1E2A4A' },
-    pipeline:  { bg: 'rgba(90,80,144,0.10)',   border: '#A896C8', icon: '#7A5A9E', label: '#221A4A' },
-    dashboard: { bg: 'rgba(158,90,60,0.10)',   border: '#C8907A', icon: '#9E5A3C', label: '#4A2018' },
-    log:       { bg: 'rgba(74,122,155,0.10)',  border: '#8AAACE', icon: '#4A7A9B', label: '#1E2A4A' },
-    fact:      { bg: 'rgba(158,120,36,0.10)',  border: '#C8A84E', icon: '#9E7824', label: '#4A360E' },
-    dimension: { bg: 'rgba(74,122,155,0.10)',  border: '#8AAACE', icon: '#4A7A9B', label: '#1E3A52' },
-    bridge:    { bg: 'rgba(122,90,158,0.10)',  border: '#A896C8', icon: '#7A5A9E', label: '#34204A' },
-    star:      { bg: 'rgba(158,120,36,0.10)',  border: '#C8A84E', icon: '#9E7824', label: '#4A360E' },
-    snowflake: { bg: 'rgba(58,128,128,0.10)',  border: '#78AAAA', icon: '#3A8080', label: '#1A3E3E' },
-    aggregate: { bg: 'rgba(74,122,86,0.10)',   border: '#7AA888', icon: '#4A7A56', label: '#1E4228' }
+    database:  { fill: '#4A5FE3', selected: '#3A4FD3' },
+    queue:     { fill: '#C07FD4', selected: '#B06FC4' },
+    cluster:   { fill: '#E8654A', selected: '#D8553A' },
+    stream:    { fill: '#2A9D99', selected: '#1A8D89' },
+    warehouse: { fill: '#4A5FE3', selected: '#3A4FD3' },
+    cache:     { fill: '#C07FD4', selected: '#B06FC4' },
+    api:       { fill: '#4A5FE3', selected: '#3A4FD3' },
+    cloud:     { fill: '#2A9D99', selected: '#1A8D89' },
+    pipeline:  { fill: '#C07FD4', selected: '#B06FC4' },
+    dashboard: { fill: '#E8654A', selected: '#D8553A' },
+    log:       { fill: '#2A9D99', selected: '#1A8D89' },
+    fact:      { fill: '#E8654A', selected: '#D8553A' },
+    dimension: { fill: '#4A5FE3', selected: '#3A4FD3' },
+    bridge:    { fill: '#C07FD4', selected: '#B06FC4' },
+    star:      { fill: '#E8654A', selected: '#D8553A' },
+    snowflake: { fill: '#2A9D99', selected: '#1A8D89' },
+    aggregate: { fill: '#4A5FE3', selected: '#3A4FD3' },
   };
 
   const architectures = {
@@ -1555,11 +1555,11 @@ for message in consumer:
   };
 
   const connectionColors = {
-    stream: '#9E7824',
-    batch: '#9E5A3C',
-    query: '#4A7A56',
-    fk: '#4A7A9B',
-    normalize: '#7A5A9E'
+    stream:    '#2A9D99',
+    batch:     '#E8654A',
+    query:     '#4A5FE3',
+    fk:        '#C07FD4',
+    normalize: '#4A5FE3',
   };
 
   // Case Studies Data - Real-world Big Data Architecture Examples
@@ -2110,61 +2110,25 @@ for message in consumer:
 
   const ComponentCard = ({ component, onClick }) => {
     const colors = colorScheme[component.shape] || colorScheme.database;
-    const Icon = iconComponents[component.shape];
+    const isSelected = selectedComponent?.id === component.id;
 
     return (
       <div
         onClick={() => onClick(component)}
+        className="cohere-node"
         style={{
-          background: colors.bg,
-          border: `2px solid ${colors.border}`,
-          borderRadius: '16px',
-          padding: '20px',
-          minWidth: '180px',
-          maxWidth: '180px',
-          minHeight: '180px',
-          maxHeight: '180px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '16px',
-          cursor: 'pointer',
-          transition: 'all 0.3s',
-          boxShadow: `0 0 20px ${colors.border}33`
+          background: isSelected ? colors.selected : colors.fill,
+          width: '140px',
+          height: '72px',
+          padding: '8px 10px',
+          flexShrink: 0,
+          outline: isSelected ? '3px solid rgba(0,0,0,0.25)' : 'none',
+          outlineOffset: isSelected ? '2px' : '0',
         }}
-        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
       >
-        <div
-          style={{
-            width: '80px',
-            height: '80px',
-            borderRadius: '16px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: `${colors.border}22`,
-            border: `1px solid ${colors.border}44`
-          }}
-        >
-          <Icon size={44} color={colors.icon} strokeWidth={1.5} />
-        </div>
-        <div
-          style={{
-            background: colors.label,
-            color: 'white',
-            padding: '8px 16px',
-            borderRadius: '8px',
-            fontSize: '13px',
-            fontWeight: '600',
-            textAlign: 'center',
-            width: '100%',
-            border: `1px solid ${colors.border}66`
-          }}
-        >
+        <span style={{ color: 'white', fontSize: '12px', fontWeight: '700', textAlign: 'center', lineHeight: 1.25, display: 'block', width: '100%' }}>
           {component.name}
-        </div>
+        </span>
       </div>
     );
   };
@@ -2189,13 +2153,13 @@ for message in consumer:
 
   const SchemaComponentCard = ({ component, onClick, tooltipPosition = 'top' }) => {
     const colors = colorScheme[component.shape] || colorScheme.database;
-    const Icon = iconComponents[component.shape];
     const tooltip = schemaTooltips[component.id];
     const isHovered = hoveredSchemaComponent === component.id;
+    const isSelected = selectedComponent?.id === component.id;
 
     return (
       <div
-        style={{ position: 'relative' }}
+        style={{ position: 'relative', display: 'inline-flex' }}
         onMouseEnter={() => setHoveredSchemaComponent(component.id)}
         onMouseLeave={() => setHoveredSchemaComponent(null)}
       >
@@ -2207,179 +2171,75 @@ for message in consumer:
             left: '50%',
             transform: 'translateX(-50%)',
             [tooltipPosition === 'bottom' ? 'marginTop' : 'marginBottom']: '12px',
-            width: '280px',
-            background: 'rgba(245,243,239,0.98)',
-            border: `2px solid ${colors.border}`,
-            borderRadius: '12px',
-            padding: '16px',
+            width: '260px',
+            background: 'rgba(0,0,0,0.92)',
+            color: 'white',
+            padding: '10px 12px',
+            borderRadius: '8px',
+            fontSize: '12px',
+            lineHeight: '1.5',
             zIndex: 100,
-            boxShadow: `0 8px 32px rgba(200,195,188,0.6), 0 0 20px ${colors.border}33`,
-            animation: 'fadeInScale 0.2s ease-out',
-            pointerEvents: 'none'
+            pointerEvents: 'none',
+            fontFamily: 'var(--font-sans)',
           }}>
-            {/* Arrow pointer */}
-            <div style={{
-              position: 'absolute',
-              [tooltipPosition === 'bottom' ? 'top' : 'bottom']: '-8px',
-              left: '50%',
-              transform: `translateX(-50%) ${tooltipPosition === 'bottom' ? 'rotate(180deg)' : ''}`,
-              width: 0,
-              height: 0,
-              borderLeft: '8px solid transparent',
-              borderRight: '8px solid transparent',
-              borderTop: `8px solid ${colors.border}`
-            }} />
-            <div style={{
-              fontSize: '14px',
-              fontWeight: '700',
-              color: colors.border,
-              marginBottom: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}>
-              <Icon size={16} color={colors.icon} />
-              {tooltip.title}
-            </div>
-            <div style={{
-              fontSize: '12px',
-              color: 'var(--text-body)',
-              lineHeight: '1.6'
-            }}>
-              {tooltip.tip}
-            </div>
-            <div style={{
-              fontSize: '11px',
-              color: 'var(--text-muted)',
-              marginTop: '8px',
-              fontStyle: 'italic'
-            }}>
-              Click for full details
-            </div>
+            <div style={{ fontWeight: '700', marginBottom: '4px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.5px', color: 'rgba(255,255,255,0.6)' }}>{tooltip.title}</div>
+            {tooltip.tip}
           </div>
         )}
-
         <div
-          onClick={() => onClick(component)}
+          onClick={() => onClick && onClick(component)}
+          className="cohere-node"
           style={{
-            background: colors.bg,
-            border: `2px solid ${isHovered ? colors.border : colors.border}`,
-            borderRadius: '16px',
-            padding: '20px',
-            minWidth: '180px',
-            maxWidth: '180px',
-            minHeight: '180px',
-            maxHeight: '180px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '16px',
-            cursor: 'pointer',
-            transition: 'all 0.3s',
-            boxShadow: isHovered
-              ? `0 0 30px ${colors.border}66, 0 0 60px ${colors.border}22`
-              : `0 0 20px ${colors.border}33`,
-            transform: isHovered ? 'scale(1.08)' : 'scale(1)'
+            background: isSelected ? colors.selected : colors.fill,
+            width: '130px',
+            height: '60px',
+            padding: '6px 8px',
+            flexShrink: 0,
+            outline: isSelected ? '3px solid rgba(0,0,0,0.25)' : 'none',
+            outlineOffset: '2px',
           }}
         >
-          <div
-            style={{
-              width: '80px',
-              height: '80px',
-              borderRadius: '16px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: `${colors.border}22`,
-              border: `1px solid ${colors.border}44`
-            }}
-          >
-            <Icon size={44} color={colors.icon} strokeWidth={1.5} />
-          </div>
-          <div
-            style={{
-              background: colors.label,
-              color: 'white',
-              padding: '8px 16px',
-              borderRadius: '8px',
-              fontSize: '13px',
-              fontWeight: '600',
-              textAlign: 'center',
-              width: '100%',
-              border: `1px solid ${colors.border}66`
-            }}
-          >
+          <span style={{ color: 'white', fontSize: '11px', fontWeight: '700', textAlign: 'center', lineHeight: 1.25, display: 'block', width: '100%' }}>
             {component.name}
-          </div>
+          </span>
         </div>
       </div>
     );
   };
 
   const ConnectionArrow = ({ type }) => {
-    const color = connectionColors[type] || '#4A7A9B';
-
+    const color = connectionColors[type] || '#2C2A28';
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 8px', minWidth: '80px', height: '180px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color }}>
-          <div style={{
-            width: '60px',
-            height: '2px',
-            background: `linear-gradient(90deg, transparent, ${color}, ${color})`,
-            position: 'relative'
-          }}>
-            {showDataFlow && (
-              <div
-                style={{
-                  position: 'absolute',
-                  width: '10px',
-                  height: '10px',
-                  borderRadius: '50%',
-                  background: color,
-                  boxShadow: `0 0 12px ${color}`,
-                  animation: 'flowRight 1.5s infinite linear',
-                  top: '-4px'
-                }}
-              />
-            )}
-          </div>
-          <ChevronRight size={18} />
-        </div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 4px', minWidth: '64px', height: '72px' }}>
+        <svg width="64" height="2" style={{ overflow: 'visible' }} className="cohere-arrow-svg">
+          <defs>
+            <marker id={`arr-h-${type}`} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0,0 6,3 0,6" fill={color} />
+            </marker>
+          </defs>
+          <line x1="0" y1="1" x2="56" y2="1"
+            stroke={color} strokeWidth="1.5" strokeDasharray="5,4"
+            markerEnd={`url(#arr-h-${type})`} />
+        </svg>
       </div>
     );
   };
 
   const VerticalConnectionArrow = ({ type, direction = 'down' }) => {
-    const color = connectionColors[type] || '#4A7A9B';
-    const rotation = direction === 'down' ? 'rotate(90deg)' : 'rotate(-90deg)';
-
+    const color = connectionColors[type] || '#2C2A28';
+    const isUp = direction === 'up';
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 0', minHeight: '80px', width: '180px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color, transform: rotation }}>
-          <div style={{
-            width: '60px',
-            height: '2px',
-            background: `linear-gradient(90deg, transparent, ${color}, ${color})`,
-            position: 'relative'
-          }}>
-            {showDataFlow && (
-              <div
-                style={{
-                  position: 'absolute',
-                  width: '10px',
-                  height: '10px',
-                  borderRadius: '50%',
-                  background: color,
-                  boxShadow: `0 0 12px ${color}`,
-                  animation: 'flowRight 1.5s infinite linear',
-                  top: '-4px'
-                }}
-              />
-            )}
-          </div>
-          <ChevronRight size={18} />
-        </div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px 0', minHeight: '64px', width: '140px' }}>
+        <svg width="2" height="64" style={{ overflow: 'visible' }} className="cohere-arrow-svg">
+          <defs>
+            <marker id={`arr-v-${type}-${direction}`} markerWidth="8" markerHeight="8" refX="3" refY="3" orient={isUp ? '270deg' : '90deg'}>
+              <polygon points="0,0 6,3 0,6" fill={color} />
+            </marker>
+          </defs>
+          <line x1="1" y1={isUp ? 56 : 0} x2="1" y2={isUp ? 0 : 56}
+            stroke={color} strokeWidth="1.5" strokeDasharray="5,4"
+            markerEnd={`url(#arr-v-${type}-${direction})`} />
+        </svg>
       </div>
     );
   };
@@ -2460,213 +2320,76 @@ for message in consumer:
   };
 
   const LBendArrow = ({ type, direction }) => {
-    const color = connectionColors[type] || '#4A7A9B';
-    const isCenter = direction === 'center';
-    const isDown = direction === 'down';
-
-    // Keep the arrow *center-aligned* to the source card (y=90), and end at the ClickHouse-aligned bend height.
-    // Two bends total: right -> up/down -> right.
-    //
-    // We "nudge" the arrow end slightly into the ClickHouse rounded corner so it visually touches the border,
-    // without obviously overshooting into the card.
-    const SVG_W = 360;
-    const SVG_H = 180;
-    const CHEVRON_SIZE = 18; // match ConnectionArrow chevron size
-    const CHEVRON_GAP = 1; // tighter line -> chevron spacing
-    const TARGET_GAP = 1; // tighter chevron -> target spacing (still no overlap)
-    const CHEVRON_Y_OFFSET = 0; // prefer true center alignment; baseline issues handled via display:block
-
-    const startY = 90;
-    const bendX = 70;
-    // For the merged single-arrow variant, we go straight into ClickHouse center (y=90).
-    // Otherwise we offset up/down around the center.
-    const TARGET_CENTER_OFFSET = 15;
-    const bendY = isCenter ? startY : startY + (isDown ? TARGET_CENTER_OFFSET : -TARGET_CENTER_OFFSET);
-    // Make the chevron tip stop short of the target by TARGET_GAP, same visual as ConnectionArrow.
-    const chevronLeft = SVG_W - TARGET_GAP - CHEVRON_SIZE;
-    const endX = chevronLeft - CHEVRON_GAP;
-
-    // If merged: single straight line at center. Otherwise: two bends only (right -> up/down -> right).
-    const pathD = isCenter
-      ? `M 0 ${startY} L ${endX} ${startY}`
-      : `M 0 ${startY} L ${bendX} ${startY} L ${bendX} ${bendY} L ${endX} ${bendY}`;
-
+    const color = connectionColors[type] || '#2C2A28';
+    const markerId = `arr-lbend-${type}-${direction}`;
+    // direction: 'batch-down' goes right then down; 'stream-down' same
+    const SVG_W = 96, SVG_H = 96;
+    const d = direction === 'batch-down' || direction === 'stream-down'
+      ? `M 4 4 L ${SVG_W - 4} 4 L ${SVG_W - 4} ${SVG_H - 4}`
+      : `M 4 4 L 4 ${SVG_H - 4} L ${SVG_W - 4} ${SVG_H - 4}`;
     return (
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        padding: '0',
-        minWidth: `${SVG_W}px`,
-        height: `${SVG_H}px`,
-        position: 'relative',
-        marginRight: '0px',
-        overflow: 'visible'
-      }}>
-        <svg width={SVG_W} height={SVG_H} style={{ overflow: 'hidden' }}>
-          {/* Main L-shaped path */}
-          <path
-            d={pathD}
-            stroke={color}
-            strokeWidth="2"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          {/* Animated dataflow dots */}
-          {showDataFlow && (
-            <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-              <animateMotion path={pathD} dur="1.5s" repeatCount="indefinite" />
-            </circle>
-          )}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '96px', height: '96px', flexShrink: 0 }}>
+        <svg width={SVG_W} height={SVG_H} style={{ overflow: 'visible' }}>
+          <defs>
+            <marker id={markerId} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0,0 6,3 0,6" fill={color} />
+            </marker>
+          </defs>
+          <path d={d} fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="5,4"
+            strokeLinecap="round" strokeLinejoin="round"
+            markerEnd={`url(#${markerId})`} />
         </svg>
-
-        {/* Use the SAME chevron icon as `ConnectionArrow` (reference chevron style). */}
-        <div
-          style={{
-            position: 'absolute',
-            left: `${chevronLeft}px`,
-            top: `${bendY + CHEVRON_Y_OFFSET}px`,
-            transform: 'translateY(-50%)',
-            color,
-            pointerEvents: 'none'
-          }}
-        >
-          <ChevronRight size={CHEVRON_SIZE} strokeWidth={2} style={{ display: 'block' }} />
-        </div>
       </div>
     );
   };
 
-  // Two sources -> one target: draw two lines from the two collector centers,
-  // merge them, then continue as a single centered line into ClickHouse.
   const MergeToCenterArrow = ({ type }) => {
-    const color = connectionColors[type] || '#4A7A9B';
-
-    // This arrow column sits between the stacked collectors (180 + 100 + 180 = 460).
-    const SVG_W = 120;
-    const SVG_H = 460;
-    const STROKE_W = 2;
-
-    const CHEVRON_SIZE = 18;
-    const CHEVRON_GAP = 1;
-    const TARGET_GAP = 1;
-
-    // Collector centers inside this 460px column.
-    const TOP_Y = 90; // first card center
-    const BOTTOM_Y = 370; // second card center (180 + 100 + 90)
-    const MERGE_Y = 230; // column vertical center (align to ClickHouse center)
-
-    const MERGE_X = 70;
-    const chevronLeft = SVG_W - TARGET_GAP - CHEVRON_SIZE;
-    const endX = chevronLeft - CHEVRON_GAP;
-
-    const topPath = `M 0 ${TOP_Y} L ${MERGE_X} ${TOP_Y} L ${MERGE_X} ${MERGE_Y}`;
-    const bottomPath = `M 0 ${BOTTOM_Y} L ${MERGE_X} ${BOTTOM_Y} L ${MERGE_X} ${MERGE_Y}`;
-    const mainPath = `M ${MERGE_X} ${MERGE_Y} L ${endX} ${MERGE_Y}`;
-
+    const color = connectionColors[type] || '#2C2A28';
+    const SVG_W = 300, SVG_H = 80;
+    // Two source points merge to center bottom
+    const cx = SVG_W / 2;
+    const topPath = `M ${cx * 0.25} 0 Q ${cx * 0.25} ${SVG_H * 0.6}, ${cx} ${SVG_H}`;
+    const bottomPath = `M ${cx * 1.75} 0 Q ${cx * 1.75} ${SVG_H * 0.6}, ${cx} ${SVG_H}`;
+    const markerId = `arr-merge-${type}`;
     return (
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          padding: '0',
-          minWidth: `${SVG_W}px`,
-          height: `${SVG_H}px`,
-          position: 'relative',
-          overflow: 'visible'
-        }}
-      >
-        <svg width={SVG_W} height={SVG_H} style={{ overflow: 'hidden' }}>
-          {/* Branches from both sources */}
-          <path
-            d={topPath}
-            stroke={color}
-            strokeWidth={STROKE_W}
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d={bottomPath}
-            stroke={color}
-            strokeWidth={STROKE_W}
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          {/* Merged single line to ClickHouse center */}
-          <path
-            d={mainPath}
-            stroke={color}
-            strokeWidth={STROKE_W}
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          {/* Animated dataflow dots */}
-          {showDataFlow && (
-            <>
-              <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-                <animateMotion path={topPath} dur="1.5s" repeatCount="indefinite" />
-              </circle>
-              <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-                <animateMotion path={bottomPath} dur="1.5s" repeatCount="indefinite" />
-              </circle>
-              <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-                <animateMotion path={mainPath} begin="0.6s" dur="1.5s" repeatCount="indefinite" />
-              </circle>
-            </>
-          )}
-
-          {/* Visual merge node */}
-          <circle cx={MERGE_X} cy={MERGE_Y} r="3" fill={color} />
-
-          {/* Chevron at the target end (same style as ConnectionArrow) */}
-          <g
-            transform={`translate(${chevronLeft}, ${MERGE_Y})`}
-            style={{ color }}
-          >
-            <g transform="translate(0, -9)">
-              <ChevronRight size={CHEVRON_SIZE} strokeWidth={2} style={{ display: 'block' }} />
-            </g>
-          </g>
+      <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+        <svg width={SVG_W} height={SVG_H} style={{ overflow: 'visible' }}>
+          <defs>
+            <marker id={markerId} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0,0 6,3 0,6" fill={color} />
+            </marker>
+          </defs>
+          <path d={topPath} fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="5,4" strokeLinecap="round" markerEnd={`url(#${markerId})`} />
+          <path d={bottomPath} fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="5,4" strokeLinecap="round" />
         </svg>
       </div>
     );
   };
 
   // MapReduce: Fan-out arrow (1 source splits down to N targets)
-  const MapReduceFanOutArrow = ({ color = '#9E5A3C', count = 3, cardGap = 40 }) => {
-    const cardWidth = 180;
+  const MapReduceFanOutArrow = ({ color = '#E8654A', count = 3, cardGap = 40 }) => {
+    const cardWidth = 120;
     const SVG_W = (count * cardWidth) + ((count - 1) * cardGap);
     const SVG_H = 80;
     const centerX = SVG_W / 2;
     const spacing = cardWidth + cardGap;
     const startOffset = centerX - ((count - 1) / 2) * spacing;
-
+    const markerId = `fanout-arr-${count}`;
     return (
       <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
         <svg width={SVG_W} height={SVG_H} style={{ overflow: 'visible' }}>
+          <defs>
+            <marker id={markerId} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0,0 6,3 0,6" fill={color} />
+            </marker>
+          </defs>
           {Array.from({ length: count }).map((_, i) => {
             const targetX = startOffset + i * spacing;
             const d = `M ${centerX} 0 Q ${centerX} ${SVG_H * 0.5}, ${targetX} ${SVG_H + 8}`;
             return (
-              <g key={i}>
-                <path d={d} stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" />
-                {showDataFlow && (
-                  <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-                    <animateMotion path={d} dur="1.2s" repeatCount="indefinite" begin={`${i * 0.15}s`} />
-                  </circle>
-                )}
-                <g transform={`translate(${targetX}, ${SVG_H + 8})`}>
-                  <polyline points="-5,-7 0,0 5,-7" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </g>
-              </g>
+              <path key={i} d={d} stroke={color} strokeWidth="1.5" fill="none"
+                strokeDasharray="5,4" strokeLinecap="round"
+                markerEnd={`url(#${markerId})`} />
             );
           })}
         </svg>
@@ -2675,33 +2398,31 @@ for message in consumer:
   };
 
   // MapReduce: Fan-in arrow (multiple sources merge to 1 target)
-  const MapReduceFanInArrow = ({ color = '#9E7824', sourceCount = 3 }) => {
-    const SVG_W = (sourceCount * 180) + ((sourceCount - 1) * 40);
+  const MapReduceFanInArrow = ({ color = '#4A5FE3', sourceCount = 3 }) => {
+    const cardWidth = 120;
+    const SVG_W = (sourceCount * cardWidth) + ((sourceCount - 1) * 40);
     const SVG_H = 80;
     const centerX = SVG_W / 2;
-    const spacing = 180 + 40;
+    const spacing = cardWidth + 40;
     const startOffset = centerX - ((sourceCount - 1) / 2) * spacing;
-
+    const markerId = `fanin-arr-${sourceCount}`;
     return (
       <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
         <svg width={SVG_W} height={SVG_H} style={{ overflow: 'visible' }}>
+          <defs>
+            <marker id={markerId} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0,0 6,3 0,6" fill={color} />
+            </marker>
+          </defs>
           {Array.from({ length: sourceCount }).map((_, i) => {
             const sourceX = startOffset + i * spacing;
             const d = `M ${sourceX} 0 Q ${sourceX} ${SVG_H * 0.5}, ${centerX} ${SVG_H + 8}`;
             return (
-              <g key={i}>
-                <path d={d} stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" />
-                {showDataFlow && (
-                  <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-                    <animateMotion path={d} dur="1.2s" repeatCount="indefinite" begin={`${i * 0.15}s`} />
-                  </circle>
-                )}
-              </g>
+              <path key={i} d={d} stroke={color} strokeWidth="1.5" fill="none"
+                strokeDasharray="5,4" strokeLinecap="round"
+                markerEnd={i === Math.floor(sourceCount / 2) ? `url(#${markerId})` : undefined} />
             );
           })}
-          <g transform={`translate(${centerX}, ${SVG_H + 8})`}>
-            <polyline points="-5,-7 0,0 5,-7" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </g>
         </svg>
       </div>
     );
@@ -2711,38 +2432,27 @@ for message in consumer:
   const MapReduceShuffleArrows = () => {
     const sourceCount = 3;
     const targetCount = 2;
-    const SVG_W = (sourceCount * 180) + ((sourceCount - 1) * 40);
+    const cardWidth = 120;
+    const SVG_W = (sourceCount * cardWidth) + ((sourceCount - 1) * 40);
     const SVG_H = 100;
-    const spacing = 180 + 40;
+    const spacing = cardWidth + 40;
     const centerX = SVG_W / 2;
     const srcOffset = centerX - ((sourceCount - 1) / 2) * spacing;
     const tgtOffset = centerX - ((targetCount - 1) / 2) * spacing;
-    const shuffleColor = '#9E7824';
+    const shuffleColor = '#C07FD4';
+    const markerId = 'shuffle-arr';
 
-    // Each source connects to each target with crossing lines
     const paths = [];
     let idx = 0;
     for (let s = 0; s < sourceCount; s++) {
       for (let t = 0; t < targetCount; t++) {
         const sx = srcOffset + s * spacing;
         const tx = tgtOffset + t * spacing;
-          const shuffleD = `M ${sx} 0 C ${sx} ${SVG_H * 0.4}, ${tx} ${SVG_H * 0.6}, ${tx} ${SVG_H + 8}`;
+        const shuffleD = `M ${sx} 0 C ${sx} ${SVG_H * 0.4}, ${tx} ${SVG_H * 0.6}, ${tx} ${SVG_H + 8}`;
         paths.push(
-          <g key={idx}>
-            <path
-              d={shuffleD}
-              stroke={shuffleColor}
-              strokeWidth="1.5"
-              fill="none"
-              strokeLinecap="round"
-              opacity="0.6"
-            />
-            {showDataFlow && (
-              <circle r="4" fill={shuffleColor} filter={`drop-shadow(0 0 4px ${shuffleColor})`}>
-                <animateMotion path={shuffleD} dur={`${1.0 + idx * 0.2}s`} repeatCount="indefinite" begin={`${idx * 0.12}s`} />
-              </circle>
-            )}
-          </g>
+          <path key={idx} d={shuffleD} stroke={shuffleColor} strokeWidth="1.5" fill="none"
+            strokeDasharray="5,4" strokeLinecap="round" opacity="0.75"
+            markerEnd={s === 0 && t === 0 ? `url(#${markerId})` : undefined} />
         );
         idx++;
       }
@@ -2751,70 +2461,41 @@ for message in consumer:
     return (
       <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
         <svg width={SVG_W} height={SVG_H} style={{ overflow: 'visible' }}>
+          <defs>
+            <marker id={markerId} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0,0 6,3 0,6" fill={shuffleColor} />
+            </marker>
+          </defs>
           {paths}
-          {/* Chevrons at each target */}
-          {Array.from({ length: targetCount }).map((_, t) => {
-            const tx = tgtOffset + t * spacing;
-            return (
-              <g key={t} transform={`translate(${tx}, ${SVG_H + 8})`}>
-                <polyline points="-5,-7 0,0 5,-7" fill="none" stroke={shuffleColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </g>
-            );
-          })}
         </svg>
       </div>
     );
   };
 
   // MapReduce: Mini-card for parallel tasks (smaller than ComponentCard)
-  const MapReduceMiniCard = ({ label, icon: IconComp, color, borderColor, isActive = true, onClick, exampleText }) => {
-    const step = mapReduceStep;
-    const dimmed = step > 0 && !isActive;
-
+  const MapReduceMiniCard = ({ label, color, isActive = true, onClick, exampleText }) => {
+    const dimmed = mapReduceStep > 0 && !isActive;
     return (
       <div
         onClick={onClick}
+        className="cohere-node"
         style={{
-          background: `${color}`,
-          border: `2px solid ${borderColor}`,
-          borderRadius: '12px',
-          padding: '12px',
-          width: '160px',
-          minHeight: '80px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '8px',
-          cursor: 'pointer',
-          transition: 'all 0.3s',
-          opacity: dimmed ? 0.25 : 1,
-          boxShadow: (!dimmed && step > 0) ? `0 0 20px ${borderColor}66, 0 0 40px ${borderColor}22` : `0 0 12px ${borderColor}33`,
-          transform: (!dimmed && step > 0) ? 'scale(1.05)' : 'scale(1)'
+          background: color,
+          width: '120px',
+          height: '56px',
+          padding: '6px 8px',
+          opacity: dimmed ? 0.35 : 1,
+          cursor: onClick ? 'pointer' : 'default',
+          flexShrink: 0,
         }}
-        onMouseEnter={(e) => { if (!dimmed) e.currentTarget.style.transform = 'scale(1.08)'; }}
-        onMouseLeave={(e) => { if (!dimmed) e.currentTarget.style.transform = (!dimmed && step > 0) ? 'scale(1.05)' : 'scale(1)'; }}
       >
-        <IconComp size={28} color={borderColor} strokeWidth={1.5} />
-        <span style={{
-          color: 'white',
-          fontSize: '12px',
-          fontWeight: '600',
-          textAlign: 'center'
-        }}>{label}</span>
-        {showMapReduceExample && exampleText && (
-          <div style={{
-            background: 'rgba(200,195,188,0.3)',
-            borderRadius: '6px',
-            padding: '4px 8px',
-            fontSize: '10px',
-            color: '#C8A84E',
-            fontFamily: 'Monaco, Consolas, monospace',
-            textAlign: 'center',
-            marginTop: '2px',
-            maxWidth: '140px',
-            wordBreak: 'break-word'
-          }}>{exampleText}</div>
+        <span style={{ color: 'white', fontSize: '11px', fontWeight: '700', textAlign: 'center', lineHeight: 1.25, display: 'block', width: '100%' }}>
+          {label}
+        </span>
+        {exampleText && !dimmed && (
+          <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.75)', textAlign: 'center', marginTop: '2px', lineHeight: 1.2 }}>
+            {exampleText}
+          </div>
         )}
       </div>
     );
@@ -5894,368 +5575,147 @@ for message in consumer:
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-page)', color: 'var(--text-primary)', fontFamily: 'var(--font-sans)' }}>
-      <style>{`
-        @keyframes flowRight {
-          0% { left: 0; opacity: 0; }
-          10% { opacity: 1; }
-          90% { opacity: 1; }
-          100% { left: calc(100% - 10px); opacity: 0; }
-        }
-        @keyframes flowDown {
-          0% { top: 0; opacity: 0; }
-          10% { opacity: 1; }
-          90% { opacity: 1; }
-          100% { top: calc(100% - 10px); opacity: 0; }
-        }
-        @keyframes flowUp {
-          0% { top: calc(100% - 10px); opacity: 0; }
-          10% { opacity: 1; }
-          90% { opacity: 1; }
-          100% { top: 0; opacity: 0; }
-        }
-      `}</style>
+    <div className="app-shell">
 
-      <div style={{ padding: '32px' }}>
-        <div style={{ maxWidth: '1600px', margin: '0 auto' }}>
-          {showBanner && (
-            <div
-              style={{
-                background: 'var(--bg-panel)',
-                border: '1px solid var(--border)',
-                borderRadius: '12px',
-                padding: '16px 20px',
-                marginBottom: '24px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: '16px',
-                boxShadow: 'none'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
-                <Info size={20} style={{ color: 'var(--text-secondary)', flexShrink: 0 }} />
-                <p style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.6', margin: 0 }}>
-                  <strong style={{ color: 'var(--text-primary)' }}>Work in Progress:</strong> This project is actively evolving and will be updated regularly. The content is provided as-is for educational and reference purposes. Feel free to explore and learn from the architecture patterns presented here.
-                </p>
-              </div>
+      {/* ── Sidebar Navigation ── */}
+      <aside className="sidebar">
+        <div className="sidebar-brand">
+          <div className="sidebar-brand-title">Big Data<br/>Architecture<br/>Explorer</div>
+          <div className="sidebar-brand-sub">IS459 Reference</div>
+        </div>
+
+        <div className="sidebar-section">
+          <span className="sidebar-section-label">Architecture</span>
+          {[
+            { key: 'lambda',    label: 'Lambda',    color: '#E8654A' },
+            { key: 'kappa',     label: 'Kappa',     color: '#4A5FE3' },
+            { key: 'streaming', label: 'Streaming', color: '#2A9D99' },
+            { key: 'batch',     label: 'Batch',     color: '#E8654A' },
+            { key: 'mapreduce', label: 'MapReduce', color: '#C07FD4' },
+            { key: 'spark',     label: 'Spark',     color: '#4A5FE3' },
+          ].map(({ key, label, color }) => {
+            const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && !showComparison;
+            return (
               <button
-                onClick={handleDismissBanner}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: 'var(--text-muted)',
-                  cursor: 'pointer',
-                  padding: '4px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: '6px',
-                  transition: 'all 0.2s',
-                  flexShrink: 0
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'var(--bg-hover)';
-                  e.currentTarget.style.color = 'var(--text-primary)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent';
-                  e.currentTarget.style.color = 'var(--text-muted)';
-                }}
-                aria-label="Dismiss banner"
+                key={key}
+                className={`sidebar-item${isActive ? ' active' : ''}`}
+                onClick={() => { setActiveArchitecture(key); setSelectedComponent(null); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); setShowComparison(false); }}
               >
-                <X size={20} />
+                <span className="sidebar-dot" style={{ background: isActive ? 'var(--blue)' : color }} />
+                {label}
               </button>
-            </div>
-          )}
+            );
+          })}
+        </div>
 
-          <div style={{ marginBottom: '32px' }}>
-            <h1 style={{ fontSize: '36px', fontWeight: '300', marginBottom: '8px', fontFamily: 'var(--font-serif)', color: 'var(--text-primary)' }}>
-              Big Data Architecture Explorer
-            </h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '16px' }}>
-              Interactive 2D visualization of data engineering patterns
-            </p>
-          </div>
+        <hr className="sidebar-divider" />
 
-          {/* Navigation Section - Organized by Category */}
+        <div className="sidebar-section">
+          <span className="sidebar-section-label">Schemas</span>
+          {[
+            { key: 'starSchema',      label: 'Star Schema',  color: '#E8654A' },
+            { key: 'snowflakeSchema', label: 'Snowflake',    color: '#2A9D99' },
+          ].map(({ key, label, color }) => {
+            const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && !showComparison;
+            return (
+              <button
+                key={key}
+                className={`sidebar-item${isActive ? ' active' : ''}`}
+                onClick={() => { setActiveArchitecture(key); setSelectedComponent(null); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); setShowComparison(false); }}
+              >
+                <span className="sidebar-dot" style={{ background: isActive ? 'var(--blue)' : color }} />
+                {label}
+              </button>
+            );
+          })}
+        </div>
+
+        <hr className="sidebar-divider" />
+
+        <div className="sidebar-section">
+          <span className="sidebar-section-label">Resources</span>
+          {[
+            { key: 'info',       label: 'Compare & Glossary', action: () => { setShowAdditionalInfo(!showAdditionalInfo); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); setShowComparison(false); }, active: showAdditionalInfo },
+            { key: 'handson',    label: 'Hands-on Lab',       action: () => { setShowHandsOn(!showHandsOn); setShowAdditionalInfo(false); setShowCurriculum(false); setShowCaseStudies(false); setShowComparison(false); }, active: showHandsOn },
+            { key: 'curriculum', label: 'Curriculum',         action: () => { setShowCurriculum(!showCurriculum); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCaseStudies(false); setShowComparison(false); }, active: showCurriculum },
+            { key: 'cases',      label: 'Case Studies',       action: () => { setShowCaseStudies(!showCaseStudies); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowComparison(false); }, active: showCaseStudies },
+            { key: 'comparison', label: 'Dist. vs Clustered', action: () => { setShowComparison(!showComparison); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); }, active: showComparison },
+          ].map(({ key, label, action, active }) => (
+            <button
+              key={key}
+              className={`sidebar-item${active ? ' active' : ''}`}
+              onClick={action}
+            >
+              <span className="sidebar-dot" style={{ background: active ? 'var(--blue)' : 'var(--gray-300)' }} />
+              {label}
+            </button>
+          ))}
+        </div>
+      </aside>
+
+      {/* ── Main Content ── */}
+      <main className="main-content">
+
+        {/* Banner */}
+        {showBanner && (
           <div style={{
-            marginBottom: '24px',
-            background: 'var(--bg-panel)',
-            border: '1px solid var(--border)',
-            borderRadius: '16px',
-            padding: '20px 24px',
+            background: 'var(--warm-white)',
+            border: '1px solid rgba(0,0,0,0.1)',
+            borderRadius: '8px',
+            padding: '12px 16px',
+            marginBottom: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '12px',
           }}>
-            {/* Two-row layout: Architecture topics on top, Resources below */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-
-              {/* Row 1: Architecture Categories */}
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
-                  <div style={{
-                    width: '4px',
-                    height: '16px',
-                    borderRadius: '2px',
-                    background: 'var(--text-muted)'
-                  }} />
-                  <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1.5px' }}>
-                    Architecture Patterns
-                  </span>
-                </div>
-                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
-                  {[
-                    { key: 'lambda',          icon: 'L',  schema: false },
-                    { key: 'kappa',           icon: 'K',  schema: false },
-                    { key: 'streaming',       icon: 'S',  schema: false },
-                    { key: 'batch',           icon: 'B',  schema: false },
-                    { key: 'mapreduce',       icon: 'MR', schema: false },
-                    { key: 'spark',           icon: 'SP', schema: false },
-                    { key: '__divider__' },
-                    { key: 'starSchema',      icon: null, schema: true },
-                    { key: 'snowflakeSchema', icon: null, schema: true },
-                  ].map(({ key, icon, schema }) => {
-                    if (key === '__divider__') return (
-                      <div key="div" style={{ width: '1px', height: '24px', background: 'var(--border)', margin: '0 4px', flexShrink: 0 }} />
-                    );
-                    const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && !showComparison;
-                    return (
-                      <button
-                        key={key}
-                        onClick={() => {
-                          setActiveArchitecture(key);
-                          setSelectedComponent(null);
-                          setShowAdditionalInfo(false);
-                          setShowHandsOn(false);
-                          setShowCurriculum(false);
-                          setShowCaseStudies(false);
-                          setShowComparison(false);
-                        }}
-                        style={{
-                          padding: '7px 14px',
-                          background: isActive ? 'var(--text-primary)' : 'var(--bg-hover)',
-                          border: `1px solid ${isActive ? 'var(--text-primary)' : 'var(--border)'}`,
-                          borderRadius: '8px',
-                          color: isActive ? 'var(--bg-page)' : 'var(--text-secondary)',
-                          fontSize: '13px',
-                          fontWeight: isActive ? '600' : '500',
-                          cursor: 'pointer',
-                          transition: 'all 0.15s ease',
-                          whiteSpace: 'nowrap',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          flexShrink: 0,
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!isActive) {
-                            e.currentTarget.style.color = 'var(--text-primary)';
-                            e.currentTarget.style.borderColor = 'var(--text-muted)';
-                            e.currentTarget.style.background = 'var(--bg-panel)';
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!isActive) {
-                            e.currentTarget.style.color = 'var(--text-secondary)';
-                            e.currentTarget.style.borderColor = 'var(--border)';
-                            e.currentTarget.style.background = 'var(--bg-hover)';
-                          }
-                        }}
-                      >
-                        {icon && (
-                          <span style={{
-                            width: '18px', height: '18px', borderRadius: '3px',
-                            background: isActive ? 'rgba(255,255,255,0.15)' : 'var(--border)',
-                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: '9px', fontWeight: '700',
-                            color: isActive ? 'var(--bg-page)' : 'var(--text-secondary)',
-                            flexShrink: 0,
-                          }}>
-                            {icon}
-                          </span>
-                        )}
-                        {!icon && (key === 'starSchema' ? <Star size={13} /> : <Snowflake size={13} />)}
-                        {architectures[key].name}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Separator */}
-              <div style={{ height: '1px', background: 'rgba(235,231,225,1)' }} />
-
-              {/* Row 2: Learning Resources */}
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
-                  <div style={{
-                    width: '4px',
-                    height: '16px',
-                    borderRadius: '2px',
-                    background: 'var(--text-muted)'
-                  }} />
-                  <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1.5px' }}>
-                    Learning Resources
-                  </span>
-                </div>
-                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                  {/* Info */}
-                  {[
-                    { key: 'info', label: 'Compare & Glossary', color: '#a78bfa', bgColor: '139, 92, 246', state: showAdditionalInfo, setState: () => { setShowAdditionalInfo(!showAdditionalInfo); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); setShowComparison(false); if (!showAdditionalInfo) { setTimeout(() => { const el = document.getElementById('additional-info'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
-                      icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                    },
-                    { key: 'handson', label: 'Hands-on Lab', color: '#4A7A56', bgColor: '16, 185, 129', state: showHandsOn, setState: () => { setShowHandsOn(!showHandsOn); setShowAdditionalInfo(false); setShowCurriculum(false); setShowCaseStudies(false); setShowComparison(false); if (!showHandsOn) { setTimeout(() => { const el = document.getElementById('hands-on'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
-                      icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
-                    },
-                    { key: 'curriculum', label: 'Curriculum', color: '#9E7824', bgColor: '245, 158, 11', state: showCurriculum, setState: () => { setShowCurriculum(!showCurriculum); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCaseStudies(false); setShowComparison(false); if (!showCurriculum) { setTimeout(() => { const el = document.getElementById('curriculum-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
-                      icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
-                    },
-                    { key: 'cases', label: 'Case Studies', color: '#9E5A3C', bgColor: '236, 72, 153', state: showCaseStudies, setState: () => { setShowCaseStudies(!showCaseStudies); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowComparison(false); if (!showCaseStudies) { setTimeout(() => { const el = document.getElementById('case-studies-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
-                      icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                    },
-                    { key: 'comparison', label: 'Distributed vs Clustered', color: '#3A8080', bgColor: '6, 182, 212', state: showComparison, setState: () => { setShowComparison(!showComparison); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); if (!showComparison) { setTimeout(() => { const el = document.getElementById('comparison-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
-                      icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"></path></svg>
-                    }
-                  ].map(({ key, label, color, bgColor, state, setState, icon }) => (
-                    <button
-                      key={key}
-                      onClick={setState}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        padding: '8px 16px',
-                        background: state ? `rgba(${bgColor}, 0.12)` : 'var(--bg-hover)',
-                        border: state ? `1px solid rgba(${bgColor}, 0.4)` : '1px solid var(--border)',
-                        borderRadius: '10px',
-                        color: state ? color : 'var(--text-secondary)',
-                        fontSize: '13px',
-                        fontWeight: '500',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!state) {
-                          e.currentTarget.style.background = `rgba(${bgColor}, 0.08)`;
-                          e.currentTarget.style.borderColor = `rgba(${bgColor}, 0.25)`;
-                          e.currentTarget.style.color = color;
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!state) {
-                          e.currentTarget.style.background = 'var(--bg-hover)';
-                          e.currentTarget.style.borderColor = 'var(--border)';
-                          e.currentTarget.style.color = 'var(--text-secondary)';
-                        }
-                      }}
-                    >
-                      {icon}
-                      <span>{label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1 }}>
+              <Info size={16} style={{ color: 'var(--gray-300)', flexShrink: 0 }} />
+              <p style={{ color: 'var(--gray-500)', fontSize: '13px', lineHeight: '1.5', margin: 0 }}>
+                <strong style={{ color: 'var(--near-black)', fontWeight: '600' }}>Work in Progress:</strong>{' '}
+                Content is provided as-is for educational and reference purposes.
+              </p>
             </div>
+            <button onClick={handleDismissBanner} style={{ background: 'transparent', border: 'none', color: 'var(--gray-300)', cursor: 'pointer', padding: '2px', display: 'flex', borderRadius: '4px' }}
+              onMouseEnter={e => e.currentTarget.style.color = 'var(--near-black)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'var(--gray-300)'}
+              aria-label="Dismiss">
+              <X size={16} />
+            </button>
           </div>
+        )}
 
           {!showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && !showComparison && (
           <>
-          <div
-            style={{
-              background: 'rgba(245,243,239,0.8)',
-              
-              border: '1px solid rgba(235,231,225,1)',
-              borderRadius: '12px',
-              padding: '20px',
-              marginBottom: '24px'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
-                  <h2 style={{ fontSize: '24px', fontWeight: 'bold' }}>
-                    {currentArch.name}
-                  </h2>
-                  <span style={{
-                    padding: '4px 12px',
-                    borderRadius: '6px',
-                    fontSize: '12px',
-                    fontWeight: '600',
-                    background: currentArch.difficulty === 'Beginner' ? 'rgba(34, 197, 94, 0.2)' :
-                                currentArch.difficulty === 'Intermediate' ? 'rgba(74, 122, 155, 0.2)' :
-                                'rgba(239, 68, 68, 0.2)',
-                    color: currentArch.difficulty === 'Beginner' ? '#22c55e' :
-                           currentArch.difficulty === 'Intermediate' ? '#4A7A9B' :
-                           '#ef4444',
-                    border: `1px solid ${currentArch.difficulty === 'Beginner' ? '#22c55e' :
-                                         currentArch.difficulty === 'Intermediate' ? '#4A7A9B' :
-                                         '#ef4444'}`
-                  }}>
-                    {currentArch.difficulty}
-                  </span>
-                </div>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '8px' }}>
-                  {currentArch.tagline}
-                </p>
-                <p style={{ color: 'var(--text-body)', fontSize: '14px' }}>
-                  {currentArch.description}
-                </p>
-              </div>
-              <button
-                onClick={() => setShowDataFlow(!showDataFlow)}
-                style={{
-                  padding: '10px 20px',
-                  background: 'rgba(235,232,228,0.6)',
-                  border: '1px solid rgba(235,231,225,1)',
-                  borderRadius: '8px',
-                  color: 'var(--text-primary)',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(235,232,228,0.8)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(235,232,228,0.6)'}
-              >
-                <Sparkles size={18} />
-                <span>Data Flow {showDataFlow ? 'ON' : 'OFF'}</span>
-              </button>
+          <div style={{ marginBottom: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '6px' }}>
+              <h1 style={{ fontSize: '28px', fontWeight: '700', letterSpacing: '-1px', color: 'var(--near-black)', lineHeight: 1 }}>
+                {currentArch.name}
+              </h1>
+              <span className={`badge-pill diff-${currentArch.difficulty?.toLowerCase()}`} style={{ fontSize: '11px', padding: '2px 8px' }}>
+                {currentArch.difficulty}
+              </span>
             </div>
+            <p style={{ color: 'var(--gray-500)', fontSize: '14px', fontWeight: '500', marginBottom: '4px' }}>{currentArch.tagline}</p>
+            <p style={{ color: 'var(--gray-500)', fontSize: '13px', lineHeight: '1.55', maxWidth: '720px' }}>{currentArch.description}</p>
           </div>
 
-          <div
-            style={{
-              background: 'var(--bg-panel)',
-              
-              border: '1px solid rgba(235,231,225,1)',
-              borderRadius: '12px',
-              padding: '16px 24px',
-              marginBottom: '24px'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '32px', flexWrap: 'wrap' }}>
-              <span style={{ color: 'var(--text-secondary)', fontSize: '14px', fontWeight: '600' }}>
-                Connection Types:
-              </span>
-              {Object.entries(connectionColors).map(([type, color]) => {
-                const labels = { stream: 'Stream', batch: 'Batch', query: 'Query', fk: 'Foreign Key', normalize: 'Normalize' };
-                return (
-                  <div key={type} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{
-                      width: '32px',
-                      height: '3px',
-                      background: color,
-                      borderRadius: '2px'
-                    }} />
-                    <span style={{ color: 'var(--text-body)', fontSize: '14px' }}>
-                      {labels[type] || type}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap', marginBottom: '20px', padding: '10px 0', borderBottom: '1px solid rgba(0,0,0,0.07)' }}>
+            <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--gray-300)', textTransform: 'uppercase', letterSpacing: '1.5px', flexShrink: 0 }}>
+              Connection types
+            </span>
+            {Object.entries(connectionColors).map(([type, color]) => {
+              const labels = { stream: 'Stream', batch: 'Batch', query: 'Query', fk: 'Foreign Key', normalize: 'Normalize' };
+              return (
+                <div key={type} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <svg width="28" height="10" style={{ overflow: 'visible' }}>
+                    <line x1="0" y1="5" x2="22" y2="5" stroke={color} strokeWidth="1.5" strokeDasharray="4,3" />
+                    <polygon points="22,5 16,2 16,8" fill={color} />
+                  </svg>
+                  <span style={{ fontSize: '12px', color: 'var(--gray-500)' }}>{labels[type] || type}</span>
+                </div>
+              );
+            })}
           </div>
 
           {showWarning && (
@@ -6286,16 +5746,15 @@ for message in consumer:
 
           <div
             ref={diagramContainerRef}
+            className="diagram-canvas"
             style={{
-              background: 'rgba(245,243,239,0.4)',
-              
-              border: '1px solid rgba(235,231,225,1)',
-              borderRadius: '12px',
-              padding: '60px 40px',
+              padding: '32px',
               marginBottom: '24px',
               minHeight: '500px',
               overflow: 'hidden',
-              position: 'relative'
+              position: 'relative',
+              borderRadius: '12px',
+              display: 'block',
             }}
           >
             <div
@@ -8302,8 +7761,6 @@ for message in consumer:
               </div>
             </div>
           )}
-        </div>
-      </div>
 
       {selectedComponent && (
         <div
@@ -8704,6 +8161,7 @@ extract >> transform >> load`
           </div>
         </div>
       )}
+      </main>
     </div>
   );
 };

@@ -1,43 +1,282 @@
-@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@300;400&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg-page:        #FAFAF7;
-  --bg-hover:       #F5F3EF;
-  --bg-panel:       #F0EDE8;
-  --text-primary:   #2C2A28;
-  --text-body:      #5C574F;
-  --text-secondary: #8A837A;
-  --text-muted:     #B0A99F;
-  --border:         #EBEBEA;
-  --border-light:   #F2F4F7;
-  --font-serif:     'Source Serif 4', Georgia, serif;
-  --font-sans:      'Inter', -apple-system, sans-serif;
+  /* Notion design tokens */
+  --white:          #ffffff;
+  --warm-white:     #f6f5f4;
+  --near-black:     rgba(0,0,0,0.95);
+  --gray-500:       #615d59;
+  --gray-300:       #a39e98;
+  --whisper:        rgba(0,0,0,0.1);
+  --blue:           #0075de;
+  --blue-hover:     #005bab;
+  --badge-bg:       #f2f9ff;
+  --badge-text:     #097fe8;
+  --shadow-card:    rgba(0,0,0,0.04) 0px 4px 18px, rgba(0,0,0,0.027) 0px 2.025px 7.85px, rgba(0,0,0,0.02) 0px 0.8px 2.93px, rgba(0,0,0,0.01) 0px 0.175px 1.04px;
+  /* Cohere diagram */
+  --c-bg:           #F0EFED;
+  --c-coral:        #E8654A;
+  --c-blue:         #4A5FE3;
+  --c-purple:       #C07FD4;
+  --c-teal:         #2A9D99;
+  --c-arrow:        #2C2A28;
+  /* Legacy aliases used in inline styles — keep for compatibility */
+  --bg-page:        var(--white);
+  --bg-hover:       var(--warm-white);
+  --bg-panel:       var(--warm-white);
+  --text-primary:   var(--near-black);
+  --text-body:      var(--gray-500);
+  --text-secondary: var(--gray-500);
+  --text-muted:     var(--gray-300);
+  --border:         var(--whisper);
+  --border-light:   var(--whisper);
+  --font-sans:      'Inter', -apple-system, system-ui, sans-serif;
   --font-mono:      'IBM Plex Mono', monospace;
 }
 
-body {
-  margin: 0;
+html, body {
   font-family: var(--font-sans);
-  background: var(--bg-page);
-  color: var(--text-primary);
+  background: var(--white);
+  color: var(--near-black);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
 }
 
-code {
-  font-family: var(--font-mono);
+code { font-family: var(--font-mono); }
+
+/* ── App Shell: sidebar + main ── */
+.app-shell {
+  display: grid;
+  grid-template-columns: 208px 1fr;
+  min-height: 100vh;
 }
 
-/* ReactFlow warm theme */
-.react-flow__background {
-  background: var(--bg-page) !important;
+/* ── Sidebar ── */
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--warm-white);
+  border-right: 1px solid rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  flex-shrink: 0;
 }
-.react-flow__edge-path {
-  stroke: var(--border) !important;
+
+.sidebar-brand {
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
 }
+
+.sidebar-brand-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.25px;
+  line-height: 1.35;
+  color: var(--near-black);
+}
+
+.sidebar-brand-sub {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gray-300);
+  margin-top: 3px;
+}
+
+.sidebar-section { padding: 12px 8px 4px; }
+
+.sidebar-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--gray-300);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 0 8px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray-500);
+  transition: background 0.1s, color 0.1s;
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-family: var(--font-sans);
+}
+
+.sidebar-item:hover {
+  background: rgba(0,0,0,0.05);
+  color: var(--near-black);
+}
+
+.sidebar-item.active {
+  background: rgba(0,117,222,0.1);
+  color: var(--blue);
+  font-weight: 600;
+}
+
+.sidebar-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sidebar-divider {
+  border: none;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  margin: 8px 16px;
+}
+
+/* ── Main content ── */
+.main-content {
+  overflow-y: auto;
+  padding: 32px;
+  background: var(--white);
+}
+
+/* ── Notion card ── */
+.notion-card {
+  background: var(--white);
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+}
+
+/* ── Cohere diagram canvas ── */
+.diagram-canvas {
+  background: var(--c-bg);
+  border-radius: 0 0 12px 12px;
+  padding: 32px;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Cohere node box ── */
+.cohere-node {
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+  text-align: center;
+  line-height: 1.25;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+  user-select: none;
+}
+
+.cohere-node:hover { opacity: 0.88; transform: translateY(-1px); }
+.cohere-node.selected { outline: 3px solid rgba(0,0,0,0.2); outline-offset: 2px; }
+
+/* ── Cohere dashed arrow ── */
+.cohere-arrow-svg { overflow: visible; }
+
+/* ── Buttons ── */
+.btn-notion {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 4px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: transparent;
+  color: var(--gray-500);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-notion:hover { background: var(--warm-white); color: var(--near-black); }
+
+.btn-notion-primary {
+  background: var(--blue);
+  color: white;
+  border-color: transparent;
+}
+.btn-notion-primary:hover { background: var(--blue-hover); }
+
+/* ── Badge pill ── */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--badge-bg);
+  color: var(--badge-text);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.125px;
+  padding: 3px 9px;
+  border-radius: 9999px;
+}
+
+/* ── Tech chips ── */
+.tech-chip {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--warm-white);
+  border: 1px solid rgba(0,0,0,0.1);
+  color: var(--near-black);
+  font-family: var(--font-sans);
+}
+
+/* ── Difficulty badge ── */
+.diff-beginner   { background: rgba(26,174,57,0.12); color: #1aae39; border: 1px solid rgba(26,174,57,0.3); }
+.diff-intermediate { background: rgba(0,117,222,0.1); color: var(--blue); border: 1px solid rgba(0,117,222,0.25); }
+.diff-advanced   { background: rgba(221,91,0,0.12); color: #dd5b00; border: 1px solid rgba(221,91,0,0.3); }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  .sidebar {
+    position: static;
+    height: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding: 8px;
+    gap: 4px;
+    border-right: none;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+  .sidebar-brand { display: none; }
+  .sidebar-section { padding: 4px; display: flex; flex-direction: row; flex-wrap: wrap; gap: 2px; align-items: center; }
+  .sidebar-section-label { display: none; }
+  .sidebar-item { padding: 4px 10px; font-size: 12px; white-space: nowrap; }
+  .sidebar-divider { display: none; }
+  .main-content { padding: 16px; overflow-x: auto; }
+  .diagram-canvas { overflow-x: auto; min-height: 220px; }
+}
+
+/* ReactFlow overrides */
+.react-flow__background { background: var(--c-bg) !important; }
+.react-flow__edge-path { stroke: var(--c-arrow) !important; stroke-dasharray: 5,4 !important; stroke-width: 1.5px !important; }
+.react-flow__edge-text { font-size: 11px !important; fill: var(--gray-500) !important; }
+.react-flow__arrowhead path { fill: var(--c-arrow) !important; }
