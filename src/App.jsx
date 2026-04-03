@@ -4120,22 +4120,22 @@ for message in consumer:
       { name: 'group_name', type: 'VARCHAR' }
     ];
 
-    const SVG_W = 1100;
-    const SVG_H = 920;
+    const SVG_W = 1040;
+    const SVG_H = 900;
     const SNOW_TW = 220;   // ERTable width
     const SNOW_SW = 190;   // ERSubTable width
 
     // Positions — organized as a clear ER diagram layout
     const tables = {
-      fact:       { x: 420, y: 330 },
-      patient:    { x: 60,  y: 160 },
-      physician:  { x: 780, y: 160 },
-      diagnosis:  { x: 420, y: 640 },
-      date:       { x: 60,  y: 560 },
-      insurance:  { x: 60,  y: 0 },
-      department: { x: 780, y: 0 },
-      hospital:   { x: 880, y: 340 },
-      dxCategory: { x: 420, y: 830 }
+      fact:       { x: 390, y: 320 },
+      patient:    { x: 40,  y: 160 },
+      physician:  { x: 690, y: 160 },
+      diagnosis:  { x: 390, y: 630 },
+      date:       { x: 40,  y: 540 },
+      insurance:  { x: 40,  y: 0 },
+      department: { x: 690, y: 0 },
+      hospital:   { x: 790, y: 330 },
+      dxCategory: { x: 390, y: 810 }
     };
 
     // Column-level connection definitions for snowflake schema
@@ -5352,7 +5352,7 @@ for message in consumer:
       <aside className="sidebar">
         <div className="sidebar-brand">
           <div className="sidebar-brand-title">Big Data<br/>Architecture<br/>Explorer</div>
-          <div className="sidebar-brand-sub">IS459 Reference</div>
+          <div className="sidebar-brand-sub">Reference Guide</div>
         </div>
 
         <div className="sidebar-section">
