@@ -114,7 +114,7 @@ const BigDataArchitectureExplorer = () => {
 
   // Hands On section responsive scaling
   const handsOnDiagramRef = useRef(null);
-  const { scale: handsOnScale } = useResponsiveScale('blockchain', handsOnDiagramRef);
+  const { scale: handsOnScale, showWarning: handsOnShowWarning } = useResponsiveScale('blockchain', handsOnDiagramRef);
   const streamingDiagramRef = useRef(null);
   const { scale: streamingLabScale } = useResponsiveScale('velocityLab', streamingDiagramRef);
 
