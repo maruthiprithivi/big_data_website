@@ -72,6 +72,7 @@ const BigDataArchitectureExplorer = () => {
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const [showHandsOn, setShowHandsOn] = useState(false);
+  const [activeLabTab, setActiveLabTab] = useState('blockchain');
   const [showBanner, setShowBanner] = useState(() => {
     const bannerDismissed = localStorage.getItem('bannerDismissed');
     return !bannerDismissed;
@@ -257,7 +258,7 @@ const BigDataArchitectureExplorer = () => {
 
   // Safeguard: Reset to lambda if blockchain is selected but hands-on is not showing
   useEffect(() => {
-    if (activeArchitecture === 'blockchain' && !showHandsOn) {
+    if ((activeArchitecture === 'blockchain' || activeArchitecture === 'velocityLab') && !showHandsOn) {
       setActiveArchitecture('lambda');
     }
   }, [activeArchitecture, showHandsOn]);
@@ -602,6 +603,72 @@ const BigDataArchitectureExplorer = () => {
         { from: 'solana-collector', to: 'clickhouse', type: 'batch' },
         { from: 'clickhouse', to: 'dashboard', type: 'query' },
         { from: 'dashboard', to: 'browser', type: 'query' }
+      ]
+    },
+    velocityLab: {
+      name: 'Velocity Showdown',
+      difficulty: 'Intermediate',
+      tagline: 'Live Streaming Protocol Comparison',
+      description: 'A one-command Docker Compose lab that streams live data from three public sources into Kafka and ClickHouse, letting students see event-velocity differences in real time. Compare HTTP polling (Solana RPC ~2.5 slots/sec), WebSocket (Bluesky Jetstream ~20-30 posts/sec), and Server-Sent Events (Wikipedia SSE ~0.3 edits/sec) side by side.',
+      layout: 'streaming',
+      overview: {
+        text: 'This lab demonstrates the full streaming data pipeline: three heterogeneous sources each using a different streaming protocol feed into a FastAPI collector that produces events to Kafka 4.1.0 (KRaft mode, no ZooKeeper). A micro-batch consumer reads from Kafka and inserts into ClickHouse with TTL-based auto-cleanup. The dashboard polls the collector\'s admin API to show live velocity metrics. Students learn to compare streaming protocols, observe consumer lag in Kafka UI, and query live data with SQL — all from a single docker compose up.',
+        scenario: 'Velocity Showdown — Live Protocol Comparison',
+        scenarioDescription: 'Three public data sources with vastly different event velocities stream simultaneously through Kafka into ClickHouse. Solana RPC polls ~2.5 blockchain slots per second via HTTP. Bluesky Jetstream pushes ~20-30 social posts per second via WebSocket. Wikipedia SSE trickles ~0.3 page edits per second via Server-Sent Events. Students observe these velocity differences in real time on the dashboard, experiment with stopping individual sources, and query the unified events table to analyze protocol behavior.',
+        components: [
+          { name: 'Solana RPC', metric: 'HTTP polling at ~2.5 slots/sec from mainnet-beta' },
+          { name: 'Bluesky Jetstream', metric: 'WebSocket stream at ~20-30 posts/sec' },
+          { name: 'Wikipedia SSE', metric: 'Server-Sent Events at ~0.3 edits/sec' },
+          { name: 'Collector (FastAPI)', metric: 'Producer service at port 8000 with Swagger UI' },
+          { name: 'Kafka 4.1.0', metric: 'KRaft mode, no ZooKeeper, 2-hour log retention' },
+          { name: 'Consumer', metric: 'Micro-batch INSERT into ClickHouse' },
+          { name: 'ClickHouse', metric: 'Columnar DB with 4-hour TTL auto-cleanup' },
+          { name: 'Dashboard', metric: 'Live velocity dashboard at port 3001' }
+        ]
+      },
+      useCases: [
+        'Comparing streaming protocols (HTTP polling vs WebSocket vs SSE)',
+        'Understanding Kafka producer/consumer patterns',
+        'Real-time event velocity analysis',
+        'Columnar database querying with live data'
+      ],
+      advantages: [
+        'Single-command setup (docker compose up)',
+        'Three real public data sources — no API keys needed',
+        'Kafka 4.1.0 with KRaft (no ZooKeeper dependency)',
+        'Auto-cleanup via ClickHouse TTL (4-hour retention)',
+        'Storage guard auto-pauses collection at 5GB',
+        'Kafka UI for browsing topics and consumer lag'
+      ],
+      challenges: [
+        'Public endpoint rate limits and availability',
+        'Different event schemas across sources',
+        'Micro-batch vs true streaming trade-offs',
+        'Resource usage with multiple containers'
+      ],
+      learningResources: [
+        { title: 'GitHub Repository: Velocity Showdown Lab', url: 'https://github.com/maruthiprithivi/big_data_architecture_streaming' },
+        { title: 'Apache Kafka Documentation', url: 'https://kafka.apache.org/documentation/' },
+        { title: 'ClickHouse: Official Documentation', url: 'https://clickhouse.com/docs' }
+      ],
+      components: [
+        { id: 'solana-src', name: 'Solana RPC', shape: 'database', description: 'HTTP polling source', details: 'Polls Solana mainnet-beta RPC at ~2.5 slots/sec via HTTP.', technologies: ['HTTP Polling', 'JSON-RPC'] },
+        { id: 'bluesky-src', name: 'Bluesky Jetstream', shape: 'stream', description: 'WebSocket source', details: 'Connects to Bluesky Jetstream WebSocket for ~20-30 posts/sec.', technologies: ['WebSocket', 'AT Protocol'] },
+        { id: 'wikipedia-src', name: 'Wikipedia SSE', shape: 'stream', description: 'SSE source', details: 'Subscribes to Wikimedia EventStreams SSE for ~0.3 edits/sec.', technologies: ['Server-Sent Events', 'EventSource'] },
+        { id: 'collector', name: 'Collector', shape: 'api', description: 'FastAPI producer', details: 'FastAPI service producing events to Kafka topics at port 8000.', technologies: ['FastAPI', 'Python', 'aiokafka'] },
+        { id: 'kafka', name: 'Kafka', shape: 'queue', description: 'Message broker', details: 'Apache Kafka 4.1.0 in KRaft mode with auto-created topics.', technologies: ['Kafka 4.1.0', 'KRaft'] },
+        { id: 'consumer', name: 'Consumer', shape: 'batch', description: 'Micro-batch writer', details: 'Kafka consumer with micro-batch INSERT into ClickHouse.', technologies: ['Python', 'clickhouse-connect'] },
+        { id: 'clickhouse-stream', name: 'ClickHouse', shape: 'warehouse', description: 'Columnar storage', details: 'Events table with MergeTree engine, TTL 4 hours, ZSTD compression.', technologies: ['ClickHouse', 'SQL'] },
+        { id: 'dashboard-stream', name: 'Dashboard', shape: 'dashboard', description: 'Velocity dashboard', details: 'Live velocity comparison dashboard at port 3001.', technologies: ['nginx', 'Vanilla JS'] }
+      ],
+      connections: [
+        { from: 'solana-src', to: 'collector', type: 'stream' },
+        { from: 'bluesky-src', to: 'collector', type: 'stream' },
+        { from: 'wikipedia-src', to: 'collector', type: 'stream' },
+        { from: 'collector', to: 'kafka', type: 'stream' },
+        { from: 'kafka', to: 'consumer', type: 'stream' },
+        { from: 'consumer', to: 'clickhouse-stream', type: 'batch' },
+        { from: 'clickhouse-stream', to: 'dashboard-stream', type: 'query' }
       ]
     },
     starSchema: {
@@ -6218,11 +6285,39 @@ for message in consumer:
 
           {showHandsOn && (
             <>
+              {/* Lab Tab Selector */}
+              <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
+                {[
+                  { key: 'blockchain', label: 'Lab 1: Blockchain Pipeline', color: '#4A7A56' },
+                  { key: 'streaming', label: 'Lab 2: Velocity Showdown', color: '#E8654A' }
+                ].map(({ key, label, color }) => (
+                  <button
+                    key={key}
+                    onClick={() => setActiveLabTab(key)}
+                    style={{
+                      padding: '10px 20px',
+                      borderRadius: '8px',
+                      border: `1.5px solid ${activeLabTab === key ? color : 'rgba(0,0,0,0.1)'}`,
+                      background: activeLabTab === key ? `${color}10` : 'transparent',
+                      color: activeLabTab === key ? color : 'var(--gray-500)',
+                      fontWeight: activeLabTab === key ? '600' : '400',
+                      fontSize: '14px',
+                      cursor: 'pointer',
+                      fontFamily: 'var(--font-sans)',
+                      transition: 'all 0.15s'
+                    }}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+
+              {activeLabTab === 'blockchain' && (
               <div
                 id="hands-on"
                 style={{
                   background: 'rgba(245,243,239,0.8)',
-                  
+
                   border: '1px solid rgba(235,231,225,1)',
                   borderRadius: '12px',
                   padding: '24px',
@@ -6637,6 +6732,300 @@ for message in consumer:
                   </div>
                 </div>
               </div>
+              )}
+
+              {activeLabTab === 'streaming' && (
+              <div
+                id="hands-on-streaming"
+                style={{
+                  background: 'rgba(245,243,239,0.8)',
+                  border: '1px solid rgba(235,231,225,1)',
+                  borderRadius: '12px',
+                  padding: '24px',
+                  marginBottom: '24px'
+                }}
+              >
+                <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px', color: '#E8654A' }}>
+                  Hands-on Lab: Velocity Showdown — Streaming Protocol Comparison
+                </h3>
+
+                <div style={{ marginBottom: '24px' }}>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '16px', marginBottom: '12px' }}>
+                    Compare three streaming protocols side-by-side: HTTP polling, WebSocket, and Server-Sent Events — all feeding live data through Kafka into ClickHouse.
+                  </p>
+                </div>
+
+                <div style={{
+                  background: 'rgba(232, 101, 74, 0.08)',
+                  border: '1px solid rgba(232, 101, 74, 0.25)',
+                  borderRadius: '12px',
+                  padding: '24px',
+                  marginBottom: '24px'
+                }}>
+                  <h4 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '16px', color: '#E8654A' }}>
+                    Understanding Streaming Velocity
+                  </h4>
+                  <div style={{ marginBottom: '20px' }}>
+                    <p style={{ color: 'var(--text-body)', fontSize: '15px', marginBottom: '12px', lineHeight: '1.6' }}>
+                      {architectures.velocityLab.overview.text}
+                    </p>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '14px', fontStyle: 'italic', lineHeight: '1.6' }}>
+                      {architectures.velocityLab.overview.scenarioDescription}
+                    </p>
+                  </div>
+
+                  <div style={{ marginBottom: '20px' }}>
+                    <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '10px', color: '#E8654A' }}>
+                      Use Cases
+                    </h5>
+                    <ul style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px' }}>
+                      {architectures.velocityLab.useCases.map((uc, i) => (
+                        <li key={i}>{uc}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                    <div>
+                      <h5 style={{ fontSize: '14px', fontWeight: '600', marginBottom: '8px', color: '#4A7A56' }}>Advantages</h5>
+                      <ul style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.7', paddingLeft: '16px' }}>
+                        {architectures.velocityLab.advantages.map((a, i) => <li key={i}>{a}</li>)}
+                      </ul>
+                    </div>
+                    <div>
+                      <h5 style={{ fontSize: '14px', fontWeight: '600', marginBottom: '8px', color: '#E8654A' }}>Challenges</h5>
+                      <ul style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.7', paddingLeft: '16px' }}>
+                        {architectures.velocityLab.challenges.map((c, i) => <li key={i}>{c}</li>)}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* System Architecture Diagram */}
+                <div style={{
+                  background: 'rgba(245,243,239,0.8)',
+                  border: '1px solid rgba(235,231,225,1)',
+                  borderRadius: '12px',
+                  marginBottom: '32px',
+                  overflow: 'hidden',
+                  position: 'relative'
+                }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '24px', paddingTop: '24px', color: '#E8654A', textAlign: 'center' }}>
+                    System Architecture
+                  </h4>
+                  <div style={{ padding: '0 20px 20px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px', minWidth: 'fit-content' }}>
+                      {/* Column 1: Three sources stacked */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {['solana-src', 'bluesky-src', 'wikipedia-src'].map(id => {
+                          const comp = architectures.velocityLab.components.find(c => c.id === id);
+                          return <ComponentCard key={id} component={comp} onClick={setSelectedComponent} />;
+                        })}
+                      </div>
+
+                      {/* Arrows from sources */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <ConnectionArrow type="stream" />
+                        <ConnectionArrow type="stream" />
+                        <ConnectionArrow type="stream" />
+                      </div>
+
+                      {/* Collector (centered) */}
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <ComponentCard component={architectures.velocityLab.components.find(c => c.id === 'collector')} onClick={setSelectedComponent} />
+                      </div>
+
+                      <ConnectionArrow type="stream" />
+                      <ComponentCard component={architectures.velocityLab.components.find(c => c.id === 'kafka')} onClick={setSelectedComponent} />
+                      <ConnectionArrow type="stream" />
+                      <ComponentCard component={architectures.velocityLab.components.find(c => c.id === 'consumer')} onClick={setSelectedComponent} />
+                      <ConnectionArrow type="batch" />
+                      <ComponentCard component={architectures.velocityLab.components.find(c => c.id === 'clickhouse-stream')} onClick={setSelectedComponent} />
+                      <ConnectionArrow type="query" />
+                      <ComponentCard component={architectures.velocityLab.components.find(c => c.id === 'dashboard-stream')} onClick={setSelectedComponent} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Services Table */}
+                <div style={{ background: 'rgba(74, 95, 227, 0.08)', border: '1px solid rgba(74, 95, 227, 0.2)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#4A5FE3' }}>
+                    Service Endpoints
+                  </h4>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
+                    {[
+                      { name: 'Dashboard', port: ':3001', desc: 'Live velocity dashboard' },
+                      { name: 'Kafka UI', port: ':8080', desc: 'Browse topics & lag' },
+                      { name: 'ClickHouse', port: ':8123', desc: 'SQL query interface' },
+                      { name: 'Collector API', port: ':8000', desc: 'Swagger UI at /docs' }
+                    ].map(({ name, port, desc }) => (
+                      <div key={name} style={{ background: 'rgba(255,255,255,0.6)', borderRadius: '6px', padding: '10px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                        <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--near-black)' }}>{name}</div>
+                        <div style={{ fontSize: '12px', fontWeight: '500', color: '#4A5FE3', fontFamily: 'var(--font-mono)' }}>{port}</div>
+                        <div style={{ fontSize: '11px', color: 'var(--gray-500)', marginTop: '2px' }}>{desc}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* What You'll Learn */}
+                <div style={{ background: 'rgba(74, 122, 86, 0.1)', border: '1px solid rgba(74, 122, 86, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#4A7A56' }}>
+                    What You'll Learn
+                  </h4>
+                  <ul style={{ color: 'var(--text-body)', fontSize: '14px', marginLeft: '20px', lineHeight: '1.8' }}>
+                    <li>Compare HTTP polling, WebSocket, and Server-Sent Events in production</li>
+                    <li>Understand Kafka producer/consumer patterns with KRaft (no ZooKeeper)</li>
+                    <li>Observe consumer lag and partition behavior in Kafka UI</li>
+                    <li>Query live streaming data with SQL in ClickHouse</li>
+                    <li>Analyze event velocity differences across data sources</li>
+                    <li>Experiment with stopping/starting individual sources</li>
+                  </ul>
+                </div>
+
+                {/* Streaming Protocols */}
+                <div style={{ background: 'rgba(74, 122, 155, 0.1)', border: '1px solid rgba(74, 122, 155, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#4A7A9B' }}>
+                    Streaming Protocols Compared
+                  </h4>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+                    {[
+                      { name: 'HTTP Polling (Solana)', rate: '~2.5 events/sec', desc: 'Client repeatedly requests new data. Simple but adds latency equal to poll interval. Used when servers don\'t support push.', color: '#4A5FE3' },
+                      { name: 'WebSocket (Bluesky)', rate: '~20-30 events/sec', desc: 'Full-duplex persistent connection. Lowest latency, bidirectional. Requires connection management and reconnection logic.', color: '#E8654A' },
+                      { name: 'SSE (Wikipedia)', rate: '~0.3 events/sec', desc: 'Server pushes events over HTTP. Simpler than WebSocket (unidirectional), auto-reconnects. Good for event streams and notifications.', color: '#2A9D99' }
+                    ].map(({ name, rate, desc, color }) => (
+                      <div key={name} style={{ background: 'rgba(255,255,255,0.6)', borderRadius: '8px', padding: '14px', border: `1px solid ${color}30` }}>
+                        <div style={{ fontSize: '13px', fontWeight: '700', color, marginBottom: '4px' }}>{name}</div>
+                        <div style={{ fontSize: '12px', fontWeight: '600', color: 'var(--near-black)', marginBottom: '6px', fontFamily: 'var(--font-mono)' }}>{rate}</div>
+                        <div style={{ fontSize: '12px', color: 'var(--text-body)', lineHeight: '1.5' }}>{desc}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Prerequisites */}
+                <div style={{ background: 'rgba(122, 90, 158, 0.1)', border: '1px solid rgba(122, 90, 158, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#a78bfa' }}>
+                    Prerequisites
+                  </h4>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px' }}>
+                    <p style={{ fontWeight: '600', marginBottom: '8px' }}>Required:</p>
+                    <ul style={{ marginLeft: '20px', marginBottom: '12px', lineHeight: '1.8' }}>
+                      <li>Docker Desktop 20.10+</li>
+                      <li>10GB free disk space minimum</li>
+                      <li>Internet connectivity (public APIs, no keys needed)</li>
+                    </ul>
+                    <p style={{ fontWeight: '600', marginBottom: '8px' }}>Recommended:</p>
+                    <ul style={{ marginLeft: '20px', lineHeight: '1.8' }}>
+                      <li>SQL knowledge (SELECT, WHERE, GROUP BY)</li>
+                      <li>8GB RAM minimum (16GB recommended for all 6 services)</li>
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Quick Start */}
+                <div style={{ background: 'rgba(158, 120, 36, 0.1)', border: '1px solid rgba(158, 120, 36, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#9E7824' }}>
+                    Quick Start Guide
+                  </h4>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px' }}>
+                    <ol style={{ marginLeft: '20px', lineHeight: '1.8' }}>
+                      <li style={{ marginBottom: '8px' }}>
+                        <strong style={{ color: '#9E7824' }}>Clone the repository:</strong>
+                        <pre style={{ background: 'rgba(0,0,0,0.06)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto', color: 'var(--near-black)' }}>
+                          <code>git clone https://github.com/maruthiprithivi/big_data_architecture_streaming.git{'\n'}cd big_data_architecture_streaming</code>
+                        </pre>
+                      </li>
+                      <li style={{ marginBottom: '8px' }}>
+                        <strong style={{ color: '#9E7824' }}>Start all services:</strong>
+                        <pre style={{ background: 'rgba(0,0,0,0.06)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto', color: 'var(--near-black)' }}>
+                          <code>docker compose up --build -d</code>
+                        </pre>
+                        <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>First run ~3-5 minutes (downloads), subsequent starts ~30 seconds</span>
+                      </li>
+                      <li style={{ marginBottom: '8px' }}>
+                        <strong style={{ color: '#9E7824' }}>Open the dashboard:</strong> <a href="http://localhost:3001" target="_blank" rel="noopener noreferrer" style={{ color: '#E8654A', textDecoration: 'underline' }}>http://localhost:3001</a>
+                      </li>
+                      <li style={{ marginBottom: '8px' }}>
+                        <strong style={{ color: '#9E7824' }}>Explore Kafka UI:</strong> <a href="http://localhost:8080" target="_blank" rel="noopener noreferrer" style={{ color: '#E8654A', textDecoration: 'underline' }}>http://localhost:8080</a> — browse topics, partitions, consumer lag
+                      </li>
+                      <li>
+                        <strong style={{ color: '#9E7824' }}>Cleanup:</strong>
+                        <pre style={{ background: 'rgba(0,0,0,0.06)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto', color: 'var(--near-black)' }}>
+                          <code>docker compose down     # Stop services{'\n'}docker compose down -v  # Remove all data</code>
+                        </pre>
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+
+                {/* Student Experiments */}
+                <div style={{ background: 'rgba(20, 184, 166, 0.1)', border: '1px solid rgba(20, 184, 166, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#14b8a6' }}>
+                    Student Experiments
+                  </h4>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px' }}>
+                    <div style={{ marginBottom: '16px' }}>
+                      <p style={{ fontWeight: '600', color: '#14b8a6', marginBottom: '8px' }}>Protocol Comparison</p>
+                      <ul style={{ marginLeft: '20px', lineHeight: '1.8' }}>
+                        <li>Compare event rates: Bluesky (~30/s) vs Solana (~2.5/s) vs Wikipedia (~0.3/s)</li>
+                        <li>Observe latency differences between polling, WebSocket, and SSE</li>
+                        <li>Stop individual sources and watch velocity changes on the dashboard</li>
+                      </ul>
+                    </div>
+                    <div style={{ marginBottom: '16px' }}>
+                      <p style={{ fontWeight: '600', color: '#14b8a6', marginBottom: '8px' }}>Kafka Exploration</p>
+                      <ul style={{ marginLeft: '20px', lineHeight: '1.8' }}>
+                        <li>Browse topics and partitions in Kafka UI</li>
+                        <li>Observe consumer lag when the consumer is slower than producers</li>
+                        <li>Examine message schemas across different source topics</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <p style={{ fontWeight: '600', color: '#14b8a6', marginBottom: '8px' }}>SQL Analysis (Query Lab)</p>
+                      <ul style={{ marginLeft: '20px', lineHeight: '1.8' }}>
+                        <li>Query the unified <code style={{ background: 'rgba(0,0,0,0.06)', padding: '2px 6px', borderRadius: '3px', color: 'var(--near-black)' }}>events</code> table in ClickHouse</li>
+                        <li>Compare event rates by source using GROUP BY</li>
+                        <li>Analyze event schemas via the metadata JSON column</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Additional Resources */}
+                <div style={{ background: 'rgba(99, 102, 241, 0.1)', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: '8px', padding: '16px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#6366f1' }}>
+                    Additional Resources
+                  </h4>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.8' }}>
+                    <p style={{ marginBottom: '8px' }}>
+                      <strong style={{ color: '#6366f1' }}>GitHub Repository:</strong>{' '}
+                      <a href="https://github.com/maruthiprithivi/big_data_architecture_streaming" target="_blank" rel="noopener noreferrer" style={{ color: '#E8654A', textDecoration: 'underline' }}>
+                        maruthiprithivi/big_data_architecture_streaming
+                      </a>
+                    </p>
+                    <p style={{ marginBottom: '8px' }}>
+                      <strong style={{ color: '#6366f1' }}>Kafka UI:</strong>{' '}
+                      <a href="http://localhost:8080" target="_blank" rel="noopener noreferrer" style={{ color: '#E8654A', textDecoration: 'underline' }}>
+                        Browse topics, partitions, and consumer groups
+                      </a>
+                    </p>
+                    <p style={{ marginBottom: '8px' }}>
+                      <strong style={{ color: '#6366f1' }}>Collector API Docs:</strong>{' '}
+                      <a href="http://localhost:8000/docs" target="_blank" rel="noopener noreferrer" style={{ color: '#E8654A', textDecoration: 'underline' }}>
+                        Interactive Swagger UI
+                      </a>
+                    </p>
+                    <p style={{ marginBottom: '8px' }}>
+                      <strong style={{ color: '#6366f1' }}>ClickHouse SQL:</strong>{' '}
+                      <a href="http://localhost:8123" target="_blank" rel="noopener noreferrer" style={{ color: '#E8654A', textDecoration: 'underline' }}>
+                        Query interface at localhost:8123
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              )}
             </>
           )}
 
