@@ -32,7 +32,8 @@ const useResponsiveScale = (layoutType, containerRef) => {
       star: 960,
       snowflake: 1100,
       mapreduce: 1100,
-      spark: 1100
+      spark: 1100,
+      velocityLab: 1500
     };
 
     // Absolute minimum before showing warning
@@ -113,7 +114,9 @@ const BigDataArchitectureExplorer = () => {
 
   // Hands On section responsive scaling
   const handsOnDiagramRef = useRef(null);
-  const { scale: handsOnScale, showWarning: handsOnShowWarning } = useResponsiveScale('blockchain', handsOnDiagramRef);
+  const { scale: handsOnScale } = useResponsiveScale('blockchain', handsOnDiagramRef);
+  const streamingDiagramRef = useRef(null);
+  const { scale: streamingLabScale } = useResponsiveScale('velocityLab', streamingDiagramRef);
 
   // Technology URL mapping
   const technologyUrls = {
@@ -6446,11 +6449,11 @@ for message in consumer:
                   ref={handsOnDiagramRef}
                   style={{
                     background: 'rgba(245,243,239,0.8)',
-                    
                     border: '1px solid rgba(235,231,225,1)',
                     borderRadius: '12px',
                     marginBottom: '32px',
-                    overflow: 'hidden',
+                    overflowX: 'auto',
+                    overflowY: 'hidden',
                     position: 'relative'
                   }}
                 >
@@ -6468,15 +6471,13 @@ for message in consumer:
                     const browser = arch.components.find(c => c.id === 'browser');
 
                     return (
-                      <div
-                        style={{
-                          transform: `scale(${handsOnScale})`,
-                          transformOrigin: 'top center',
-                          transition: 'transform 0.3s ease-out',
-                          padding: '0 20px 20px'
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px' }}>
+                      <div style={{
+                        transform: `scale(${handsOnScale})`,
+                        transformOrigin: 'top center',
+                        transition: 'transform 0.3s ease-out',
+                        padding: '0 20px 20px'
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px', minWidth: 'fit-content' }}>
                         {/* Column 1: External APIs stacked */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '100px' }}>
                           <ComponentCard component={bitcoinApi} onClick={(comp) => setSelectedComponent(comp)} />
@@ -6802,18 +6803,26 @@ for message in consumer:
                 </div>
 
                 {/* System Architecture Diagram */}
-                <div style={{
-                  background: 'rgba(245,243,239,0.8)',
-                  border: '1px solid rgba(235,231,225,1)',
-                  borderRadius: '12px',
-                  marginBottom: '32px',
-                  overflow: 'hidden',
-                  position: 'relative'
-                }}>
+                <div
+                  ref={streamingDiagramRef}
+                  style={{
+                    background: 'rgba(245,243,239,0.8)',
+                    border: '1px solid rgba(235,231,225,1)',
+                    borderRadius: '12px',
+                    marginBottom: '32px',
+                    overflow: 'hidden',
+                    position: 'relative'
+                  }}
+                >
                   <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '24px', paddingTop: '24px', color: '#E8654A', textAlign: 'center' }}>
                     System Architecture
                   </h4>
-                  <div style={{ padding: '0 20px 20px' }}>
+                  <div style={{
+                    transform: `scale(${streamingLabScale})`,
+                    transformOrigin: 'top center',
+                    transition: 'transform 0.3s ease-out',
+                    padding: '0 20px 20px'
+                  }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px', minWidth: 'fit-content' }}>
                       {/* Column 1: Three sources stacked */}
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -6823,14 +6832,37 @@ for message in consumer:
                         })}
                       </div>
 
-                      {/* Arrows from sources */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        <ConnectionArrow type="stream" />
-                        <ConnectionArrow type="stream" />
-                        <ConnectionArrow type="stream" />
-                      </div>
+                      {/* 3-to-1 merge arrow: three sources converge to single point */}
+                      {(() => {
+                        const color = connectionColors['stream'] || '#2C2A28';
+                        const cardH = 72, gap = 8;
+                        const totalH = 3 * cardH + 2 * gap;   // 232
+                        const topY = cardH / 2;                // 36
+                        const midY = cardH + gap + cardH / 2;  // 116
+                        const botY = totalH - cardH / 2;       // 196
+                        const W = 80;
+                        const markerId = 'arr-tri-merge';
+                        const topPath = `M 0 ${topY} C ${W*0.5} ${topY}, ${W*0.8} ${midY}, ${W} ${midY}`;
+                        const midPath = `M 0 ${midY} L ${W} ${midY}`;
+                        const botPath = `M 0 ${botY} C ${W*0.5} ${botY}, ${W*0.8} ${midY}, ${W} ${midY}`;
+                        return (
+                          <div style={{ flexShrink: 0, width: W+'px', height: totalH+'px' }}>
+                            <svg width={W} height={totalH} style={{ overflow: 'visible', display: 'block' }}>
+                              <defs>
+                                <marker id={markerId} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                                  <polygon points="0,0 6,3 0,6" fill={color} />
+                                </marker>
+                              </defs>
+                              <path d={topPath} fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="5,4" strokeLinecap="round" />
+                              <path d={midPath} fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="5,4" strokeLinecap="round" />
+                              <path d={botPath} fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="5,4" strokeLinecap="round"
+                                markerEnd={`url(#${markerId})`} />
+                            </svg>
+                          </div>
+                        );
+                      })()}
 
-                      {/* Collector (centered) */}
+                      {/* Collector (centered with middle source) */}
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         <ComponentCard component={architectures.velocityLab.components.find(c => c.id === 'collector')} onClick={setSelectedComponent} />
                       </div>
