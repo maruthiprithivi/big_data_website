@@ -1,0 +1,42 @@
+<h2>How should we rebuild the broken diagrams?</h2>
+<p class="subtitle">The current diagrams use <code>position: absolute</code> with hardcoded pixel offsets — that's why arrows break at different screen widths. Three options to fix it.</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Flexbox/Grid layout — no coordinates</h3>
+      <p>Rebuild architecture diagrams as CSS flex/grid layouts. Nodes are block elements; connectors are CSS borders, pseudo-elements (<code>::before/::after</code>), or short SVG overlays. Fully responsive — no pixel math.</p>
+      <div class="pros-cons" style="margin-top:10px">
+        <div class="pros"><h4>Pros</h4><ul><li>No coordinate bugs — layout is flow-based</li><li>Works at any width, no scale hacks</li><li>Warm Notebook aesthetic fits naturally</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Complex arrows (curves, fan-out) need SVG overlays</li><li>Limited to left-to-right or top-to-bottom flows</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Inline SVG — explicit but correct coordinates</h3>
+      <p>Draw each diagram as a self-contained SVG with <code>viewBox</code>. Coordinates are explicit but scale perfectly via <code>width: 100% / height: auto</code>. Best for MapReduce fan-out, Kafka partition diagrams, and any complex arrow routing.</p>
+      <div class="pros-cons" style="margin-top:10px">
+        <div class="pros"><h4>Pros</h4><ul><li>Pixel-perfect arrows that scale correctly on all screens</li><li>Full control over curves, labels, animations</li><li>MapReduce fan-in/fan-out is trivial with SVG paths</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>More verbose to write and maintain</li><li>React state (hover, step animations) needs careful wiring</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Keep ReactFlow — fix layout config</h3>
+      <p>Keep ReactFlow (already installed) for all diagrams. Fix the broken ones by correcting the dagre layout configs. The existing "Which Architecture?" decision flowchart already works well with ReactFlow.</p>
+      <div class="pros-cons" style="margin-top:10px">
+        <div class="pros"><h4>Pros</h4><ul><li>Consistent library across all diagrams</li><li>Auto-layout means no manual coordinates</li><li>Already works for the decision flowchart</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Heavyweight for simple flow diagrams</li><li>ReactFlow's default style clashes with Warm Notebook palette</li><li>Harder to style to match the warm/calm aesthetic</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p style="font-size: 12px; color: #666; margin-top: 16px; text-align: center;">I recommend <strong>A for simple flow diagrams</strong> (Lambda, Batch, Streaming) and <strong>B for complex fan-out diagrams</strong> (MapReduce, Kafka partitions, Spark DAGs). Keep ReactFlow only for the interactive decision flowchart where it already works.</p>

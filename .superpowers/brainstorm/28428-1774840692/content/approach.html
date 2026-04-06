@@ -1,0 +1,48 @@
+<h2>How should we approach the 8804-line single file?</h2>
+<p class="subtitle">This is the first decision — it shapes everything else.</p>
+
+<div class="section">
+  <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; font-size: 13px; color: #aaa;">
+    <strong style="color: #e2e8f0;">Current state:</strong> One file (<code style="color: #fbbf24;">src/App.jsx</code>), 8804 lines, dark navy/neon theme, all content inline. The Warm Notebook spec wants cream/serif/accordion — a complete aesthetic reversal.
+  </div>
+</div>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Incremental — edit in place</h3>
+      <p>Keep the single file. Apply Warm Notebook CSS, restructure the main render into accordion sections, fix diagrams one by one. All content stays, file just evolves.</p>
+      <div class="pros-cons" style="margin-top: 10px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Least risk to existing content</li><li>Easier to QA incrementally</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>File stays huge and hard to navigate</li><li>CSS conflicts from dark→light switch</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Split + redesign — extract components</h3>
+      <p>Break the file into logical components (<code>DiagramSection</code>, <code>CurriculumSection</code>, <code>KafkaSection</code>, etc.) while applying the Warm Notebook shell. Each component is its own file.</p>
+      <div class="pros-cons" style="margin-top: 10px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Maintainable going forward</li><li>Each component QA-able independently</li><li>Clean slate for the new aesthetic</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>More upfront work to split correctly</li><li>Risk of breaking state shared across the single component</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Clean rebuild — new shell, preserve content data</h3>
+      <p>Build the Warm Notebook page structure fresh. Port all data (section text, diagram configs, Kafka content) into the new shell. The old file becomes a data source, not the app.</p>
+      <div class="pros-cons" style="margin-top: 10px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Cleanest result — no legacy CSS baggage</li><li>Diagrams can be rebuilt with correct layouts from scratch</li><li>Natural place to add Kafka section properly</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Highest risk of missing content</li><li>Longest implementation path</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p style="font-size: 12px; color: #666; margin-top: 16px; text-align: center;">Click to select. I lean toward <strong>B</strong> — splits state risk while giving us clean component boundaries for diagrams and the new Kafka section.</p>
