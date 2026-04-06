@@ -6446,14 +6446,12 @@ for message in consumer:
                 )}
 
                 <div
-                  ref={handsOnDiagramRef}
                   style={{
                     background: 'rgba(245,243,239,0.8)',
                     border: '1px solid rgba(235,231,225,1)',
                     borderRadius: '12px',
                     marginBottom: '32px',
-                    overflowX: 'auto',
-                    overflowY: 'hidden',
+                    overflow: 'hidden',
                     position: 'relative'
                   }}
                 >
@@ -6471,13 +6469,8 @@ for message in consumer:
                     const browser = arch.components.find(c => c.id === 'browser');
 
                     return (
-                      <div style={{
-                        transform: `scale(${handsOnScale})`,
-                        transformOrigin: 'top center',
-                        transition: 'transform 0.3s ease-out',
-                        padding: '0 20px 20px'
-                      }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px', minWidth: 'fit-content' }}>
+                      <div style={{ padding: '0 20px 20px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px', flexWrap: 'nowrap', maxWidth: '100%', transform: 'scale(0.88)', transformOrigin: 'top center' }}>
                         {/* Column 1: External APIs stacked */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '100px' }}>
                           <ComponentCard component={bitcoinApi} onClick={(comp) => setSelectedComponent(comp)} />
@@ -6804,7 +6797,6 @@ for message in consumer:
 
                 {/* System Architecture Diagram */}
                 <div
-                  ref={streamingDiagramRef}
                   style={{
                     background: 'rgba(245,243,239,0.8)',
                     border: '1px solid rgba(235,231,225,1)',
@@ -6817,13 +6809,8 @@ for message in consumer:
                   <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '24px', paddingTop: '24px', color: '#E8654A', textAlign: 'center' }}>
                     System Architecture
                   </h4>
-                  <div style={{
-                    transform: `scale(${streamingLabScale})`,
-                    transformOrigin: 'top center',
-                    transition: 'transform 0.3s ease-out',
-                    padding: '0 20px 20px'
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px', minWidth: 'fit-content' }}>
+                  <div style={{ padding: '0 20px 20px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px', flexWrap: 'nowrap', maxWidth: '100%', transform: 'scale(0.78)', transformOrigin: 'top center' }}>
                       {/* Column 1: Three sources stacked */}
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                         {['solana-src', 'bluesky-src', 'wikipedia-src'].map(id => {
