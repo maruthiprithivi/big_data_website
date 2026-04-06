@@ -4,7 +4,11 @@ import {
   Globe, Cloud, GitMerge, LayoutDashboard, ScrollText,
   ChevronRight, Check, Sparkles, Info, ChevronDown, ChevronUp, X,
   Table2, Layers, Link, Star, Snowflake, Box,
-  ArrowRight, Eye, EyeOff
+  ArrowRight, Eye, EyeOff,
+  Target, Lightbulb, Wrench, BookOpen, RefreshCw, Shield, Monitor,
+  BarChart2, Brain, Shuffle, FolderOpen, Bot, Briefcase, MapPin,
+  Hammer, Rocket, Settings2, Server, Music, Play, Car, Home,
+  Users, Search, MessageSquare, BookMarked, Navigation, Hash, Film, Pin
 } from 'lucide-react';
 import { ReactFlow, Background, useNodesState, useEdgesState, Handle, Position, useReactFlow } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -28,7 +32,8 @@ const useResponsiveScale = (layoutType, containerRef) => {
       star: 960,
       snowflake: 1100,
       mapreduce: 1100,
-      spark: 1100
+      spark: 1100,
+      velocityLab: 1500
     };
 
     // Absolute minimum before showing warning
@@ -66,9 +71,9 @@ const useResponsiveScale = (layoutType, containerRef) => {
 const BigDataArchitectureExplorer = () => {
   const [activeArchitecture, setActiveArchitecture] = useState('lambda');
   const [selectedComponent, setSelectedComponent] = useState(null);
-  const [showDataFlow, setShowDataFlow] = useState(true);
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const [showHandsOn, setShowHandsOn] = useState(false);
+  const [activeLabTab, setActiveLabTab] = useState('blockchain');
   const [showBanner, setShowBanner] = useState(() => {
     const bannerDismissed = localStorage.getItem('bannerDismissed');
     return !bannerDismissed;
@@ -92,14 +97,12 @@ const BigDataArchitectureExplorer = () => {
   });
 
   // MapReduce interactive states
-  const [mapReduceStep, setMapReduceStep] = useState(0); // 0 = show all, 1-8 = specific step
-  const [mapReduceAnimating, setMapReduceAnimating] = useState(false);
+  const [mapReduceStep, setMapReduceStep] = useState(0); // 0 = show all, 1-7 = specific step
   const [showMapReduceExample, setShowMapReduceExample] = useState(false);
-  const [showDataTransform, setShowDataTransform] = useState(true); // data flow transformation panel
+  const showDataTransform = true; // always show contextual step annotations
 
   // Spark interactive states
   const [sparkStep, setSparkStep] = useState(0);
-  const [sparkAnimating, setSparkAnimating] = useState(false);
 
   // MapReduce vs Spark comparison state
   const [showComparison, setShowComparison] = useState(false);
@@ -112,6 +115,8 @@ const BigDataArchitectureExplorer = () => {
   // Hands On section responsive scaling
   const handsOnDiagramRef = useRef(null);
   const { scale: handsOnScale, showWarning: handsOnShowWarning } = useResponsiveScale('blockchain', handsOnDiagramRef);
+  const streamingDiagramRef = useRef(null);
+  const { scale: streamingLabScale } = useResponsiveScale('velocityLab', streamingDiagramRef);
 
   // Technology URL mapping
   const technologyUrls = {
@@ -204,10 +209,10 @@ const BigDataArchitectureExplorer = () => {
       }
       @keyframes pulse {
         0%, 100% {
-          box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+          box-shadow: 0 0 0 0 rgba(74, 122, 155, 0.4);
         }
         50% {
-          box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+          box-shadow: 0 0 0 8px rgba(74, 122, 155, 0);
         }
       }
       @keyframes levelUnlock {
@@ -256,7 +261,7 @@ const BigDataArchitectureExplorer = () => {
 
   // Safeguard: Reset to lambda if blockchain is selected but hands-on is not showing
   useEffect(() => {
-    if (activeArchitecture === 'blockchain' && !showHandsOn) {
+    if ((activeArchitecture === 'blockchain' || activeArchitecture === 'velocityLab') && !showHandsOn) {
       setActiveArchitecture('lambda');
     }
   }, [activeArchitecture, showHandsOn]);
@@ -293,23 +298,23 @@ const BigDataArchitectureExplorer = () => {
   };
 
   const colorScheme = {
-    database: { bg: 'rgba(59, 130, 246, 0.15)', border: '#60a5fa', icon: '#60a5fa', label: '#1e3a5f' },
-    queue: { bg: 'rgba(139, 92, 246, 0.15)', border: '#8b5cf6', icon: '#8b5cf6', label: '#3b1f5e' },
-    cluster: { bg: 'rgba(236, 72, 153, 0.15)', border: '#ec4899', icon: '#ec4899', label: '#5c1f4a' },
-    stream: { bg: 'rgba(245, 158, 11, 0.15)', border: '#f59e0b', icon: '#f59e0b', label: '#5c3d1f' },
-    warehouse: { bg: 'rgba(16, 185, 129, 0.15)', border: '#10b981', icon: '#10b981', label: '#1f4a3d' },
-    cache: { bg: 'rgba(6, 182, 212, 0.15)', border: '#06b6d4', icon: '#06b6d4', label: '#1f4a5c' },
-    api: { bg: 'rgba(168, 85, 247, 0.15)', border: '#a855f7', icon: '#a855f7', label: '#3d1f5c' },
-    cloud: { bg: 'rgba(59, 130, 246, 0.15)', border: '#3b82f6', icon: '#3b82f6', label: '#1f2f5c' },
-    pipeline: { bg: 'rgba(124, 58, 237, 0.15)', border: '#7c3aed', icon: '#7c3aed', label: '#2f1f5c' },
-    dashboard: { bg: 'rgba(236, 72, 153, 0.15)', border: '#ec4899', icon: '#ec4899', label: '#5c1f4a' },
-    log: { bg: 'rgba(59, 130, 246, 0.15)', border: '#3b82f6', icon: '#3b82f6', label: '#1f2f5c' },
-    fact: { bg: 'rgba(245, 158, 11, 0.15)', border: '#f59e0b', icon: '#f59e0b', label: '#5c3d1f' },
-    dimension: { bg: 'rgba(59, 130, 246, 0.15)', border: '#60a5fa', icon: '#60a5fa', label: '#1e3a5f' },
-    bridge: { bg: 'rgba(168, 85, 247, 0.15)', border: '#a855f7', icon: '#a855f7', label: '#3d1f5c' },
-    star: { bg: 'rgba(245, 158, 11, 0.15)', border: '#f59e0b', icon: '#f59e0b', label: '#5c3d1f' },
-    snowflake: { bg: 'rgba(6, 182, 212, 0.15)', border: '#06b6d4', icon: '#06b6d4', label: '#1f4a5c' },
-    aggregate: { bg: 'rgba(16, 185, 129, 0.15)', border: '#10b981', icon: '#10b981', label: '#1f4a3d' }
+    database:  { fill: '#4A5FE3', selected: '#3A4FD3' },
+    queue:     { fill: '#C07FD4', selected: '#B06FC4' },
+    cluster:   { fill: '#E8654A', selected: '#D8553A' },
+    stream:    { fill: '#2A9D99', selected: '#1A8D89' },
+    warehouse: { fill: '#4A5FE3', selected: '#3A4FD3' },
+    cache:     { fill: '#C07FD4', selected: '#B06FC4' },
+    api:       { fill: '#4A5FE3', selected: '#3A4FD3' },
+    cloud:     { fill: '#2A9D99', selected: '#1A8D89' },
+    pipeline:  { fill: '#C07FD4', selected: '#B06FC4' },
+    dashboard: { fill: '#E8654A', selected: '#D8553A' },
+    log:       { fill: '#2A9D99', selected: '#1A8D89' },
+    fact:      { fill: '#E8654A', selected: '#D8553A' },
+    dimension: { fill: '#4A5FE3', selected: '#3A4FD3' },
+    bridge:    { fill: '#C07FD4', selected: '#B06FC4' },
+    star:      { fill: '#E8654A', selected: '#D8553A' },
+    snowflake: { fill: '#2A9D99', selected: '#1A8D89' },
+    aggregate: { fill: '#4A5FE3', selected: '#3A4FD3' },
   };
 
   const architectures = {
@@ -601,6 +606,72 @@ const BigDataArchitectureExplorer = () => {
         { from: 'solana-collector', to: 'clickhouse', type: 'batch' },
         { from: 'clickhouse', to: 'dashboard', type: 'query' },
         { from: 'dashboard', to: 'browser', type: 'query' }
+      ]
+    },
+    velocityLab: {
+      name: 'Velocity Showdown',
+      difficulty: 'Intermediate',
+      tagline: 'Live Streaming Protocol Comparison',
+      description: 'A one-command Docker Compose lab that streams live data from three public sources into Kafka and ClickHouse, letting students see event-velocity differences in real time. Compare HTTP polling (Solana RPC ~2.5 slots/sec), WebSocket (Bluesky Jetstream ~20-30 posts/sec), and Server-Sent Events (Wikipedia SSE ~0.3 edits/sec) side by side.',
+      layout: 'streaming',
+      overview: {
+        text: 'This lab demonstrates the full streaming data pipeline: three heterogeneous sources each using a different streaming protocol feed into a FastAPI collector that produces events to Kafka 4.1.0 (KRaft mode, no ZooKeeper). A micro-batch consumer reads from Kafka and inserts into ClickHouse with TTL-based auto-cleanup. The dashboard polls the collector\'s admin API to show live velocity metrics. Students learn to compare streaming protocols, observe consumer lag in Kafka UI, and query live data with SQL — all from a single docker compose up.',
+        scenario: 'Velocity Showdown — Live Protocol Comparison',
+        scenarioDescription: 'Three public data sources with vastly different event velocities stream simultaneously through Kafka into ClickHouse. Solana RPC polls ~2.5 blockchain slots per second via HTTP. Bluesky Jetstream pushes ~20-30 social posts per second via WebSocket. Wikipedia SSE trickles ~0.3 page edits per second via Server-Sent Events. Students observe these velocity differences in real time on the dashboard, experiment with stopping individual sources, and query the unified events table to analyze protocol behavior.',
+        components: [
+          { name: 'Solana RPC', metric: 'HTTP polling at ~2.5 slots/sec from mainnet-beta' },
+          { name: 'Bluesky Jetstream', metric: 'WebSocket stream at ~20-30 posts/sec' },
+          { name: 'Wikipedia SSE', metric: 'Server-Sent Events at ~0.3 edits/sec' },
+          { name: 'Collector (FastAPI)', metric: 'Producer service at port 8000 with Swagger UI' },
+          { name: 'Kafka 4.1.0', metric: 'KRaft mode, no ZooKeeper, 2-hour log retention' },
+          { name: 'Consumer', metric: 'Micro-batch INSERT into ClickHouse' },
+          { name: 'ClickHouse', metric: 'Columnar DB with 4-hour TTL auto-cleanup' },
+          { name: 'Dashboard', metric: 'Live velocity dashboard at port 3001' }
+        ]
+      },
+      useCases: [
+        'Comparing streaming protocols (HTTP polling vs WebSocket vs SSE)',
+        'Understanding Kafka producer/consumer patterns',
+        'Real-time event velocity analysis',
+        'Columnar database querying with live data'
+      ],
+      advantages: [
+        'Single-command setup (docker compose up)',
+        'Three real public data sources — no API keys needed',
+        'Kafka 4.1.0 with KRaft (no ZooKeeper dependency)',
+        'Auto-cleanup via ClickHouse TTL (4-hour retention)',
+        'Storage guard auto-pauses collection at 5GB',
+        'Kafka UI for browsing topics and consumer lag'
+      ],
+      challenges: [
+        'Public endpoint rate limits and availability',
+        'Different event schemas across sources',
+        'Micro-batch vs true streaming trade-offs',
+        'Resource usage with multiple containers'
+      ],
+      learningResources: [
+        { title: 'GitHub Repository: Velocity Showdown Lab', url: 'https://github.com/maruthiprithivi/big_data_architecture_streaming' },
+        { title: 'Apache Kafka Documentation', url: 'https://kafka.apache.org/documentation/' },
+        { title: 'ClickHouse: Official Documentation', url: 'https://clickhouse.com/docs' }
+      ],
+      components: [
+        { id: 'solana-src', name: 'Solana RPC', shape: 'database', description: 'HTTP polling source', details: 'Polls Solana mainnet-beta RPC at ~2.5 slots/sec via HTTP.', technologies: ['HTTP Polling', 'JSON-RPC'] },
+        { id: 'bluesky-src', name: 'Bluesky Jetstream', shape: 'stream', description: 'WebSocket source', details: 'Connects to Bluesky Jetstream WebSocket for ~20-30 posts/sec.', technologies: ['WebSocket', 'AT Protocol'] },
+        { id: 'wikipedia-src', name: 'Wikipedia SSE', shape: 'stream', description: 'SSE source', details: 'Subscribes to Wikimedia EventStreams SSE for ~0.3 edits/sec.', technologies: ['Server-Sent Events', 'EventSource'] },
+        { id: 'collector', name: 'Collector', shape: 'api', description: 'FastAPI producer', details: 'FastAPI service producing events to Kafka topics at port 8000.', technologies: ['FastAPI', 'Python', 'aiokafka'] },
+        { id: 'kafka', name: 'Kafka', shape: 'queue', description: 'Message broker', details: 'Apache Kafka 4.1.0 in KRaft mode with auto-created topics.', technologies: ['Kafka 4.1.0', 'KRaft'] },
+        { id: 'consumer', name: 'Consumer', shape: 'batch', description: 'Micro-batch writer', details: 'Kafka consumer with micro-batch INSERT into ClickHouse.', technologies: ['Python', 'clickhouse-connect'] },
+        { id: 'clickhouse-stream', name: 'ClickHouse', shape: 'warehouse', description: 'Columnar storage', details: 'Events table with MergeTree engine, TTL 4 hours, ZSTD compression.', technologies: ['ClickHouse', 'SQL'] },
+        { id: 'dashboard-stream', name: 'Dashboard', shape: 'dashboard', description: 'Velocity dashboard', details: 'Live velocity comparison dashboard at port 3001.', technologies: ['nginx', 'Vanilla JS'] }
+      ],
+      connections: [
+        { from: 'solana-src', to: 'collector', type: 'stream' },
+        { from: 'bluesky-src', to: 'collector', type: 'stream' },
+        { from: 'wikipedia-src', to: 'collector', type: 'stream' },
+        { from: 'collector', to: 'kafka', type: 'stream' },
+        { from: 'kafka', to: 'consumer', type: 'stream' },
+        { from: 'consumer', to: 'clickhouse-stream', type: 'batch' },
+        { from: 'clickhouse-stream', to: 'dashboard-stream', type: 'query' }
       ]
     },
     starSchema: {
@@ -1043,8 +1114,8 @@ const BigDataArchitectureExplorer = () => {
         subtitle: "Data Literacy",
         goal: "Understand the ecosystem before touching code",
         icon: "foundation",
-        color: "#3b82f6",
-        colorLight: "rgba(59, 130, 246, 0.15)",
+        color: "#4A7A9B",
+        colorLight: "rgba(74, 122, 155, 0.15)",
         levels: [
           {
             id: "1.1",
@@ -1102,8 +1173,8 @@ const BigDataArchitectureExplorer = () => {
         subtitle: "SQL & Python",
         goal: "Master the tools of the trade",
         icon: "tools",
-        color: "#10b981",
-        colorLight: "rgba(16, 185, 129, 0.15)",
+        color: "#4A7A56",
+        colorLight: "rgba(74, 122, 86, 0.15)",
         levels: [
           {
             id: "2.1",
@@ -1176,8 +1247,8 @@ df.to_json("weather_data.json", orient="records")`
         subtitle: "Core Engineering",
         goal: "Move data automatically",
         icon: "pipeline",
-        color: "#f59e0b",
-        colorLight: "rgba(245, 158, 11, 0.15)",
+        color: "#9E7824",
+        colorLight: "rgba(158, 120, 36, 0.15)",
         levels: [
           {
             id: "3.1",
@@ -1299,8 +1370,8 @@ CMD ["python", "weather_pipeline.py"]`
         subtitle: "The Pro Level",
         goal: "Move from laptop to cloud infrastructure",
         icon: "cloud",
-        color: "#8b5cf6",
-        colorLight: "rgba(139, 92, 246, 0.15)",
+        color: "#7A5A9E",
+        colorLight: "rgba(122, 90, 158, 0.15)",
         levels: [
           {
             id: "4.1",
@@ -1432,8 +1503,8 @@ SELECT * FROM enriched`
         subtitle: "Advanced Trends 2026",
         goal: "Niche specialization and modern best practices",
         icon: "rocket",
-        color: "#ec4899",
-        colorLight: "rgba(236, 72, 153, 0.15)",
+        color: "#9E5A3C",
+        colorLight: "rgba(158, 90, 60, 0.15)",
         levels: [
           {
             id: "5.1",
@@ -1538,28 +1609,28 @@ for message in consumer:
 
   // Phase colors for curriculum
   const phaseColors = {
-    1: { primary: '#3b82f6', light: 'rgba(59, 130, 246, 0.15)', border: 'rgba(59, 130, 246, 0.3)' },
-    2: { primary: '#10b981', light: 'rgba(16, 185, 129, 0.15)', border: 'rgba(16, 185, 129, 0.3)' },
-    3: { primary: '#f59e0b', light: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.3)' },
-    4: { primary: '#8b5cf6', light: 'rgba(139, 92, 246, 0.15)', border: 'rgba(139, 92, 246, 0.3)' },
-    5: { primary: '#ec4899', light: 'rgba(236, 72, 153, 0.15)', border: 'rgba(236, 72, 153, 0.3)' }
+    1: { primary: '#4A7A9B', light: 'rgba(74, 122, 155, 0.15)', border: 'rgba(74, 122, 155, 0.3)' },
+    2: { primary: '#4A7A56', light: 'rgba(74, 122, 86, 0.15)', border: 'rgba(74, 122, 86, 0.3)' },
+    3: { primary: '#9E7824', light: 'rgba(158, 120, 36, 0.15)', border: 'rgba(158, 120, 36, 0.3)' },
+    4: { primary: '#7A5A9E', light: 'rgba(122, 90, 158, 0.15)', border: 'rgba(122, 90, 158, 0.3)' },
+    5: { primary: '#9E5A3C', light: 'rgba(158, 90, 60, 0.15)', border: 'rgba(158, 90, 60, 0.3)' }
   };
 
   // Phase icons for curriculum
   const phaseIcons = {
-    foundation: '🏗️',
-    tools: '🛠️',
-    pipeline: '🔄',
-    cloud: '☁️',
-    rocket: '🚀'
+    foundation: Hammer,
+    tools: Settings2,
+    pipeline: RefreshCw,
+    cloud: Cloud,
+    rocket: Rocket
   };
 
   const connectionColors = {
-    stream: '#f59e0b',
-    batch: '#ec4899',
-    query: '#10b981',
-    fk: '#60a5fa',
-    normalize: '#a855f7'
+    stream:    '#2A9D99',
+    batch:     '#E8654A',
+    query:     '#4A5FE3',
+    fk:        '#C07FD4',
+    normalize: '#4A5FE3',
   };
 
   // Case Studies Data - Real-world Big Data Architecture Examples
@@ -1568,7 +1639,7 @@ for message in consumer:
       id: 'netflix',
       company: 'Netflix',
       industry: 'Streaming Entertainment',
-      logo: '🎬',
+      logo: Film,
       color: '#e50914',
       title: 'Real-Time Personalization at Scale',
       subtitle: 'Processing 500+ billion events daily',
@@ -1604,7 +1675,7 @@ for message in consumer:
       id: 'uber',
       company: 'Uber',
       industry: 'Transportation & Logistics',
-      logo: '🚗',
+      logo: Car,
       color: '#000000',
       title: 'Real-Time Marketplace Matching',
       subtitle: 'Sub-second rider-driver matching across 10,000+ cities',
@@ -1640,7 +1711,7 @@ for message in consumer:
       id: 'airbnb',
       company: 'Airbnb',
       industry: 'Travel & Hospitality',
-      logo: '🏠',
+      logo: Home,
       color: '#ff5a5f',
       title: 'Search Ranking & Dynamic Pricing',
       subtitle: 'ML-powered search across 7M+ listings',
@@ -1676,7 +1747,7 @@ for message in consumer:
       id: 'meta',
       company: 'Meta (Facebook)',
       industry: 'Social Media',
-      logo: '👥',
+      logo: Users,
       color: '#1877f2',
       title: 'Unified Data Warehouse at Exabyte Scale',
       subtitle: 'Largest Hadoop/Presto deployment in the world',
@@ -1712,7 +1783,7 @@ for message in consumer:
       id: 'google',
       company: 'Google',
       industry: 'Technology',
-      logo: '🔍',
+      logo: Search,
       color: '#4285f4',
       title: 'Global-Scale Data Processing',
       subtitle: 'Pioneers of MapReduce, BigQuery, and Dataflow',
@@ -1748,7 +1819,7 @@ for message in consumer:
       id: 'linkedin',
       company: 'LinkedIn',
       industry: 'Professional Networking',
-      logo: '💼',
+      logo: Briefcase,
       color: '#0077b5',
       title: 'Real-Time Activity Tracking',
       subtitle: 'Creators of Apache Kafka',
@@ -1784,7 +1855,7 @@ for message in consumer:
       id: 'twitter',
       company: 'X (Twitter)',
       industry: 'Social Media',
-      logo: '🐦',
+      logo: MessageSquare,
       color: '#1da1f2',
       title: 'Real-Time Tweet Processing',
       subtitle: 'Processing 500M+ tweets daily',
@@ -1820,7 +1891,7 @@ for message in consumer:
       id: 'pinterest',
       company: 'Pinterest',
       industry: 'Social Discovery',
-      logo: '📌',
+      logo: Pin,
       color: '#e60023',
       title: 'Visual Discovery at Scale',
       subtitle: 'Processing billions of Pins for personalized discovery',
@@ -1856,7 +1927,7 @@ for message in consumer:
       id: 'grab',
       company: 'Grab',
       industry: 'Super App (Ride-hailing, Food, Payments)',
-      logo: '🚕',
+      logo: Navigation,
       color: '#00b14f',
       title: 'Southeast Asia\'s Super App Data Platform',
       subtitle: 'Unified data platform for ride-hailing, food delivery, and fintech',
@@ -1892,7 +1963,7 @@ for message in consumer:
       id: 'reddit',
       company: 'Reddit',
       industry: 'Social Media & Community',
-      logo: '🤖',
+      logo: Hash,
       color: '#ff4500',
       title: 'Community-Scale Content Processing',
       subtitle: 'Real-time content ranking and moderation',
@@ -1928,7 +1999,7 @@ for message in consumer:
       id: 'microsoft',
       company: 'Microsoft',
       industry: 'Technology',
-      logo: '🪟',
+      logo: Monitor,
       color: '#00a4ef',
       title: 'Azure Synapse Analytics',
       subtitle: 'Unified analytics service for enterprises',
@@ -1964,7 +2035,7 @@ for message in consumer:
       id: 'tesla',
       company: 'Tesla',
       industry: 'Automotive & Energy',
-      logo: '🚗',
+      logo: Zap,
       color: '#cc0000',
       title: 'Autonomous Driving Data Pipeline',
       subtitle: 'Petabytes of video data for AI training',
@@ -2000,7 +2071,7 @@ for message in consumer:
       id: 'anthropic',
       company: 'Anthropic',
       industry: 'AI Research',
-      logo: '🧠',
+      logo: Brain,
       color: '#d4a574',
       title: 'Large Language Model Training Infrastructure',
       subtitle: 'Constitutional AI training at scale',
@@ -2036,7 +2107,7 @@ for message in consumer:
       id: 'openai',
       company: 'OpenAI',
       industry: 'AI Research',
-      logo: '🤖',
+      logo: Bot,
       color: '#00a67e',
       title: 'GPT Training Infrastructure',
       subtitle: 'Scaling language models to trillions of parameters',
@@ -2072,7 +2143,7 @@ for message in consumer:
       id: 'spotify',
       company: 'Spotify',
       industry: 'Music Streaming',
-      logo: '🎵',
+      logo: Music,
       color: '#1db954',
       title: 'Personalized Music Discovery',
       subtitle: 'Discover Weekly reaching 500M+ users',
@@ -2110,61 +2181,25 @@ for message in consumer:
 
   const ComponentCard = ({ component, onClick }) => {
     const colors = colorScheme[component.shape] || colorScheme.database;
-    const Icon = iconComponents[component.shape];
+    const isSelected = selectedComponent?.id === component.id;
 
     return (
       <div
         onClick={() => onClick(component)}
+        className="cohere-node"
         style={{
-          background: colors.bg,
-          border: `2px solid ${colors.border}`,
-          borderRadius: '16px',
-          padding: '20px',
-          minWidth: '180px',
-          maxWidth: '180px',
-          minHeight: '180px',
-          maxHeight: '180px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '16px',
-          cursor: 'pointer',
-          transition: 'all 0.3s',
-          boxShadow: `0 0 20px ${colors.border}33`
+          background: isSelected ? colors.selected : colors.fill,
+          width: '140px',
+          height: '72px',
+          padding: '8px 10px',
+          flexShrink: 0,
+          outline: isSelected ? '3px solid rgba(0,0,0,0.25)' : 'none',
+          outlineOffset: isSelected ? '2px' : '0',
         }}
-        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
       >
-        <div
-          style={{
-            width: '80px',
-            height: '80px',
-            borderRadius: '16px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: `${colors.border}22`,
-            border: `1px solid ${colors.border}44`
-          }}
-        >
-          <Icon size={44} color={colors.icon} strokeWidth={1.5} />
-        </div>
-        <div
-          style={{
-            background: colors.label,
-            color: 'white',
-            padding: '8px 16px',
-            borderRadius: '8px',
-            fontSize: '13px',
-            fontWeight: '600',
-            textAlign: 'center',
-            width: '100%',
-            border: `1px solid ${colors.border}66`
-          }}
-        >
+        <span style={{ color: 'white', fontSize: '12px', fontWeight: '700', textAlign: 'center', lineHeight: 1.25, display: 'block', width: '100%' }}>
           {component.name}
-        </div>
+        </span>
       </div>
     );
   };
@@ -2189,13 +2224,13 @@ for message in consumer:
 
   const SchemaComponentCard = ({ component, onClick, tooltipPosition = 'top' }) => {
     const colors = colorScheme[component.shape] || colorScheme.database;
-    const Icon = iconComponents[component.shape];
     const tooltip = schemaTooltips[component.id];
     const isHovered = hoveredSchemaComponent === component.id;
+    const isSelected = selectedComponent?.id === component.id;
 
     return (
       <div
-        style={{ position: 'relative' }}
+        style={{ position: 'relative', display: 'inline-flex' }}
         onMouseEnter={() => setHoveredSchemaComponent(component.id)}
         onMouseLeave={() => setHoveredSchemaComponent(null)}
       >
@@ -2207,179 +2242,75 @@ for message in consumer:
             left: '50%',
             transform: 'translateX(-50%)',
             [tooltipPosition === 'bottom' ? 'marginTop' : 'marginBottom']: '12px',
-            width: '280px',
-            background: 'rgba(15, 23, 42, 0.98)',
-            border: `2px solid ${colors.border}`,
-            borderRadius: '12px',
-            padding: '16px',
+            width: '260px',
+            background: 'rgba(0,0,0,0.92)',
+            color: 'white',
+            padding: '10px 12px',
+            borderRadius: '8px',
+            fontSize: '12px',
+            lineHeight: '1.5',
             zIndex: 100,
-            boxShadow: `0 8px 32px rgba(0,0,0,0.6), 0 0 20px ${colors.border}33`,
-            animation: 'fadeInScale 0.2s ease-out',
-            pointerEvents: 'none'
+            pointerEvents: 'none',
+            fontFamily: 'var(--font-sans)',
           }}>
-            {/* Arrow pointer */}
-            <div style={{
-              position: 'absolute',
-              [tooltipPosition === 'bottom' ? 'top' : 'bottom']: '-8px',
-              left: '50%',
-              transform: `translateX(-50%) ${tooltipPosition === 'bottom' ? 'rotate(180deg)' : ''}`,
-              width: 0,
-              height: 0,
-              borderLeft: '8px solid transparent',
-              borderRight: '8px solid transparent',
-              borderTop: `8px solid ${colors.border}`
-            }} />
-            <div style={{
-              fontSize: '14px',
-              fontWeight: '700',
-              color: colors.border,
-              marginBottom: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}>
-              <Icon size={16} color={colors.icon} />
-              {tooltip.title}
-            </div>
-            <div style={{
-              fontSize: '12px',
-              color: '#cbd5e1',
-              lineHeight: '1.6'
-            }}>
-              {tooltip.tip}
-            </div>
-            <div style={{
-              fontSize: '11px',
-              color: '#64748b',
-              marginTop: '8px',
-              fontStyle: 'italic'
-            }}>
-              Click for full details
-            </div>
+            <div style={{ fontWeight: '700', marginBottom: '4px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.5px', color: 'rgba(255,255,255,0.6)' }}>{tooltip.title}</div>
+            {tooltip.tip}
           </div>
         )}
-
         <div
-          onClick={() => onClick(component)}
+          onClick={() => onClick && onClick(component)}
+          className="cohere-node"
           style={{
-            background: colors.bg,
-            border: `2px solid ${isHovered ? colors.border : colors.border}`,
-            borderRadius: '16px',
-            padding: '20px',
-            minWidth: '180px',
-            maxWidth: '180px',
-            minHeight: '180px',
-            maxHeight: '180px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '16px',
-            cursor: 'pointer',
-            transition: 'all 0.3s',
-            boxShadow: isHovered
-              ? `0 0 30px ${colors.border}66, 0 0 60px ${colors.border}22`
-              : `0 0 20px ${colors.border}33`,
-            transform: isHovered ? 'scale(1.08)' : 'scale(1)'
+            background: isSelected ? colors.selected : colors.fill,
+            width: '130px',
+            height: '60px',
+            padding: '6px 8px',
+            flexShrink: 0,
+            outline: isSelected ? '3px solid rgba(0,0,0,0.25)' : 'none',
+            outlineOffset: '2px',
           }}
         >
-          <div
-            style={{
-              width: '80px',
-              height: '80px',
-              borderRadius: '16px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: `${colors.border}22`,
-              border: `1px solid ${colors.border}44`
-            }}
-          >
-            <Icon size={44} color={colors.icon} strokeWidth={1.5} />
-          </div>
-          <div
-            style={{
-              background: colors.label,
-              color: 'white',
-              padding: '8px 16px',
-              borderRadius: '8px',
-              fontSize: '13px',
-              fontWeight: '600',
-              textAlign: 'center',
-              width: '100%',
-              border: `1px solid ${colors.border}66`
-            }}
-          >
+          <span style={{ color: 'white', fontSize: '11px', fontWeight: '700', textAlign: 'center', lineHeight: 1.25, display: 'block', width: '100%' }}>
             {component.name}
-          </div>
+          </span>
         </div>
       </div>
     );
   };
 
   const ConnectionArrow = ({ type }) => {
-    const color = connectionColors[type] || '#60a5fa';
-
+    const color = connectionColors[type] || '#2C2A28';
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 8px', minWidth: '80px', height: '180px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color }}>
-          <div style={{
-            width: '60px',
-            height: '2px',
-            background: `linear-gradient(90deg, transparent, ${color}, ${color})`,
-            position: 'relative'
-          }}>
-            {showDataFlow && (
-              <div
-                style={{
-                  position: 'absolute',
-                  width: '10px',
-                  height: '10px',
-                  borderRadius: '50%',
-                  background: color,
-                  boxShadow: `0 0 12px ${color}`,
-                  animation: 'flowRight 1.5s infinite linear',
-                  top: '-4px'
-                }}
-              />
-            )}
-          </div>
-          <ChevronRight size={18} />
-        </div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 4px', minWidth: '64px', height: '72px' }}>
+        <svg width="64" height="2" style={{ overflow: 'visible' }} className="cohere-arrow-svg">
+          <defs>
+            <marker id={`arr-h-${type}`} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0,0 6,3 0,6" fill={color} />
+            </marker>
+          </defs>
+          <line x1="0" y1="1" x2="56" y2="1"
+            stroke={color} strokeWidth="1.5" strokeDasharray="5,4"
+            markerEnd={`url(#arr-h-${type})`} />
+        </svg>
       </div>
     );
   };
 
   const VerticalConnectionArrow = ({ type, direction = 'down' }) => {
-    const color = connectionColors[type] || '#60a5fa';
-    const rotation = direction === 'down' ? 'rotate(90deg)' : 'rotate(-90deg)';
-
+    const color = connectionColors[type] || '#2C2A28';
+    const isUp = direction === 'up';
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 0', minHeight: '80px', width: '180px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color, transform: rotation }}>
-          <div style={{
-            width: '60px',
-            height: '2px',
-            background: `linear-gradient(90deg, transparent, ${color}, ${color})`,
-            position: 'relative'
-          }}>
-            {showDataFlow && (
-              <div
-                style={{
-                  position: 'absolute',
-                  width: '10px',
-                  height: '10px',
-                  borderRadius: '50%',
-                  background: color,
-                  boxShadow: `0 0 12px ${color}`,
-                  animation: 'flowRight 1.5s infinite linear',
-                  top: '-4px'
-                }}
-              />
-            )}
-          </div>
-          <ChevronRight size={18} />
-        </div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px 0', minHeight: '64px', width: '140px' }}>
+        <svg width="2" height="64" style={{ overflow: 'visible' }} className="cohere-arrow-svg">
+          <defs>
+            <marker id={`arr-v-${type}-${direction}`} markerWidth="8" markerHeight="8" refX="3" refY="3" orient={isUp ? '270deg' : '90deg'}>
+              <polygon points="0,0 6,3 0,6" fill={color} />
+            </marker>
+          </defs>
+          <line x1="1" y1={isUp ? 56 : 0} x2="1" y2={isUp ? 0 : 56}
+            stroke={color} strokeWidth="1.5" strokeDasharray="5,4"
+            markerEnd={`url(#arr-v-${type}-${direction})`} />
+        </svg>
       </div>
     );
   };
@@ -2395,49 +2326,70 @@ for message in consumer:
     const serving = comps.find(c => c.id === 'serving');
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0px' }}>
-        {/* Top Row - Batch Layer */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ width: '180px' }}></div>
-          <div style={{ width: '96px', minWidth: '96px' }}></div>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '140px 64px 140px 64px 140px',
+        gridTemplateRows: 'auto auto auto auto auto',
+        justifyContent: 'center',
+        justifyItems: 'center',
+        alignItems: 'center',
+      }}>
+        {/* Row 1: Batch Layer (col 3–5) */}
+        <div style={{ gridColumn: '1 / 3', gridRow: '1' }} />
+        <div style={{ gridColumn: '3', gridRow: '1' }}>
           <ComponentCard component={batch} onClick={setSelectedComponent} />
+        </div>
+        <div style={{ gridColumn: '4', gridRow: '1' }}>
           <ConnectionArrow type="batch" />
+        </div>
+        <div style={{ gridColumn: '5', gridRow: '1' }}>
           <ComponentCard component={batchStorage} onClick={setSelectedComponent} />
         </div>
 
-        {/* Vertical connectors: Message Queue to Batch, Batch Views to Serving */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ width: '180px' }}></div>
-          <div style={{ width: '96px', minWidth: '96px' }}></div>
+        {/* Row 2: Vertical arrows (col 3 up to Batch, col 5 down to Serving) */}
+        <div style={{ gridColumn: '1 / 3', gridRow: '2' }} />
+        <div style={{ gridColumn: '3', gridRow: '2' }}>
           <VerticalConnectionArrow type="batch" direction="up" />
-          <div style={{ width: '96px', minWidth: '96px' }}></div>
+        </div>
+        <div style={{ gridColumn: '4', gridRow: '2' }} />
+        <div style={{ gridColumn: '5', gridRow: '2' }}>
           <VerticalConnectionArrow type="query" direction="down" />
         </div>
 
-        {/* Middle Row - Source & Ingestion & Serving */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {/* Row 3: Source → Message Queue ... Serving */}
+        <div style={{ gridColumn: '1', gridRow: '3' }}>
           <ComponentCard component={source} onClick={setSelectedComponent} />
+        </div>
+        <div style={{ gridColumn: '2', gridRow: '3' }}>
           <ConnectionArrow type="stream" />
+        </div>
+        <div style={{ gridColumn: '3', gridRow: '3' }}>
           <ComponentCard component={ingestion} onClick={setSelectedComponent} />
-          <div style={{ width: '96px', minWidth: '96px' }}></div>
+        </div>
+        <div style={{ gridColumn: '4', gridRow: '3' }} />
+        <div style={{ gridColumn: '5', gridRow: '3' }}>
           <ComponentCard component={serving} onClick={setSelectedComponent} />
         </div>
 
-        {/* Vertical connectors: Message Queue to Speed, Real-time Views to Serving */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ width: '180px' }}></div>
-          <div style={{ width: '96px', minWidth: '96px' }}></div>
+        {/* Row 4: Vertical arrows (col 3 down to Speed, col 5 up to Serving) */}
+        <div style={{ gridColumn: '1 / 3', gridRow: '4' }} />
+        <div style={{ gridColumn: '3', gridRow: '4' }}>
           <VerticalConnectionArrow type="stream" direction="down" />
-          <div style={{ width: '96px', minWidth: '96px' }}></div>
+        </div>
+        <div style={{ gridColumn: '4', gridRow: '4' }} />
+        <div style={{ gridColumn: '5', gridRow: '4' }}>
           <VerticalConnectionArrow type="query" direction="up" />
         </div>
 
-        {/* Bottom Row - Speed Layer */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ width: '180px' }}></div>
-          <div style={{ width: '96px', minWidth: '96px' }}></div>
+        {/* Row 5: Speed Layer (col 3–5) */}
+        <div style={{ gridColumn: '1 / 3', gridRow: '5' }} />
+        <div style={{ gridColumn: '3', gridRow: '5' }}>
           <ComponentCard component={speed} onClick={setSelectedComponent} />
+        </div>
+        <div style={{ gridColumn: '4', gridRow: '5' }}>
           <ConnectionArrow type="stream" />
+        </div>
+        <div style={{ gridColumn: '5', gridRow: '5' }}>
           <ComponentCard component={speedStorage} onClick={setSelectedComponent} />
         </div>
       </div>
@@ -2460,240 +2412,84 @@ for message in consumer:
   };
 
   const LBendArrow = ({ type, direction }) => {
-    const color = connectionColors[type] || '#60a5fa';
-    const isCenter = direction === 'center';
-    const isDown = direction === 'down';
-
-    // Keep the arrow *center-aligned* to the source card (y=90), and end at the ClickHouse-aligned bend height.
-    // Two bends total: right -> up/down -> right.
-    //
-    // We "nudge" the arrow end slightly into the ClickHouse rounded corner so it visually touches the border,
-    // without obviously overshooting into the card.
-    const SVG_W = 360;
-    const SVG_H = 180;
-    const CHEVRON_SIZE = 18; // match ConnectionArrow chevron size
-    const CHEVRON_GAP = 1; // tighter line -> chevron spacing
-    const TARGET_GAP = 1; // tighter chevron -> target spacing (still no overlap)
-    const CHEVRON_Y_OFFSET = 0; // prefer true center alignment; baseline issues handled via display:block
-
-    const startY = 90;
-    const bendX = 70;
-    // For the merged single-arrow variant, we go straight into ClickHouse center (y=90).
-    // Otherwise we offset up/down around the center.
-    const TARGET_CENTER_OFFSET = 15;
-    const bendY = isCenter ? startY : startY + (isDown ? TARGET_CENTER_OFFSET : -TARGET_CENTER_OFFSET);
-    // Make the chevron tip stop short of the target by TARGET_GAP, same visual as ConnectionArrow.
-    const chevronLeft = SVG_W - TARGET_GAP - CHEVRON_SIZE;
-    const endX = chevronLeft - CHEVRON_GAP;
-
-    // If merged: single straight line at center. Otherwise: two bends only (right -> up/down -> right).
-    const pathD = isCenter
-      ? `M 0 ${startY} L ${endX} ${startY}`
-      : `M 0 ${startY} L ${bendX} ${startY} L ${bendX} ${bendY} L ${endX} ${bendY}`;
-
+    const color = connectionColors[type] || '#2C2A28';
+    const markerId = `arr-lbend-${type}-${direction}`;
+    // direction: 'batch-down' goes right then down; 'stream-down' same
+    const SVG_W = 96, SVG_H = 96;
+    const d = direction === 'batch-down' || direction === 'stream-down'
+      ? `M 4 4 L ${SVG_W - 4} 4 L ${SVG_W - 4} ${SVG_H - 4}`
+      : `M 4 4 L 4 ${SVG_H - 4} L ${SVG_W - 4} ${SVG_H - 4}`;
     return (
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        padding: '0',
-        minWidth: `${SVG_W}px`,
-        height: `${SVG_H}px`,
-        position: 'relative',
-        marginRight: '0px',
-        overflow: 'visible'
-      }}>
-        <svg width={SVG_W} height={SVG_H} style={{ overflow: 'hidden' }}>
-          {/* Main L-shaped path */}
-          <path
-            d={pathD}
-            stroke={color}
-            strokeWidth="2"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          {/* Animated dataflow dots */}
-          {showDataFlow && (
-            <>
-              <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-                <animateMotion dur="1.5s" repeatCount="indefinite">
-                  <mpath href={`#lbend-path-${type}-${direction}`} />
-                </animateMotion>
-              </circle>
-            </>
-          )}
-
-          {/* Hidden path for animation reference */}
-          <path id={`lbend-path-${type}-${direction}`} d={pathD} stroke="none" fill="none" />
-        </svg>
-
-        {/* Use the SAME chevron icon as `ConnectionArrow` (reference chevron style). */}
-        <div
-          style={{
-            position: 'absolute',
-            left: `${chevronLeft}px`,
-            top: `${bendY + CHEVRON_Y_OFFSET}px`,
-            transform: 'translateY(-50%)',
-            color,
-            pointerEvents: 'none'
-          }}
-        >
-          <ChevronRight size={CHEVRON_SIZE} strokeWidth={2} style={{ display: 'block' }} />
-        </div>
-      </div>
-    );
-  };
-
-  // Two sources -> one target: draw two lines from the two collector centers,
-  // merge them, then continue as a single centered line into ClickHouse.
-  const MergeToCenterArrow = ({ type }) => {
-    const color = connectionColors[type] || '#60a5fa';
-
-    // This arrow column sits between the stacked collectors (180 + 100 + 180 = 460).
-    const SVG_W = 120;
-    const SVG_H = 460;
-    const STROKE_W = 2;
-
-    const CHEVRON_SIZE = 18;
-    const CHEVRON_GAP = 1;
-    const TARGET_GAP = 1;
-
-    // Collector centers inside this 460px column.
-    const TOP_Y = 90; // first card center
-    const BOTTOM_Y = 370; // second card center (180 + 100 + 90)
-    const MERGE_Y = 230; // column vertical center (align to ClickHouse center)
-
-    const MERGE_X = 70;
-    const chevronLeft = SVG_W - TARGET_GAP - CHEVRON_SIZE;
-    const endX = chevronLeft - CHEVRON_GAP;
-
-    const topPath = `M 0 ${TOP_Y} L ${MERGE_X} ${TOP_Y} L ${MERGE_X} ${MERGE_Y}`;
-    const bottomPath = `M 0 ${BOTTOM_Y} L ${MERGE_X} ${BOTTOM_Y} L ${MERGE_X} ${MERGE_Y}`;
-    const mainPath = `M ${MERGE_X} ${MERGE_Y} L ${endX} ${MERGE_Y}`;
-
-    return (
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          padding: '0',
-          minWidth: `${SVG_W}px`,
-          height: `${SVG_H}px`,
-          position: 'relative',
-          overflow: 'visible'
-        }}
-      >
-        <svg width={SVG_W} height={SVG_H} style={{ overflow: 'hidden' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '96px', height: '96px', flexShrink: 0 }}>
+        <svg width={SVG_W} height={SVG_H} style={{ overflow: 'visible' }}>
           <defs>
-            {/* Hidden paths for animation motion */}
-            <path id={`merge-top-path-${type}`} d={topPath} stroke="none" fill="none" />
-            <path id={`merge-bottom-path-${type}`} d={bottomPath} stroke="none" fill="none" />
-            <path id={`merge-main-path-${type}`} d={mainPath} stroke="none" fill="none" />
+            <marker id={markerId} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0,0 6,3 0,6" fill={color} />
+            </marker>
           </defs>
-
-          {/* Branches from both sources */}
-          <path
-            d={topPath}
-            stroke={color}
-            strokeWidth={STROKE_W}
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d={bottomPath}
-            stroke={color}
-            strokeWidth={STROKE_W}
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          {/* Merged single line to ClickHouse center */}
-          <path
-            d={mainPath}
-            stroke={color}
-            strokeWidth={STROKE_W}
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          {/* Animated dataflow dots (match other arrows) */}
-          {showDataFlow && (
-            <>
-              {/* Top branch dot */}
-              <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-                <animateMotion dur="1.5s" repeatCount="indefinite">
-                  <mpath href={`#merge-top-path-${type}`} />
-                </animateMotion>
-              </circle>
-
-              {/* Bottom branch dot */}
-              <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-                <animateMotion dur="1.5s" repeatCount="indefinite">
-                  <mpath href={`#merge-bottom-path-${type}`} />
-                </animateMotion>
-              </circle>
-
-              {/* Merged line dot (slight delay so it feels like it continues after merge) */}
-              <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-                <animateMotion begin="0.6s" dur="1.5s" repeatCount="indefinite">
-                  <mpath href={`#merge-main-path-${type}`} />
-                </animateMotion>
-              </circle>
-            </>
-          )}
-
-          {/* Visual merge node */}
-          <circle cx={MERGE_X} cy={MERGE_Y} r="3" fill={color} />
-
-          {/* Chevron at the target end (same style as ConnectionArrow) */}
-          <g
-            transform={`translate(${chevronLeft}, ${MERGE_Y})`}
-            style={{ color }}
-          >
-            <g transform="translate(0, -9)">
-              <ChevronRight size={CHEVRON_SIZE} strokeWidth={2} style={{ display: 'block' }} />
-            </g>
-          </g>
+          <path d={d} fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="5,4"
+            strokeLinecap="round" strokeLinejoin="round"
+            markerEnd={`url(#${markerId})`} />
         </svg>
       </div>
     );
   };
 
-  // MapReduce: Fan-out arrow (1 source splits down to 3 targets)
-  const MapReduceFanOutArrow = ({ color = '#ec4899', count = 3 }) => {
-    const SVG_W = (count * 180) + ((count - 1) * 40); // total width of target row
+  // HorizontalMergeArrow: two vertically-stacked nodes → one right-pointing arrow
+  // Used in horizontal flex layouts (blockchain diagram) where two rows merge into one.
+  // Cubic bezier with P2 and P3 sharing the same Y gives a perfectly horizontal tangent
+  // at the arrowhead tip, so the arrow points cleanly rightward.
+  const HorizontalMergeArrow = ({ type, cardHeight = 72, gap = 100 }) => {
+    const color = connectionColors[type] || '#2C2A28';
+    const totalH = 2 * cardHeight + gap;       // 244px — matches stacked collectors height
+    const topY    = cardHeight / 2;             // 36 — center of top card
+    const bottomY = totalH - cardHeight / 2;    // 208 — center of bottom card
+    const centerY = totalH / 2;                 // 122 — merge point (vert. center)
+    const SVG_W   = 80;
+    const markerId = `arr-hmerge-${type}`;
+    // Cubic bezier: horizontal departure, S-curve meeting at centerY, horizontal arrival
+    const topPath    = `M 0 ${topY}    C ${SVG_W * 0.5} ${topY},    ${SVG_W * 0.8} ${centerY}, ${SVG_W} ${centerY}`;
+    const bottomPath = `M 0 ${bottomY} C ${SVG_W * 0.5} ${bottomY}, ${SVG_W * 0.8} ${centerY}, ${SVG_W} ${centerY}`;
+    return (
+      <div style={{ flexShrink: 0, width: SVG_W + 'px', height: totalH + 'px' }}>
+        <svg width={SVG_W} height={totalH} style={{ overflow: 'visible', display: 'block' }}>
+          <defs>
+            <marker id={markerId} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0,0 6,3 0,6" fill={color} />
+            </marker>
+          </defs>
+          <path d={topPath}    fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="5,4" strokeLinecap="round" />
+          <path d={bottomPath} fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="5,4" strokeLinecap="round"
+            markerEnd={`url(#${markerId})`} />
+        </svg>
+      </div>
+    );
+  };
+
+  // MapReduce: Fan-out arrow (1 source splits down to N targets)
+  const MapReduceFanOutArrow = ({ color = '#E8654A', count = 3, cardGap = 40 }) => {
+    const cardWidth = 120;
+    const SVG_W = (count * cardWidth) + ((count - 1) * cardGap);
     const SVG_H = 80;
     const centerX = SVG_W / 2;
-    const spacing = 180 + 40; // card width + gap
+    const spacing = cardWidth + cardGap;
     const startOffset = centerX - ((count - 1) / 2) * spacing;
-
+    const markerId = `fanout-arr-${count}`;
     return (
       <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
         <svg width={SVG_W} height={SVG_H} style={{ overflow: 'visible' }}>
+          <defs>
+            <marker id={markerId} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0,0 6,3 0,6" fill={color} />
+            </marker>
+          </defs>
           {Array.from({ length: count }).map((_, i) => {
             const targetX = startOffset + i * spacing;
-            const pathId = `fanout-path-${i}`;
-            const d = `M ${centerX} 0 Q ${centerX} ${SVG_H * 0.5}, ${targetX} ${SVG_H}`;
+            const d = `M ${centerX} 0 Q ${centerX} ${SVG_H * 0.5}, ${targetX} ${SVG_H + 8}`;
             return (
-              <g key={i}>
-                <path id={pathId} d={d} stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" />
-                {showDataFlow && (
-                  <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-                    <animateMotion dur="1.2s" repeatCount="indefinite" begin={`${i * 0.15}s`}>
-                      <mpath href={`#${pathId}`} />
-                    </animateMotion>
-                  </circle>
-                )}
-                <g transform={`translate(${targetX}, ${SVG_H - 6})`}>
-                  <polyline points="-5,-5 0,2 5,-5" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </g>
-              </g>
+              <path key={i} d={d} stroke={color} strokeWidth="1.5" fill="none"
+                strokeDasharray="5,4" strokeLinecap="round"
+                markerEnd={`url(#${markerId})`} />
             );
           })}
         </svg>
@@ -2702,36 +2498,31 @@ for message in consumer:
   };
 
   // MapReduce: Fan-in arrow (multiple sources merge to 1 target)
-  const MapReduceFanInArrow = ({ color = '#f59e0b', sourceCount = 3 }) => {
-    const SVG_W = (sourceCount * 180) + ((sourceCount - 1) * 40);
+  const MapReduceFanInArrow = ({ color = '#4A5FE3', sourceCount = 3 }) => {
+    const cardWidth = 120;
+    const SVG_W = (sourceCount * cardWidth) + ((sourceCount - 1) * 40);
     const SVG_H = 80;
     const centerX = SVG_W / 2;
-    const spacing = 180 + 40;
+    const spacing = cardWidth + 40;
     const startOffset = centerX - ((sourceCount - 1) / 2) * spacing;
-
+    const markerId = `fanin-arr-${sourceCount}`;
     return (
       <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
         <svg width={SVG_W} height={SVG_H} style={{ overflow: 'visible' }}>
+          <defs>
+            <marker id={markerId} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0,0 6,3 0,6" fill={color} />
+            </marker>
+          </defs>
           {Array.from({ length: sourceCount }).map((_, i) => {
             const sourceX = startOffset + i * spacing;
-            const pathId = `fanin-path-${i}`;
-            const d = `M ${sourceX} 0 Q ${sourceX} ${SVG_H * 0.5}, ${centerX} ${SVG_H}`;
+            const d = `M ${sourceX} 0 Q ${sourceX} ${SVG_H * 0.5}, ${centerX} ${SVG_H + 8}`;
             return (
-              <g key={i}>
-                <path id={pathId} d={d} stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" />
-                {showDataFlow && (
-                  <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-                    <animateMotion dur="1.2s" repeatCount="indefinite" begin={`${i * 0.15}s`}>
-                      <mpath href={`#${pathId}`} />
-                    </animateMotion>
-                  </circle>
-                )}
-              </g>
+              <path key={i} d={d} stroke={color} strokeWidth="1.5" fill="none"
+                strokeDasharray="5,4" strokeLinecap="round"
+                markerEnd={i === Math.floor(sourceCount / 2) ? `url(#${markerId})` : undefined} />
             );
           })}
-          <g transform={`translate(${centerX}, ${SVG_H - 6})`}>
-            <polyline points="-5,-5 0,2 5,-5" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </g>
         </svg>
       </div>
     );
@@ -2741,41 +2532,27 @@ for message in consumer:
   const MapReduceShuffleArrows = () => {
     const sourceCount = 3;
     const targetCount = 2;
-    const SVG_W = (sourceCount * 180) + ((sourceCount - 1) * 40);
+    const cardWidth = 120;
+    const SVG_W = (sourceCount * cardWidth) + ((sourceCount - 1) * 40);
     const SVG_H = 100;
-    const spacing = 180 + 40;
+    const spacing = cardWidth + 40;
     const centerX = SVG_W / 2;
     const srcOffset = centerX - ((sourceCount - 1) / 2) * spacing;
     const tgtOffset = centerX - ((targetCount - 1) / 2) * spacing;
-    const shuffleColor = '#f59e0b';
+    const shuffleColor = '#C07FD4';
+    const markerId = 'shuffle-arr';
 
-    // Each source connects to each target with crossing lines
     const paths = [];
     let idx = 0;
     for (let s = 0; s < sourceCount; s++) {
       for (let t = 0; t < targetCount; t++) {
         const sx = srcOffset + s * spacing;
         const tx = tgtOffset + t * spacing;
-        const pathId = `shuffle-path-${s}-${t}`;
+        const shuffleD = `M ${sx} 0 C ${sx} ${SVG_H * 0.4}, ${tx} ${SVG_H * 0.6}, ${tx} ${SVG_H + 8}`;
         paths.push(
-          <g key={idx}>
-            <path
-              id={pathId}
-              d={`M ${sx} 0 C ${sx} ${SVG_H * 0.4}, ${tx} ${SVG_H * 0.6}, ${tx} ${SVG_H}`}
-              stroke={shuffleColor}
-              strokeWidth="1.5"
-              fill="none"
-              strokeLinecap="round"
-              opacity="0.6"
-            />
-            {showDataFlow && (
-              <circle r="4" fill={shuffleColor} filter={`drop-shadow(0 0 4px ${shuffleColor})`}>
-                <animateMotion dur={`${1.0 + idx * 0.2}s`} repeatCount="indefinite" begin={`${idx * 0.12}s`}>
-                  <mpath href={`#${pathId}`} />
-                </animateMotion>
-              </circle>
-            )}
-          </g>
+          <path key={idx} d={shuffleD} stroke={shuffleColor} strokeWidth="1.5" fill="none"
+            strokeDasharray="5,4" strokeLinecap="round" opacity="0.75"
+            markerEnd={s === 0 && t === 0 ? `url(#${markerId})` : undefined} />
         );
         idx++;
       }
@@ -2784,70 +2561,41 @@ for message in consumer:
     return (
       <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
         <svg width={SVG_W} height={SVG_H} style={{ overflow: 'visible' }}>
+          <defs>
+            <marker id={markerId} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0,0 6,3 0,6" fill={shuffleColor} />
+            </marker>
+          </defs>
           {paths}
-          {/* Chevrons at each target */}
-          {Array.from({ length: targetCount }).map((_, t) => {
-            const tx = tgtOffset + t * spacing;
-            return (
-              <g key={t} transform={`translate(${tx}, ${SVG_H - 6})`}>
-                <polyline points="-5,-5 0,2 5,-5" fill="none" stroke={shuffleColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </g>
-            );
-          })}
         </svg>
       </div>
     );
   };
 
   // MapReduce: Mini-card for parallel tasks (smaller than ComponentCard)
-  const MapReduceMiniCard = ({ label, icon: IconComp, color, borderColor, isActive = true, onClick, exampleText }) => {
-    const step = mapReduceStep;
-    const dimmed = step > 0 && !isActive;
-
+  const MapReduceMiniCard = ({ label, color, isActive = true, onClick, exampleText }) => {
+    const dimmed = mapReduceStep > 0 && !isActive;
     return (
       <div
         onClick={onClick}
+        className="cohere-node"
         style={{
-          background: `${color}`,
-          border: `2px solid ${borderColor}`,
-          borderRadius: '12px',
-          padding: '12px',
-          width: '160px',
-          minHeight: '80px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '8px',
-          cursor: 'pointer',
-          transition: 'all 0.3s',
-          opacity: dimmed ? 0.25 : 1,
-          boxShadow: (!dimmed && step > 0) ? `0 0 20px ${borderColor}66, 0 0 40px ${borderColor}22` : `0 0 12px ${borderColor}33`,
-          transform: (!dimmed && step > 0) ? 'scale(1.05)' : 'scale(1)'
+          background: color,
+          width: '120px',
+          height: '56px',
+          padding: '6px 8px',
+          opacity: dimmed ? 0.35 : 1,
+          cursor: onClick ? 'pointer' : 'default',
+          flexShrink: 0,
         }}
-        onMouseEnter={(e) => { if (!dimmed) e.currentTarget.style.transform = 'scale(1.08)'; }}
-        onMouseLeave={(e) => { if (!dimmed) e.currentTarget.style.transform = (!dimmed && step > 0) ? 'scale(1.05)' : 'scale(1)'; }}
       >
-        <IconComp size={28} color={borderColor} strokeWidth={1.5} />
-        <span style={{
-          color: 'white',
-          fontSize: '12px',
-          fontWeight: '600',
-          textAlign: 'center'
-        }}>{label}</span>
-        {showMapReduceExample && exampleText && (
-          <div style={{
-            background: 'rgba(0,0,0,0.4)',
-            borderRadius: '6px',
-            padding: '4px 8px',
-            fontSize: '10px',
-            color: '#fbbf24',
-            fontFamily: 'Monaco, Consolas, monospace',
-            textAlign: 'center',
-            marginTop: '2px',
-            maxWidth: '140px',
-            wordBreak: 'break-word'
-          }}>{exampleText}</div>
+        <span style={{ color: 'white', fontSize: '11px', fontWeight: '700', textAlign: 'center', lineHeight: 1.25, display: 'block', width: '100%' }}>
+          {label}
+        </span>
+        {exampleText && !dimmed && (
+          <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.75)', textAlign: 'center', marginTop: '2px', lineHeight: 1.2 }}>
+            {exampleText}
+          </div>
         )}
       </div>
     );
@@ -2873,7 +2621,7 @@ for message in consumer:
       operation: { label: 'Submit to Cluster', detail: 'Client packages JAR + config and sends to ResourceManager via RPC' },
       after: { label: 'Job Queued', data: ['job_202601_0001 ACCEPTED', 'Requested: 3 mappers, 2 reducers', 'Priority: NORMAL'] },
       insight: 'The client never processes data itself — it only submits the job definition and waits for results.',
-      color: '#3b82f6'
+      color: '#4A7A9B'
     },
     2: {
       title: 'Data Location Discovery',
@@ -2881,7 +2629,7 @@ for message in consumer:
       operation: { label: 'NameNode Lookup', detail: 'ResourceManager queries NameNode metadata to find which DataNodes hold each block' },
       after: { label: 'Block Location Map', data: ['Block 1 (128MB) → Node-A, Node-C', 'Block 2 (128MB) → Node-B, Node-A', 'Block 3 (128MB) → Node-C, Node-B'] },
       insight: 'Data locality: Mappers are assigned to nodes where the data already lives, avoiding network transfer.',
-      color: '#10b981'
+      color: '#4A7A56'
     },
     3: {
       title: 'Input Splitting',
@@ -2889,7 +2637,7 @@ for message in consumer:
       operation: { label: 'InputFormat.getSplits()', detail: 'TextInputFormat splits files at line boundaries, one split per HDFS block (128MB default)' },
       after: { label: '3 Input Splits Created', data: ['Split-0: "hello world hello"', 'Split-1: "foo hello world"', 'Split-2: "bar world foo"'] },
       insight: 'Each split maps to exactly one Map task. More splits = more parallelism but more overhead.',
-      color: '#3b82f6'
+      color: '#4A7A9B'
     },
     4: {
       title: 'Map Phase — Parallel Transformation',
@@ -2897,7 +2645,7 @@ for message in consumer:
       operation: { label: 'map(key, value) → emit(word, 1)', detail: 'Each mapper reads one split line-by-line, tokenizes words, emits (word, 1) for each token' },
       after: { label: 'Intermediate Key-Value Pairs', data: ['Mapper-0: (hello,1)(world,1)(hello,1)', 'Mapper-1: (foo,1)(hello,1)(world,1)', 'Mapper-2: (bar,1)(world,1)(foo,1)'] },
       insight: 'Mappers run independently — no communication between them. Each processes only its local split.',
-      color: '#ec4899'
+      color: '#9E5A3C'
     },
     5: {
       title: 'Shuffle & Sort — The Network Storm',
@@ -2905,7 +2653,7 @@ for message in consumer:
       operation: { label: 'Hash Partition → Transfer → Merge Sort', detail: 'Each key is hashed to a reducer partition. Pairs are sent across the network and merge-sorted by key.' },
       after: { label: 'Grouped & Sorted by Key', data: ['→ Reducer-0: bar→[1], foo→[1,1], hello→[1,1,1]', '→ Reducer-1: world→[1,1,1]'] },
       insight: 'This is the most expensive step — all intermediate data crosses the network. The "shuffle" is why MapReduce is disk-heavy.',
-      color: '#f59e0b'
+      color: '#9E7824'
     },
     6: {
       title: 'Reduce Phase — Aggregation',
@@ -2913,7 +2661,7 @@ for message in consumer:
       operation: { label: 'reduce(key, values) → sum(values)', detail: 'Each reducer receives all values for its key range and applies the user-defined reduce function' },
       after: { label: 'Aggregated Results', data: ['Reducer-0: (bar,1) (foo,2) (hello,3)', 'Reducer-1: (world,3)'] },
       insight: 'Each reducer sees ALL values for a given key — this is guaranteed by the shuffle. sum([1,1,1]) = 3',
-      color: '#f59e0b'
+      color: '#9E7824'
     },
     7: {
       title: 'Output to HDFS',
@@ -2921,7 +2669,7 @@ for message in consumer:
       operation: { label: 'OutputFormat.write()', detail: 'Each reducer writes results to HDFS as a separate part file (one file per reducer)' },
       after: { label: 'HDFS Output Files', data: ['part-r-00000: bar\\t1, foo\\t2, hello\\t3', 'part-r-00001: world\\t3', 'Total: 4 unique words counted'] },
       insight: 'Results are split across part files. Use "hadoop fs -cat /results/*" or downstream tools (Hive) to read them.',
-      color: '#10b981'
+      color: '#4A7A56'
     }
   };
 
@@ -2932,7 +2680,7 @@ for message in consumer:
       <div style={{
         margin: '0 0 20px 0',
         padding: '20px',
-        background: 'rgba(15, 23, 42, 0.8)',
+        background: 'rgba(245,243,239,0.8)',
         border: `1px solid ${stageData.color}44`,
         borderRadius: '16px',
         animation: 'fadeInScale 0.3s ease-out'
@@ -2946,15 +2694,15 @@ for message in consumer:
           {/* BEFORE */}
           <div style={{
             flex: '1', minWidth: '200px', maxWidth: '280px',
-            background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '14px',
-            border: '1px solid rgba(71, 85, 105, 0.3)'
+            background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '14px',
+            border: '1px solid rgba(235,231,225,1)'
           }}>
-            <div style={{ fontSize: '10px', fontWeight: '700', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '8px' }}>
+            <div style={{ fontSize: '10px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '8px' }}>
               Input
             </div>
             <div style={{ fontFamily: 'Monaco, Consolas, monospace', fontSize: '11px', lineHeight: '1.8' }}>
               {stageData.before.data.map((line, i) => (
-                <div key={i} style={{ color: '#cbd5e1', padding: '2px 0' }}>{line}</div>
+                <div key={i} style={{ color: 'var(--text-body)', padding: '2px 0' }}>{line}</div>
               ))}
             </div>
           </div>
@@ -2974,7 +2722,7 @@ for message in consumer:
               <div style={{ width: '20px', height: '2px', background: stageData.color }} />
               <ArrowRight size={16} color={stageData.color} />
             </div>
-            <div style={{ fontSize: '10px', color: '#64748b', textAlign: 'center', maxWidth: '180px', lineHeight: '1.4' }}>
+            <div style={{ fontSize: '10px', color: 'var(--text-muted)', textAlign: 'center', maxWidth: '180px', lineHeight: '1.4' }}>
               {stageData.operation.detail}
             </div>
           </div>
@@ -2990,7 +2738,7 @@ for message in consumer:
             </div>
             <div style={{ fontFamily: 'Monaco, Consolas, monospace', fontSize: '11px', lineHeight: '1.8' }}>
               {stageData.after.data.map((line, i) => (
-                <div key={i} style={{ color: '#e2e8f0', padding: '2px 0' }}>{line}</div>
+                <div key={i} style={{ color: 'var(--text-body)', padding: '2px 0' }}>{line}</div>
               ))}
             </div>
           </div>
@@ -3000,11 +2748,11 @@ for message in consumer:
         <div style={{
           marginTop: '14px',
           padding: '10px 16px',
-          background: 'rgba(245, 158, 11, 0.08)',
-          border: '1px solid rgba(245, 158, 11, 0.2)',
+          background: 'rgba(158, 120, 36, 0.08)',
+          border: '1px solid rgba(158, 120, 36, 0.2)',
           borderRadius: '8px',
           fontSize: '12px',
-          color: '#fbbf24',
+          color: '#C8A84E',
           textAlign: 'center',
           lineHeight: '1.5'
         }}>
@@ -3014,26 +2762,10 @@ for message in consumer:
     );
   };
 
-  // Auto-advance animation effect
-  useEffect(() => {
-    if (!mapReduceAnimating) return;
-    const timer = setInterval(() => {
-      setMapReduceStep(prev => {
-        if (prev >= 7) {
-          setMapReduceAnimating(false);
-          return 0;
-        }
-        return prev + 1;
-      });
-    }, 2000);
-    return () => clearInterval(timer);
-  }, [mapReduceAnimating]);
-
   // Reset step when switching away from mapreduce
   useEffect(() => {
     if (activeArchitecture !== 'mapreduce') {
       setMapReduceStep(0);
-      setMapReduceAnimating(false);
       setShowMapReduceExample(false);
     }
   }, [activeArchitecture]);
@@ -3071,7 +2803,7 @@ for message in consumer:
       return (
         <div style={{
           position: 'absolute', right: '-180px', top: '50%', transform: 'translateY(-50%)',
-          background: 'rgba(0,0,0,0.7)', borderRadius: '6px', padding: '4px 8px',
+          background: 'rgba(200,195,188,0.7)', borderRadius: '6px', padding: '4px 8px',
           fontSize: '9px', color: color, fontFamily: 'Monaco, Consolas, monospace',
           whiteSpace: 'nowrap', border: `1px solid ${color}33`, zIndex: 5,
           animation: 'fadeInScale 0.3s ease-out'
@@ -3084,135 +2816,53 @@ for message in consumer:
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0px', position: 'relative' }}>
 
-        {/* Step-by-step animation controls */}
+        {/* Step selector */}
         <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          marginBottom: '24px',
-          padding: '12px 20px',
-          background: 'rgba(30, 41, 59, 0.8)',
-          borderRadius: '12px',
-          border: '1px solid rgba(71, 85, 105, 0.3)',
-          flexWrap: 'wrap',
-          justifyContent: 'center'
+          display: 'flex', gap: '6px', alignItems: 'center', justifyContent: 'center',
+          marginBottom: '20px', flexWrap: 'wrap'
         }}>
-          {/* Play/Reset */}
-          <button
-            onClick={() => {
-              if (mapReduceAnimating) {
-                setMapReduceAnimating(false);
-              } else {
-                setMapReduceStep(1);
-                setMapReduceAnimating(true);
-              }
-            }}
-            style={{
-              padding: '6px 14px',
-              background: mapReduceAnimating ? 'rgba(239, 68, 68, 0.2)' : 'rgba(59, 130, 246, 0.2)',
-              border: `1px solid ${mapReduceAnimating ? '#ef4444' : '#3b82f6'}`,
-              borderRadius: '8px',
-              color: mapReduceAnimating ? '#ef4444' : '#60a5fa',
-              fontSize: '12px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-          >
-            {mapReduceAnimating ? '⏸ Pause' : '▶ Play Flow'}
-          </button>
-
-          {/* Step indicators */}
-          <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-            {mapReduceSteps.map((s, i) => (
-              <button
-                key={i}
-                onClick={() => { setMapReduceStep(i); setMapReduceAnimating(false); }}
-                title={s.description}
-                style={{
-                  padding: '4px 10px',
-                  background: step === i ? 'rgba(59, 130, 246, 0.3)' : 'rgba(30, 41, 59, 0.5)',
-                  border: `1px solid ${step === i ? '#3b82f6' : 'rgba(71, 85, 105, 0.3)'}`,
-                  borderRadius: '6px',
-                  color: step === i ? '#60a5fa' : '#64748b',
-                  fontSize: '11px',
-                  fontWeight: step === i ? '700' : '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}
-              >
-                {i === 0 ? 'All' : i}
-              </button>
-            ))}
-          </div>
-
-          {/* Divider */}
-          <div style={{ width: '1px', height: '24px', background: 'rgba(71, 85, 105, 0.3)' }} />
-
-          {/* Data Transform toggle */}
-          <button
-            onClick={() => setShowDataTransform(!showDataTransform)}
-            style={{
-              padding: '6px 14px',
-              background: showDataTransform ? 'rgba(16, 185, 129, 0.2)' : 'rgba(30, 41, 59, 0.5)',
-              border: `1px solid ${showDataTransform ? '#10b981' : 'rgba(71, 85, 105, 0.3)'}`,
-              borderRadius: '8px',
-              color: showDataTransform ? '#34d399' : '#94a3b8',
-              fontSize: '12px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-          >
-            {showDataTransform ? <Eye size={14} /> : <EyeOff size={14} />}
-            {showDataTransform ? 'Data Flow On' : 'Data Flow Off'}
-          </button>
-
-          {/* Example toggle */}
+          {mapReduceSteps.map((s, i) => (
+            <button key={i}
+              onClick={() => setMapReduceStep(i)}
+              title={s.description}
+              style={{
+                padding: '5px 14px',
+                background: step === i ? '#0075de' : '#ffffff',
+                border: `1px solid ${step === i ? '#0075de' : 'rgba(0,0,0,0.1)'}`,
+                borderRadius: '20px',
+                color: step === i ? '#ffffff' : 'rgba(0,0,0,0.5)',
+                fontSize: '12px', fontWeight: step === i ? '600' : '400',
+                cursor: 'pointer', transition: 'all 0.15s',
+                boxShadow: step === i ? '0 1px 4px rgba(0,117,222,0.25)' : 'none'
+              }}
+            >
+              {i === 0 ? 'All' : `Step ${i}`}
+            </button>
+          ))}
           <button
             onClick={() => setShowMapReduceExample(!showMapReduceExample)}
             style={{
-              padding: '6px 14px',
-              background: showMapReduceExample ? 'rgba(245, 158, 11, 0.2)' : 'rgba(30, 41, 59, 0.5)',
-              border: `1px solid ${showMapReduceExample ? '#f59e0b' : 'rgba(71, 85, 105, 0.3)'}`,
-              borderRadius: '8px',
-              color: showMapReduceExample ? '#fbbf24' : '#94a3b8',
-              fontSize: '12px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
+              padding: '5px 14px', marginLeft: '8px',
+              background: showMapReduceExample ? 'rgba(0,117,222,0.08)' : '#ffffff',
+              border: `1px solid ${showMapReduceExample ? 'rgba(0,117,222,0.3)' : 'rgba(0,0,0,0.1)'}`,
+              borderRadius: '20px',
+              color: showMapReduceExample ? '#0075de' : 'rgba(0,0,0,0.5)',
+              fontSize: '12px', fontWeight: '400', cursor: 'pointer', transition: 'all 0.15s'
             }}
           >
-            <Sparkles size={14} />
-            {showMapReduceExample ? 'Hide Example' : 'Word Count Example'}
+            Word Count Example
           </button>
         </div>
 
         {/* Step description */}
         {step > 0 && (
           <div style={{
-            marginBottom: '4px',
-            padding: '8px 20px',
-            background: 'rgba(59, 130, 246, 0.1)',
-            border: '1px solid rgba(59, 130, 246, 0.3)',
-            borderRadius: '8px',
-            color: '#93c5fd',
-            fontSize: '13px',
-            textAlign: 'center'
+            marginBottom: '16px', padding: '8px 16px',
+            background: 'rgba(0,117,222,0.06)', border: '1px solid rgba(0,117,222,0.15)',
+            borderRadius: '8px', color: 'rgba(0,0,0,0.85)', fontSize: '13px', textAlign: 'center'
           }}>
-            <strong>Step {step}:</strong> {mapReduceSteps[step]?.description}
+            <strong style={{ color: '#0075de' }}>Step {step}:</strong> {mapReduceSteps[step]?.description}
           </div>
-        )}
-
-        {/* Data Transformation Panel */}
-        {step > 0 && showDataTransform && dataTransformStages[step] && (
-          <DataTransformPanel stageData={dataTransformStages[step]} />
         )}
 
         {/* Phase labels alongside the diagram */}
@@ -3221,15 +2871,15 @@ for message in consumer:
           {/* Row 1: Client */}
           <div style={{
             display: 'flex', justifyContent: 'center', position: 'relative',
-            opacity: isStepActive([1]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([1]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <ComponentCard component={client} onClick={setSelectedComponent} />
             {step === 1 && showDataTransform && (
               <div style={{
                 position: 'absolute', left: '50%', marginLeft: '110px', top: '50%', transform: 'translateY(-50%)',
-                background: 'rgba(0,0,0,0.7)', borderRadius: '8px', padding: '6px 10px',
-                fontSize: '10px', color: '#93c5fd', fontFamily: 'Monaco, Consolas, monospace',
+                background: 'rgba(200,195,188,0.7)', borderRadius: '8px', padding: '6px 10px',
+                fontSize: '10px', color: '#8AAACE', fontFamily: 'Monaco, Consolas, monospace',
                 border: '1px solid rgba(59,130,246,0.3)', animation: 'fadeInScale 0.3s ease-out',
                 whiteSpace: 'nowrap'
               }}>
@@ -3241,14 +2891,14 @@ for message in consumer:
           {/* Arrow: Client → ResourceManager */}
           <div style={{
             display: 'flex', justifyContent: 'center', padding: '4px 0', position: 'relative',
-            opacity: isStepActive([1]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([1]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <VerticalConnectionArrow type="query" direction="down" />
             {step === 1 && showDataTransform && (
               <div style={{
                 position: 'absolute', left: '50%', marginLeft: '40px', top: '50%', transform: 'translateY(-50%)',
-                fontSize: '9px', color: '#64748b', fontStyle: 'italic'
+                fontSize: '9px', color: 'var(--text-muted)', fontStyle: 'italic'
               }}>
                 submit job via RPC
               </div>
@@ -3258,7 +2908,7 @@ for message in consumer:
           {/* Row 2: ResourceManager + NameNode */}
           <div style={{
             display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0px', position: 'relative',
-            opacity: isStepActive([1, 2]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([1, 2]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <ComponentCard component={jobtracker} onClick={setSelectedComponent} />
@@ -3267,7 +2917,7 @@ for message in consumer:
               {step === 2 && showDataTransform && (
                 <div style={{
                   position: 'absolute', left: '50%', transform: 'translateX(-50%)', top: '-18px',
-                  fontSize: '9px', color: '#10b981', fontFamily: 'Monaco, Consolas, monospace',
+                  fontSize: '9px', color: '#4A7A56', fontFamily: 'Monaco, Consolas, monospace',
                   whiteSpace: 'nowrap'
                 }}>
                   "Where are blocks for /data/logs/*?"
@@ -3280,7 +2930,7 @@ for message in consumer:
           {/* Arrow: ResourceManager → Input Splits (fan out to 3) */}
           <div style={{
             padding: '8px 0',
-            opacity: isStepActive([2, 3]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([2, 3]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <MapReduceFanOutArrow color={connectionColors.batch} count={3} />
@@ -3289,7 +2939,7 @@ for message in consumer:
           {/* Row 3: Input Splits (3x mini cards) */}
           <div style={{
             display: 'flex', justifyContent: 'center', gap: '40px',
-            opacity: isStepActive([3]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([3]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             {[
@@ -3301,11 +2951,10 @@ for message in consumer:
                 key={i}
                 label={s.label}
                 icon={ScrollText}
-                color="rgba(59, 130, 246, 0.15)"
-                borderColor="#3b82f6"
+                color="#4A5FE3"
                 isActive={isStepActive([3])}
                 onClick={() => setSelectedComponent(input)}
-                exampleText={s.ex}
+                exampleText={showMapReduceExample ? s.ex : undefined}
               />
             ))}
           </div>
@@ -3313,29 +2962,12 @@ for message in consumer:
           {/* Arrows: Split → Map (vertical, 3x parallel) */}
           <div style={{
             display: 'flex', justifyContent: 'center', gap: '40px', padding: '0',
-            opacity: isStepActive([3, 4]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([3, 4]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             {[0, 1, 2].map(i => (
-              <div key={i} style={{ width: '160px', display: 'flex', justifyContent: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px 0', height: '60px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: connectionColors.batch, transform: 'rotate(90deg)' }}>
-                    <div style={{
-                      width: '40px', height: '2px',
-                      background: `linear-gradient(90deg, transparent, ${connectionColors.batch}, ${connectionColors.batch})`,
-                      position: 'relative'
-                    }}>
-                      {showDataFlow && (
-                        <div style={{
-                          position: 'absolute', width: '8px', height: '8px', borderRadius: '50%',
-                          background: connectionColors.batch, boxShadow: `0 0 10px ${connectionColors.batch}`,
-                          animation: 'flowRight 1.2s infinite linear', top: '-3px'
-                        }} />
-                      )}
-                    </div>
-                    <ChevronRight size={14} />
-                  </div>
-                </div>
+              <div key={i} style={{ width: '120px', display: 'flex', justifyContent: 'center' }}>
+                <VerticalConnectionArrow type="batch" direction="down" />
               </div>
             ))}
           </div>
@@ -3343,15 +2975,15 @@ for message in consumer:
           {/* Phase label: MAP PHASE */}
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px',
-            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div style={{
               padding: '4px 16px',
-              background: 'rgba(236, 72, 153, 0.15)',
-              border: '1px solid rgba(236, 72, 153, 0.3)',
+              background: 'rgba(232,101,74,0.08)',
+              border: '1px solid rgba(232,101,74,0.25)',
               borderRadius: '20px',
-              color: '#ec4899',
+              color: '#E8654A',
               fontSize: '11px',
               fontWeight: '700',
               letterSpacing: '2px',
@@ -3362,7 +2994,7 @@ for message in consumer:
           {/* Row 4: Map Tasks (3x mini cards) */}
           <div style={{
             display: 'flex', justifyContent: 'center', gap: '40px',
-            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             {[
@@ -3374,11 +3006,10 @@ for message in consumer:
                 key={i}
                 label={m.label}
                 icon={Cpu}
-                color="rgba(236, 72, 153, 0.15)"
-                borderColor="#ec4899"
+                color="#E8654A"
                 isActive={isStepActive([4])}
                 onClick={() => setSelectedComponent(map)}
-                exampleText={m.ex}
+                exampleText={showMapReduceExample ? m.ex : undefined}
               />
             ))}
           </div>
@@ -3386,15 +3017,15 @@ for message in consumer:
           {/* Phase label: SHUFFLE & SORT */}
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '12px 0 4px 0',
-            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div style={{
               padding: '4px 16px',
-              background: 'rgba(245, 158, 11, 0.15)',
-              border: '1px solid rgba(245, 158, 11, 0.3)',
+              background: 'rgba(192,127,212,0.08)',
+              border: '1px solid rgba(192,127,212,0.25)',
               borderRadius: '20px',
-              color: '#f59e0b',
+              color: '#C07FD4',
               fontSize: '11px',
               fontWeight: '700',
               letterSpacing: '2px',
@@ -3405,7 +3036,7 @@ for message in consumer:
           {/* Shuffle cross-connect arrows */}
           <div style={{
             padding: '8px 0',
-            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <MapReduceShuffleArrows />
@@ -3414,45 +3045,29 @@ for message in consumer:
           {/* Row 5: Shuffle & Sort wide card */}
           <div style={{
             display: 'flex', justifyContent: 'center',
-            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div
               onClick={() => setSelectedComponent(shuffle)}
+              className="cohere-node"
               style={{
-                background: 'rgba(124, 58, 237, 0.15)',
-                border: '2px solid #7c3aed',
-                borderRadius: '16px',
-                padding: '16px 40px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '16px',
-                cursor: 'pointer',
-                transition: 'all 0.3s',
-                boxShadow: (step === 5) ? '0 0 30px rgba(124, 58, 237, 0.4)' : '0 0 15px rgba(124, 58, 237, 0.2)'
+                background: selectedComponent?.id === shuffle?.id ? '#B06FC4' : '#C07FD4',
+                width: '320px', minHeight: '64px', padding: '10px 20px',
+                cursor: 'pointer', flexDirection: 'column',
+                outline: selectedComponent?.id === shuffle?.id ? '3px solid rgba(0,0,0,0.2)' : 'none',
+                outlineOffset: '2px'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
             >
-              <div style={{
-                width: '50px', height: '50px', borderRadius: '12px',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'rgba(124, 58, 237, 0.2)',
-                border: '1px solid rgba(124, 58, 237, 0.4)'
-              }}>
-                <GitMerge size={28} color="#7c3aed" strokeWidth={1.5} />
+              <div style={{ color: 'white', fontSize: '13px', fontWeight: '700', textAlign: 'center' }}>
+                Shuffle &amp; Sort
               </div>
-              <div>
-                <div style={{ color: '#a78bfa', fontSize: '16px', fontWeight: '700' }}>Shuffle & Sort</div>
-                <div style={{ color: '#94a3b8', fontSize: '12px' }}>Partition by key → Transfer → Merge sort</div>
+              <div style={{ color: 'rgba(255,255,255,0.72)', fontSize: '10px', textAlign: 'center', marginTop: '3px' }}>
+                Partition by key → Transfer → Merge sort
               </div>
-              {(showMapReduceExample || (step === 5 && showDataTransform)) && (
-                <div style={{
-                  background: 'rgba(0,0,0,0.4)', borderRadius: '8px', padding: '8px 12px',
-                  fontSize: '11px', color: '#fbbf24', fontFamily: 'Monaco, Consolas, monospace',
-                  lineHeight: '1.5'
-                }}>
-                  Group: hello→[1,1,1], world→[1,1,1], foo→[1,1], bar→[1]
+              {showMapReduceExample && (
+                <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '9px', textAlign: 'center', marginTop: '3px', fontFamily: 'monospace' }}>
+                  Group: hello→[1,1,1], world→[1,1,1]
                 </div>
               )}
             </div>
@@ -3461,15 +3076,15 @@ for message in consumer:
           {/* Phase label: REDUCE PHASE */}
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '12px 0 4px 0',
-            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div style={{
               padding: '4px 16px',
-              background: 'rgba(245, 158, 11, 0.15)',
-              border: '1px solid rgba(245, 158, 11, 0.3)',
+              background: 'rgba(42,157,153,0.08)',
+              border: '1px solid rgba(42,157,153,0.25)',
               borderRadius: '20px',
-              color: '#f59e0b',
+              color: '#2A9D99',
               fontSize: '11px',
               fontWeight: '700',
               letterSpacing: '2px',
@@ -3480,7 +3095,7 @@ for message in consumer:
           {/* Arrows: Shuffle → Reducers (fan out to 2) */}
           <div style={{
             padding: '8px 0',
-            opacity: isStepActive([5, 6]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([5, 6]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <MapReduceFanOutArrow color={connectionColors.stream} count={2} />
@@ -3489,7 +3104,7 @@ for message in consumer:
           {/* Row 6: Reduce Tasks (2x mini cards) */}
           <div style={{
             display: 'flex', justifyContent: 'center', gap: '40px',
-            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             {[
@@ -3500,11 +3115,10 @@ for message in consumer:
                 key={i}
                 label={r.label}
                 icon={Activity}
-                color="rgba(245, 158, 11, 0.15)"
-                borderColor="#f59e0b"
+                color="#2A9D99"
                 isActive={isStepActive([6])}
                 onClick={() => setSelectedComponent(reduce)}
-                exampleText={r.ex}
+                exampleText={showMapReduceExample ? r.ex : undefined}
               />
             ))}
           </div>
@@ -3512,7 +3126,7 @@ for message in consumer:
           {/* Arrows: Reducers → Output (fan in to 1) */}
           <div style={{
             padding: '8px 0',
-            opacity: isStepActive([6, 7]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([6, 7]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <MapReduceFanInArrow color={connectionColors.batch} sourceCount={2} />
@@ -3521,7 +3135,7 @@ for message in consumer:
           {/* Row 7: HDFS Output */}
           <div style={{
             display: 'flex', justifyContent: 'center',
-            opacity: isStepActive([7]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([7]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div style={{ position: 'relative' }}>
@@ -3530,9 +3144,9 @@ for message in consumer:
                 <div style={{
                   position: 'absolute', top: '50%', left: '100%', marginLeft: '12px',
                   transform: 'translateY(-50%)',
-                  background: 'rgba(0,0,0,0.6)', borderRadius: '8px', padding: '8px 12px',
-                  fontSize: '11px', color: '#fbbf24', fontFamily: 'Monaco, Consolas, monospace',
-                  whiteSpace: 'nowrap', border: '1px solid rgba(245, 158, 11, 0.3)'
+                  background: 'rgba(42,157,153,0.08)', borderRadius: '8px', padding: '6px 10px',
+                  fontSize: '11px', color: '#2A9D99', fontFamily: 'monospace',
+                  whiteSpace: 'nowrap', border: '1px solid rgba(42,157,153,0.2)'
                 }}>
                   {exampleData.output}
                 </div>
@@ -3564,7 +3178,7 @@ for message in consumer:
       operation: { label: 'Connect to Cluster', detail: 'Driver connects to YARN/K8s, requests Executor containers with CPU + memory' },
       after: { label: 'Cluster Ready', data: ['SparkContext initialized', '4 Executors allocated (4 cores, 8GB each)', 'Application ID: app-20260101-001'] },
       insight: 'Unlike MapReduce, one SparkContext can run many jobs without re-negotiating resources each time.',
-      color: '#3b82f6'
+      color: '#4A7A9B'
     },
     2: {
       title: 'DAG Construction & Optimization',
@@ -3572,7 +3186,7 @@ for message in consumer:
       operation: { label: 'Catalyst + DAG Scheduler', detail: 'Builds a DAG of stages, optimizes query plan, pipelines narrow transforms into single stages' },
       after: { label: 'Optimized Execution Plan', data: ['Stage 0: textFile → flatMap → map', '  (pipelined — single pass!)', 'Stage 1: reduceByKey (shuffle)', '  2 stages, 4 tasks each'] },
       insight: 'Spark pipelines multiple transforms into one stage — map→filter→map runs as ONE pass over data, not three.',
-      color: '#a855f7'
+      color: '#7A5A9E'
     },
     3: {
       title: 'Data Loading into Memory',
@@ -3580,7 +3194,7 @@ for message in consumer:
       operation: { label: 'Parallel Read + Partition', detail: 'Each Executor reads its assigned partitions directly into JVM memory (or off-heap with Tungsten)' },
       after: { label: 'In-Memory RDD Partitions', data: ['Executor-0: Partition 0 → [IN MEMORY]', 'Executor-1: Partition 1 → [IN MEMORY]', 'Executor-2: Partition 2 → [IN MEMORY]', '.cache() keeps data for reuse!'] },
       insight: 'Data lives in memory across operations — no disk writes between steps. This is what makes Spark 100x faster.',
-      color: '#06b6d4'
+      color: '#3A8080'
     },
     4: {
       title: 'Lazy Transformations (Pipelined)',
@@ -3588,7 +3202,7 @@ for message in consumer:
       operation: { label: 'flatMap → map (pipelined)', detail: 'Narrow transforms execute in a single pass — no shuffle, no disk, no network' },
       after: { label: 'Transformed Partitions (still in memory)', data: ['P0: (hello,1)(world,1)(hello,1)', 'P1: (foo,1)(hello,1)(world,1)', 'P2: (bar,1)(world,1)(foo,1)'] },
       insight: 'These transforms are lazy! Nothing executes until an action (collect, save) is called. Spark just records the plan.',
-      color: '#ec4899'
+      color: '#9E5A3C'
     },
     5: {
       title: 'Shuffle Exchange (Stage Boundary)',
@@ -3596,7 +3210,7 @@ for message in consumer:
       operation: { label: 'Repartition by Key Hash', detail: 'Data redistributed across executors by key — shuffle files written to local disk temporarily' },
       after: { label: 'Partitions by Key', data: ['P0: hello→[1,1,1], foo→[1,1], bar→[1]', 'P1: world→[1,1,1]', '(reduceByKey combines locally first!)'] },
       insight: 'Shuffles are the bottleneck in Spark too — but Spark\'s combiner (map-side reduce) minimizes data transferred.',
-      color: '#f59e0b'
+      color: '#9E7824'
     },
     6: {
       title: 'Action Triggers Execution',
@@ -3604,30 +3218,14 @@ for message in consumer:
       operation: { label: '.saveAsTextFile() or .collect()', detail: 'Action triggers the entire DAG execution — all stages run, results materialized' },
       after: { label: 'Output Results', data: ['part-00000: bar 1, foo 2, hello 3', 'part-00001: world 3', 'Job completed in 2.3s (vs 45s MR)'] },
       insight: 'Only ONE pass through the DAG. MapReduce would need separate jobs chained together for complex pipelines.',
-      color: '#10b981'
+      color: '#4A7A56'
     }
   };
-
-  // Auto-advance animation for Spark
-  useEffect(() => {
-    if (!sparkAnimating) return;
-    const timer = setInterval(() => {
-      setSparkStep(prev => {
-        if (prev >= 6) {
-          setSparkAnimating(false);
-          return 0;
-        }
-        return prev + 1;
-      });
-    }, 2500);
-    return () => clearInterval(timer);
-  }, [sparkAnimating]);
 
   // Reset Spark step when switching away
   useEffect(() => {
     if (activeArchitecture !== 'spark') {
       setSparkStep(0);
-      setSparkAnimating(false);
     }
   }, [activeArchitecture]);
 
@@ -3648,82 +3246,40 @@ for message in consumer:
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0px', position: 'relative' }}>
 
-        {/* Step-by-step animation controls */}
+        {/* Step selector */}
         <div style={{
-          display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px',
-          padding: '12px 20px', background: 'rgba(30, 41, 59, 0.8)',
-          borderRadius: '12px', border: '1px solid rgba(71, 85, 105, 0.3)',
-          flexWrap: 'wrap', justifyContent: 'center'
+          display: 'flex', gap: '6px', alignItems: 'center', justifyContent: 'center',
+          marginBottom: '20px', flexWrap: 'wrap'
         }}>
-          <button
-            onClick={() => {
-              if (sparkAnimating) { setSparkAnimating(false); }
-              else { setSparkStep(1); setSparkAnimating(true); }
-            }}
-            style={{
-              padding: '6px 14px',
-              background: sparkAnimating ? 'rgba(239, 68, 68, 0.2)' : 'rgba(59, 130, 246, 0.2)',
-              border: `1px solid ${sparkAnimating ? '#ef4444' : '#3b82f6'}`,
-              borderRadius: '8px', color: sparkAnimating ? '#ef4444' : '#60a5fa',
-              fontSize: '12px', fontWeight: '600', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: '6px'
-            }}
-          >
-            {sparkAnimating ? '⏸ Pause' : '▶ Play Flow'}
-          </button>
-
-          <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-            {sparkSteps.map((s, i) => (
-              <button
-                key={i}
-                onClick={() => { setSparkStep(i); setSparkAnimating(false); }}
-                title={s.description}
-                style={{
-                  padding: '4px 10px',
-                  background: step === i ? 'rgba(59, 130, 246, 0.3)' : 'rgba(30, 41, 59, 0.5)',
-                  border: `1px solid ${step === i ? '#3b82f6' : 'rgba(71, 85, 105, 0.3)'}`,
-                  borderRadius: '6px', color: step === i ? '#60a5fa' : '#64748b',
-                  fontSize: '11px', fontWeight: step === i ? '700' : '500',
-                  cursor: 'pointer', transition: 'all 0.2s'
-                }}
-              >
-                {i === 0 ? 'All' : i}
-              </button>
-            ))}
-          </div>
-
-          <div style={{ width: '1px', height: '24px', background: 'rgba(71, 85, 105, 0.3)' }} />
-
-          <button
-            onClick={() => setShowDataTransform(!showDataTransform)}
-            style={{
-              padding: '6px 14px',
-              background: showDataTransform ? 'rgba(16, 185, 129, 0.2)' : 'rgba(30, 41, 59, 0.5)',
-              border: `1px solid ${showDataTransform ? '#10b981' : 'rgba(71, 85, 105, 0.3)'}`,
-              borderRadius: '8px', color: showDataTransform ? '#34d399' : '#94a3b8',
-              fontSize: '12px', fontWeight: '500', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: '6px'
-            }}
-          >
-            {showDataTransform ? <Eye size={14} /> : <EyeOff size={14} />}
-            {showDataTransform ? 'Data Flow On' : 'Data Flow Off'}
-          </button>
+          {sparkSteps.map((s, i) => (
+            <button key={i}
+              onClick={() => setSparkStep(i)}
+              title={s.description}
+              style={{
+                padding: '5px 14px',
+                background: step === i ? '#0075de' : '#ffffff',
+                border: `1px solid ${step === i ? '#0075de' : 'rgba(0,0,0,0.1)'}`,
+                borderRadius: '20px',
+                color: step === i ? '#ffffff' : 'rgba(0,0,0,0.5)',
+                fontSize: '12px', fontWeight: step === i ? '600' : '400',
+                cursor: 'pointer', transition: 'all 0.15s',
+                boxShadow: step === i ? '0 1px 4px rgba(0,117,222,0.25)' : 'none'
+              }}
+            >
+              {i === 0 ? 'All' : `Step ${i}`}
+            </button>
+          ))}
         </div>
 
         {/* Step description */}
         {step > 0 && (
           <div style={{
-            marginBottom: '4px', padding: '8px 20px',
-            background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)',
-            borderRadius: '8px', color: '#93c5fd', fontSize: '13px', textAlign: 'center'
+            marginBottom: '16px', padding: '8px 16px',
+            background: 'rgba(0,117,222,0.06)', border: '1px solid rgba(0,117,222,0.15)',
+            borderRadius: '8px', color: 'rgba(0,0,0,0.85)', fontSize: '13px', textAlign: 'center'
           }}>
-            <strong>Step {step}:</strong> {sparkSteps[step]?.description}
+            <strong style={{ color: '#0075de' }}>Step {step}:</strong> {sparkSteps[step]?.description}
           </div>
-        )}
-
-        {/* Data Transformation Panel for Spark */}
-        {step > 0 && showDataTransform && sparkDataTransformStages[step] && (
-          <DataTransformPanel stageData={sparkDataTransformStages[step]} />
         )}
 
         {/* Phase labels alongside the diagram */}
@@ -3732,7 +3288,7 @@ for message in consumer:
           {/* Row 1: Driver Program */}
           <div style={{
             display: 'flex', justifyContent: 'center',
-            opacity: isStepActive([1]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([1]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <ComponentCard component={driver} onClick={setSelectedComponent} />
@@ -3741,16 +3297,16 @@ for message in consumer:
           {/* Arrow: Driver → Cluster Manager + DAG */}
           <div style={{
             display: 'flex', justifyContent: 'center', padding: '4px 0',
-            opacity: isStepActive([1, 2]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([1, 2]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
-            <MapReduceFanOutArrow color="#a855f7" count={2} />
+            <MapReduceFanOutArrow color="#7A5A9E" count={2} cardGap={60} />
           </div>
 
           {/* Row 2: Cluster Manager + DAG Scheduler */}
           <div style={{
             display: 'flex', justifyContent: 'center', gap: '60px',
-            opacity: isStepActive([1, 2]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([1, 2]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <ComponentCard component={clusterMgr} onClick={setSelectedComponent} />
@@ -3760,7 +3316,7 @@ for message in consumer:
           {/* Arrow: down to Data Source */}
           <div style={{
             display: 'flex', justifyContent: 'center', padding: '4px 0',
-            opacity: isStepActive([2, 3]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([2, 3]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <VerticalConnectionArrow type="batch" direction="down" />
@@ -3769,7 +3325,7 @@ for message in consumer:
           {/* Row 3: Data Source */}
           <div style={{
             display: 'flex', justifyContent: 'center',
-            opacity: isStepActive([3]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([3]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <ComponentCard component={source} onClick={setSelectedComponent} />
@@ -3778,22 +3334,22 @@ for message in consumer:
           {/* Arrow: Data Source → RDD (fan out to 3 partitions) */}
           <div style={{
             padding: '8px 0',
-            opacity: isStepActive([3]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([3]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
-            <MapReduceFanOutArrow color="#06b6d4" count={3} />
+            <MapReduceFanOutArrow color="#3A8080" count={3} />
           </div>
 
           {/* Phase label: IN-MEMORY PARTITIONS */}
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px',
-            opacity: isStepActive([3, 4]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([3, 4]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div style={{
-              padding: '4px 16px', background: 'rgba(6, 182, 212, 0.15)',
-              border: '1px solid rgba(6, 182, 212, 0.3)', borderRadius: '20px',
-              color: '#06b6d4', fontSize: '11px', fontWeight: '700',
+              padding: '4px 16px', background: 'rgba(42,157,153,0.08)',
+              border: '1px solid rgba(42,157,153,0.25)', borderRadius: '20px',
+              color: '#2A9D99', fontSize: '11px', fontWeight: '700',
               letterSpacing: '2px', textTransform: 'uppercase'
             }}>In-Memory Partitions — No Disk I/O</div>
           </div>
@@ -3801,7 +3357,7 @@ for message in consumer:
           {/* Row 4: RDD / DataFrame partitions (3x mini cards) */}
           <div style={{
             display: 'flex', justifyContent: 'center', gap: '40px',
-            opacity: isStepActive([3, 4]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([3, 4]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             {[
@@ -3811,7 +3367,7 @@ for message in consumer:
             ].map((p, i) => (
               <MapReduceMiniCard
                 key={i} label={p.label} icon={Zap}
-                color="rgba(6, 182, 212, 0.15)" borderColor="#06b6d4"
+                color="#2A9D99"
                 isActive={isStepActive([3, 4])}
                 onClick={() => setSelectedComponent(rdd)}
                 exampleText={showDataTransform && step >= 3 ? p.ex : undefined}
@@ -3822,29 +3378,12 @@ for message in consumer:
           {/* Arrow: partitions → Transformations (parallel) */}
           <div style={{
             display: 'flex', justifyContent: 'center', gap: '40px', padding: '0',
-            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             {[0, 1, 2].map(i => (
-              <div key={i} style={{ width: '160px', display: 'flex', justifyContent: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px 0', height: '60px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#ec4899', transform: 'rotate(90deg)' }}>
-                    <div style={{
-                      width: '40px', height: '2px',
-                      background: `linear-gradient(90deg, transparent, #ec4899, #ec4899)`,
-                      position: 'relative'
-                    }}>
-                      {showDataFlow && (
-                        <div style={{
-                          position: 'absolute', width: '8px', height: '8px', borderRadius: '50%',
-                          background: '#ec4899', boxShadow: '0 0 10px #ec4899',
-                          animation: 'flowRight 1.2s infinite linear', top: '-3px'
-                        }} />
-                      )}
-                    </div>
-                    <ChevronRight size={14} />
-                  </div>
-                </div>
+              <div key={i} style={{ width: '120px', display: 'flex', justifyContent: 'center' }}>
+                <VerticalConnectionArrow type="batch" direction="down" />
               </div>
             ))}
           </div>
@@ -3852,13 +3391,13 @@ for message in consumer:
           {/* Phase label: TRANSFORM PHASE */}
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px',
-            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div style={{
-              padding: '4px 16px', background: 'rgba(236, 72, 153, 0.15)',
-              border: '1px solid rgba(236, 72, 153, 0.3)', borderRadius: '20px',
-              color: '#ec4899', fontSize: '11px', fontWeight: '700',
+              padding: '4px 16px', background: 'rgba(232,101,74,0.08)',
+              border: '1px solid rgba(232,101,74,0.25)', borderRadius: '20px',
+              color: '#E8654A', fontSize: '11px', fontWeight: '700',
               letterSpacing: '2px', textTransform: 'uppercase'
             }}>Transform Phase — Pipelined In One Pass</div>
           </div>
@@ -3866,7 +3405,7 @@ for message in consumer:
           {/* Row 5: Transformation tasks (3x mini cards) */}
           <div style={{
             display: 'flex', justifyContent: 'center', gap: '40px',
-            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([4]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             {[
@@ -3876,7 +3415,7 @@ for message in consumer:
             ].map((t, i) => (
               <MapReduceMiniCard
                 key={i} label={t.label} icon={Cpu}
-                color="rgba(236, 72, 153, 0.15)" borderColor="#ec4899"
+                color="#E8654A"
                 isActive={isStepActive([4])}
                 onClick={() => setSelectedComponent(transform)}
                 exampleText={showDataTransform && step === 4 ? t.ex : undefined}
@@ -3887,13 +3426,13 @@ for message in consumer:
           {/* Phase label: SHUFFLE EXCHANGE */}
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '12px 0 4px 0',
-            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div style={{
-              padding: '4px 16px', background: 'rgba(245, 158, 11, 0.15)',
-              border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '20px',
-              color: '#f59e0b', fontSize: '11px', fontWeight: '700',
+              padding: '4px 16px', background: 'rgba(192,127,212,0.08)',
+              border: '1px solid rgba(192,127,212,0.25)', borderRadius: '20px',
+              color: '#C07FD4', fontSize: '11px', fontWeight: '700',
               letterSpacing: '2px', textTransform: 'uppercase'
             }}>Shuffle Exchange — Stage Boundary</div>
           </div>
@@ -3901,7 +3440,7 @@ for message in consumer:
           {/* Shuffle cross-connect arrows (reuse MapReduce shuffle arrows) */}
           <div style={{
             padding: '8px 0',
-            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <MapReduceShuffleArrows />
@@ -3910,63 +3449,48 @@ for message in consumer:
           {/* Row 6: Shuffle Exchange wide card */}
           <div style={{
             display: 'flex', justifyContent: 'center',
-            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([5]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div
               onClick={() => setSelectedComponent(shuffle)}
+              className="cohere-node"
               style={{
-                background: 'rgba(245, 158, 11, 0.15)', border: '2px solid #f59e0b',
-                borderRadius: '16px', padding: '16px 40px',
-                display: 'flex', alignItems: 'center', gap: '16px',
-                cursor: 'pointer', transition: 'all 0.3s',
-                boxShadow: step === 5 ? '0 0 30px rgba(245, 158, 11, 0.4)' : '0 0 15px rgba(245, 158, 11, 0.2)'
+                background: selectedComponent?.id === shuffle?.id ? '#B06FC4' : '#C07FD4',
+                width: '380px', minHeight: '64px', padding: '10px 20px',
+                cursor: 'pointer', flexDirection: 'column',
+                outline: selectedComponent?.id === shuffle?.id ? '3px solid rgba(0,0,0,0.2)' : 'none',
+                outlineOffset: '2px'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
             >
-              <div style={{
-                width: '50px', height: '50px', borderRadius: '12px',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'rgba(245, 158, 11, 0.2)', border: '1px solid rgba(245, 158, 11, 0.4)'
-              }}>
-                <GitMerge size={28} color="#f59e0b" strokeWidth={1.5} />
+              <div style={{ color: 'white', fontSize: '13px', fontWeight: '700', textAlign: 'center' }}>
+                Shuffle Exchange
               </div>
-              <div>
-                <div style={{ color: '#fbbf24', fontSize: '16px', fontWeight: '700' }}>Shuffle Exchange</div>
-                <div style={{ color: '#94a3b8', fontSize: '12px' }}>Hash partition → Network transfer → Local disk write (temporary)</div>
+              <div style={{ color: 'rgba(255,255,255,0.72)', fontSize: '10px', textAlign: 'center', marginTop: '3px' }}>
+                Hash partition → Network transfer → Local disk write (temporary)
               </div>
-              {step === 5 && showDataTransform && (
-                <div style={{
-                  background: 'rgba(0,0,0,0.4)', borderRadius: '8px', padding: '8px 12px',
-                  fontSize: '11px', color: '#fbbf24', fontFamily: 'Monaco, Consolas, monospace',
-                  lineHeight: '1.5'
-                }}>
-                  reduceByKey: hello→[1,1,1], world→[1,1,1]
-                </div>
-              )}
             </div>
           </div>
 
           {/* Arrow: Shuffle → Output (fan out to 2 result partitions) */}
           <div style={{
             padding: '8px 0',
-            opacity: isStepActive([5, 6]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([5, 6]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
-            <MapReduceFanOutArrow color="#10b981" count={2} />
+            <MapReduceFanOutArrow color="#4A7A56" count={2} />
           </div>
 
           {/* Phase label: ACTION & OUTPUT */}
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px',
-            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div style={{
-              padding: '4px 16px', background: 'rgba(16, 185, 129, 0.15)',
-              border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '20px',
-              color: '#10b981', fontSize: '11px', fontWeight: '700',
+              padding: '4px 16px', background: 'rgba(74,95,227,0.08)',
+              border: '1px solid rgba(74,95,227,0.25)', borderRadius: '20px',
+              color: '#4A5FE3', fontSize: '11px', fontWeight: '700',
               letterSpacing: '2px', textTransform: 'uppercase'
             }}>Action & Output — Results Materialized</div>
           </div>
@@ -3974,7 +3498,7 @@ for message in consumer:
           {/* Row 7: Output partitions (2x mini cards) */}
           <div style={{
             display: 'flex', justifyContent: 'center', gap: '40px',
-            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             {[
@@ -3983,7 +3507,7 @@ for message in consumer:
             ].map((r, i) => (
               <MapReduceMiniCard
                 key={i} label={r.label} icon={HardDrive}
-                color="rgba(16, 185, 129, 0.15)" borderColor="#10b981"
+                color="#4A5FE3"
                 isActive={isStepActive([6])}
                 onClick={() => setSelectedComponent(output)}
                 exampleText={showDataTransform && step === 6 ? r.ex : undefined}
@@ -3994,27 +3518,27 @@ for message in consumer:
           {/* Fan-in to final output */}
           <div style={{
             padding: '8px 0',
-            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
-            <MapReduceFanInArrow color="#10b981" sourceCount={2} />
+            <MapReduceFanInArrow color="#4A7A56" sourceCount={2} />
           </div>
 
           {/* Row 8: HDFS/S3 Output */}
           <div style={{
             display: 'flex', justifyContent: 'center',
-            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.25 : 1),
+            opacity: isStepActive([6]) ? 1 : (step > 0 ? 0.45 : 1),
             transition: 'opacity 0.5s'
           }}>
             <div style={{ position: 'relative' }}>
               <ComponentCard component={output} onClick={setSelectedComponent} />
-              {step === 6 && showDataTransform && (
+              {step === 6 && (
                 <div style={{
                   position: 'absolute', top: '50%', left: '100%', marginLeft: '12px',
                   transform: 'translateY(-50%)',
-                  background: 'rgba(0,0,0,0.6)', borderRadius: '8px', padding: '8px 12px',
-                  fontSize: '11px', color: '#34d399', fontFamily: 'Monaco, Consolas, monospace',
-                  whiteSpace: 'nowrap', border: '1px solid rgba(16, 185, 129, 0.3)'
+                  background: 'rgba(74,95,227,0.08)', borderRadius: '8px', padding: '6px 10px',
+                  fontSize: '11px', color: '#4A5FE3', fontFamily: 'monospace',
+                  whiteSpace: 'nowrap', border: '1px solid rgba(74,95,227,0.2)'
                 }}>
                   Completed in 2.3s (vs 45s MapReduce)
                 </div>
@@ -4037,7 +3561,7 @@ for message in consumer:
     const browser = currentArch.components.find(c => c.id === 'browser');
 
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px', padding: '40px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px', padding: '40px', minWidth: 'fit-content' }}>
         {/* Column 1: External APIs stacked */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '100px' }}>
           <ComponentCard component={bitcoinApi} onClick={setSelectedComponent} />
@@ -4056,8 +3580,8 @@ for message in consumer:
           <ComponentCard component={solanaCollector} onClick={setSelectedComponent} />
         </div>
 
-        {/* Two sources -> one target (merge into a single centered arrow to ClickHouse) */}
-        <MergeToCenterArrow type="batch" />
+        {/* Two sources → one right-pointing arrow to ClickHouse */}
+        <HorizontalMergeArrow type="batch" />
 
         {/* Column 3: ClickHouse centered */}
         <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -4081,7 +3605,7 @@ for message in consumer:
 
   // Radial arrow for star/snowflake schemas: draws an SVG line from center to a position
   const RadialArrow = ({ type, angle, length = 120 }) => {
-    const color = connectionColors[type] || '#60a5fa';
+    const color = connectionColors[type] || '#4A7A9B';
     const radians = (angle * Math.PI) / 180;
     const endX = Math.cos(radians) * length;
     const endY = Math.sin(radians) * length;
@@ -4101,13 +3625,6 @@ for message in consumer:
           fill="none"
           strokeLinecap="round"
         />
-        {showDataFlow && (
-          <circle r="5" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-            <animateMotion dur="1.5s" repeatCount="indefinite">
-              <mpath href={`#${pathId}`} />
-            </animateMotion>
-          </circle>
-        )}
         <g transform={`translate(${chevronX}, ${chevronY}) rotate(${chevronRotation})`}>
           <polyline
             points="-6,-6 4,0 -6,6"
@@ -4124,7 +3641,7 @@ for message in consumer:
 
   // Chain arrow for snowflake normalization branches (dimension → sub-dimension)
   const ChainArrow = ({ type, angle, innerLength = 120, outerLength = 80 }) => {
-    const color = connectionColors[type] || '#a855f7';
+    const color = connectionColors[type] || '#7A5A9E';
     const radians = (angle * Math.PI) / 180;
     const startX = Math.cos(radians) * innerLength;
     const startY = Math.sin(radians) * innerLength;
@@ -4146,13 +3663,6 @@ for message in consumer:
           strokeLinecap="round"
           strokeDasharray="6 4"
         />
-        {showDataFlow && (
-          <circle r="4" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-            <animateMotion dur="1.2s" repeatCount="indefinite">
-              <mpath href={`#${pathId}`} />
-            </animateMotion>
-          </circle>
-        )}
         <g transform={`translate(${chevronX}, ${chevronY}) rotate(${angle})`}>
           <polyline
             points="-5,-5 3,0 -5,5"
@@ -4169,7 +3679,7 @@ for message in consumer:
 
   // Branch arrow for snowflake: a chain that goes out at a slight angle from the main dimension direction
   const BranchArrow = ({ type, startAngle, branchAngle, innerLength = 120, outerLength = 80 }) => {
-    const color = connectionColors[type] || '#a855f7';
+    const color = connectionColors[type] || '#7A5A9E';
     const startRadians = (startAngle * Math.PI) / 180;
     const branchRadians = (branchAngle * Math.PI) / 180;
     const startX = Math.cos(startRadians) * innerLength;
@@ -4192,13 +3702,6 @@ for message in consumer:
           strokeLinecap="round"
           strokeDasharray="6 4"
         />
-        {showDataFlow && (
-          <circle r="4" fill={color} filter={`drop-shadow(0 0 6px ${color})`}>
-            <animateMotion dur="1.2s" repeatCount="indefinite">
-              <mpath href={`#${pathId}`} />
-            </animateMotion>
-          </circle>
-        )}
         <g transform={`translate(${chevronX}, ${chevronY}) rotate(${branchAngle})`}>
           <polyline
             points="-5,-5 3,0 -5,5"
@@ -4244,15 +3747,15 @@ for message in consumer:
   // ER Diagram Table component for schema visuals
   const ERTable = ({ title, type, columns, style: posStyle, onClick, id, highlightedColumns = [] }) => {
     const isFact = type === 'fact';
-    const headerBg = isFact ? 'linear-gradient(135deg, #f59e0b, #d97706)' : 'linear-gradient(135deg, #3b82f6, #2563eb)';
-    const borderColor = isFact ? '#f59e0b' : '#60a5fa';
-    const glowColor = isFact ? 'rgba(245, 158, 11, 0.3)' : 'rgba(96, 165, 250, 0.2)';
+    const headerBg = isFact ? 'linear-gradient(135deg, #9E7824, #9E7824)' : 'linear-gradient(135deg, #4A7A9B, #2563eb)';
+    const borderColor = isFact ? '#9E7824' : '#4A7A9B';
+    const glowColor = isFact ? 'rgba(158, 120, 36, 0.3)' : 'rgba(96, 165, 250, 0.2)';
 
     return (
       <div
         onClick={onClick}
         style={{
-          background: 'rgba(15, 23, 42, 0.95)',
+          background: 'rgba(245,243,239,0.95)',
           border: `2px solid ${borderColor}`,
           borderRadius: '8px',
           minWidth: '220px',
@@ -4288,7 +3791,7 @@ for message in consumer:
                 alignItems: 'center',
                 gap: '8px',
                 padding: '5px 14px',
-                borderBottom: idx < columns.length - 1 ? '1px solid rgba(71, 85, 105, 0.2)' : 'none',
+                borderBottom: idx < columns.length - 1 ? '1px solid rgba(235,231,225,1)' : 'none',
                 fontSize: '12px',
                 background: isHL ? 'rgba(96, 165, 250, 0.15)' : 'transparent',
                 boxShadow: isHL ? 'inset 0 0 0 1px rgba(96, 165, 250, 0.4)' : 'none',
@@ -4298,32 +3801,32 @@ for message in consumer:
             >
               {col.pk && (
                 <span style={{
-                  background: isHL ? 'rgba(245, 158, 11, 0.4)' : 'rgba(245, 158, 11, 0.2)',
-                  color: '#fbbf24',
+                  background: isHL ? 'rgba(158, 120, 36, 0.4)' : 'rgba(158, 120, 36, 0.2)',
+                  color: '#C8A84E',
                   padding: '1px 5px',
                   borderRadius: '3px',
                   fontSize: '9px',
                   fontWeight: '700',
-                  border: '1px solid rgba(245, 158, 11, 0.4)',
+                  border: '1px solid rgba(158, 120, 36, 0.4)',
                   flexShrink: 0
                 }}>PK</span>
               )}
               {col.fk && (
                 <span style={{
-                  background: isHL ? 'rgba(59, 130, 246, 0.4)' : 'rgba(59, 130, 246, 0.2)',
-                  color: '#60a5fa',
+                  background: isHL ? 'rgba(74, 122, 155, 0.4)' : 'rgba(74, 122, 155, 0.2)',
+                  color: '#4A7A9B',
                   padding: '1px 5px',
                   borderRadius: '3px',
                   fontSize: '9px',
                   fontWeight: '700',
-                  border: '1px solid rgba(59, 130, 246, 0.4)',
+                  border: '1px solid rgba(74, 122, 155, 0.4)',
                   flexShrink: 0
                 }}>FK</span>
               )}
-              <span style={{ color: col.pk ? '#fbbf24' : col.fk ? '#93c5fd' : '#cbd5e1', fontWeight: col.pk || col.fk ? '600' : '400', fontFamily: 'monospace' }}>
+              <span style={{ color: col.pk ? '#9E7824' : col.fk ? '#4A7A9B' : 'var(--text-body)', fontWeight: col.pk || col.fk ? '600' : '400', fontFamily: 'monospace' }}>
                 {col.name}
               </span>
-              <span style={{ color: '#64748b', marginLeft: 'auto', fontSize: '11px', fontFamily: 'monospace' }}>{col.type}</span>
+              <span style={{ color: 'var(--text-muted)', marginLeft: 'auto', fontSize: '11px', fontFamily: 'monospace' }}>{col.type}</span>
             </div>
             );
           })}
@@ -4450,7 +3953,7 @@ for message in consumer:
                 <path
                   d={pathD}
                   fill="none"
-                  stroke={isHovered ? '#93c5fd' : '#60a5fa'}
+                  stroke={isHovered ? '#8AAACE' : '#4A7A9B'}
                   strokeWidth={isHovered ? 3 : 1.5}
                   strokeOpacity={isHovered ? 1 : 0.7}
                   filter={isHovered ? 'url(#glow-star)' : 'none'}
@@ -4467,8 +3970,8 @@ for message in consumer:
                   onMouseLeave={() => setHoveredConnection(null)}
                 />
                 {/* Endpoint dots */}
-                <circle cx={fkX} cy={fkY} r={isHovered ? 5 : 3.5} fill={isHovered ? '#93c5fd' : '#60a5fa'} style={{ transition: 'r 0.2s, fill 0.2s' }} />
-                <circle cx={pkX} cy={pkY} r={isHovered ? 5 : 3.5} fill={isHovered ? '#93c5fd' : '#60a5fa'} style={{ transition: 'r 0.2s, fill 0.2s' }} />
+                <circle cx={fkX} cy={fkY} r={isHovered ? 5 : 3.5} fill={isHovered ? '#8AAACE' : '#4A7A9B'} style={{ transition: 'r 0.2s, fill 0.2s' }} />
+                <circle cx={pkX} cy={pkY} r={isHovered ? 5 : 3.5} fill={isHovered ? '#8AAACE' : '#4A7A9B'} style={{ transition: 'r 0.2s, fill 0.2s' }} />
                 {/* FK label badge at midpoint */}
                 <rect
                   x={midX - labelW / 2}
@@ -4477,7 +3980,7 @@ for message in consumer:
                   height="22"
                   rx="6"
                   fill={isHovered ? 'rgba(30, 58, 138, 0.95)' : 'rgba(15, 23, 42, 0.9)'}
-                  stroke={isHovered ? '#93c5fd' : 'rgba(96, 165, 250, 0.4)'}
+                  stroke={isHovered ? '#8AAACE' : 'rgba(96, 165, 250, 0.4)'}
                   strokeWidth="1"
                   style={{ transition: 'fill 0.2s, stroke 0.2s' }}
                 />
@@ -4485,7 +3988,7 @@ for message in consumer:
                   x={midX}
                   y={midY + 4}
                   textAnchor="middle"
-                  fill={isHovered ? '#bfdbfe' : '#60a5fa'}
+                  fill={isHovered ? '#bfdbfe' : '#4A7A9B'}
                   fontSize="10"
                   fontWeight="700"
                   fontFamily="monospace"
@@ -4494,14 +3997,8 @@ for message in consumer:
                   {conn.fkCol}
                 </text>
                 {/* Cardinality: N at fact side, 1 at dim side */}
-                <text x={fkX + (conn.fromSide === 'left' ? -16 : 8)} y={fkY - 10} fill={isHovered ? '#bfdbfe' : '#94a3b8'} fontSize="10" fontWeight="600" fontFamily="monospace">N</text>
-                <text x={pkX + (conn.toSide === 'left' ? -12 : 6)} y={pkY - 10} fill={isHovered ? '#bfdbfe' : '#94a3b8'} fontSize="10" fontWeight="600" fontFamily="monospace">1</text>
-                {/* Animated data flow dot */}
-                {showDataFlow && (
-                  <circle r="4" fill="#60a5fa" filter="drop-shadow(0 0 6px #60a5fa)">
-                    <animateMotion dur="2.5s" repeatCount="indefinite" path={pathD} />
-                  </circle>
-                )}
+                <text x={fkX + (conn.fromSide === 'left' ? -16 : 8)} y={fkY - 10} fill={isHovered ? '#4A7A9B' : 'var(--text-secondary)'} fontSize="10" fontWeight="600" fontFamily="monospace">N</text>
+                <text x={pkX + (conn.toSide === 'left' ? -12 : 6)} y={pkY - 10} fill={isHovered ? '#4A7A9B' : 'var(--text-secondary)'} fontSize="10" fontWeight="600" fontFamily="monospace">1</text>
               </g>
             );
           })}
@@ -4545,7 +4042,7 @@ for message in consumer:
           display: 'flex',
           alignItems: 'center',
           gap: '8px',
-          color: '#f59e0b',
+          color: '#9E7824',
           fontSize: '13px',
           fontWeight: '600',
           opacity: 0.8
@@ -4563,20 +4060,20 @@ for message in consumer:
       <div
         onClick={onClick}
         style={{
-          background: 'rgba(15, 23, 42, 0.95)',
-          border: '2px solid #a855f7',
+          background: 'rgba(245,243,239,0.95)',
+          border: '2px solid #7A5A9E',
           borderRadius: '8px',
           minWidth: '190px',
           cursor: 'pointer',
-          boxShadow: '0 4px 20px rgba(168, 85, 247, 0.2)',
+          boxShadow: '0 4px 20px rgba(122, 90, 158, 0.2)',
           transition: 'all 0.2s ease',
           ...posStyle
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 8px 32px rgba(168, 85, 247, 0.3), 0 0 20px rgba(168, 85, 247, 0.2)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-        onMouseLeave={(e) => { e.currentTarget.style.boxShadow = '0 4px 20px rgba(168, 85, 247, 0.2)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+        onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 8px 32px rgba(122, 90, 158, 0.3), 0 0 20px rgba(122, 90, 158, 0.2)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.boxShadow = '0 4px 20px rgba(122, 90, 158, 0.2)'; e.currentTarget.style.transform = 'translateY(0)'; }}
       >
         <div style={{
-          background: 'linear-gradient(135deg, #a855f7, #7c3aed)',
+          background: 'linear-gradient(135deg, #7A5A9E, #7A5A9E)',
           padding: '8px 12px',
           borderRadius: '6px 6px 0 0',
           display: 'flex',
@@ -4606,18 +4103,18 @@ for message in consumer:
                 alignItems: 'center',
                 gap: '6px',
                 padding: '4px 12px',
-                borderBottom: idx < columns.length - 1 ? '1px solid rgba(71, 85, 105, 0.2)' : 'none',
+                borderBottom: idx < columns.length - 1 ? '1px solid rgba(235,231,225,1)' : 'none',
                 fontSize: '11px',
-                background: isHL ? 'rgba(168, 85, 247, 0.15)' : 'transparent',
-                boxShadow: isHL ? 'inset 0 0 0 1px rgba(168, 85, 247, 0.4)' : 'none',
+                background: isHL ? 'rgba(122, 90, 158, 0.15)' : 'transparent',
+                boxShadow: isHL ? 'inset 0 0 0 1px rgba(122, 90, 158, 0.4)' : 'none',
                 borderRadius: isHL ? '4px' : '0',
                 transition: 'background 0.2s, box-shadow 0.2s'
               }}
             >
-              {col.pk && <span style={{ background: isHL ? 'rgba(245, 158, 11, 0.4)' : 'rgba(245, 158, 11, 0.2)', color: '#fbbf24', padding: '1px 4px', borderRadius: '3px', fontSize: '8px', fontWeight: '700', border: '1px solid rgba(245, 158, 11, 0.4)', flexShrink: 0 }}>PK</span>}
-              {col.fk && <span style={{ background: isHL ? 'rgba(168, 85, 247, 0.4)' : 'rgba(168, 85, 247, 0.2)', color: '#c084fc', padding: '1px 4px', borderRadius: '3px', fontSize: '8px', fontWeight: '700', border: '1px solid rgba(168, 85, 247, 0.4)', flexShrink: 0 }}>FK</span>}
-              <span style={{ color: col.pk ? '#fbbf24' : col.fk ? '#c084fc' : '#cbd5e1', fontWeight: col.pk || col.fk ? '600' : '400', fontFamily: 'monospace', fontSize: '11px' }}>{col.name}</span>
-              <span style={{ color: '#64748b', marginLeft: 'auto', fontSize: '10px', fontFamily: 'monospace' }}>{col.type}</span>
+              {col.pk && <span style={{ background: isHL ? 'rgba(158, 120, 36, 0.4)' : 'rgba(158, 120, 36, 0.2)', color: '#C8A84E', padding: '1px 4px', borderRadius: '3px', fontSize: '8px', fontWeight: '700', border: '1px solid rgba(158, 120, 36, 0.4)', flexShrink: 0 }}>PK</span>}
+              {col.fk && <span style={{ background: isHL ? 'rgba(122, 90, 158, 0.4)' : 'rgba(122, 90, 158, 0.2)', color: '#c084fc', padding: '1px 4px', borderRadius: '3px', fontSize: '8px', fontWeight: '700', border: '1px solid rgba(122, 90, 158, 0.4)', flexShrink: 0 }}>FK</span>}
+              <span style={{ color: col.pk ? '#9E7824' : col.fk ? '#7A5A9E' : 'var(--text-body)', fontWeight: col.pk || col.fk ? '600' : '400', fontFamily: 'monospace', fontSize: '11px' }}>{col.name}</span>
+              <span style={{ color: 'var(--text-muted)', marginLeft: 'auto', fontSize: '10px', fontFamily: 'monospace' }}>{col.type}</span>
             </div>
             );
           })}
@@ -4693,25 +4190,30 @@ for message in consumer:
       { name: 'group_name', type: 'VARCHAR' }
     ];
 
-    const SVG_W = 1100;
-    const SVG_H = 920;
+    const SVG_W = 1060;
+    const SVG_H = 900;
     const SNOW_TW = 220;   // ERTable width
     const SNOW_SW = 190;   // ERSubTable width
 
-    // Positions — organized as a clear ER diagram layout
+    // Three-column layout: sub-dims stacked above/below their parent dims
+    // Left column (x=0): insurance → patient → date
+    // Center column (x=400): fact → diagnosis → dxCategory
+    // Right column (x=740): department → physician → hospital
     const tables = {
-      fact:       { x: 420, y: 330 },
-      patient:    { x: 60,  y: 160 },
-      physician:  { x: 780, y: 160 },
-      diagnosis:  { x: 420, y: 640 },
-      date:       { x: 60,  y: 560 },
-      insurance:  { x: 60,  y: 0 },
-      department: { x: 780, y: 0 },
-      hospital:   { x: 880, y: 340 },
-      dxCategory: { x: 420, y: 830 }
+      insurance:  { x: 0,   y: 0 },
+      patient:    { x: 0,   y: 210 },
+      date:       { x: 0,   y: 530 },
+      fact:       { x: 400, y: 280 },
+      diagnosis:  { x: 400, y: 590 },
+      dxCategory: { x: 400, y: 770 },
+      department: { x: 740, y: 0 },
+      physician:  { x: 740, y: 210 },
+      hospital:   { x: 740, y: 460 }
     };
 
     // Column-level connection definitions for snowflake schema
+    // Cross-column connections use clean C-curves (opposite sides).
+    // Same-column vertical connections use sameSide bows into clear inter-column gaps.
     const snowConnections = [
       // FK connections: fact → dimensions
       { id: 'patient_key', fkCol: 'patient_key', isNorm: false,
@@ -4725,12 +4227,12 @@ for message in consumer:
       { id: 'diagnosis_key', fkCol: 'diagnosis_key', isNorm: false,
         fkIdx: 3, fromPos: tables.fact, fromW: SNOW_TW, fromSub: false,
         pkIdx: 0, toPos: tables.diagnosis, toW: SNOW_TW, toSub: false,
-        fromSide: 'right', toSide: 'right', sameSide: true, bowSide: 'right' },
+        fromSide: 'left', toSide: 'left', sameSide: true, bowSide: 'left' },
       { id: 'date_key', fkCol: 'date_key', isNorm: false,
         fkIdx: 4, fromPos: tables.fact, fromW: SNOW_TW, fromSub: false,
         pkIdx: 0, toPos: tables.date, toW: SNOW_TW, toSub: false,
         fromSide: 'left', toSide: 'right' },
-      // Normalization connections: dim → sub-dim
+      // Normalization connections: dim → sub-dim (same column, bow into gap)
       { id: 'insurance_key', fkCol: 'insurance_key', isNorm: true,
         fkIdx: 4, fromPos: tables.patient, fromW: SNOW_TW, fromSub: false,
         pkIdx: 0, toPos: tables.insurance, toW: SNOW_SW, toSub: true,
@@ -4742,7 +4244,7 @@ for message in consumer:
       { id: 'hospital_key', fkCol: 'hospital_key', isNorm: true,
         fkIdx: 2, fromPos: tables.department, fromW: SNOW_SW, fromSub: true,
         pkIdx: 0, toPos: tables.hospital, toW: SNOW_SW, toSub: true,
-        fromSide: 'right', toSide: 'left' },
+        fromSide: 'left', toSide: 'left', sameSide: true, bowSide: 'left' },
       { id: 'category_key', fkCol: 'category_key', isNorm: true,
         fkIdx: 3, fromPos: tables.diagnosis, fromW: SNOW_TW, fromSub: false,
         pkIdx: 0, toPos: tables.dxCategory, toW: SNOW_SW, toSub: true,
@@ -4780,8 +4282,8 @@ for message in consumer:
           </defs>
           {snowConnections.map((conn) => {
             const isHovered = hoveredConnection && hoveredConnection.schema === 'snow' && hoveredConnection.id === conn.id;
-            const color = conn.isNorm ? '#a855f7' : '#60a5fa';
-            const hoverColor = conn.isNorm ? '#c084fc' : '#93c5fd';
+            const color = conn.isNorm ? '#7A5A9E' : '#4A7A9B';
+            const hoverColor = conn.isNorm ? '#c084fc' : '#8AAACE';
             const glowId = conn.isNorm ? 'glow-snow-norm' : 'glow-snow-fk';
 
             // FK row exit point
@@ -4847,12 +4349,6 @@ for message in consumer:
                 >
                   {conn.fkCol}
                 </text>
-                {/* Animated data flow */}
-                {showDataFlow && (
-                  <circle r="3" fill={color} filter={`drop-shadow(0 0 4px ${color})`}>
-                    <animateMotion dur="2.5s" repeatCount="indefinite" path={pathD} />
-                  </circle>
-                )}
               </g>
             );
           })}
@@ -4903,16 +4399,16 @@ for message in consumer:
           fontSize: '12px'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <div style={{ width: '24px', height: '2px', background: '#60a5fa' }} />
-            <span style={{ color: '#60a5fa', fontWeight: '600' }}>FK (Foreign Key)</span>
+            <div style={{ width: '24px', height: '2px', background: '#4A7A9B' }} />
+            <span style={{ color: '#4A7A9B', fontWeight: '600' }}>FK (Foreign Key)</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <div style={{ width: '24px', height: '2px', background: '#a855f7', borderTop: '2px dashed #a855f7' }} />
-            <span style={{ color: '#a855f7', fontWeight: '600' }}>3NF Normalized</span>
+            <div style={{ width: '24px', height: '2px', background: '#7A5A9E', borderTop: '2px dashed #7A5A9E' }} />
+            <span style={{ color: '#7A5A9E', fontWeight: '600' }}>3NF Normalized</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Snowflake size={14} color="#06b6d4" />
-            <span style={{ color: '#06b6d4', fontWeight: '600' }}>Snowflake: Dimensions branch into sub-tables</span>
+            <Snowflake size={14} color="#3A8080" />
+            <span style={{ color: '#3A8080', fontWeight: '600' }}>Snowflake: Dimensions branch into sub-tables</span>
           </div>
         </div>
       </div>
@@ -4924,10 +4420,10 @@ for message in consumer:
     return (
       <div style={{
         padding: '18px 32px',
-        background: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)',
+        background: 'linear-gradient(135deg, #a78bfa 0%, #7A5A9E 100%)',
         border: '3px solid #a78bfa',
         borderRadius: '16px',
-        color: '#ffffff',
+        color: 'var(--text-primary)',
         fontWeight: '700',
         fontSize: '15px',
         boxShadow: '0 10px 30px rgba(167, 139, 250, 0.5), 0 0 0 1px rgba(167, 139, 250, 0.2)',
@@ -4955,18 +4451,18 @@ for message in consumer:
       <div style={{
         padding: '18px 24px',
         background: isExpanded
-          ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.5) 0%, rgba(37, 99, 235, 0.4) 100%)'
-          : 'linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%)',
-        border: `3px solid ${isExpanded ? '#60a5fa' : '#3b82f6'}`,
+          ? 'linear-gradient(135deg, rgba(74, 122, 155, 0.5) 0%, rgba(37, 99, 235, 0.4) 100%)'
+          : 'linear-gradient(135deg, rgba(74, 122, 155, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%)',
+        border: `3px solid ${isExpanded ? '#4A7A9B' : '#4A7A9B'}`,
         borderRadius: '16px',
-        color: '#ffffff',
+        color: 'var(--text-primary)',
         fontWeight: '600',
         fontSize: '14px',
         cursor: 'pointer',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         boxShadow: isExpanded
-          ? '0 10px 30px rgba(59, 130, 246, 0.4), 0 0 0 1px rgba(59, 130, 246, 0.2)'
-          : '0 6px 16px rgba(59, 130, 246, 0.25)',
+          ? '0 10px 30px rgba(74, 122, 155, 0.4), 0 0 0 1px rgba(74, 122, 155, 0.2)'
+          : '0 6px 16px rgba(74, 122, 155, 0.25)',
         textAlign: 'center',
         width: '320px',
         height: '70px',
@@ -4978,14 +4474,14 @@ for message in consumer:
         <Handle
           type="target"
           position={Position.Top}
-          style={{ background: '#3b82f6', width: 12, height: 12, border: '2px solid #fff' }}
+          style={{ background: '#4A7A9B', width: 12, height: 12, border: '2px solid #fff' }}
         />
         {isExpanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
         <span>{data.label}</span>
         <Handle
           type="source"
           position={Position.Bottom}
-          style={{ background: '#3b82f6', width: 12, height: 12, border: '2px solid #fff' }}
+          style={{ background: '#4A7A9B', width: 12, height: 12, border: '2px solid #fff' }}
         />
       </div>
     );
@@ -4993,10 +4489,10 @@ for message in consumer:
 
   const ArchitectureNode = ({ data }) => {
     const colors = {
-      batch: { gradient: 'linear-gradient(135deg, #22c55e 0%, #059669 100%)', border: '#22c55e', shadow: 'rgba(34, 197, 94, 0.5)' },
+      batch: { gradient: 'linear-gradient(135deg, #22c55e 0%, #4A7A56 100%)', border: '#22c55e', shadow: 'rgba(34, 197, 94, 0.5)' },
       lambda: { gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)', border: '#ef4444', shadow: 'rgba(239, 68, 68, 0.5)' },
-      kappa: { gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)', border: '#3b82f6', shadow: 'rgba(59, 130, 246, 0.5)' },
-      streaming: { gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', border: '#f59e0b', shadow: 'rgba(245, 158, 11, 0.5)' }
+      kappa: { gradient: 'linear-gradient(135deg, #4A7A9B 0%, #2563eb 100%)', border: '#4A7A9B', shadow: 'rgba(74, 122, 155, 0.5)' },
+      streaming: { gradient: 'linear-gradient(135deg, #9E7824 0%, #9E7824 100%)', border: '#9E7824', shadow: 'rgba(158, 120, 36, 0.5)' }
     };
     const style = colors[data.architecture];
 
@@ -5022,7 +4518,7 @@ for message in consumer:
           position={Position.Top}
           style={{ background: style.border, width: 12, height: 12, border: '2px solid #fff' }}
         />
-        <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#ffffff', marginBottom: '4px' }}>
+        <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '4px' }}>
           {data.label}
         </div>
         <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.9)', fontWeight: '500' }}>
@@ -5171,10 +4667,10 @@ for message in consumer:
       target: 'realtimeYesQuestion',
       label: 'Yes',
       animated: true,
-      style: { stroke: '#60a5fa', strokeWidth: 3 },
+      style: { stroke: '#4A7A9B', strokeWidth: 3 },
       type: 'step',
-      labelStyle: { fill: '#ffffff', fontWeight: 600, fontSize: 13 },
-      labelBgStyle: { fill: '#1e293b', fillOpacity: 0.8 }
+      labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
+      labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
     },
     {
       id: 'realtime-no',
@@ -5182,10 +4678,10 @@ for message in consumer:
       target: 'batchAnalyticsQuestion',
       label: 'No',
       animated: true,
-      style: { stroke: '#60a5fa', strokeWidth: 3 },
+      style: { stroke: '#4A7A9B', strokeWidth: 3 },
       type: 'step',
-      labelStyle: { fill: '#ffffff', fontWeight: 600, fontSize: 13 },
-      labelBgStyle: { fill: '#1e293b', fillOpacity: 0.8 }
+      labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
+      labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
     },
     {
       id: 'realtimeYes-lambda1',
@@ -5195,8 +4691,8 @@ for message in consumer:
       animated: true,
       style: { stroke: '#ef4444', strokeWidth: 3 },
       type: 'step',
-      labelStyle: { fill: '#ffffff', fontWeight: 600, fontSize: 13 },
-      labelBgStyle: { fill: '#1e293b', fillOpacity: 0.8 }
+      labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
+      labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
     },
     {
       id: 'realtimeYes-reprocessing',
@@ -5204,10 +4700,10 @@ for message in consumer:
       target: 'reprocessingQuestion',
       label: 'No',
       animated: true,
-      style: { stroke: '#60a5fa', strokeWidth: 3 },
+      style: { stroke: '#4A7A9B', strokeWidth: 3 },
       type: 'step',
-      labelStyle: { fill: '#ffffff', fontWeight: 600, fontSize: 13 },
-      labelBgStyle: { fill: '#1e293b', fillOpacity: 0.8 }
+      labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
+      labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
     },
     {
       id: 'batchAnalytics-batch',
@@ -5217,8 +4713,8 @@ for message in consumer:
       animated: true,
       style: { stroke: '#22c55e', strokeWidth: 3 },
       type: 'step',
-      labelStyle: { fill: '#ffffff', fontWeight: 600, fontSize: 13 },
-      labelBgStyle: { fill: '#1e293b', fillOpacity: 0.8 }
+      labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
+      labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
     },
     {
       id: 'batchAnalytics-batch2',
@@ -5228,8 +4724,8 @@ for message in consumer:
       animated: true,
       style: { stroke: '#22c55e', strokeWidth: 3 },
       type: 'step',
-      labelStyle: { fill: '#ffffff', fontWeight: 600, fontSize: 13 },
-      labelBgStyle: { fill: '#1e293b', fillOpacity: 0.8 }
+      labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
+      labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
     },
     {
       id: 'reprocessing-kappa',
@@ -5237,10 +4733,10 @@ for message in consumer:
       target: 'kappa',
       label: 'Yes',
       animated: true,
-      style: { stroke: '#3b82f6', strokeWidth: 3 },
+      style: { stroke: '#4A7A9B', strokeWidth: 3 },
       type: 'step',
-      labelStyle: { fill: '#ffffff', fontWeight: 600, fontSize: 13 },
-      labelBgStyle: { fill: '#1e293b', fillOpacity: 0.8 }
+      labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
+      labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
     },
     {
       id: 'reprocessing-streaming',
@@ -5248,10 +4744,10 @@ for message in consumer:
       target: 'streaming',
       label: 'No',
       animated: true,
-      style: { stroke: '#f59e0b', strokeWidth: 3 },
+      style: { stroke: '#9E7824', strokeWidth: 3 },
       type: 'step',
-      labelStyle: { fill: '#ffffff', fontWeight: 600, fontSize: 13 },
-      labelBgStyle: { fill: '#1e293b', fillOpacity: 0.8 }
+      labelStyle: { fill: 'var(--text-primary)', fontWeight: 600, fontSize: 13 },
+      labelBgStyle: { fill: '#F0EDE8', fillOpacity: 0.95 }
     }
   ];
 
@@ -5384,38 +4880,38 @@ for message in consumer:
       <div id="curriculum-section" style={{ animation: 'fadeInSlideDown 0.5s ease-out' }}>
         {/* Curriculum Header */}
         <div style={{
-          background: 'rgba(15, 23, 42, 0.8)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(245, 158, 11, 0.3)',
+          background: 'rgba(245,243,239,0.8)',
+          
+          border: '1px solid rgba(158, 120, 36, 0.3)',
           borderRadius: '12px',
           padding: '24px',
           marginBottom: '24px'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', marginBottom: '16px' }}>
             <div>
-              <h2 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '4px', color: '#f59e0b' }}>
+              <h2 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '4px', color: '#9E7824' }}>
                 {curriculumData.title}
               </h2>
-              <p style={{ color: '#94a3b8', fontSize: '16px' }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '16px' }}>
                 {curriculumData.subtitle}
               </p>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#f59e0b' }}>
+              <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#9E7824' }}>
                 {progress}%
               </div>
-              <div style={{ fontSize: '12px', color: '#94a3b8' }}>Overall Progress</div>
+              <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Overall Progress</div>
             </div>
           </div>
           {/* Overall Progress Bar */}
           <div style={{
-            background: 'rgba(245, 158, 11, 0.1)',
+            background: 'rgba(158, 120, 36, 0.1)',
             borderRadius: '8px',
             height: '12px',
             overflow: 'hidden'
           }}>
             <div style={{
-              background: 'linear-gradient(90deg, #f59e0b, #d97706)',
+              background: 'linear-gradient(90deg, #9E7824, #9E7824)',
               height: '100%',
               width: `${progress}%`,
               borderRadius: '8px',
@@ -5447,12 +4943,12 @@ for message in consumer:
                     : colors.light,
                   border: `2px solid ${isActive ? colors.primary : colors.border}`,
                   borderRadius: '12px',
-                  color: '#ffffff',
+                  color: 'var(--text-primary)',
                   fontSize: '13px',
                   fontWeight: '600',
                   cursor: 'pointer',
                   transition: 'all 0.3s',
-                  backdropFilter: 'blur(10px)',
+                  
                   position: 'relative',
                   overflow: 'hidden'
                 }}
@@ -5468,7 +4964,7 @@ for message in consumer:
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                  <span style={{ fontSize: '16px' }}>{phaseIcons[phase.icon]}</span>
+                  {React.createElement(phaseIcons[phase.icon] || Hammer, { size: 16 })}
                   <span>Phase {phase.id}</span>
                 </div>
                 <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '8px' }}>{phase.name}</div>
@@ -5480,7 +4976,7 @@ for message in consumer:
                   overflow: 'hidden'
                 }}>
                   <div style={{
-                    background: '#ffffff',
+                    background: 'var(--bg-page)',
                     height: '100%',
                     width: `${pProgress}%`,
                     borderRadius: '4px',
@@ -5502,15 +4998,15 @@ for message in consumer:
             marginBottom: '24px'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-              <span style={{ fontSize: '32px' }}>{phaseIcons[currentPhase.icon]}</span>
+              {React.createElement(phaseIcons[currentPhase.icon] || Hammer, { size: 32 })}
               <div>
                 <h3 style={{ fontSize: '22px', fontWeight: 'bold', color: phaseColors[activePhase].primary }}>
                   Phase {currentPhase.id}: {currentPhase.name}
                 </h3>
-                <p style={{ fontSize: '14px', color: '#94a3b8' }}>{currentPhase.subtitle}</p>
+                <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{currentPhase.subtitle}</p>
               </div>
             </div>
-            <p style={{ color: '#cbd5e1', fontSize: '15px', marginBottom: '12px' }}>
+            <p style={{ color: 'var(--text-body)', fontSize: '15px', marginBottom: '12px' }}>
               <strong style={{ color: phaseColors[activePhase].primary }}>Goal:</strong> {currentPhase.goal}
             </p>
             {/* Phase Progress */}
@@ -5555,8 +5051,8 @@ for message in consumer:
                     style={{
                       background: isSelected
                         ? `${phaseColors[activePhase].primary}22`
-                        : 'rgba(15, 23, 42, 0.8)',
-                      border: `2px solid ${isSelected ? phaseColors[activePhase].primary : isCompleted ? '#10b981' : 'rgba(71, 85, 105, 0.3)'}`,
+                        : 'rgba(245,243,239,0.8)',
+                      border: `2px solid ${isSelected ? phaseColors[activePhase].primary : isCompleted ? '#4A7A56' : 'rgba(235,231,225,1)'}`,
                       borderRadius: '12px',
                       padding: '20px',
                       cursor: 'pointer',
@@ -5571,7 +5067,7 @@ for message in consumer:
                     }}
                     onMouseLeave={(e) => {
                       if (!isSelected) {
-                        e.currentTarget.style.borderColor = isCompleted ? '#10b981' : 'rgba(71, 85, 105, 0.3)';
+                        e.currentTarget.style.borderColor = isCompleted ? '#4A7A56' : 'rgba(235,231,225,1)';
                         e.currentTarget.style.transform = 'translateX(0)';
                       }
                     }}
@@ -5580,26 +5076,26 @@ for message in consumer:
                       <div style={{ flex: 1 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                           <span style={{
-                            background: isCompleted ? 'rgba(16, 185, 129, 0.2)' : phaseColors[activePhase].light,
-                            border: `1px solid ${isCompleted ? '#10b981' : phaseColors[activePhase].border}`,
+                            background: isCompleted ? 'rgba(74, 122, 86, 0.2)' : phaseColors[activePhase].light,
+                            border: `1px solid ${isCompleted ? '#4A7A56' : phaseColors[activePhase].border}`,
                             borderRadius: '6px',
                             padding: '4px 10px',
                             fontSize: '12px',
                             fontWeight: '700',
-                            color: isCompleted ? '#10b981' : phaseColors[activePhase].primary
+                            color: isCompleted ? '#4A7A56' : phaseColors[activePhase].primary
                           }}>
                             Level {level.id}
                           </span>
                           {isCompleted && (
-                            <span style={{ color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <span style={{ color: '#4A7A56', display: 'flex', alignItems: 'center', gap: '4px' }}>
                               <Check size={16} strokeWidth={3} />
                             </span>
                           )}
                         </div>
-                        <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '8px', color: '#ffffff' }}>
+                        <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '8px', color: 'var(--text-primary)' }}>
                           {level.name}
                         </h4>
-                        <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.5', marginBottom: '12px' }}>
+                        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.5', marginBottom: '12px' }}>
                           {level.concept.substring(0, 120)}...
                         </p>
                         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -5621,13 +5117,13 @@ for message in consumer:
                           )}
                           {hasMicroTask && (
                             <span style={{
-                              background: 'rgba(6, 182, 212, 0.15)',
-                              border: '1px solid rgba(6, 182, 212, 0.3)',
+                              background: 'rgba(58, 128, 128, 0.15)',
+                              border: '1px solid rgba(58, 128, 128, 0.3)',
                               borderRadius: '6px',
                               padding: '4px 10px',
                               fontSize: '11px',
                               fontWeight: '600',
-                              color: '#06b6d4',
+                              color: '#3A8080',
                               display: 'flex',
                               alignItems: 'center',
                               gap: '4px'
@@ -5650,13 +5146,11 @@ for message in consumer:
             <div style={{
               flex: '1',
               minWidth: '400px',
-              background: 'rgba(15, 23, 42, 0.9)',
+              background: 'var(--bg-panel)',
               border: `1px solid ${phaseColors[activePhase].border}`,
               borderRadius: '12px',
               padding: '24px',
               animation: 'fadeInScale 0.3s ease-out',
-              maxHeight: 'calc(100vh - 300px)',
-              overflowY: 'auto'
             }}>
               {/* Level Header */}
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '20px' }}>
@@ -5674,7 +5168,7 @@ for message in consumer:
                   }}>
                     Level {currentLevel.id}
                   </span>
-                  <h3 style={{ fontSize: '24px', fontWeight: 'bold', color: '#ffffff', marginTop: '8px' }}>
+                  <h3 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--text-primary)', marginTop: '8px' }}>
                     {currentLevel.name}
                   </h3>
                 </div>
@@ -5683,7 +5177,7 @@ for message in consumer:
                   style={{
                     background: 'transparent',
                     border: 'none',
-                    color: '#64748b',
+                    color: 'var(--text-muted)',
                     cursor: 'pointer',
                     padding: '8px'
                   }}
@@ -5694,32 +5188,32 @@ for message in consumer:
 
               {/* Concept Section */}
               <div style={{
-                background: 'rgba(59, 130, 246, 0.1)',
-                border: '1px solid rgba(59, 130, 246, 0.3)',
+                background: 'rgba(74, 122, 155, 0.1)',
+                border: '1px solid rgba(74, 122, 155, 0.3)',
                 borderRadius: '8px',
                 padding: '16px',
                 marginBottom: '16px'
               }}>
-                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#60a5fa', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#4A7A9B', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Database size={16} /> Concept
                 </h4>
-                <p style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.7' }}>
+                <p style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.7' }}>
                   {currentLevel.concept}
                 </p>
               </div>
 
               {/* Why It Matters */}
               <div style={{
-                background: 'rgba(245, 158, 11, 0.1)',
-                border: '1px solid rgba(245, 158, 11, 0.3)',
+                background: 'rgba(158, 120, 36, 0.1)',
+                border: '1px solid rgba(158, 120, 36, 0.3)',
                 borderRadius: '8px',
                 padding: '16px',
                 marginBottom: '16px'
               }}>
-                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#f59e0b', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#9E7824', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Sparkles size={16} /> Why This Matters
                 </h4>
-                <p style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.7' }}>
+                <p style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.7' }}>
                   {currentLevel.whyItMatters}
                 </p>
               </div>
@@ -5727,8 +5221,8 @@ for message in consumer:
               {/* Analogy */}
               {currentLevel.analogy && (
                 <div style={{
-                  background: 'rgba(139, 92, 246, 0.1)',
-                  border: '1px solid rgba(139, 92, 246, 0.3)',
+                  background: 'rgba(122, 90, 158, 0.1)',
+                  border: '1px solid rgba(122, 90, 158, 0.3)',
                   borderRadius: '8px',
                   padding: '16px',
                   marginBottom: '16px'
@@ -5736,7 +5230,7 @@ for message in consumer:
                   <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#a78bfa', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Info size={16} /> Think of it like...
                   </h4>
-                  <p style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.7', fontStyle: 'italic' }}>
+                  <p style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.7', fontStyle: 'italic' }}>
                     "{currentLevel.analogy}"
                   </p>
                 </div>
@@ -5745,23 +5239,23 @@ for message in consumer:
               {/* Code Example */}
               {currentLevel.codeExample && (
                 <div style={{
-                  background: 'rgba(30, 41, 59, 0.8)',
+                  background: 'rgba(235,232,228,0.8)',
                   border: '1px solid rgba(71, 85, 105, 0.5)',
                   borderRadius: '8px',
                   padding: '16px',
                   marginBottom: '16px'
                 }}>
-                  <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#fbbf24', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#C8A84E', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <ScrollText size={16} /> Code Example ({currentLevel.codeExample.language})
                   </h4>
                   <pre style={{
-                    background: 'rgba(0, 0, 0, 0.4)',
+                    background: 'rgba(200,195,188,0.3)',
                     borderRadius: '6px',
                     padding: '16px',
                     overflow: 'auto',
                     fontSize: '12px',
                     lineHeight: '1.6',
-                    color: '#e2e8f0',
+                    color: 'var(--text-body)',
                     fontFamily: 'monospace'
                   }}>
                     <code>{currentLevel.codeExample.code}</code>
@@ -5771,13 +5265,13 @@ for message in consumer:
 
               {/* References */}
               <div style={{
-                background: 'rgba(16, 185, 129, 0.1)',
-                border: '1px solid rgba(16, 185, 129, 0.3)',
+                background: 'rgba(74, 122, 86, 0.1)',
+                border: '1px solid rgba(74, 122, 86, 0.3)',
                 borderRadius: '8px',
                 padding: '16px',
                 marginBottom: '16px'
               }}>
-                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#10b981', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#4A7A56', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Globe size={16} /> Learning Resources
                 </h4>
                 <ul style={{ margin: 0, paddingLeft: '0', listStyle: 'none' }}>
@@ -5788,7 +5282,7 @@ for message in consumer:
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{
-                          color: '#10b981',
+                          color: '#4A7A56',
                           textDecoration: 'none',
                           fontSize: '14px',
                           display: 'flex',
@@ -5796,8 +5290,8 @@ for message in consumer:
                           gap: '8px',
                           transition: 'color 0.2s'
                         }}
-                        onMouseEnter={(e) => e.currentTarget.style.color = '#34d399'}
-                        onMouseLeave={(e) => e.currentTarget.style.color = '#10b981'}
+                        onMouseEnter={(e) => e.currentTarget.style.color = '#4A7A56'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = '#4A7A56'}
                       >
                         <ChevronRight size={14} />
                         {ref.title}
@@ -5827,17 +5321,17 @@ for message in consumer:
                   }}>
                     <Sparkles size={20} /> BOSS FIGHT: {currentLevel.bossFight.name}
                   </h4>
-                  <p style={{ color: '#fca5a5', fontSize: '14px', lineHeight: '1.7', marginBottom: '16px' }}>
+                  <p style={{ color: '#9f1239', fontSize: '14px', lineHeight: '1.7', marginBottom: '16px' }}>
                     {currentLevel.bossFight.description}
                   </p>
                   <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
                     <div style={{ flex: '1', minWidth: '200px' }}>
-                      <h5 style={{ fontSize: '12px', fontWeight: '600', color: '#f87171', marginBottom: '6px' }}>INPUT</h5>
-                      <p style={{ color: '#fecaca', fontSize: '13px' }}>{currentLevel.bossFight.input}</p>
+                      <h5 style={{ fontSize: '12px', fontWeight: '600', color: '#b91c1c', marginBottom: '6px' }}>INPUT</h5>
+                      <p style={{ color: '#7f1d1d', fontSize: '13px' }}>{currentLevel.bossFight.input}</p>
                     </div>
                     <div style={{ flex: '1', minWidth: '200px' }}>
-                      <h5 style={{ fontSize: '12px', fontWeight: '600', color: '#f87171', marginBottom: '6px' }}>EXPECTED OUTPUT</h5>
-                      <p style={{ color: '#fecaca', fontSize: '13px' }}>{currentLevel.bossFight.expectedOutput}</p>
+                      <h5 style={{ fontSize: '12px', fontWeight: '600', color: '#b91c1c', marginBottom: '6px' }}>EXPECTED OUTPUT</h5>
+                      <p style={{ color: '#7f1d1d', fontSize: '13px' }}>{currentLevel.bossFight.expectedOutput}</p>
                     </div>
                   </div>
                 </div>
@@ -5846,8 +5340,8 @@ for message in consumer:
               {/* Micro Task */}
               {currentLevel.microTask && (
                 <div style={{
-                  background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(8, 145, 178, 0.1) 100%)',
-                  border: '2px solid rgba(6, 182, 212, 0.4)',
+                  background: 'linear-gradient(135deg, rgba(58, 128, 128, 0.15) 0%, rgba(8, 145, 178, 0.1) 100%)',
+                  border: '2px solid rgba(58, 128, 128, 0.4)',
                   borderRadius: '12px',
                   padding: '20px',
                   marginBottom: '16px'
@@ -5855,7 +5349,7 @@ for message in consumer:
                   <h4 style={{
                     fontSize: '18px',
                     fontWeight: '700',
-                    color: '#06b6d4',
+                    color: '#3A8080',
                     marginBottom: '12px',
                     display: 'flex',
                     alignItems: 'center',
@@ -5886,11 +5380,11 @@ for message in consumer:
                   width: '100%',
                   padding: '16px',
                   background: isLevelCompleted(currentLevel.id)
-                    ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
-                    : 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.15) 100%)',
-                  border: `2px solid ${isLevelCompleted(currentLevel.id) ? '#10b981' : 'rgba(16, 185, 129, 0.5)'}`,
+                    ? 'linear-gradient(135deg, #4A7A56 0%, #4A7A56 100%)'
+                    : 'linear-gradient(135deg, rgba(74, 122, 86, 0.2) 0%, rgba(5, 150, 105, 0.15) 100%)',
+                  border: `2px solid ${isLevelCompleted(currentLevel.id) ? '#4A7A56' : 'rgba(74, 122, 86, 0.5)'}`,
                   borderRadius: '10px',
-                  color: '#ffffff',
+                  color: 'var(--text-primary)',
                   fontSize: '16px',
                   fontWeight: '700',
                   cursor: 'pointer',
@@ -5902,7 +5396,7 @@ for message in consumer:
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'scale(1.02)';
-                  e.currentTarget.style.boxShadow = '0 4px 20px rgba(16, 185, 129, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 4px 20px rgba(74, 122, 86, 0.3)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'scale(1)';
@@ -5927,446 +5421,165 @@ for message in consumer:
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0f', color: '#ffffff' }}>
-      <style>{`
-        @keyframes flowRight {
-          0% { left: 0; opacity: 0; }
-          10% { opacity: 1; }
-          90% { opacity: 1; }
-          100% { left: calc(100% - 10px); opacity: 0; }
-        }
-        @keyframes flowDown {
-          0% { top: 0; opacity: 0; }
-          10% { opacity: 1; }
-          90% { opacity: 1; }
-          100% { top: calc(100% - 10px); opacity: 0; }
-        }
-        @keyframes flowUp {
-          0% { top: calc(100% - 10px); opacity: 0; }
-          10% { opacity: 1; }
-          90% { opacity: 1; }
-          100% { top: 0; opacity: 0; }
-        }
-      `}</style>
+    <div className="app-shell">
 
-      <div style={{ padding: '32px' }}>
-        <div style={{ maxWidth: '1600px', margin: '0 auto' }}>
-          {showBanner && (
-            <div
-              style={{
-                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%)',
-                border: '1px solid rgba(59, 130, 246, 0.3)',
-                borderRadius: '12px',
-                padding: '16px 20px',
-                marginBottom: '24px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: '16px',
-                backdropFilter: 'blur(10px)',
-                boxShadow: '0 4px 12px rgba(59, 130, 246, 0.1)'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
-                <Info size={20} style={{ color: '#60a5fa', flexShrink: 0 }} />
-                <p style={{ color: '#e2e8f0', fontSize: '14px', lineHeight: '1.6', margin: 0 }}>
-                  <strong style={{ color: '#ffffff' }}>Work in Progress:</strong> This project is actively evolving and will be updated regularly. The content is provided as-is for educational and reference purposes. Feel free to explore and learn from the architecture patterns presented here.
-                </p>
-              </div>
+      {/* ── Sidebar Navigation ── */}
+      <aside className="sidebar">
+        <div className="sidebar-brand">
+          <div className="sidebar-brand-title">Big Data<br/>Architecture<br/>Explorer</div>
+          <div className="sidebar-brand-sub">Reference Guide</div>
+        </div>
+
+        <div className="sidebar-section">
+          <span className="sidebar-section-label">Architecture</span>
+          {[
+            { key: 'lambda',    label: 'Lambda',    color: '#E8654A' },
+            { key: 'kappa',     label: 'Kappa',     color: '#4A5FE3' },
+            { key: 'streaming', label: 'Streaming', color: '#2A9D99' },
+            { key: 'batch',     label: 'Batch',     color: '#E8654A' },
+            { key: 'mapreduce', label: 'MapReduce', color: '#C07FD4' },
+            { key: 'spark',     label: 'Spark',     color: '#4A5FE3' },
+          ].map(({ key, label, color }) => {
+            const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && !showComparison;
+            return (
               <button
-                onClick={handleDismissBanner}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: '#94a3b8',
-                  cursor: 'pointer',
-                  padding: '4px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: '6px',
-                  transition: 'all 0.2s',
-                  flexShrink: 0
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(148, 163, 184, 0.1)';
-                  e.currentTarget.style.color = '#e2e8f0';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent';
-                  e.currentTarget.style.color = '#94a3b8';
-                }}
-                aria-label="Dismiss banner"
+                key={key}
+                className={`sidebar-item${isActive ? ' active' : ''}`}
+                onClick={() => { setActiveArchitecture(key); setSelectedComponent(null); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); setShowComparison(false); }}
               >
-                <X size={20} />
+                <span className="sidebar-dot" style={{ background: isActive ? 'var(--blue)' : color }} />
+                {label}
               </button>
-            </div>
-          )}
+            );
+          })}
+        </div>
 
-          <div style={{ marginBottom: '32px' }}>
-            <h1 style={{ fontSize: '36px', fontWeight: 'bold', marginBottom: '8px' }}>
-              Big Data Architecture Explorer
-            </h1>
-            <p style={{ color: '#94a3b8', fontSize: '16px' }}>
-              Interactive 2D visualization of data engineering patterns
-            </p>
-          </div>
+        <hr className="sidebar-divider" />
 
-          {/* Navigation Section - Organized by Category */}
+        <div className="sidebar-section">
+          <span className="sidebar-section-label">Schemas</span>
+          {[
+            { key: 'starSchema',      label: 'Star Schema',  color: '#E8654A' },
+            { key: 'snowflakeSchema', label: 'Snowflake',    color: '#2A9D99' },
+          ].map(({ key, label, color }) => {
+            const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && !showComparison;
+            return (
+              <button
+                key={key}
+                className={`sidebar-item${isActive ? ' active' : ''}`}
+                onClick={() => { setActiveArchitecture(key); setSelectedComponent(null); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); setShowComparison(false); }}
+              >
+                <span className="sidebar-dot" style={{ background: isActive ? 'var(--blue)' : color }} />
+                {label}
+              </button>
+            );
+          })}
+        </div>
+
+        <hr className="sidebar-divider" />
+
+        <div className="sidebar-section">
+          <span className="sidebar-section-label">Resources</span>
+          {[
+            { key: 'info',       label: 'Compare & Glossary', action: () => { setShowAdditionalInfo(!showAdditionalInfo); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); setShowComparison(false); }, active: showAdditionalInfo },
+            { key: 'handson',    label: 'Hands-on Lab',       action: () => { setShowHandsOn(!showHandsOn); setShowAdditionalInfo(false); setShowCurriculum(false); setShowCaseStudies(false); setShowComparison(false); }, active: showHandsOn },
+            { key: 'curriculum', label: 'Curriculum',         action: () => { setShowCurriculum(!showCurriculum); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCaseStudies(false); setShowComparison(false); }, active: showCurriculum },
+            { key: 'cases',      label: 'Case Studies',       action: () => { setShowCaseStudies(!showCaseStudies); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowComparison(false); }, active: showCaseStudies },
+            { key: 'comparison', label: 'Dist. vs Clustered', action: () => { setShowComparison(!showComparison); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); }, active: showComparison },
+          ].map(({ key, label, action, active }) => (
+            <button
+              key={key}
+              className={`sidebar-item${active ? ' active' : ''}`}
+              onClick={action}
+            >
+              <span className="sidebar-dot" style={{ background: active ? 'var(--blue)' : 'var(--gray-300)' }} />
+              {label}
+            </button>
+          ))}
+        </div>
+      </aside>
+
+      {/* ── Main Content ── */}
+      <main className="main-content">
+
+        {/* Banner */}
+        {showBanner && (
           <div style={{
-            marginBottom: '24px',
-            background: 'rgba(15, 23, 42, 0.6)',
-            border: '1px solid rgba(71, 85, 105, 0.3)',
-            borderRadius: '16px',
-            padding: '20px 24px',
-            backdropFilter: 'blur(10px)'
+            background: 'var(--warm-white)',
+            border: '1px solid rgba(0,0,0,0.1)',
+            borderRadius: '8px',
+            padding: '12px 16px',
+            marginBottom: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '12px',
           }}>
-            {/* Two-row layout: Architecture topics on top, Resources below */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-
-              {/* Row 1: Architecture Categories */}
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
-                  <div style={{
-                    width: '4px',
-                    height: '16px',
-                    borderRadius: '2px',
-                    background: 'linear-gradient(180deg, #3b82f6, #60a5fa)'
-                  }} />
-                  <span style={{ fontSize: '11px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1.5px' }}>
-                    Architecture Patterns
-                  </span>
-                </div>
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  {/* Processing Architectures */}
-                  <div style={{
-                    display: 'flex',
-                    background: 'rgba(30, 41, 59, 0.5)',
-                    borderRadius: '10px',
-                    padding: '3px',
-                    gap: '2px',
-                    border: '1px solid rgba(71, 85, 105, 0.2)'
-                  }}>
-                    {['lambda', 'kappa', 'streaming', 'batch', 'mapreduce', 'spark'].map(key => {
-                      const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && !showComparison;
-                      const icons = { lambda: 'L', kappa: 'K', streaming: 'S', batch: 'B', mapreduce: 'MR', spark: 'SP' };
-                      return (
-                        <button
-                          key={key}
-                          onClick={() => {
-                            setActiveArchitecture(key);
-                            setSelectedComponent(null);
-                            setShowAdditionalInfo(false);
-                            setShowHandsOn(false);
-                            setShowCurriculum(false);
-                            setShowCaseStudies(false);
-                            setShowComparison(false);
-                          }}
-                          style={{
-                            padding: '8px 16px',
-                            background: isActive ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' : 'transparent',
-                            border: 'none',
-                            borderRadius: '8px',
-                            color: isActive ? '#ffffff' : '#94a3b8',
-                            fontSize: '13px',
-                            fontWeight: isActive ? '600' : '500',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s ease',
-                            whiteSpace: 'nowrap',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '6px'
-                          }}
-                          onMouseEnter={(e) => {
-                            if (!isActive) {
-                              e.currentTarget.style.color = '#ffffff';
-                              e.currentTarget.style.background = 'rgba(59, 130, 246, 0.15)';
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (!isActive) {
-                              e.currentTarget.style.color = '#94a3b8';
-                              e.currentTarget.style.background = 'transparent';
-                            }
-                          }}
-                        >
-                          <span style={{
-                            width: '20px',
-                            height: '20px',
-                            borderRadius: '4px',
-                            background: isActive ? 'rgba(255,255,255,0.2)' : 'rgba(59, 130, 246, 0.15)',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '10px',
-                            fontWeight: '700',
-                            color: isActive ? '#ffffff' : '#60a5fa',
-                            flexShrink: 0
-                          }}>
-                            {icons[key]}
-                          </span>
-                          {architectures[key].name}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Divider */}
-                  <div style={{ width: '1px', background: 'rgba(71, 85, 105, 0.3)', margin: '4px 4px' }} />
-
-                  {/* Data Modeling */}
-                  <div style={{
-                    display: 'flex',
-                    background: 'rgba(30, 41, 59, 0.5)',
-                    borderRadius: '10px',
-                    padding: '3px',
-                    gap: '2px',
-                    border: '1px solid rgba(71, 85, 105, 0.2)'
-                  }}>
-                    {['starSchema', 'snowflakeSchema'].map(key => {
-                      const isActive = activeArchitecture === key && !showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && !showComparison;
-                      const icons = { starSchema: null, snowflakeSchema: null };
-                      return (
-                        <button
-                          key={key}
-                          onClick={() => {
-                            setActiveArchitecture(key);
-                            setSelectedComponent(null);
-                            setShowAdditionalInfo(false);
-                            setShowHandsOn(false);
-                            setShowCurriculum(false);
-                            setShowCaseStudies(false);
-                          }}
-                          style={{
-                            padding: '8px 16px',
-                            background: isActive ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'transparent',
-                            border: 'none',
-                            borderRadius: '8px',
-                            color: isActive ? '#ffffff' : '#94a3b8',
-                            fontSize: '13px',
-                            fontWeight: isActive ? '600' : '500',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s ease',
-                            whiteSpace: 'nowrap',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '6px'
-                          }}
-                          onMouseEnter={(e) => {
-                            if (!isActive) {
-                              e.currentTarget.style.color = '#fbbf24';
-                              e.currentTarget.style.background = 'rgba(245, 158, 11, 0.12)';
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (!isActive) {
-                              e.currentTarget.style.color = '#94a3b8';
-                              e.currentTarget.style.background = 'transparent';
-                            }
-                          }}
-                        >
-                          {key === 'starSchema' ? <Star size={14} /> : <Snowflake size={14} />}
-                          {architectures[key].name}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-
-              {/* Separator */}
-              <div style={{ height: '1px', background: 'rgba(71, 85, 105, 0.2)' }} />
-
-              {/* Row 2: Learning Resources */}
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
-                  <div style={{
-                    width: '4px',
-                    height: '16px',
-                    borderRadius: '2px',
-                    background: 'linear-gradient(180deg, #a78bfa, #7c3aed)'
-                  }} />
-                  <span style={{ fontSize: '11px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1.5px' }}>
-                    Learning Resources
-                  </span>
-                </div>
-                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                  {/* Info */}
-                  {[
-                    { key: 'info', label: 'Compare & Glossary', color: '#a78bfa', bgColor: '139, 92, 246', state: showAdditionalInfo, setState: () => { setShowAdditionalInfo(!showAdditionalInfo); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); setShowComparison(false); if (!showAdditionalInfo) { setTimeout(() => { const el = document.getElementById('additional-info'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
-                      icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                    },
-                    { key: 'handson', label: 'Hands-on Lab', color: '#10b981', bgColor: '16, 185, 129', state: showHandsOn, setState: () => { setShowHandsOn(!showHandsOn); setShowAdditionalInfo(false); setShowCurriculum(false); setShowCaseStudies(false); setShowComparison(false); if (!showHandsOn) { setTimeout(() => { const el = document.getElementById('hands-on'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
-                      icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
-                    },
-                    { key: 'curriculum', label: 'Curriculum', color: '#f59e0b', bgColor: '245, 158, 11', state: showCurriculum, setState: () => { setShowCurriculum(!showCurriculum); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCaseStudies(false); setShowComparison(false); if (!showCurriculum) { setTimeout(() => { const el = document.getElementById('curriculum-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
-                      icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
-                    },
-                    { key: 'cases', label: 'Case Studies', color: '#ec4899', bgColor: '236, 72, 153', state: showCaseStudies, setState: () => { setShowCaseStudies(!showCaseStudies); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowComparison(false); if (!showCaseStudies) { setTimeout(() => { const el = document.getElementById('case-studies-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
-                      icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                    },
-                    { key: 'comparison', label: 'Distributed vs Clustered', color: '#06b6d4', bgColor: '6, 182, 212', state: showComparison, setState: () => { setShowComparison(!showComparison); setShowAdditionalInfo(false); setShowHandsOn(false); setShowCurriculum(false); setShowCaseStudies(false); if (!showComparison) { setTimeout(() => { const el = document.getElementById('comparison-section'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); } },
-                      icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"></path></svg>
-                    }
-                  ].map(({ key, label, color, bgColor, state, setState, icon }) => (
-                    <button
-                      key={key}
-                      onClick={setState}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        padding: '8px 16px',
-                        background: state ? `rgba(${bgColor}, 0.2)` : 'rgba(30, 41, 59, 0.5)',
-                        border: state ? `1px solid rgba(${bgColor}, 0.5)` : '1px solid rgba(71, 85, 105, 0.2)',
-                        borderRadius: '10px',
-                        color: state ? color : '#94a3b8',
-                        fontSize: '13px',
-                        fontWeight: '500',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!state) {
-                          e.currentTarget.style.background = `rgba(${bgColor}, 0.1)`;
-                          e.currentTarget.style.borderColor = `rgba(${bgColor}, 0.3)`;
-                          e.currentTarget.style.color = color;
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!state) {
-                          e.currentTarget.style.background = 'rgba(30, 41, 59, 0.5)';
-                          e.currentTarget.style.borderColor = 'rgba(71, 85, 105, 0.2)';
-                          e.currentTarget.style.color = '#94a3b8';
-                        }
-                      }}
-                    >
-                      {icon}
-                      <span>{label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1 }}>
+              <Info size={16} style={{ color: 'var(--gray-300)', flexShrink: 0 }} />
+              <p style={{ color: 'var(--gray-500)', fontSize: '13px', lineHeight: '1.5', margin: 0 }}>
+                <strong style={{ color: 'var(--near-black)', fontWeight: '600' }}>Work in Progress:</strong>{' '}
+                Content is provided as-is for educational and reference purposes.
+              </p>
             </div>
+            <button onClick={handleDismissBanner} style={{ background: 'transparent', border: 'none', color: 'var(--gray-300)', cursor: 'pointer', padding: '2px', display: 'flex', borderRadius: '4px' }}
+              onMouseEnter={e => e.currentTarget.style.color = 'var(--near-black)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'var(--gray-300)'}
+              aria-label="Dismiss">
+              <X size={16} />
+            </button>
           </div>
+        )}
 
           {!showAdditionalInfo && !showHandsOn && !showCurriculum && !showCaseStudies && !showComparison && (
           <>
-          <div
-            style={{
-              background: 'rgba(15, 23, 42, 0.8)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(71, 85, 105, 0.3)',
-              borderRadius: '12px',
-              padding: '20px',
-              marginBottom: '24px'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
-                  <h2 style={{ fontSize: '24px', fontWeight: 'bold' }}>
-                    {currentArch.name}
-                  </h2>
-                  <span style={{
-                    padding: '4px 12px',
-                    borderRadius: '6px',
-                    fontSize: '12px',
-                    fontWeight: '600',
-                    background: currentArch.difficulty === 'Beginner' ? 'rgba(34, 197, 94, 0.2)' :
-                                currentArch.difficulty === 'Intermediate' ? 'rgba(59, 130, 246, 0.2)' :
-                                'rgba(239, 68, 68, 0.2)',
-                    color: currentArch.difficulty === 'Beginner' ? '#22c55e' :
-                           currentArch.difficulty === 'Intermediate' ? '#3b82f6' :
-                           '#ef4444',
-                    border: `1px solid ${currentArch.difficulty === 'Beginner' ? '#22c55e' :
-                                         currentArch.difficulty === 'Intermediate' ? '#3b82f6' :
-                                         '#ef4444'}`
-                  }}>
-                    {currentArch.difficulty}
-                  </span>
-                </div>
-                <p style={{ color: '#94a3b8', fontSize: '14px', marginBottom: '8px' }}>
-                  {currentArch.tagline}
-                </p>
-                <p style={{ color: '#cbd5e1', fontSize: '14px' }}>
-                  {currentArch.description}
-                </p>
-              </div>
-              <button
-                onClick={() => setShowDataFlow(!showDataFlow)}
-                style={{
-                  padding: '10px 20px',
-                  background: 'rgba(30, 41, 59, 0.6)',
-                  border: '1px solid rgba(71, 85, 105, 0.3)',
-                  borderRadius: '8px',
-                  color: '#ffffff',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(30, 41, 59, 0.8)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(30, 41, 59, 0.6)'}
-              >
-                <Sparkles size={18} />
-                <span>Data Flow {showDataFlow ? 'ON' : 'OFF'}</span>
-              </button>
+          <div style={{ marginBottom: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '6px' }}>
+              <h1 style={{ fontSize: '28px', fontWeight: '700', letterSpacing: '-1px', color: 'var(--near-black)', lineHeight: 1 }}>
+                {currentArch.name}
+              </h1>
+              <span className={`badge-pill diff-${currentArch.difficulty?.toLowerCase()}`} style={{ fontSize: '11px', padding: '2px 8px' }}>
+                {currentArch.difficulty}
+              </span>
             </div>
+            <p style={{ color: 'var(--gray-500)', fontSize: '14px', fontWeight: '500', marginBottom: '4px' }}>{currentArch.tagline}</p>
+            <p style={{ color: 'var(--gray-500)', fontSize: '13px', lineHeight: '1.55', maxWidth: '720px' }}>{currentArch.description}</p>
           </div>
 
-          <div
-            style={{
-              background: 'rgba(15, 23, 42, 0.9)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(71, 85, 105, 0.3)',
-              borderRadius: '12px',
-              padding: '16px 24px',
-              marginBottom: '24px'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '32px', flexWrap: 'wrap' }}>
-              <span style={{ color: '#94a3b8', fontSize: '14px', fontWeight: '600' }}>
-                Connection Types:
-              </span>
-              {Object.entries(connectionColors).map(([type, color]) => {
-                const labels = { stream: 'Stream', batch: 'Batch', query: 'Query', fk: 'Foreign Key', normalize: 'Normalize' };
-                return (
-                  <div key={type} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{
-                      width: '32px',
-                      height: '3px',
-                      background: color,
-                      borderRadius: '2px'
-                    }} />
-                    <span style={{ color: '#e2e8f0', fontSize: '14px' }}>
-                      {labels[type] || type}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap', marginBottom: '20px', padding: '10px 0', borderBottom: '1px solid rgba(0,0,0,0.07)' }}>
+            <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--gray-300)', textTransform: 'uppercase', letterSpacing: '1.5px', flexShrink: 0 }}>
+              Connection types
+            </span>
+            {Object.entries(connectionColors).map(([type, color]) => {
+              const labels = { stream: 'Stream', batch: 'Batch', query: 'Query', fk: 'Foreign Key', normalize: 'Normalize' };
+              return (
+                <div key={type} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <svg width="28" height="10" style={{ overflow: 'visible' }}>
+                    <line x1="0" y1="5" x2="22" y2="5" stroke={color} strokeWidth="1.5" strokeDasharray="4,3" />
+                    <polygon points="22,5 16,2 16,8" fill={color} />
+                  </svg>
+                  <span style={{ fontSize: '12px', color: 'var(--gray-500)' }}>{labels[type] || type}</span>
+                </div>
+              );
+            })}
           </div>
 
           {showWarning && (
             <div
               style={{
-                background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.15) 100%)',
-                border: '2px solid rgba(245, 158, 11, 0.6)',
+                background: 'linear-gradient(135deg, rgba(158, 120, 36, 0.2) 0%, rgba(217, 119, 6, 0.15) 100%)',
+                border: '2px solid rgba(158, 120, 36, 0.6)',
                 borderRadius: '12px',
                 padding: '16px 24px',
                 marginBottom: '16px',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
-                color: '#fbbf24',
+                color: '#C8A84E',
                 fontSize: '14px',
                 fontWeight: '600',
-                backdropFilter: 'blur(10px)',
-                boxShadow: '0 0 20px rgba(245, 158, 11, 0.3)'
+                
+                boxShadow: '0 0 20px rgba(158, 120, 36, 0.3)'
               }}
             >
               <Info size={20} />
@@ -6379,16 +5592,22 @@ for message in consumer:
 
           <div
             ref={diagramContainerRef}
+            className="diagram-canvas"
             style={{
-              background: 'rgba(15, 23, 42, 0.4)',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(71, 85, 105, 0.3)',
-              borderRadius: '12px',
-              padding: '60px 40px',
+              padding: '32px',
               marginBottom: '24px',
-              minHeight: '500px',
-              overflow: 'hidden',
-              position: 'relative'
+              minHeight: (() => {
+                const l = currentArch.layout;
+                if (l === 'lambda' || l === 'blockchain') return '320px';
+                if (l === 'mapreduce' || l === 'spark') return '560px';
+                if (l === 'star' || l === 'snowflake') return '420px';
+                return '120px'; // linear: kappa, streaming, batch
+              })(),
+              overflowX: 'auto',
+              overflowY: 'hidden',
+              position: 'relative',
+              borderRadius: '12px',
+              display: 'block',
             }}
           >
             <div
@@ -6396,7 +5615,6 @@ for message in consumer:
                 transform: `scale(${scale})`,
                 transformOrigin: 'top center',
                 transition: 'transform 0.3s ease-out',
-                minHeight: scale < 1 ? `${500 / scale}px` : '500px'
               }}
             >
               {currentArch.layout === 'lambda' ? renderLambdaLayout() :
@@ -6412,11 +5630,11 @@ for message in consumer:
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              color: '#94a3b8',
+              color: 'var(--text-secondary)',
               fontSize: '12px',
               marginTop: '48px',
               paddingTop: '24px',
-              borderTop: '1px solid rgba(71, 85, 105, 0.3)',
+              borderTop: '1px solid rgba(235,231,225,1)',
               justifyContent: 'center'
             }}>
               <Info size={16} />
@@ -6426,9 +5644,9 @@ for message in consumer:
 
           <div
             style={{
-              background: 'rgba(15, 23, 42, 0.6)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(71, 85, 105, 0.3)',
+              background: 'rgba(245,243,239,0.6)',
+              
+              border: '1px solid rgba(235,231,225,1)',
               borderRadius: '12px',
               padding: '32px',
               marginBottom: '24px'
@@ -6439,36 +5657,36 @@ for message in consumer:
                 fontSize: '24px',
                 fontWeight: 'bold',
                 marginBottom: '16px',
-                color: '#60a5fa'
+                color: '#4A7A9B'
               }}>
                 Overview
               </h3>
-              <p style={{ color: '#cbd5e1', fontSize: '15px', lineHeight: '1.6', marginBottom: '20px' }}>
+              <p style={{ color: 'var(--text-body)', fontSize: '15px', lineHeight: '1.6', marginBottom: '20px' }}>
                 {currentArch.overview.text}
               </p>
 
               <div style={{
-                background: 'rgba(59, 130, 246, 0.1)',
-                border: '1px solid rgba(59, 130, 246, 0.3)',
+                background: 'rgba(74, 122, 155, 0.1)',
+                border: '1px solid rgba(74, 122, 155, 0.3)',
                 borderRadius: '12px',
                 padding: '20px',
                 marginBottom: '20px'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                  <Sparkles size={20} color="#60a5fa" />
-                  <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#60a5fa' }}>
+                  <Sparkles size={20} color="#4A7A9B" />
+                  <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#4A7A9B' }}>
                     Example Scenario: {currentArch.overview.scenario}
                   </h4>
                 </div>
-                <p style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.7', marginBottom: '8px' }}>
+                <p style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.7', marginBottom: '8px' }}>
                   {currentArch.overview.scenarioDescription}
                 </p>
-                <p style={{ color: '#94a3b8', fontSize: '12px', fontStyle: 'italic' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '12px', fontStyle: 'italic' }}>
                   Note: This is a fictional example based on patterns observed in the market to illustrate real-world applications.
                 </p>
               </div>
 
-              <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#e2e8f0', marginBottom: '12px' }}>
+              <h4 style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-body)', marginBottom: '12px' }}>
                 Components in This Scenario
               </h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }}>
@@ -6476,16 +5694,16 @@ for message in consumer:
                   <div
                     key={idx}
                     style={{
-                      background: 'rgba(30, 41, 59, 0.6)',
-                      border: '1px solid rgba(59, 130, 246, 0.3)',
+                      background: 'rgba(235,232,228,0.6)',
+                      border: '1px solid rgba(74, 122, 155, 0.3)',
                       borderRadius: '8px',
                       padding: '12px 16px'
                     }}
                   >
-                    <div style={{ fontSize: '13px', fontWeight: '600', color: '#e2e8f0', marginBottom: '4px' }}>
+                    <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-body)', marginBottom: '4px' }}>
                       {comp.name}
                     </div>
-                    <div style={{ fontSize: '12px', color: '#94a3b8', lineHeight: '1.5' }}>
+                    <div style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
                       {comp.metric}
                     </div>
                   </div>
@@ -6506,7 +5724,7 @@ for message in consumer:
                 {currentArch.useCases.map((useCase, idx) => (
                   <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <ChevronRight size={18} color="#a78bfa" />
-                    <span style={{ color: '#cbd5e1', fontSize: '15px' }}>{useCase}</span>
+                    <span style={{ color: 'var(--text-body)', fontSize: '15px' }}>{useCase}</span>
                   </div>
                 ))}
               </div>
@@ -6517,15 +5735,15 @@ for message in consumer:
                 fontSize: '24px',
                 fontWeight: 'bold',
                 marginBottom: '16px',
-                color: '#34d399'
+                color: '#4A7A56'
               }}>
                 Advantages
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {currentArch.advantages.map((advantage, idx) => (
                   <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <Check size={18} color="#34d399" />
-                    <span style={{ color: '#cbd5e1', fontSize: '15px' }}>{advantage}</span>
+                    <Check size={18} color="#4A7A56" />
+                    <span style={{ color: 'var(--text-body)', fontSize: '15px' }}>{advantage}</span>
                   </div>
                 ))}
               </div>
@@ -6536,7 +5754,7 @@ for message in consumer:
                 fontSize: '24px',
                 fontWeight: 'bold',
                 marginBottom: '16px',
-                color: '#fbbf24'
+                color: '#C8A84E'
               }}>
                 Challenges
               </h3>
@@ -6548,10 +5766,10 @@ for message in consumer:
                       width: '6px',
                       height: '6px',
                       borderRadius: '50%',
-                      background: '#fbbf24',
+                      background: '#C8A84E',
                       flexShrink: 0
                     }} />
-                    <span style={{ color: '#cbd5e1', fontSize: '15px' }}>{challenge}</span>
+                    <span style={{ color: 'var(--text-body)', fontSize: '15px' }}>{challenge}</span>
                   </div>
                 ))}
               </div>
@@ -6567,7 +5785,7 @@ for message in consumer:
               }}>
                 Gotchas & Common Mistakes
               </h3>
-              <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '16px', fontStyle: 'italic' }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '16px', fontStyle: 'italic' }}>
                 Pitfalls that trip up beginners and experienced engineers alike
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -6596,7 +5814,7 @@ for message in consumer:
                     }}>
                       !
                     </div>
-                    <span style={{ color: '#e2e8f0', fontSize: '14px', lineHeight: '1.6' }}>{gotcha}</span>
+                    <span style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.6' }}>{gotcha}</span>
                   </div>
                 ))}
               </div>
@@ -6619,7 +5837,7 @@ for message in consumer:
                 <Check size={24} color="#22c55e" />
                 Good Design Patterns
               </h3>
-              <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '16px', fontStyle: 'italic' }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '16px', fontStyle: 'italic' }}>
                 Follow these patterns for a well-designed schema
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
@@ -6634,14 +5852,14 @@ for message in consumer:
                     <div style={{ fontSize: '15px', fontWeight: '700', color: '#4ade80', marginBottom: '8px' }}>
                       {example.title}
                     </div>
-                    <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6', marginBottom: '12px' }}>
+                    <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6', marginBottom: '12px' }}>
                       {example.description}
                     </p>
                     {/* Visual table representation */}
                     <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '12px' }}>
                       {example.columns.map((tbl, tIdx) => (
                         <div key={tIdx} style={{
-                          background: 'rgba(15, 23, 42, 0.8)',
+                          background: 'rgba(245,243,239,0.8)',
                           border: '1px solid rgba(34, 197, 94, 0.3)',
                           borderRadius: '8px',
                           minWidth: '200px',
@@ -6663,7 +5881,7 @@ for message in consumer:
                               padding: '4px 12px',
                               fontSize: '11px',
                               fontFamily: 'monospace',
-                              color: col.includes('PK') ? '#fbbf24' : col.includes('FK') ? '#93c5fd' : '#94a3b8',
+                              color: col.includes('PK') ? '#9E7824' : col.includes('FK') ? '#4A7A9B' : 'var(--text-body)',
                               fontWeight: col.includes('PK') || col.includes('FK') ? '600' : '400',
                               borderBottom: cIdx < tbl.cols.length - 1 ? '1px solid rgba(71, 85, 105, 0.15)' : 'none'
                             }}>
@@ -6674,11 +5892,11 @@ for message in consumer:
                       ))}
                     </div>
                     <div style={{
-                      background: 'rgba(34, 197, 94, 0.08)',
+                      background: 'rgba(34, 197, 94, 0.1)',
                       borderRadius: '6px',
                       padding: '10px 14px',
                       fontSize: '12px',
-                      color: '#86efac',
+                      color: '#166534',
                       lineHeight: '1.5'
                     }}>
                       <strong>Why this works:</strong> {example.why}
@@ -6700,7 +5918,7 @@ for message in consumer:
                 <X size={24} color="#ef4444" />
                 Anti-Patterns to Avoid
               </h3>
-              <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '16px', fontStyle: 'italic' }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '16px', fontStyle: 'italic' }}>
                 Common mistakes that lead to performance issues, data quality problems, or maintenance headaches
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -6715,14 +5933,14 @@ for message in consumer:
                     <div style={{ fontSize: '15px', fontWeight: '700', color: '#f87171', marginBottom: '8px' }}>
                       {example.title}
                     </div>
-                    <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6', marginBottom: '12px' }}>
+                    <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6', marginBottom: '12px' }}>
                       {example.description}
                     </p>
                     {/* Visual table representation */}
                     <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '12px' }}>
                       {example.columns.map((tbl, tIdx) => (
                         <div key={tIdx} style={{
-                          background: 'rgba(15, 23, 42, 0.8)',
+                          background: 'rgba(245,243,239,0.8)',
                           border: '1px solid rgba(239, 68, 68, 0.3)',
                           borderRadius: '8px',
                           minWidth: '200px',
@@ -6744,7 +5962,7 @@ for message in consumer:
                               padding: '4px 12px',
                               fontSize: '11px',
                               fontFamily: 'monospace',
-                              color: col.includes('PK') ? '#fbbf24' : col.includes('FK') ? '#93c5fd' : col.includes('BAD') || col.includes('NO MATCHING') || col.includes('UNNECESSARY') ? '#f87171' : '#94a3b8',
+                              color: col.includes('PK') ? '#9E7824' : col.includes('FK') ? '#4A7A9B' : col.includes('BAD') || col.includes('NO MATCHING') || col.includes('UNNECESSARY') ? '#e11d48' : 'var(--text-body)',
                               fontWeight: col.includes('PK') || col.includes('FK') ? '600' : '400',
                               borderBottom: cIdx < tbl.cols.length - 1 ? '1px solid rgba(71, 85, 105, 0.15)' : 'none',
                               textDecoration: col.includes('BAD') || col.includes('NO MATCHING') ? 'line-through' : 'none',
@@ -6757,11 +5975,11 @@ for message in consumer:
                       ))}
                     </div>
                     <div style={{
-                      background: 'rgba(239, 68, 68, 0.08)',
+                      background: 'rgba(239, 68, 68, 0.1)',
                       borderRadius: '6px',
                       padding: '10px 14px',
                       fontSize: '12px',
-                      color: '#fca5a5',
+                      color: '#991b1b',
                       lineHeight: '1.5',
                       marginBottom: example.fix ? '8px' : '0'
                     }}>
@@ -6769,11 +5987,11 @@ for message in consumer:
                     </div>
                     {example.fix && (
                       <div style={{
-                        background: 'rgba(59, 130, 246, 0.08)',
+                        background: 'rgba(74, 122, 155, 0.1)',
                         borderRadius: '6px',
                         padding: '10px 14px',
                         fontSize: '12px',
-                        color: '#93c5fd',
+                        color: '#1e3a5f',
                         lineHeight: '1.5'
                       }}>
                         <strong>How to fix:</strong> {example.fix}
@@ -6818,7 +6036,7 @@ for message in consumer:
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{
-                        color: '#cbd5e1',
+                        color: 'var(--text-body)',
                         fontSize: '15px',
                         textDecoration: 'none',
                         borderBottom: '1px solid #f472b644',
@@ -6829,7 +6047,7 @@ for message in consumer:
                         e.currentTarget.style.borderBottom = '1px solid #f472b6';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.color = '#cbd5e1';
+                        e.currentTarget.style.color = 'var(--text-body)';
                         e.currentTarget.style.borderBottom = '1px solid #f472b644';
                       }}
                     >
@@ -6848,91 +6066,91 @@ for message in consumer:
               <div
                 id="additional-info"
                 style={{
-                  background: 'rgba(15, 23, 42, 0.8)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  background: 'rgba(245,243,239,0.8)',
+                  
+                  border: '1px solid rgba(235,231,225,1)',
                   borderRadius: '12px',
                   padding: '24px',
                   marginBottom: '24px',
                   overflowX: 'auto'
                 }}
               >
-            <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px', color: '#60a5fa' }}>
+            <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px', color: '#4A7A9B' }}>
               Architecture Comparison
             </h3>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
               <thead>
                 <tr>
-                  <th style={{ padding: '12px', textAlign: 'left', color: '#94a3b8', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Feature</th>
-                  <th style={{ padding: '12px', textAlign: 'left', color: '#ec4899', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Lambda</th>
-                  <th style={{ padding: '12px', textAlign: 'left', color: '#8b5cf6', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Kappa</th>
-                  <th style={{ padding: '12px', textAlign: 'left', color: '#f59e0b', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Streaming</th>
-                  <th style={{ padding: '12px', textAlign: 'left', color: '#10b981', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Batch</th>
+                  <th style={{ padding: '12px', textAlign: 'left', color: 'var(--text-secondary)', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Feature</th>
+                  <th style={{ padding: '12px', textAlign: 'left', color: '#9E5A3C', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Lambda</th>
+                  <th style={{ padding: '12px', textAlign: 'left', color: '#7A5A9E', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Kappa</th>
+                  <th style={{ padding: '12px', textAlign: 'left', color: '#9E7824', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Streaming</th>
+                  <th style={{ padding: '12px', textAlign: 'left', color: '#4A7A56', borderBottom: '2px solid rgba(71, 85, 105, 0.5)', fontWeight: '600' }}>Batch</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td style={{ padding: '10px 12px', color: '#94a3b8', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Difficulty</td>
-                  <td style={{ padding: '10px 12px', color: '#ef4444', borderBottom: '1px solid rgba(71, 85, 105, 0.3)', fontWeight: '600' }}>Advanced</td>
-                  <td style={{ padding: '10px 12px', color: '#3b82f6', borderBottom: '1px solid rgba(71, 85, 105, 0.3)', fontWeight: '600' }}>Intermediate</td>
-                  <td style={{ padding: '10px 12px', color: '#3b82f6', borderBottom: '1px solid rgba(71, 85, 105, 0.3)', fontWeight: '600' }}>Intermediate</td>
-                  <td style={{ padding: '10px 12px', color: '#22c55e', borderBottom: '1px solid rgba(71, 85, 105, 0.3)', fontWeight: '600' }}>Beginner</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Difficulty</td>
+                  <td style={{ padding: '10px 12px', color: '#ef4444', borderBottom: '1px solid rgba(235,231,225,1)', fontWeight: '600' }}>Advanced</td>
+                  <td style={{ padding: '10px 12px', color: '#4A7A9B', borderBottom: '1px solid rgba(235,231,225,1)', fontWeight: '600' }}>Intermediate</td>
+                  <td style={{ padding: '10px 12px', color: '#4A7A9B', borderBottom: '1px solid rgba(235,231,225,1)', fontWeight: '600' }}>Intermediate</td>
+                  <td style={{ padding: '10px 12px', color: '#22c55e', borderBottom: '1px solid rgba(235,231,225,1)', fontWeight: '600' }}>Beginner</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '10px 12px', color: '#94a3b8', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Complexity</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>High</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Medium</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Low</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Low</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Complexity</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>High</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Medium</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Low</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Low</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '10px 12px', color: '#94a3b8', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Real-time Support</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Yes</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Yes</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Yes</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>No</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Real-time Support</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Yes</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Yes</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Yes</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>No</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '10px 12px', color: '#94a3b8', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Data Consistency</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>High</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Medium</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Medium</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>High</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Data Consistency</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>High</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Medium</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Medium</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>High</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '10px 12px', color: '#94a3b8', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Latency</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Low (speed layer)</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Low</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Very Low</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>High (hours/days)</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Latency</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Low (speed layer)</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Low</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Very Low</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>High (hours/days)</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '10px 12px', color: '#94a3b8', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Processing Layers</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Batch + Speed + Serving</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Stream only</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Stream only</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Batch only</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Processing Layers</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Batch + Speed + Serving</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Stream only</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Stream only</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Batch only</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '10px 12px', color: '#94a3b8', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Data Reprocessing</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Easy (batch layer)</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Possible (replay log)</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Limited</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Easy (re-run ETL)</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Data Reprocessing</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Easy (batch layer)</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Possible (replay log)</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Limited</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Easy (re-run ETL)</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '10px 12px', color: '#94a3b8', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Operational Overhead</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>High</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Medium</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Low</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1', borderBottom: '1px solid rgba(71, 85, 105, 0.3)' }}>Low</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-secondary)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Operational Overhead</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>High</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Medium</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Low</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)', borderBottom: '1px solid rgba(235,231,225,1)' }}>Low</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '10px 12px', color: '#94a3b8' }}>Best For</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1' }}>Mission-critical systems needing both accuracy and speed</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1' }}>Event-driven systems with replay requirements</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1' }}>Real-time applications with minimal latency needs</td>
-                  <td style={{ padding: '10px 12px', color: '#cbd5e1' }}>Reporting, analytics, and historical insights</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-secondary)' }}>Best For</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)' }}>Mission-critical systems needing both accuracy and speed</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)' }}>Event-driven systems with replay requirements</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)' }}>Real-time applications with minimal latency needs</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--text-body)' }}>Reporting, analytics, and historical insights</td>
                 </tr>
               </tbody>
             </table>
@@ -6940,9 +6158,9 @@ for message in consumer:
 
           <div
             style={{
-              background: 'rgba(15, 23, 42, 0.6)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(71, 85, 105, 0.3)',
+              background: 'rgba(245,243,239,0.6)',
+              
+              border: '1px solid rgba(235,231,225,1)',
               borderRadius: '12px',
               padding: '32px',
               marginBottom: '24px'
@@ -6952,58 +6170,58 @@ for message in consumer:
               fontSize: '24px',
               fontWeight: 'bold',
               marginBottom: '16px',
-              color: '#fbbf24'
+              color: '#C8A84E'
             }}>
               Technical Glossary
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>OLAP</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Online Analytical Processing - Database optimized for complex queries and analytics on large datasets.</p>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>OLAP</h4>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Online Analytical Processing - Database optimized for complex queries and analytics on large datasets.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>OLTP</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Online Transaction Processing - Database optimized for high-volume transactions and data modifications.</p>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>OLTP</h4>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Online Transaction Processing - Database optimized for high-volume transactions and data modifications.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>ETL</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Extract, Transform, Load - Process of extracting data from sources, transforming it, and loading into a data warehouse.</p>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>ETL</h4>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Extract, Transform, Load - Process of extracting data from sources, transforming it, and loading into a data warehouse.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Stateful Processing</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Stream processing that maintains state across events, enabling windowing, aggregations, and joins.</p>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Stateful Processing</h4>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Stream processing that maintains state across events, enabling windowing, aggregations, and joins.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>MapReduce</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Programming model for processing large datasets in parallel across distributed clusters.</p>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>MapReduce</h4>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Programming model for processing large datasets in parallel across distributed clusters.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Event Log</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Immutable, append-only sequence of events that can be replayed for reprocessing.</p>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Event Log</h4>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Immutable, append-only sequence of events that can be replayed for reprocessing.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Materialized View</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Pre-computed query results stored for fast retrieval, continuously updated from source data.</p>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Materialized View</h4>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Pre-computed query results stored for fast retrieval, continuously updated from source data.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Partitioning</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Dividing data across multiple nodes for parallel processing and scalability.</p>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Partitioning</h4>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Dividing data across multiple nodes for parallel processing and scalability.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Backpressure</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Flow control mechanism to prevent overwhelming downstream systems when data arrives faster than it can be processed.</p>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Backpressure</h4>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Flow control mechanism to prevent overwhelming downstream systems when data arrives faster than it can be processed.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Data Lake</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Centralized repository for storing raw, unstructured data at scale in its native format.</p>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Data Lake</h4>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Centralized repository for storing raw, unstructured data at scale in its native format.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Windowing</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Grouping stream events into finite time or count-based windows for aggregation.</p>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Windowing</h4>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Grouping stream events into finite time or count-based windows for aggregation.</p>
               </div>
-              <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
-                <h4 style={{ color: '#60a5fa', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Columnar Storage</h4>
-                <p style={{ color: '#cbd5e1', fontSize: '13px', lineHeight: '1.6' }}>Data storage format organizing by columns rather than rows, optimized for analytics.</p>
+              <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '8px', padding: '16px', border: '1px solid rgba(235,231,225,1)' }}>
+                <h4 style={{ color: '#4A7A9B', fontSize: '15px', fontWeight: '600', marginBottom: '6px' }}>Columnar Storage</h4>
+                <p style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.6' }}>Data storage format organizing by columns rather than rows, optimized for analytics.</p>
               </div>
             </div>
           </div>
@@ -7011,9 +6229,9 @@ for message in consumer:
           {/* Decision Flowchart */}
           <div
             style={{
-              background: 'rgba(15, 23, 42, 0.6)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(71, 85, 105, 0.3)',
+              background: 'rgba(245,243,239,0.6)',
+              
+              border: '1px solid rgba(235,231,225,1)',
               borderRadius: '12px',
               padding: '32px',
               marginBottom: '24px'
@@ -7027,16 +6245,16 @@ for message in consumer:
             }}>
               Which Architecture Should I Use?
             </h3>
-            <p style={{ color: '#94a3b8', fontSize: '14px', marginBottom: '24px' }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '24px' }}>
               Click on nodes to expand the decision tree and find the best architecture for your requirements
             </p>
 
             <div style={{
-              background: 'rgba(30, 41, 59, 0.6)',
-              border: '1px solid rgba(71, 85, 105, 0.3)',
+              background: 'rgba(235,232,228,0.6)',
+              border: '1px solid rgba(235,231,225,1)',
               borderRadius: '12px',
               padding: '24px',
-              height: '1000px',
+              height: '620px',
               width: '100%'
             }}>
               <ReactFlow
@@ -7070,30 +6288,58 @@ for message in consumer:
 
           {showHandsOn && (
             <>
+              {/* Lab Tab Selector */}
+              <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
+                {[
+                  { key: 'blockchain', label: 'Lab 1: Blockchain Pipeline', color: '#4A7A56' },
+                  { key: 'streaming', label: 'Lab 2: Velocity Showdown', color: '#E8654A' }
+                ].map(({ key, label, color }) => (
+                  <button
+                    key={key}
+                    onClick={() => setActiveLabTab(key)}
+                    style={{
+                      padding: '10px 20px',
+                      borderRadius: '8px',
+                      border: `1.5px solid ${activeLabTab === key ? color : 'rgba(0,0,0,0.1)'}`,
+                      background: activeLabTab === key ? `${color}10` : 'transparent',
+                      color: activeLabTab === key ? color : 'var(--gray-500)',
+                      fontWeight: activeLabTab === key ? '600' : '400',
+                      fontSize: '14px',
+                      cursor: 'pointer',
+                      fontFamily: 'var(--font-sans)',
+                      transition: 'all 0.15s'
+                    }}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+
+              {activeLabTab === 'blockchain' && (
               <div
                 id="hands-on"
                 style={{
-                  background: 'rgba(15, 23, 42, 0.8)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  background: 'rgba(245,243,239,0.8)',
+
+                  border: '1px solid rgba(235,231,225,1)',
                   borderRadius: '12px',
                   padding: '24px',
                   marginBottom: '24px'
                 }}
               >
-                <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px', color: '#10b981' }}>
+                <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px', color: '#4A7A56' }}>
                   Hands-on Lab: Blockchain Data Ingestion Pipeline
                 </h3>
 
                 <div style={{ marginBottom: '24px' }}>
-                  <p style={{ color: '#94a3b8', fontSize: '16px', marginBottom: '12px' }}>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '16px', marginBottom: '12px' }}>
                     Build a real-time blockchain data pipeline that demonstrates big data architecture patterns through practical implementation.
                   </p>
                 </div>
 
                 <div style={{
-                  background: 'rgba(139, 92, 246, 0.1)',
-                  border: '1px solid rgba(139, 92, 246, 0.3)',
+                  background: 'rgba(122, 90, 158, 0.1)',
+                  border: '1px solid rgba(122, 90, 158, 0.3)',
                   borderRadius: '12px',
                   padding: '24px',
                   marginBottom: '24px',
@@ -7104,10 +6350,10 @@ for message in consumer:
                   </h4>
 
                   <div style={{ marginBottom: '20px' }}>
-                    <p style={{ color: '#cbd5e1', fontSize: '15px', marginBottom: '12px', lineHeight: '1.6' }}>
+                    <p style={{ color: 'var(--text-body)', fontSize: '15px', marginBottom: '12px', lineHeight: '1.6' }}>
                       {architectures.blockchain.overview.text}
                     </p>
-                    <p style={{ color: '#94a3b8', fontSize: '14px', fontStyle: 'italic', lineHeight: '1.6' }}>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '14px', fontStyle: 'italic', lineHeight: '1.6' }}>
                       {architectures.blockchain.overview.scenarioDescription}
                     </p>
                   </div>
@@ -7116,7 +6362,7 @@ for message in consumer:
                     <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '10px', color: '#c4b5fd' }}>
                       Use Cases in Production
                     </h5>
-                    <ul style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px' }}>
+                    <ul style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px' }}>
                       {architectures.blockchain.useCases.map((useCase, index) => (
                         <li key={index} style={{ marginBottom: '4px' }}>{useCase}</li>
                       ))}
@@ -7128,7 +6374,7 @@ for message in consumer:
                       <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '10px', color: '#c4b5fd' }}>
                         Advantages
                       </h5>
-                      <ul style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px' }}>
+                      <ul style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px' }}>
                         {architectures.blockchain.advantages.map((advantage, index) => (
                           <li key={index} style={{ marginBottom: '4px' }}>{advantage}</li>
                         ))}
@@ -7138,7 +6384,7 @@ for message in consumer:
                       <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '10px', color: '#c4b5fd' }}>
                         Challenges
                       </h5>
-                      <ul style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px' }}>
+                      <ul style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px' }}>
                         {architectures.blockchain.challenges.map((challenge, index) => (
                           <li key={index} style={{ marginBottom: '4px' }}>{challenge}</li>
                         ))}
@@ -7176,19 +6422,19 @@ for message in consumer:
                 {handsOnShowWarning && (
                   <div
                     style={{
-                      background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.15) 100%)',
-                      border: '2px solid rgba(245, 158, 11, 0.6)',
+                      background: 'linear-gradient(135deg, rgba(158, 120, 36, 0.2) 0%, rgba(217, 119, 6, 0.15) 100%)',
+                      border: '2px solid rgba(158, 120, 36, 0.6)',
                       borderRadius: '12px',
                       padding: '16px 24px',
                       marginBottom: '16px',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '12px',
-                      color: '#fbbf24',
+                      color: '#C8A84E',
                       fontSize: '14px',
                       fontWeight: '600',
-                      backdropFilter: 'blur(10px)',
-                      boxShadow: '0 0 20px rgba(245, 158, 11, 0.3)'
+                      
+                      boxShadow: '0 0 20px rgba(158, 120, 36, 0.3)'
                     }}
                   >
                     <Info size={20} />
@@ -7200,18 +6446,16 @@ for message in consumer:
                 )}
 
                 <div
-                  ref={handsOnDiagramRef}
                   style={{
-                    background: 'rgba(15, 23, 42, 0.8)',
-                    backdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(71, 85, 105, 0.3)',
+                    background: 'rgba(245,243,239,0.8)',
+                    border: '1px solid rgba(235,231,225,1)',
                     borderRadius: '12px',
                     marginBottom: '32px',
                     overflow: 'hidden',
                     position: 'relative'
                   }}
                 >
-                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '24px', paddingTop: '24px', color: '#10b981', textAlign: 'center' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '24px', paddingTop: '24px', color: '#4A7A56', textAlign: 'center' }}>
                     System Architecture
                   </h4>
                   {(() => {
@@ -7225,15 +6469,8 @@ for message in consumer:
                     const browser = arch.components.find(c => c.id === 'browser');
 
                     return (
-                      <div
-                        style={{
-                          transform: `scale(${handsOnScale})`,
-                          transformOrigin: 'top center',
-                          transition: 'transform 0.3s ease-out',
-                          padding: '0 20px 20px'
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px' }}>
+                      <div style={{ padding: '0 20px 20px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px', flexWrap: 'nowrap', maxWidth: '100%', transform: 'scale(0.78)', transformOrigin: 'top center' }}>
                         {/* Column 1: External APIs stacked */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '100px' }}>
                           <ComponentCard component={bitcoinApi} onClick={(comp) => setSelectedComponent(comp)} />
@@ -7252,8 +6489,8 @@ for message in consumer:
                           <ComponentCard component={solanaCollector} onClick={(comp) => setSelectedComponent(comp)} />
                         </div>
 
-                        {/* Two sources -> one target (merge into a single centered arrow to ClickHouse) */}
-                        <MergeToCenterArrow type="batch" />
+                        {/* Two sources → one right-pointing arrow to ClickHouse */}
+                        <HorizontalMergeArrow type="batch" />
 
                         {/* Column 3: ClickHouse centered */}
                         <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -7277,11 +6514,11 @@ for message in consumer:
                   })()}
                 </div>
 
-                <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
-                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#10b981' }}>
+                <div style={{ background: 'rgba(74, 122, 86, 0.1)', border: '1px solid rgba(74, 122, 86, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#4A7A56' }}>
                     What You'll Learn
                   </h4>
-                  <ul style={{ color: '#cbd5e1', fontSize: '14px', marginLeft: '20px', lineHeight: '1.8' }}>
+                  <ul style={{ color: 'var(--text-body)', fontSize: '14px', marginLeft: '20px', lineHeight: '1.8' }}>
                     <li>Design and implement real-time data ingestion pipelines</li>
                     <li>Work with multi-blockchain architectures (Bitcoin & Solana)</li>
                     <li>Use ClickHouse columnar database for analytical queries</li>
@@ -7292,38 +6529,38 @@ for message in consumer:
                   </ul>
                 </div>
 
-                <div style={{ background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
-                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#60a5fa' }}>
+                <div style={{ background: 'rgba(74, 122, 155, 0.1)', border: '1px solid rgba(74, 122, 155, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#4A7A9B' }}>
                     The 5Vs of Big Data in This Lab
                   </h4>
-                  <div style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.8' }}>
-                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#60a5fa' }}>Volume:</strong> Solana generates 20,000+ transactions per block, demonstrating massive data scale</p>
-                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#60a5fa' }}>Velocity:</strong> Real-time collection with Solana's ~400ms block times vs Bitcoin's ~10 minutes</p>
-                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#60a5fa' }}>Variety:</strong> Handle heterogeneous blockchain architectures (UTXO vs account-based models)</p>
-                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#60a5fa' }}>Veracity:</strong> Data validation through blockchain consensus mechanisms</p>
-                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#60a5fa' }}>Value:</strong> Extract insights on network congestion and adoption patterns</p>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.8' }}>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#4A7A9B' }}>Volume:</strong> Solana generates 20,000+ transactions per block, demonstrating massive data scale</p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#4A7A9B' }}>Velocity:</strong> Real-time collection with Solana's ~400ms block times vs Bitcoin's ~10 minutes</p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#4A7A9B' }}>Variety:</strong> Handle heterogeneous blockchain architectures (UTXO vs account-based models)</p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#4A7A9B' }}>Veracity:</strong> Data validation through blockchain consensus mechanisms</p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#4A7A9B' }}>Value:</strong> Extract insights on network congestion and adoption patterns</p>
                   </div>
                 </div>
 
-                <div style={{ background: 'rgba(139, 92, 246, 0.1)', border: '1px solid rgba(139, 92, 246, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                <div style={{ background: 'rgba(122, 90, 158, 0.1)', border: '1px solid rgba(122, 90, 158, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
                   <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#a78bfa' }}>
                     Prerequisites
                   </h4>
-                  <div style={{ color: '#cbd5e1', fontSize: '14px' }}>
-                    <p style={{ fontWeight: '600', marginBottom: '8px', color: '#e2e8f0' }}>Required:</p>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px' }}>
+                    <p style={{ fontWeight: '600', marginBottom: '8px', color: 'var(--text-body)' }}>Required:</p>
                     <ul style={{ marginLeft: '20px', marginBottom: '12px', lineHeight: '1.8' }}>
                       <li>Docker Desktop 20.10+</li>
                       <li>10GB free disk space minimum</li>
                       <li>Internet connectivity</li>
                       <li>Basic command-line knowledge</li>
                     </ul>
-                    <p style={{ fontWeight: '600', marginBottom: '8px', color: '#e2e8f0' }}>Recommended:</p>
+                    <p style={{ fontWeight: '600', marginBottom: '8px', color: 'var(--text-body)' }}>Recommended:</p>
                     <ul style={{ marginLeft: '20px', marginBottom: '12px', lineHeight: '1.8' }}>
                       <li>SQL knowledge (SELECT, WHERE, GROUP BY)</li>
                       <li>Basic REST API familiarity</li>
                       <li>8GB RAM minimum (16GB recommended)</li>
                     </ul>
-                    <p style={{ fontWeight: '600', marginBottom: '8px', color: '#e2e8f0' }}>Time Estimate:</p>
+                    <p style={{ fontWeight: '600', marginBottom: '8px', color: 'var(--text-body)' }}>Time Estimate:</p>
                     <ul style={{ marginLeft: '20px', lineHeight: '1.8' }}>
                       <li>Exercises 1-6: 1.5-2 hours</li>
                       <li>Exercises 7-9: 1-1.5 hours</li>
@@ -7332,41 +6569,41 @@ for message in consumer:
                   </div>
                 </div>
 
-                <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
-                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#f59e0b' }}>
+                <div style={{ background: 'rgba(158, 120, 36, 0.1)', border: '1px solid rgba(158, 120, 36, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#9E7824' }}>
                     Quick Start Guide
                   </h4>
-                  <div style={{ color: '#cbd5e1', fontSize: '14px' }}>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px' }}>
                     <ol style={{ marginLeft: '20px', lineHeight: '1.8' }}>
                       <li style={{ marginBottom: '8px' }}>
-                        <strong style={{ color: '#f59e0b' }}>Clone the repository:</strong>
-                        <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
+                        <strong style={{ color: '#9E7824' }}>Clone the repository:</strong>
+                        <pre style={{ background: 'rgba(0,0,0,0.06)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto', color: 'var(--near-black)' }}>
                           <code>git clone https://github.com/maruthiprithivi/big_data_architecture.git{'\n'}cd big_data_architecture</code>
                         </pre>
                       </li>
                       <li style={{ marginBottom: '8px' }}>
-                        <strong style={{ color: '#f59e0b' }}>Configure environment (optional):</strong>
-                        <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
+                        <strong style={{ color: '#9E7824' }}>Configure environment (optional):</strong>
+                        <pre style={{ background: 'rgba(0,0,0,0.06)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto', color: 'var(--near-black)' }}>
                           <code>cp .env.example .env</code>
                         </pre>
-                        <span style={{ fontSize: '13px', color: '#94a3b8' }}>Note: Default settings work for first-time users</span>
+                        <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Note: Default settings work for first-time users</span>
                       </li>
                       <li style={{ marginBottom: '8px' }}>
-                        <strong style={{ color: '#f59e0b' }}>Start services:</strong>
-                        <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
+                        <strong style={{ color: '#9E7824' }}>Start services:</strong>
+                        <pre style={{ background: 'rgba(0,0,0,0.06)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto', color: 'var(--near-black)' }}>
                           <code>./scripts/start.sh</code>
                         </pre>
-                        <span style={{ fontSize: '13px', color: '#94a3b8' }}>Initial setup: 15-20 minutes (Docker downloads), subsequent starts: 30-60 seconds</span>
+                        <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Initial setup: 15-20 minutes (Docker downloads), subsequent starts: 30-60 seconds</span>
                       </li>
                       <li style={{ marginBottom: '8px' }}>
-                        <strong style={{ color: '#f59e0b' }}>Access dashboard:</strong> Open{' '}
-                        <a href="http://localhost:3001" target="_blank" rel="noopener noreferrer" style={{ color: '#10b981', textDecoration: 'underline' }}>
+                        <strong style={{ color: '#9E7824' }}>Access dashboard:</strong> Open{' '}
+                        <a href="http://localhost:3001" target="_blank" rel="noopener noreferrer" style={{ color: '#4A7A56', textDecoration: 'underline' }}>
                           http://localhost:3001
                         </a> in your browser
                       </li>
                       <li>
-                        <strong style={{ color: '#f59e0b' }}>Shutdown:</strong>
-                        <pre style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto' }}>
+                        <strong style={{ color: '#9E7824' }}>Shutdown:</strong>
+                        <pre style={{ background: 'rgba(0,0,0,0.06)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto', color: 'var(--near-black)' }}>
                           <code>docker compose down     # Stop services{'\n'}docker compose down -v  # Remove all data</code>
                         </pre>
                       </li>
@@ -7378,7 +6615,7 @@ for message in consumer:
                   <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#14b8a6' }}>
                     Exercises Structure
                   </h4>
-                  <div style={{ color: '#cbd5e1', fontSize: '14px' }}>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px' }}>
                     <div style={{ marginBottom: '16px' }}>
                       <p style={{ fontWeight: '600', color: '#14b8a6', marginBottom: '8px' }}>Getting Started (Exercises 1-3)</p>
                       <ul style={{ marginLeft: '20px', lineHeight: '1.8' }}>
@@ -7418,10 +6655,10 @@ for message in consumer:
                   <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#ef4444' }}>
                     Common Issues & Troubleshooting
                   </h4>
-                  <div style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.8' }}>
-                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>Container startup failures:</strong> Check logs with <code style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '2px 6px', borderRadius: '3px' }}>docker compose logs [service]</code></p>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.8' }}>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>Container startup failures:</strong> Check logs with <code style={{ background: 'rgba(0,0,0,0.06)', padding: '2px 6px', borderRadius: '3px', color: 'var(--near-black)' }}>docker compose logs [service]</code></p>
                     <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>RPC connection errors:</strong> Public endpoints have rate limits. Reduce COLLECTION_INTERVAL_SECONDS or use dedicated providers</p>
-                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>Database connection issues:</strong> Restart collector after ClickHouse initialization: <code style={{ background: 'rgba(0, 0, 0, 0.3)', padding: '2px 6px', borderRadius: '3px' }}>docker compose restart collector</code></p>
+                    <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>Database connection issues:</strong> Restart collector after ClickHouse initialization: <code style={{ background: 'rgba(0,0,0,0.06)', padding: '2px 6px', borderRadius: '3px', color: 'var(--near-black)' }}>docker compose restart collector</code></p>
                     <p style={{ marginBottom: '8px' }}><strong style={{ color: '#ef4444' }}>Dashboard shows no data:</strong> Verify collection started via dashboard button, then check collector logs</p>
                   </div>
                 </div>
@@ -7430,14 +6667,14 @@ for message in consumer:
                   <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#6366f1' }}>
                     Additional Resources
                   </h4>
-                  <div style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.8' }}>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.8' }}>
                     <p style={{ marginBottom: '8px' }}>
                       <strong style={{ color: '#6366f1' }}>GitHub Repository:</strong>{' '}
                       <a
                         href="https://github.com/maruthiprithivi/big_data_architecture"
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: '#10b981', textDecoration: 'underline' }}
+                        style={{ color: '#4A7A56', textDecoration: 'underline' }}
                       >
                         maruthiprithivi/big_data_architecture
                       </a>
@@ -7448,7 +6685,7 @@ for message in consumer:
                         href="https://github.com/maruthiprithivi/big_data_architecture/blob/main/docs/EXERCISES.md"
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: '#10b981', textDecoration: 'underline' }}
+                        style={{ color: '#4A7A56', textDecoration: 'underline' }}
                       >
                         Complete exercise instructions
                       </a>
@@ -7459,7 +6696,7 @@ for message in consumer:
                         href="https://github.com/maruthiprithivi/big_data_architecture/blob/main/docs/SAMPLE_QUERIES.md"
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: '#10b981', textDecoration: 'underline' }}
+                        style={{ color: '#4A7A56', textDecoration: 'underline' }}
                       >
                         SQL query examples
                       </a>
@@ -7470,7 +6707,7 @@ for message in consumer:
                         href="https://github.com/maruthiprithivi/big_data_architecture/blob/main/docs/GLOSSARY.md"
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: '#10b981', textDecoration: 'underline' }}
+                        style={{ color: '#4A7A56', textDecoration: 'underline' }}
                       >
                         Blockchain terminology reference
                       </a>
@@ -7481,7 +6718,7 @@ for message in consumer:
                         href="http://localhost:8000/docs"
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: '#10b981', textDecoration: 'underline' }}
+                        style={{ color: '#4A7A56', textDecoration: 'underline' }}
                       >
                         Interactive Swagger UI at localhost:8000/docs
                       </a>
@@ -7489,6 +6726,325 @@ for message in consumer:
                   </div>
                 </div>
               </div>
+              )}
+
+              {activeLabTab === 'streaming' && (
+              <div
+                id="hands-on-streaming"
+                style={{
+                  background: 'rgba(245,243,239,0.8)',
+                  border: '1px solid rgba(235,231,225,1)',
+                  borderRadius: '12px',
+                  padding: '24px',
+                  marginBottom: '24px'
+                }}
+              >
+                <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px', color: '#E8654A' }}>
+                  Hands-on Lab: Velocity Showdown — Streaming Protocol Comparison
+                </h3>
+
+                <div style={{ marginBottom: '24px' }}>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '16px', marginBottom: '12px' }}>
+                    Compare three streaming protocols side-by-side: HTTP polling, WebSocket, and Server-Sent Events — all feeding live data through Kafka into ClickHouse.
+                  </p>
+                </div>
+
+                <div style={{
+                  background: 'rgba(232, 101, 74, 0.08)',
+                  border: '1px solid rgba(232, 101, 74, 0.25)',
+                  borderRadius: '12px',
+                  padding: '24px',
+                  marginBottom: '24px'
+                }}>
+                  <h4 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '16px', color: '#E8654A' }}>
+                    Understanding Streaming Velocity
+                  </h4>
+                  <div style={{ marginBottom: '20px' }}>
+                    <p style={{ color: 'var(--text-body)', fontSize: '15px', marginBottom: '12px', lineHeight: '1.6' }}>
+                      {architectures.velocityLab.overview.text}
+                    </p>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '14px', fontStyle: 'italic', lineHeight: '1.6' }}>
+                      {architectures.velocityLab.overview.scenarioDescription}
+                    </p>
+                  </div>
+
+                  <div style={{ marginBottom: '20px' }}>
+                    <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '10px', color: '#E8654A' }}>
+                      Use Cases
+                    </h5>
+                    <ul style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.8', paddingLeft: '20px' }}>
+                      {architectures.velocityLab.useCases.map((uc, i) => (
+                        <li key={i}>{uc}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                    <div>
+                      <h5 style={{ fontSize: '14px', fontWeight: '600', marginBottom: '8px', color: '#4A7A56' }}>Advantages</h5>
+                      <ul style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.7', paddingLeft: '16px' }}>
+                        {architectures.velocityLab.advantages.map((a, i) => <li key={i}>{a}</li>)}
+                      </ul>
+                    </div>
+                    <div>
+                      <h5 style={{ fontSize: '14px', fontWeight: '600', marginBottom: '8px', color: '#E8654A' }}>Challenges</h5>
+                      <ul style={{ color: 'var(--text-body)', fontSize: '13px', lineHeight: '1.7', paddingLeft: '16px' }}>
+                        {architectures.velocityLab.challenges.map((c, i) => <li key={i}>{c}</li>)}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* System Architecture Diagram */}
+                <div
+                  style={{
+                    background: 'rgba(245,243,239,0.8)',
+                    border: '1px solid rgba(235,231,225,1)',
+                    borderRadius: '12px',
+                    marginBottom: '32px',
+                    overflow: 'hidden',
+                    position: 'relative'
+                  }}
+                >
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '24px', paddingTop: '24px', color: '#E8654A', textAlign: 'center' }}>
+                    System Architecture
+                  </h4>
+                  <div style={{ padding: '0 20px 20px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px', flexWrap: 'nowrap', maxWidth: '100%', transform: 'scale(0.68)', transformOrigin: 'top center' }}>
+                      {/* Column 1: Three sources stacked */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {['solana-src', 'bluesky-src', 'wikipedia-src'].map(id => {
+                          const comp = architectures.velocityLab.components.find(c => c.id === id);
+                          return <ComponentCard key={id} component={comp} onClick={setSelectedComponent} />;
+                        })}
+                      </div>
+
+                      {/* 3-to-1 merge arrow: three sources converge to single point */}
+                      {(() => {
+                        const color = connectionColors['stream'] || '#2C2A28';
+                        const cardH = 72, gap = 8;
+                        const totalH = 3 * cardH + 2 * gap;   // 232
+                        const topY = cardH / 2;                // 36
+                        const midY = cardH + gap + cardH / 2;  // 116
+                        const botY = totalH - cardH / 2;       // 196
+                        const W = 80;
+                        const markerId = 'arr-tri-merge';
+                        const topPath = `M 0 ${topY} C ${W*0.5} ${topY}, ${W*0.8} ${midY}, ${W} ${midY}`;
+                        const midPath = `M 0 ${midY} L ${W} ${midY}`;
+                        const botPath = `M 0 ${botY} C ${W*0.5} ${botY}, ${W*0.8} ${midY}, ${W} ${midY}`;
+                        return (
+                          <div style={{ flexShrink: 0, width: W+'px', height: totalH+'px' }}>
+                            <svg width={W} height={totalH} style={{ overflow: 'visible', display: 'block' }}>
+                              <defs>
+                                <marker id={markerId} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                                  <polygon points="0,0 6,3 0,6" fill={color} />
+                                </marker>
+                              </defs>
+                              <path d={topPath} fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="5,4" strokeLinecap="round" />
+                              <path d={midPath} fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="5,4" strokeLinecap="round" />
+                              <path d={botPath} fill="none" stroke={color} strokeWidth="1.5" strokeDasharray="5,4" strokeLinecap="round"
+                                markerEnd={`url(#${markerId})`} />
+                            </svg>
+                          </div>
+                        );
+                      })()}
+
+                      {/* Collector (centered with middle source) */}
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <ComponentCard component={architectures.velocityLab.components.find(c => c.id === 'collector')} onClick={setSelectedComponent} />
+                      </div>
+
+                      <ConnectionArrow type="stream" />
+                      <ComponentCard component={architectures.velocityLab.components.find(c => c.id === 'kafka')} onClick={setSelectedComponent} />
+                      <ConnectionArrow type="stream" />
+                      <ComponentCard component={architectures.velocityLab.components.find(c => c.id === 'consumer')} onClick={setSelectedComponent} />
+                      <ConnectionArrow type="batch" />
+                      <ComponentCard component={architectures.velocityLab.components.find(c => c.id === 'clickhouse-stream')} onClick={setSelectedComponent} />
+                      <ConnectionArrow type="query" />
+                      <ComponentCard component={architectures.velocityLab.components.find(c => c.id === 'dashboard-stream')} onClick={setSelectedComponent} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Services Table */}
+                <div style={{ background: 'rgba(74, 95, 227, 0.08)', border: '1px solid rgba(74, 95, 227, 0.2)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#4A5FE3' }}>
+                    Service Endpoints
+                  </h4>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
+                    {[
+                      { name: 'Dashboard', port: ':3001', desc: 'Live velocity dashboard' },
+                      { name: 'Kafka UI', port: ':8080', desc: 'Browse topics & lag' },
+                      { name: 'ClickHouse', port: ':8123', desc: 'SQL query interface' },
+                      { name: 'Collector API', port: ':8000', desc: 'Swagger UI at /docs' }
+                    ].map(({ name, port, desc }) => (
+                      <div key={name} style={{ background: 'rgba(255,255,255,0.6)', borderRadius: '6px', padding: '10px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                        <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--near-black)' }}>{name}</div>
+                        <div style={{ fontSize: '12px', fontWeight: '500', color: '#4A5FE3', fontFamily: 'var(--font-mono)' }}>{port}</div>
+                        <div style={{ fontSize: '11px', color: 'var(--gray-500)', marginTop: '2px' }}>{desc}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* What You'll Learn */}
+                <div style={{ background: 'rgba(74, 122, 86, 0.1)', border: '1px solid rgba(74, 122, 86, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#4A7A56' }}>
+                    What You'll Learn
+                  </h4>
+                  <ul style={{ color: 'var(--text-body)', fontSize: '14px', marginLeft: '20px', lineHeight: '1.8' }}>
+                    <li>Compare HTTP polling, WebSocket, and Server-Sent Events in production</li>
+                    <li>Understand Kafka producer/consumer patterns with KRaft (no ZooKeeper)</li>
+                    <li>Observe consumer lag and partition behavior in Kafka UI</li>
+                    <li>Query live streaming data with SQL in ClickHouse</li>
+                    <li>Analyze event velocity differences across data sources</li>
+                    <li>Experiment with stopping/starting individual sources</li>
+                  </ul>
+                </div>
+
+                {/* Streaming Protocols */}
+                <div style={{ background: 'rgba(74, 122, 155, 0.1)', border: '1px solid rgba(74, 122, 155, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#4A7A9B' }}>
+                    Streaming Protocols Compared
+                  </h4>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+                    {[
+                      { name: 'HTTP Polling (Solana)', rate: '~2.5 events/sec', desc: 'Client repeatedly requests new data. Simple but adds latency equal to poll interval. Used when servers don\'t support push.', color: '#4A5FE3' },
+                      { name: 'WebSocket (Bluesky)', rate: '~20-30 events/sec', desc: 'Full-duplex persistent connection. Lowest latency, bidirectional. Requires connection management and reconnection logic.', color: '#E8654A' },
+                      { name: 'SSE (Wikipedia)', rate: '~0.3 events/sec', desc: 'Server pushes events over HTTP. Simpler than WebSocket (unidirectional), auto-reconnects. Good for event streams and notifications.', color: '#2A9D99' }
+                    ].map(({ name, rate, desc, color }) => (
+                      <div key={name} style={{ background: 'rgba(255,255,255,0.6)', borderRadius: '8px', padding: '14px', border: `1px solid ${color}30` }}>
+                        <div style={{ fontSize: '13px', fontWeight: '700', color, marginBottom: '4px' }}>{name}</div>
+                        <div style={{ fontSize: '12px', fontWeight: '600', color: 'var(--near-black)', marginBottom: '6px', fontFamily: 'var(--font-mono)' }}>{rate}</div>
+                        <div style={{ fontSize: '12px', color: 'var(--text-body)', lineHeight: '1.5' }}>{desc}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Prerequisites */}
+                <div style={{ background: 'rgba(122, 90, 158, 0.1)', border: '1px solid rgba(122, 90, 158, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#a78bfa' }}>
+                    Prerequisites
+                  </h4>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px' }}>
+                    <p style={{ fontWeight: '600', marginBottom: '8px' }}>Required:</p>
+                    <ul style={{ marginLeft: '20px', marginBottom: '12px', lineHeight: '1.8' }}>
+                      <li>Docker Desktop 20.10+</li>
+                      <li>10GB free disk space minimum</li>
+                      <li>Internet connectivity (public APIs, no keys needed)</li>
+                    </ul>
+                    <p style={{ fontWeight: '600', marginBottom: '8px' }}>Recommended:</p>
+                    <ul style={{ marginLeft: '20px', lineHeight: '1.8' }}>
+                      <li>SQL knowledge (SELECT, WHERE, GROUP BY)</li>
+                      <li>8GB RAM minimum (16GB recommended for all 6 services)</li>
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Quick Start */}
+                <div style={{ background: 'rgba(158, 120, 36, 0.1)', border: '1px solid rgba(158, 120, 36, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#9E7824' }}>
+                    Quick Start Guide
+                  </h4>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px' }}>
+                    <ol style={{ marginLeft: '20px', lineHeight: '1.8' }}>
+                      <li style={{ marginBottom: '8px' }}>
+                        <strong style={{ color: '#9E7824' }}>Clone the repository:</strong>
+                        <pre style={{ background: 'rgba(0,0,0,0.06)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto', color: 'var(--near-black)' }}>
+                          <code>git clone https://github.com/maruthiprithivi/big_data_architecture_streaming.git{'\n'}cd big_data_architecture_streaming</code>
+                        </pre>
+                      </li>
+                      <li style={{ marginBottom: '8px' }}>
+                        <strong style={{ color: '#9E7824' }}>Start all services:</strong>
+                        <pre style={{ background: 'rgba(0,0,0,0.06)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto', color: 'var(--near-black)' }}>
+                          <code>docker compose up --build -d</code>
+                        </pre>
+                        <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>First run ~3-5 minutes (downloads), subsequent starts ~30 seconds</span>
+                      </li>
+                      <li style={{ marginBottom: '8px' }}>
+                        <strong style={{ color: '#9E7824' }}>Open the dashboard:</strong> <a href="http://localhost:3001" target="_blank" rel="noopener noreferrer" style={{ color: '#E8654A', textDecoration: 'underline' }}>http://localhost:3001</a>
+                      </li>
+                      <li style={{ marginBottom: '8px' }}>
+                        <strong style={{ color: '#9E7824' }}>Explore Kafka UI:</strong> <a href="http://localhost:8080" target="_blank" rel="noopener noreferrer" style={{ color: '#E8654A', textDecoration: 'underline' }}>http://localhost:8080</a> — browse topics, partitions, consumer lag
+                      </li>
+                      <li>
+                        <strong style={{ color: '#9E7824' }}>Cleanup:</strong>
+                        <pre style={{ background: 'rgba(0,0,0,0.06)', padding: '8px', borderRadius: '4px', marginTop: '4px', overflow: 'auto', color: 'var(--near-black)' }}>
+                          <code>docker compose down     # Stop services{'\n'}docker compose down -v  # Remove all data</code>
+                        </pre>
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+
+                {/* Student Experiments */}
+                <div style={{ background: 'rgba(20, 184, 166, 0.1)', border: '1px solid rgba(20, 184, 166, 0.3)', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#14b8a6' }}>
+                    Student Experiments
+                  </h4>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px' }}>
+                    <div style={{ marginBottom: '16px' }}>
+                      <p style={{ fontWeight: '600', color: '#14b8a6', marginBottom: '8px' }}>Protocol Comparison</p>
+                      <ul style={{ marginLeft: '20px', lineHeight: '1.8' }}>
+                        <li>Compare event rates: Bluesky (~30/s) vs Solana (~2.5/s) vs Wikipedia (~0.3/s)</li>
+                        <li>Observe latency differences between polling, WebSocket, and SSE</li>
+                        <li>Stop individual sources and watch velocity changes on the dashboard</li>
+                      </ul>
+                    </div>
+                    <div style={{ marginBottom: '16px' }}>
+                      <p style={{ fontWeight: '600', color: '#14b8a6', marginBottom: '8px' }}>Kafka Exploration</p>
+                      <ul style={{ marginLeft: '20px', lineHeight: '1.8' }}>
+                        <li>Browse topics and partitions in Kafka UI</li>
+                        <li>Observe consumer lag when the consumer is slower than producers</li>
+                        <li>Examine message schemas across different source topics</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <p style={{ fontWeight: '600', color: '#14b8a6', marginBottom: '8px' }}>SQL Analysis (Query Lab)</p>
+                      <ul style={{ marginLeft: '20px', lineHeight: '1.8' }}>
+                        <li>Query the unified <code style={{ background: 'rgba(0,0,0,0.06)', padding: '2px 6px', borderRadius: '3px', color: 'var(--near-black)' }}>events</code> table in ClickHouse</li>
+                        <li>Compare event rates by source using GROUP BY</li>
+                        <li>Analyze event schemas via the metadata JSON column</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Additional Resources */}
+                <div style={{ background: 'rgba(99, 102, 241, 0.1)', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: '8px', padding: '16px' }}>
+                  <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#6366f1' }}>
+                    Additional Resources
+                  </h4>
+                  <div style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.8' }}>
+                    <p style={{ marginBottom: '8px' }}>
+                      <strong style={{ color: '#6366f1' }}>GitHub Repository:</strong>{' '}
+                      <a href="https://github.com/maruthiprithivi/big_data_architecture_streaming" target="_blank" rel="noopener noreferrer" style={{ color: '#E8654A', textDecoration: 'underline' }}>
+                        maruthiprithivi/big_data_architecture_streaming
+                      </a>
+                    </p>
+                    <p style={{ marginBottom: '8px' }}>
+                      <strong style={{ color: '#6366f1' }}>Kafka UI:</strong>{' '}
+                      <a href="http://localhost:8080" target="_blank" rel="noopener noreferrer" style={{ color: '#E8654A', textDecoration: 'underline' }}>
+                        Browse topics, partitions, and consumer groups
+                      </a>
+                    </p>
+                    <p style={{ marginBottom: '8px' }}>
+                      <strong style={{ color: '#6366f1' }}>Collector API Docs:</strong>{' '}
+                      <a href="http://localhost:8000/docs" target="_blank" rel="noopener noreferrer" style={{ color: '#E8654A', textDecoration: 'underline' }}>
+                        Interactive Swagger UI
+                      </a>
+                    </p>
+                    <p style={{ marginBottom: '8px' }}>
+                      <strong style={{ color: '#6366f1' }}>ClickHouse SQL:</strong>{' '}
+                      <a href="http://localhost:8123" target="_blank" rel="noopener noreferrer" style={{ color: '#E8654A', textDecoration: 'underline' }}>
+                        Query interface at localhost:8123
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              )}
             </>
           )}
 
@@ -7503,19 +7059,19 @@ for message in consumer:
             >
               <div
                 style={{
-                  background: 'rgba(15, 23, 42, 0.8)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  background: 'rgba(245,243,239,0.8)',
+                  
+                  border: '1px solid rgba(235,231,225,1)',
                   borderRadius: '12px',
                   padding: '32px',
                   marginBottom: '24px'
                 }}
               >
                 <div style={{ marginBottom: '32px' }}>
-                  <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '12px', color: '#ec4899' }}>
+                  <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '12px', color: '#9E5A3C' }}>
                     Real-World Big Data Case Studies
                   </h2>
-                  <p style={{ color: '#94a3b8', fontSize: '16px', lineHeight: '1.7', maxWidth: '900px' }}>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '16px', lineHeight: '1.7', maxWidth: '900px' }}>
                     Learn how industry leaders like Netflix, Uber, Airbnb, Google, and more have built and scaled their big data architectures.
                     These case studies provide insights into real production systems processing billions of events daily,
                     offering valuable lessons in architecture patterns, technology choices, and operational best practices.
@@ -7531,7 +7087,7 @@ for message in consumer:
                     <div
                       key={study.id}
                       style={{
-                        background: 'rgba(30, 41, 59, 0.6)',
+                        background: 'rgba(235,232,228,0.6)',
                         border: `2px solid ${study.color}33`,
                         borderRadius: '16px',
                         padding: '24px',
@@ -7551,7 +7107,6 @@ for message in consumer:
                       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                           <div style={{
-                            fontSize: '32px',
                             width: '56px',
                             height: '56px',
                             display: 'flex',
@@ -7561,13 +7116,13 @@ for message in consumer:
                             borderRadius: '12px',
                             border: `1px solid ${study.color}44`
                           }}>
-                            {study.logo}
+                            <study.logo size={28} color={study.color} />
                           </div>
                           <div>
-                            <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#ffffff', marginBottom: '2px' }}>
+                            <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '2px' }}>
                               {study.company}
                             </h3>
-                            <span style={{ fontSize: '12px', color: '#94a3b8' }}>{study.industry}</span>
+                            <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{study.industry}</span>
                           </div>
                         </div>
                         <span style={{
@@ -7585,7 +7140,7 @@ for message in consumer:
                       </div>
 
                       {/* Title & Subtitle */}
-                      <h4 style={{ fontSize: '18px', fontWeight: '600', color: '#e2e8f0', marginBottom: '4px' }}>
+                      <h4 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text-body)', marginBottom: '4px' }}>
                         {study.title}
                       </h4>
                       <p style={{ fontSize: '14px', color: study.color, marginBottom: '16px', fontWeight: '500' }}>
@@ -7605,37 +7160,37 @@ for message in consumer:
                         {study.keyMetrics.map((metric, idx) => (
                           <div key={idx} style={{ textAlign: 'center' }}>
                             <div style={{ fontSize: '18px', fontWeight: '700', color: study.color }}>{metric.value}</div>
-                            <div style={{ fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{metric.label}</div>
+                            <div style={{ fontSize: '10px', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{metric.label}</div>
                           </div>
                         ))}
                       </div>
 
                       {/* Challenge */}
                       <div style={{ marginBottom: '16px' }}>
-                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#fbbf24', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span style={{ fontSize: '16px' }}>🎯</span> Challenge
+                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#C8A84E', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <Target size={14} /> Challenge
                         </h5>
-                        <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                        <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                           {study.challenge}
                         </p>
                       </div>
 
                       {/* Solution */}
                       <div style={{ marginBottom: '16px' }}>
-                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#10b981', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span style={{ fontSize: '16px' }}>💡</span> Solution
+                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#4A7A56', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <Lightbulb size={14} /> Solution
                         </h5>
-                        <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                        <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                           {study.solution}
                         </p>
                       </div>
 
                       {/* Implementation Details */}
                       <div style={{ marginBottom: '16px' }}>
-                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#60a5fa', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span style={{ fontSize: '16px' }}>🔧</span> Implementation
+                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#4A7A9B', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <Wrench size={14} /> Implementation
                         </h5>
-                        <ul style={{ fontSize: '12px', color: '#94a3b8', lineHeight: '1.8', paddingLeft: '16px', margin: 0 }}>
+                        <ul style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.8', paddingLeft: '16px', margin: 0 }}>
                           {study.implementation.map((item, idx) => (
                             <li key={idx} style={{ marginBottom: '4px' }}>{item}</li>
                           ))}
@@ -7645,9 +7200,9 @@ for message in consumer:
                       {/* Key Learnings */}
                       <div style={{ marginBottom: '16px' }}>
                         <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#a78bfa', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span style={{ fontSize: '16px' }}>📚</span> Key Learnings
+                          <BookOpen size={14} /> Key Learnings
                         </h5>
-                        <ul style={{ fontSize: '12px', color: '#94a3b8', lineHeight: '1.8', paddingLeft: '16px', margin: 0 }}>
+                        <ul style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.8', paddingLeft: '16px', margin: 0 }}>
                           {study.keyLearnings.map((learning, idx) => (
                             <li key={idx} style={{ marginBottom: '4px' }}>{learning}</li>
                           ))}
@@ -7657,7 +7212,7 @@ for message in consumer:
                       {/* Technologies */}
                       <div style={{ marginBottom: '16px' }}>
                         <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#f472b6', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span style={{ fontSize: '16px' }}>🛠️</span> Technologies
+                          <Settings2 size={14} /> Technologies
                         </h5>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                           {study.technologies.map((tech, idx) => {
@@ -7667,9 +7222,9 @@ for message in consumer:
                               borderRadius: '6px',
                               fontSize: '11px',
                               fontWeight: '500',
-                              background: 'rgba(59, 130, 246, 0.15)',
-                              color: '#60a5fa',
-                              border: '1px solid rgba(59, 130, 246, 0.3)',
+                              background: 'rgba(74, 122, 155, 0.15)',
+                              color: '#4A7A9B',
+                              border: '1px solid rgba(74, 122, 155, 0.3)',
                               textDecoration: 'none',
                               transition: 'all 0.2s'
                             };
@@ -7681,11 +7236,11 @@ for message in consumer:
                                 rel="noopener noreferrer"
                                 style={techStyle}
                                 onMouseEnter={(e) => {
-                                  e.currentTarget.style.background = 'rgba(59, 130, 246, 0.3)';
+                                  e.currentTarget.style.background = 'rgba(74, 122, 155, 0.3)';
                                   e.currentTarget.style.transform = 'translateY(-1px)';
                                 }}
                                 onMouseLeave={(e) => {
-                                  e.currentTarget.style.background = 'rgba(59, 130, 246, 0.15)';
+                                  e.currentTarget.style.background = 'var(--bg-hover)';
                                   e.currentTarget.style.transform = 'translateY(0)';
                                 }}
                               >
@@ -7700,8 +7255,8 @@ for message in consumer:
 
                       {/* References */}
                       <div>
-                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: '#94a3b8', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span style={{ fontSize: '16px' }}>🔗</span> References
+                        <h5 style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <Link size={14} /> References
                         </h5>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                           {study.references.map((ref, idx) => (
@@ -7712,15 +7267,15 @@ for message in consumer:
                               rel="noopener noreferrer"
                               style={{
                                 fontSize: '12px',
-                                color: '#60a5fa',
+                                color: '#4A7A9B',
                                 textDecoration: 'none',
                                 transition: 'color 0.2s',
                                 display: 'inline-flex',
                                 alignItems: 'center',
                                 gap: '4px'
                               }}
-                              onMouseEnter={(e) => e.currentTarget.style.color = '#93c5fd'}
-                              onMouseLeave={(e) => e.currentTarget.style.color = '#60a5fa'}
+                              onMouseEnter={(e) => e.currentTarget.style.color = '#8AAACE'}
+                              onMouseLeave={(e) => e.currentTarget.style.color = '#4A7A9B'}
                             >
                               <ChevronRight size={12} />
                               {ref.title}
@@ -7736,70 +7291,70 @@ for message in consumer:
                 <div style={{
                   marginTop: '40px',
                   padding: '32px',
-                  background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)',
-                  border: '1px solid rgba(236, 72, 153, 0.3)',
+                  background: 'linear-gradient(135deg, rgba(158, 90, 60, 0.1) 0%, rgba(122, 90, 158, 0.1) 100%)',
+                  border: '1px solid rgba(158, 90, 60, 0.3)',
                   borderRadius: '16px'
                 }}>
-                  <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px', color: '#ec4899' }}>
+                  <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px', color: '#9E5A3C' }}>
                     Common Patterns Across Case Studies
                   </h3>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-                    <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
-                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#f59e0b', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span>🔄</span> Event-Driven Architecture
+                    <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
+                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#9E7824', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <RefreshCw size={15} /> Event-Driven Architecture
                       </h4>
-                      <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                      <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                         Nearly all case studies leverage Apache Kafka as a central event backbone. Event-driven patterns enable loose coupling,
                         real-time processing, and replay capabilities for reprocessing historical data.
                       </p>
                     </div>
 
-                    <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
-                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#10b981', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span>⚡</span> Hybrid Batch + Stream
+                    <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
+                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#4A7A56', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Zap size={15} /> Hybrid Batch + Stream
                       </h4>
-                      <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                      <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                         Most companies combine batch processing (Spark) for ML training and historical analysis with stream processing (Flink/Kafka Streams)
                         for real-time features, following Lambda or Kappa architecture patterns.
                       </p>
                     </div>
 
-                    <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
-                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#60a5fa', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span>🗄️</span> Separation of Storage & Compute
+                    <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
+                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#4A7A9B', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Database size={15} /> Separation of Storage & Compute
                       </h4>
-                      <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                      <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                         Cloud data lakes (S3, GCS, ADLS) separate storage from compute, enabling independent scaling, cost optimization,
                         and flexibility in choosing processing engines for different workloads.
                       </p>
                     </div>
 
-                    <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+                    <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
                       <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#a78bfa', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span>🤖</span> ML-Integrated Pipelines
+                        <Bot size={15} /> ML-Integrated Pipelines
                       </h4>
-                      <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                      <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                         Data pipelines are designed with ML in mind: feature stores bridge batch training and real-time inference,
                         while experimentation platforms enable rapid iteration on models and algorithms.
                       </p>
                     </div>
 
-                    <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
-                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#ec4899', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span>📊</span> Real-Time OLAP
+                    <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
+                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#9E5A3C', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <BarChart2 size={15} /> Real-Time OLAP
                       </h4>
-                      <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                      <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                         Apache Druid, Pinot, and ClickHouse appear frequently for real-time analytics, providing sub-second query latency
                         on streaming data for dashboards and user-facing features.
                       </p>
                     </div>
 
-                    <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
-                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#fbbf24', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span>🔒</span> Data Governance at Scale
+                    <div style={{ background: 'rgba(235,232,228,0.6)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(235,231,225,1)' }}>
+                      <h4 style={{ fontSize: '16px', fontWeight: '600', color: '#C8A84E', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Shield size={15} /> Data Governance at Scale
                       </h4>
-                      <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}>
+                      <p style={{ fontSize: '13px', color: 'var(--text-body)', lineHeight: '1.6' }}>
                         As data volumes grow, governance becomes critical. Companies invest in data catalogs, schema registries,
                         data contracts, and access controls to maintain data quality and compliance.
                       </p>
@@ -7817,9 +7372,9 @@ for message in consumer:
               style={{ animation: 'fadeInScale 0.3s ease-out forwards' }}
             >
               <div style={{
-                background: 'rgba(15, 23, 42, 0.8)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(71, 85, 105, 0.3)',
+                background: 'rgba(245,243,239,0.8)',
+                
+                border: '1px solid rgba(235,231,225,1)',
                 borderRadius: '12px',
                 padding: '32px',
                 marginBottom: '24px'
@@ -7827,22 +7382,22 @@ for message in consumer:
                 {/* Header */}
                 <div style={{ textAlign: 'center', marginBottom: '32px' }}>
                   <h2 style={{ fontSize: '28px', fontWeight: '800', marginBottom: '8px' }}>
-                    <span style={{ color: '#ec4899' }}>MapReduce</span>
-                    <span style={{ color: '#64748b', margin: '0 16px' }}>vs</span>
-                    <span style={{ color: '#f59e0b' }}>Apache Spark</span>
+                    <span style={{ color: '#9E5A3C' }}>MapReduce</span>
+                    <span style={{ color: 'var(--text-muted)', margin: '0 16px' }}>vs</span>
+                    <span style={{ color: '#9E7824' }}>Apache Spark</span>
                   </h2>
-                  <p style={{ color: '#94a3b8', fontSize: '14px' }}>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
                     The Distributed Workhorse vs The Clustered Speedster — understanding the nuance
                   </p>
                 </div>
 
                 {/* Distributed vs Clustered: The Nuance */}
                 <div style={{
-                  background: 'rgba(15, 23, 42, 0.6)',
-                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  background: 'var(--white)',
+                  border: '1px solid rgba(0,0,0,0.1)',
                   borderRadius: '16px', padding: '28px', marginBottom: '28px'
                 }}>
-                  <h3 style={{ color: '#e2e8f0', fontSize: '17px', fontWeight: '700', marginBottom: '20px', textAlign: 'center' }}>
+                  <h3 style={{ color: 'var(--near-black)', fontSize: '17px', fontWeight: '700', marginBottom: '20px', textAlign: 'center' }}>
                     Distributed vs. Clustered Computing: The Nuance
                   </h3>
 
@@ -7852,39 +7407,37 @@ for message in consumer:
                   }}>
                     {/* Distributed = the umbrella */}
                     <div style={{
-                      background: 'rgba(139, 92, 246, 0.1)',
-                      border: '2px solid rgba(139, 92, 246, 0.4)',
+                      background: '#f3f0ff',
+                      border: '2px solid #7A5A9E',
                       borderRadius: '16px', padding: '20px', width: '100%', position: 'relative'
                     }}>
                       <div style={{
                         position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)',
-                        background: 'rgba(139, 92, 246, 0.3)', border: '1px solid #8b5cf6',
-                        borderRadius: '20px', padding: '4px 16px',
-                        fontSize: '11px', fontWeight: '700', color: '#c4b5fd',
+                        background: '#7A5A9E', borderRadius: '20px', padding: '4px 16px',
+                        fontSize: '11px', fontWeight: '700', color: '#ffffff',
                         textTransform: 'uppercase', letterSpacing: '1.5px', whiteSpace: 'nowrap'
                       }}>
                         Distributed Computing — The Broad Umbrella
                       </div>
-                      <p style={{ color: '#c4b5fd', fontSize: '13px', textAlign: 'center', lineHeight: '1.7', marginTop: '8px' }}>
+                      <p style={{ color: 'var(--near-black)', fontSize: '13px', textAlign: 'center', lineHeight: '1.7', marginTop: '8px' }}>
                         Any system where components on <strong>networked computers</strong> communicate and coordinate by <strong>passing messages</strong>.
                       </p>
 
                       {/* Clustered = a subset inside */}
                       <div style={{
-                        background: 'rgba(6, 182, 212, 0.1)',
-                        border: '2px solid rgba(6, 182, 212, 0.4)',
+                        background: '#e8f7f7',
+                        border: '2px solid #2A9D99',
                         borderRadius: '12px', padding: '16px', marginTop: '16px', position: 'relative'
                       }}>
                         <div style={{
                           position: 'absolute', top: '-10px', left: '50%', transform: 'translateX(-50%)',
-                          background: 'rgba(6, 182, 212, 0.3)', border: '1px solid #06b6d4',
-                          borderRadius: '20px', padding: '3px 14px',
-                          fontSize: '10px', fontWeight: '700', color: '#67e8f9',
+                          background: '#2A9D99', borderRadius: '20px', padding: '3px 14px',
+                          fontSize: '10px', fontWeight: '700', color: '#ffffff',
                           textTransform: 'uppercase', letterSpacing: '1.5px', whiteSpace: 'nowrap'
                         }}>
                           Clustered Computing — A Specific Type
                         </div>
-                        <p style={{ color: '#67e8f9', fontSize: '13px', textAlign: 'center', lineHeight: '1.7', marginTop: '4px' }}>
+                        <p style={{ color: 'var(--near-black)', fontSize: '13px', textAlign: 'center', lineHeight: '1.7', marginTop: '4px' }}>
                           A set of connected nodes working <strong>so closely together</strong> that they can be viewed as a <strong>single system</strong>.
                         </p>
 
@@ -7894,45 +7447,43 @@ for message in consumer:
                         }}>
                           {/* MapReduce */}
                           <div style={{
-                            background: 'rgba(236, 72, 153, 0.1)',
-                            border: '1px solid rgba(236, 72, 153, 0.3)',
+                            background: '#E8654A',
                             borderRadius: '10px', padding: '14px', textAlign: 'center'
                           }}>
-                            <div style={{ color: '#ec4899', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
+                            <div style={{ color: '#ffffff', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
                               MapReduce
                             </div>
                             <div style={{
-                              background: 'rgba(236, 72, 153, 0.15)', borderRadius: '6px',
+                              background: 'rgba(255,255,255,0.25)', borderRadius: '6px',
                               padding: '4px 10px', display: 'inline-block', marginBottom: '8px',
-                              fontSize: '10px', fontWeight: '700', color: '#f9a8d4',
+                              fontSize: '10px', fontWeight: '700', color: '#ffffff',
                               textTransform: 'uppercase', letterSpacing: '1px'
                             }}>
                               Disk-Centric
                             </div>
-                            <p style={{ color: '#cbd5e1', fontSize: '11px', lineHeight: '1.6' }}>
-                              Runs on a Hadoop cluster, but <em>feels</em> more "distributed" — it breaks jobs into tiny pieces, sends them out, <strong>writes results to disk</strong>, and repeats. A literal distribution of a massive batch job across a vast sea of commodity hardware.
+                            <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '11px', lineHeight: '1.6' }}>
+                              Runs on a Hadoop cluster, but <em>feels</em> more "distributed" — it breaks jobs into tiny pieces, sends them out, <strong>writes results to disk</strong>, and repeats.
                             </p>
                           </div>
 
                           {/* Spark */}
                           <div style={{
-                            background: 'rgba(245, 158, 11, 0.1)',
-                            border: '1px solid rgba(245, 158, 11, 0.3)',
+                            background: '#2A9D99',
                             borderRadius: '10px', padding: '14px', textAlign: 'center'
                           }}>
-                            <div style={{ color: '#f59e0b', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
+                            <div style={{ color: '#ffffff', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
                               Apache Spark
                             </div>
                             <div style={{
-                              background: 'rgba(245, 158, 11, 0.15)', borderRadius: '6px',
+                              background: 'rgba(255,255,255,0.25)', borderRadius: '6px',
                               padding: '4px 10px', display: 'inline-block', marginBottom: '8px',
-                              fontSize: '10px', fontWeight: '700', color: '#fde68a',
+                              fontSize: '10px', fontWeight: '700', color: '#ffffff',
                               textTransform: 'uppercase', letterSpacing: '1px'
                             }}>
                               Memory-Centric
                             </div>
-                            <p style={{ color: '#cbd5e1', fontSize: '11px', lineHeight: '1.6' }}>
-                              The poster child for "clustered" computing — it treats the cluster like a <strong>single, massive pool of RAM</strong> using RDDs. Data stays in-memory, making it feel like one cohesive <strong>"Supercomputer"</strong> rather than a collection of independent workers.
+                            <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '11px', lineHeight: '1.6' }}>
+                              The poster child for "clustered" computing — treats the cluster like a <strong>single, massive pool of RAM</strong> using RDDs. Data stays in-memory, feeling like one cohesive <strong>"Supercomputer"</strong>.
                             </p>
                           </div>
                         </div>
@@ -7946,21 +7497,26 @@ for message in consumer:
                   }}>
                     {/* Filing Cabinet */}
                     <div style={{
-                      background: 'rgba(236, 72, 153, 0.06)',
-                      border: '1px dashed rgba(236, 72, 153, 0.3)',
+                      background: 'var(--warm-white)',
+                      border: '1px solid rgba(0,0,0,0.1)',
                       borderRadius: '12px', padding: '20px', textAlign: 'center'
                     }}>
-                      <div style={{ fontSize: '32px', marginBottom: '8px' }}>🗄️</div>
-                      <div style={{ color: '#ec4899', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
+                      <div style={{
+                        width: '48px', height: '48px', borderRadius: '10px', margin: '0 auto 10px',
+                        background: '#E8654A', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                      }}>
+                        <HardDrive size={24} color="#ffffff" />
+                      </div>
+                      <div style={{ color: 'var(--near-black)', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
                         "Giant Filing Cabinet"
                       </div>
-                      <p style={{ color: '#94a3b8', fontSize: '11px', lineHeight: '1.6' }}>
+                      <p style={{ color: 'var(--gray-500)', fontSize: '11px', lineHeight: '1.6' }}>
                         MapReduce treats the cluster like a filing cabinet — <strong>read a file, process it, put it back, pick up the next</strong>. Every step involves opening a drawer (disk I/O).
                       </p>
                       <div style={{
-                        marginTop: '10px', fontFamily: 'Monaco, Consolas, monospace', fontSize: '10px',
-                        color: '#f9a8d4', background: 'rgba(0,0,0,0.3)', borderRadius: '8px', padding: '8px',
-                        lineHeight: '1.6'
+                        marginTop: '10px', fontFamily: 'var(--font-mono)', fontSize: '10px',
+                        color: 'var(--near-black)', background: 'rgba(0,0,0,0.06)', borderRadius: '8px', padding: '8px',
+                        lineHeight: '1.6', textAlign: 'left'
                       }}>
                         Read → Process → Write to disk<br/>
                         Read from disk → Shuffle → Write to disk<br/>
@@ -7972,32 +7528,37 @@ for message in consumer:
                     <div style={{
                       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px'
                     }}>
-                      <div style={{ width: '2px', height: '30px', background: 'rgba(71, 85, 105, 0.3)' }} />
+                      <div style={{ width: '2px', height: '30px', background: 'rgba(0,0,0,0.1)' }} />
                       <div style={{
                         padding: '8px 14px', borderRadius: '10px',
-                        background: 'rgba(30, 41, 59, 0.8)', border: '1px solid rgba(71, 85, 105, 0.3)',
-                        color: '#64748b', fontSize: '13px', fontWeight: '700'
+                        background: 'var(--warm-white)', border: '1px solid rgba(0,0,0,0.1)',
+                        color: 'var(--gray-300)', fontSize: '13px', fontWeight: '700'
                       }}>VS</div>
-                      <div style={{ width: '2px', height: '30px', background: 'rgba(71, 85, 105, 0.3)' }} />
+                      <div style={{ width: '2px', height: '30px', background: 'rgba(0,0,0,0.1)' }} />
                     </div>
 
                     {/* Pool of RAM */}
                     <div style={{
-                      background: 'rgba(245, 158, 11, 0.06)',
-                      border: '1px dashed rgba(245, 158, 11, 0.3)',
+                      background: 'var(--warm-white)',
+                      border: '1px solid rgba(0,0,0,0.1)',
                       borderRadius: '12px', padding: '20px', textAlign: 'center'
                     }}>
-                      <div style={{ fontSize: '32px', marginBottom: '8px' }}>🧠</div>
-                      <div style={{ color: '#f59e0b', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
+                      <div style={{
+                        width: '48px', height: '48px', borderRadius: '10px', margin: '0 auto 10px',
+                        background: '#2A9D99', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                      }}>
+                        <Cpu size={24} color="#ffffff" />
+                      </div>
+                      <div style={{ color: 'var(--near-black)', fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>
                         "Massive Pool of RAM"
                       </div>
-                      <p style={{ color: '#94a3b8', fontSize: '11px', lineHeight: '1.6' }}>
+                      <p style={{ color: 'var(--gray-500)', fontSize: '11px', lineHeight: '1.6' }}>
                         Spark treats the cluster like one giant brain — data stays <strong>in-memory across all nodes</strong>. No filing cabinet drawers to open. The RDD keeps data alive and accessible.
                       </p>
                       <div style={{
-                        marginTop: '10px', fontFamily: 'Monaco, Consolas, monospace', fontSize: '10px',
-                        color: '#fde68a', background: 'rgba(0,0,0,0.3)', borderRadius: '8px', padding: '8px',
-                        lineHeight: '1.6'
+                        marginTop: '10px', fontFamily: 'var(--font-mono)', fontSize: '10px',
+                        color: 'var(--near-black)', background: 'rgba(0,0,0,0.06)', borderRadius: '8px', padding: '8px',
+                        lineHeight: '1.6', textAlign: 'left'
                       }}>
                         Read → Transform (in memory)<br/>
                         → Transform (still in memory)<br/>
@@ -8010,11 +7571,11 @@ for message in consumer:
                   {/* Key takeaway */}
                   <div style={{
                     marginTop: '20px', padding: '12px 20px', textAlign: 'center',
-                    background: 'rgba(139, 92, 246, 0.08)',
-                    border: '1px solid rgba(139, 92, 246, 0.25)',
+                    background: '#f3f0ff',
+                    border: '1px solid rgba(122,90,158,0.3)',
                     borderRadius: '10px'
                   }}>
-                    <div style={{ color: '#c4b5fd', fontSize: '12px', lineHeight: '1.7' }}>
+                    <div style={{ color: 'var(--near-black)', fontSize: '12px', lineHeight: '1.7' }}>
                       <strong>Both run on clusters.</strong> The difference is <em>how</em> they use the cluster. MapReduce treats each node as an independent worker with a shared filing system (HDFS). Spark treats all nodes as parts of one unified computational engine, sharing memory through RDDs.
                     </div>
                   </div>
@@ -8025,26 +7586,26 @@ for message in consumer:
                   display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '28px', flexWrap: 'wrap'
                 }}>
                   {[
-                    { key: null, label: 'Overview', icon: '📊' },
-                    { key: 'speed', label: 'Speed', icon: '⚡' },
-                    { key: 'fault', label: 'Fault Tolerance', icon: '🛡️' },
-                    { key: 'data', label: 'Data Flow', icon: '🔄' },
-                    { key: 'model', label: 'Programming', icon: '💻' }
+                    { key: null, label: 'Overview', Icon: BarChart2 },
+                    { key: 'speed', label: 'Speed', Icon: Zap },
+                    { key: 'fault', label: 'Fault Tolerance', Icon: Shield },
+                    { key: 'data', label: 'Data Flow', Icon: RefreshCw },
+                    { key: 'model', label: 'Programming', Icon: Monitor }
                   ].map(h => (
                     <button
                       key={h.key || 'overview'}
                       onClick={() => setComparisonHighlight(h.key)}
                       style={{
                         padding: '8px 16px',
-                        background: comparisonHighlight === h.key ? 'rgba(6, 182, 212, 0.2)' : 'rgba(30, 41, 59, 0.5)',
-                        border: `1px solid ${comparisonHighlight === h.key ? '#06b6d4' : 'rgba(71, 85, 105, 0.3)'}`,
+                        background: comparisonHighlight === h.key ? 'rgba(0,117,222,0.1)' : 'var(--warm-white)',
+                        border: `1px solid ${comparisonHighlight === h.key ? 'var(--blue)' : 'rgba(0,0,0,0.1)'}`,
                         borderRadius: '8px',
-                        color: comparisonHighlight === h.key ? '#22d3ee' : '#94a3b8',
+                        color: comparisonHighlight === h.key ? 'var(--blue)' : 'var(--gray-500)',
                         fontSize: '12px', fontWeight: '600', cursor: 'pointer',
                         transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '6px'
                       }}
                     >
-                      <span>{h.icon}</span> {h.label}
+                      <h.Icon size={13} /> {h.label}
                     </button>
                   ))}
                 </div>
@@ -8054,53 +7615,54 @@ for message in consumer:
 
                   {/* MapReduce Side */}
                   <div style={{
-                    background: 'rgba(236, 72, 153, 0.08)',
-                    border: '1px solid rgba(236, 72, 153, 0.3)',
+                    background: 'var(--white)',
+                    border: '1px solid rgba(0,0,0,0.1)',
                     borderRadius: '16px', padding: '24px'
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
                       <div style={{
                         width: '40px', height: '40px', borderRadius: '10px',
-                        background: 'rgba(236, 72, 153, 0.2)', display: 'flex',
+                        background: '#E8654A', display: 'flex',
                         alignItems: 'center', justifyContent: 'center'
                       }}>
-                        <Cpu size={22} color="#ec4899" />
+                        <Cpu size={22} color="#ffffff" />
                       </div>
                       <div>
-                        <div style={{ color: '#ec4899', fontSize: '18px', fontWeight: '700' }}>MapReduce</div>
-                        <div style={{ color: '#94a3b8', fontSize: '11px' }}>The Distributed Workhorse — Disk-Centric</div>
+                        <div style={{ color: 'var(--near-black)', fontSize: '18px', fontWeight: '700' }}>MapReduce</div>
+                        <div style={{ color: 'var(--gray-500)', fontSize: '11px' }}>The Distributed Workhorse — Disk-Centric</div>
                       </div>
                     </div>
 
                     {/* Visual Flow: Disk-heavy pipeline */}
                     <div style={{
-                      background: 'rgba(0,0,0,0.3)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
+                      background: 'var(--warm-white)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
                     }}>
-                      <div style={{ fontSize: '10px', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
+                      <div style={{ fontSize: '10px', color: 'var(--gray-300)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
                         Execution Flow
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
                         {[
-                          { label: 'HDFS Read', color: '#3b82f6', icon: '💾' },
-                          { label: 'Map', color: '#ec4899', icon: '🔀' },
-                          { label: 'Disk Write', color: '#ef4444', icon: '💾' },
-                          { label: 'Shuffle', color: '#f59e0b', icon: '🌐' },
-                          { label: 'Disk Read', color: '#ef4444', icon: '💾' },
-                          { label: 'Reduce', color: '#10b981', icon: '📊' },
-                          { label: 'HDFS Write', color: '#3b82f6', icon: '💾' }
+                          { label: 'HDFS Read', color: '#4A5FE3', Icon: HardDrive },
+                          { label: 'Map', color: '#E8654A', Icon: Shuffle },
+                          { label: 'Disk Write', color: '#ef4444', Icon: HardDrive },
+                          { label: 'Shuffle', color: '#C07FD4', Icon: Globe },
+                          { label: 'Disk Read', color: '#ef4444', Icon: HardDrive },
+                          { label: 'Reduce', color: '#2A9D99', Icon: BarChart2 },
+                          { label: 'HDFS Write', color: '#4A5FE3', Icon: HardDrive }
                         ].map((s, i) => (
                           <React.Fragment key={i}>
                             <div style={{
                               padding: '4px 8px', borderRadius: '6px',
-                              background: `${s.color}22`, border: `1px solid ${s.color}44`,
+                              background: `${s.color}18`, border: `1px solid ${s.color}44`,
                               fontSize: '10px', color: s.color, fontWeight: '600',
                               textAlign: 'center', whiteSpace: 'nowrap',
+                              display: 'flex', alignItems: 'center', gap: '4px',
                               opacity: comparisonHighlight === 'data' || !comparisonHighlight ? 1 : 0.3,
                               transition: 'opacity 0.3s'
                             }}>
-                              {s.icon} {s.label}
+                              <s.Icon size={10} /> {s.label}
                             </div>
-                            {i < 6 && <ChevronRight size={12} color="#475569" />}
+                            {i < 6 && <ChevronRight size={12} color="var(--gray-300)" />}
                           </React.Fragment>
                         ))}
                       </div>
@@ -8109,29 +7671,29 @@ for message in consumer:
                         opacity: comparisonHighlight === 'speed' || !comparisonHighlight ? 1 : 0.3,
                         transition: 'opacity 0.3s'
                       }}>
-                        ⚠ Opens the filing cabinet at every stage — 3 disk round-trips per job
+                        Opens the filing cabinet at every stage — 3 disk round-trips per job
                       </div>
                     </div>
 
                     {/* Properties */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                       {[
-                        { label: 'Processing Model', value: 'Batch only (Map → Reduce)', highlight: 'model', color: '#ec4899' },
+                        { label: 'Processing Model', value: 'Batch only (Map → Reduce)', highlight: 'model', color: '#9E5A3C' },
                         { label: 'Speed', value: '~45 seconds (word count on 384MB)', highlight: 'speed', color: '#ef4444' },
                         { label: 'Data Storage', value: 'Disk between every stage', highlight: 'data', color: '#ef4444' },
-                        { label: 'Fault Recovery', value: 'Re-run failed task from HDFS', highlight: 'fault', color: '#10b981' },
-                        { label: 'Multi-Pass', value: 'Requires chaining multiple jobs', highlight: 'model', color: '#f59e0b' },
+                        { label: 'Fault Recovery', value: 'Re-run failed task from HDFS', highlight: 'fault', color: '#4A7A56' },
+                        { label: 'Multi-Pass', value: 'Requires chaining multiple jobs', highlight: 'model', color: '#9E7824' },
                         { label: 'Latency', value: 'High (JVM start + disk I/O)', highlight: 'speed', color: '#ef4444' }
                       ].map((prop, i) => (
                         <div key={i} style={{
                           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                           padding: '8px 12px', borderRadius: '8px',
-                          background: comparisonHighlight === prop.highlight ? 'rgba(6, 182, 212, 0.1)' : 'transparent',
-                          border: comparisonHighlight === prop.highlight ? '1px solid rgba(6, 182, 212, 0.3)' : '1px solid transparent',
+                          background: comparisonHighlight === prop.highlight ? 'rgba(58, 128, 128, 0.1)' : 'transparent',
+                          border: comparisonHighlight === prop.highlight ? '1px solid rgba(58, 128, 128, 0.3)' : '1px solid transparent',
                           transition: 'all 0.3s',
                           opacity: !comparisonHighlight || comparisonHighlight === prop.highlight ? 1 : 0.4
                         }}>
-                          <span style={{ fontSize: '12px', color: '#94a3b8' }}>{prop.label}</span>
+                          <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{prop.label}</span>
                           <span style={{ fontSize: '12px', color: prop.color, fontWeight: '600', textAlign: 'right' }}>{prop.value}</span>
                         </div>
                       ))}
@@ -8140,84 +7702,85 @@ for message in consumer:
 
                   {/* Spark Side */}
                   <div style={{
-                    background: 'rgba(245, 158, 11, 0.08)',
-                    border: '1px solid rgba(245, 158, 11, 0.3)',
+                    background: 'var(--white)',
+                    border: '1px solid rgba(0,0,0,0.1)',
                     borderRadius: '16px', padding: '24px'
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
                       <div style={{
                         width: '40px', height: '40px', borderRadius: '10px',
-                        background: 'rgba(245, 158, 11, 0.2)', display: 'flex',
+                        background: '#2A9D99', display: 'flex',
                         alignItems: 'center', justifyContent: 'center'
                       }}>
-                        <Zap size={22} color="#f59e0b" />
+                        <Zap size={22} color="#ffffff" />
                       </div>
                       <div>
-                        <div style={{ color: '#f59e0b', fontSize: '18px', fontWeight: '700' }}>Apache Spark</div>
-                        <div style={{ color: '#94a3b8', fontSize: '11px' }}>The Clustered Speedster — Memory-Centric</div>
+                        <div style={{ color: 'var(--near-black)', fontSize: '18px', fontWeight: '700' }}>Apache Spark</div>
+                        <div style={{ color: 'var(--gray-500)', fontSize: '11px' }}>The Clustered Speedster — Memory-Centric</div>
                       </div>
                     </div>
 
                     {/* Visual Flow: In-memory pipeline */}
                     <div style={{
-                      background: 'rgba(0,0,0,0.3)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
+                      background: 'var(--warm-white)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '12px', padding: '16px', marginBottom: '16px'
                     }}>
-                      <div style={{ fontSize: '10px', color: '#94a3b8', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
+                      <div style={{ fontSize: '10px', color: 'var(--gray-300)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
                         Execution Flow
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
                         {[
-                          { label: 'Source Read', color: '#3b82f6', icon: '📂' },
-                          { label: 'Transform', color: '#ec4899', icon: '⚡' },
-                          { label: 'In Memory', color: '#10b981', icon: '🧠' },
-                          { label: 'Shuffle', color: '#f59e0b', icon: '🌐' },
-                          { label: 'In Memory', color: '#10b981', icon: '🧠' },
-                          { label: 'Action', color: '#a855f7', icon: '🎯' },
-                          { label: 'Output', color: '#3b82f6', icon: '💾' }
+                          { label: 'Source Read', color: '#4A5FE3', Icon: FolderOpen },
+                          { label: 'Transform', color: '#E8654A', Icon: Zap },
+                          { label: 'In Memory', color: '#2A9D99', Icon: Cpu },
+                          { label: 'Shuffle', color: '#C07FD4', Icon: Globe },
+                          { label: 'In Memory', color: '#2A9D99', Icon: Cpu },
+                          { label: 'Action', color: '#7A5A9E', Icon: Target },
+                          { label: 'Output', color: '#4A5FE3', Icon: HardDrive }
                         ].map((s, i) => (
                           <React.Fragment key={i}>
                             <div style={{
                               padding: '4px 8px', borderRadius: '6px',
-                              background: `${s.color}22`, border: `1px solid ${s.color}44`,
+                              background: `${s.color}18`, border: `1px solid ${s.color}44`,
                               fontSize: '10px', color: s.color, fontWeight: '600',
                               textAlign: 'center', whiteSpace: 'nowrap',
+                              display: 'flex', alignItems: 'center', gap: '4px',
                               opacity: comparisonHighlight === 'data' || !comparisonHighlight ? 1 : 0.3,
                               transition: 'opacity 0.3s'
                             }}>
-                              {s.icon} {s.label}
+                              <s.Icon size={10} /> {s.label}
                             </div>
-                            {i < 6 && <ChevronRight size={12} color="#475569" />}
+                            {i < 6 && <ChevronRight size={12} color="var(--gray-300)" />}
                           </React.Fragment>
                         ))}
                       </div>
                       <div style={{
-                        marginTop: '10px', textAlign: 'center', fontSize: '10px', color: '#10b981',
+                        marginTop: '10px', textAlign: 'center', fontSize: '10px', color: '#2A9D99',
                         opacity: comparisonHighlight === 'speed' || !comparisonHighlight ? 1 : 0.3,
                         transition: 'opacity 0.3s'
                       }}>
-                        ✓ One giant pool of RAM — data stays in-memory, no filing cabinet needed
+                        One giant pool of RAM — data stays in-memory, no filing cabinet needed
                       </div>
                     </div>
 
                     {/* Properties */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                       {[
-                        { label: 'Processing Model', value: 'Batch + Stream + SQL + ML + Graph', highlight: 'model', color: '#10b981' },
-                        { label: 'Speed', value: '~2.3 seconds (same word count!)', highlight: 'speed', color: '#10b981' },
-                        { label: 'Data Storage', value: 'In-memory between stages', highlight: 'data', color: '#10b981' },
-                        { label: 'Fault Recovery', value: 'Recompute from lineage (DAG)', highlight: 'fault', color: '#f59e0b' },
-                        { label: 'Multi-Pass', value: 'Single job with chained stages', highlight: 'model', color: '#10b981' },
-                        { label: 'Latency', value: 'Low (reuse JVM + cached data)', highlight: 'speed', color: '#10b981' }
+                        { label: 'Processing Model', value: 'Batch + Stream + SQL + ML + Graph', highlight: 'model', color: '#4A7A56' },
+                        { label: 'Speed', value: '~2.3 seconds (same word count!)', highlight: 'speed', color: '#4A7A56' },
+                        { label: 'Data Storage', value: 'In-memory between stages', highlight: 'data', color: '#4A7A56' },
+                        { label: 'Fault Recovery', value: 'Recompute from lineage (DAG)', highlight: 'fault', color: '#9E7824' },
+                        { label: 'Multi-Pass', value: 'Single job with chained stages', highlight: 'model', color: '#4A7A56' },
+                        { label: 'Latency', value: 'Low (reuse JVM + cached data)', highlight: 'speed', color: '#4A7A56' }
                       ].map((prop, i) => (
                         <div key={i} style={{
                           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                           padding: '8px 12px', borderRadius: '8px',
-                          background: comparisonHighlight === prop.highlight ? 'rgba(6, 182, 212, 0.1)' : 'transparent',
-                          border: comparisonHighlight === prop.highlight ? '1px solid rgba(6, 182, 212, 0.3)' : '1px solid transparent',
+                          background: comparisonHighlight === prop.highlight ? 'rgba(58, 128, 128, 0.1)' : 'transparent',
+                          border: comparisonHighlight === prop.highlight ? '1px solid rgba(58, 128, 128, 0.3)' : '1px solid transparent',
                           transition: 'all 0.3s',
                           opacity: !comparisonHighlight || comparisonHighlight === prop.highlight ? 1 : 0.4
                         }}>
-                          <span style={{ fontSize: '12px', color: '#94a3b8' }}>{prop.label}</span>
+                          <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{prop.label}</span>
                           <span style={{ fontSize: '12px', color: prop.color, fontWeight: '600', textAlign: 'right' }}>{prop.value}</span>
                         </div>
                       ))}
@@ -8227,65 +7790,65 @@ for message in consumer:
 
                 {/* Interactive Visual: Same Word Count — Two Approaches */}
                 <div style={{
-                  background: 'rgba(15, 23, 42, 0.6)',
-                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  background: 'var(--white)',
+                  border: '1px solid rgba(0,0,0,0.1)',
                   borderRadius: '16px', padding: '24px', marginBottom: '24px'
                 }}>
-                  <h3 style={{ color: '#e2e8f0', fontSize: '16px', fontWeight: '700', marginBottom: '6px', textAlign: 'center' }}>
+                  <h3 style={{ color: 'var(--near-black)', fontSize: '16px', fontWeight: '700', marginBottom: '6px', textAlign: 'center' }}>
                     Same Task, Different Philosophy: Word Count on 384MB
                   </h3>
-                  <p style={{ color: '#64748b', fontSize: '12px', textAlign: 'center', marginBottom: '20px' }}>
+                  <p style={{ color: 'var(--gray-300)', fontSize: '12px', textAlign: 'center', marginBottom: '20px' }}>
                     Filing cabinet (read/write/read/write) vs. shared memory (read once, transform in place)
                   </p>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
 
                     {/* MapReduce approach */}
-                    <div style={{ padding: '16px', background: 'rgba(236, 72, 153, 0.05)', borderRadius: '12px', border: '1px solid rgba(236, 72, 153, 0.2)' }}>
-                      <div style={{ color: '#ec4899', fontSize: '13px', fontWeight: '700', marginBottom: '4px', textAlign: 'center' }}>
+                    <div style={{ padding: '16px', background: 'var(--warm-white)', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.08)' }}>
+                      <div style={{ color: 'var(--near-black)', fontSize: '13px', fontWeight: '700', marginBottom: '4px', textAlign: 'center' }}>
                         MapReduce — The Filing Cabinet
                       </div>
-                      <div style={{ color: '#94a3b8', fontSize: '10px', textAlign: 'center', marginBottom: '12px' }}>
+                      <div style={{ color: 'var(--gray-500)', fontSize: '10px', textAlign: 'center', marginBottom: '12px' }}>
                         Every step opens a drawer (disk I/O)
                       </div>
-                      <div style={{ fontFamily: 'Monaco, Consolas, monospace', fontSize: '10px', lineHeight: '1.8', color: '#cbd5e1' }}>
-                        <div style={{ color: '#64748b' }}>// Step 1: Read from HDFS (disk)</div>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', lineHeight: '1.8', color: 'var(--near-black)' }}>
+                        <div style={{ color: 'var(--gray-300)' }}>// Step 1: Read from HDFS (disk)</div>
                         <div>InputSplit[] splits = getSplits(job);</div>
-                        <div style={{ color: '#64748b', marginTop: '4px' }}>// Step 2: Map — write output to disk</div>
+                        <div style={{ color: 'var(--gray-300)', marginTop: '4px' }}>// Step 2: Map — write output to disk</div>
                         <div>map(key, val) {'{'} emit(word, 1); {'}'}</div>
                         <div style={{ color: '#ef4444' }}>→ spill to local disk</div>
-                        <div style={{ color: '#64748b', marginTop: '4px' }}>// Step 3: Shuffle via network + disk</div>
+                        <div style={{ color: 'var(--gray-300)', marginTop: '4px' }}>// Step 3: Shuffle via network + disk</div>
                         <div>sort + partition + transfer</div>
                         <div style={{ color: '#ef4444' }}>→ merge-sort from disk</div>
-                        <div style={{ color: '#64748b', marginTop: '4px' }}>// Step 4: Reduce — write to HDFS</div>
+                        <div style={{ color: 'var(--gray-300)', marginTop: '4px' }}>// Step 4: Reduce — write to HDFS</div>
                         <div>reduce(key, vals) {'{'} sum(vals); {'}'}</div>
                         <div style={{ color: '#ef4444' }}>→ write to HDFS (disk)</div>
-                        <div style={{ marginTop: '8px', padding: '6px 10px', background: 'rgba(239, 68, 68, 0.15)', borderRadius: '6px', color: '#fca5a5', textAlign: 'center' }}>
+                        <div style={{ marginTop: '8px', padding: '6px 10px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '6px', color: '#dc2626', textAlign: 'center' }}>
                           ~45 seconds | 3x disk I/O | 1 JVM per task
                         </div>
                       </div>
                     </div>
 
                     {/* Spark approach */}
-                    <div style={{ padding: '16px', background: 'rgba(245, 158, 11, 0.05)', borderRadius: '12px', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-                      <div style={{ color: '#f59e0b', fontSize: '13px', fontWeight: '700', marginBottom: '4px', textAlign: 'center' }}>
+                    <div style={{ padding: '16px', background: 'var(--warm-white)', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.08)' }}>
+                      <div style={{ color: 'var(--near-black)', fontSize: '13px', fontWeight: '700', marginBottom: '4px', textAlign: 'center' }}>
                         Spark — The Supercomputer
                       </div>
-                      <div style={{ color: '#94a3b8', fontSize: '10px', textAlign: 'center', marginBottom: '12px' }}>
+                      <div style={{ color: 'var(--gray-500)', fontSize: '10px', textAlign: 'center', marginBottom: '12px' }}>
                         Everything stays in one giant pool of RAM
                       </div>
-                      <div style={{ fontFamily: 'Monaco, Consolas, monospace', fontSize: '10px', lineHeight: '1.8', color: '#cbd5e1' }}>
-                        <div style={{ color: '#64748b' }}>// Entire pipeline in one expression:</div>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', lineHeight: '1.8', color: 'var(--near-black)' }}>
+                        <div style={{ color: 'var(--gray-300)' }}>// Entire pipeline in one expression:</div>
                         <div>sc.textFile("/data/logs/*")</div>
                         <div>&nbsp; .flatMap(_.split(" "))</div>
-                        <div style={{ color: '#10b981' }}>&nbsp; // pipelined in memory ↑</div>
+                        <div style={{ color: '#2A9D99' }}>&nbsp; // pipelined in memory ↑</div>
                         <div>&nbsp; .map(word =&gt; (word, 1))</div>
-                        <div style={{ color: '#10b981' }}>&nbsp; // still in memory ↑</div>
+                        <div style={{ color: '#2A9D99' }}>&nbsp; // still in memory ↑</div>
                         <div>&nbsp; .reduceByKey(_ + _)</div>
-                        <div style={{ color: '#f59e0b' }}>&nbsp; // shuffle (only disk write)</div>
+                        <div style={{ color: 'var(--gray-300)' }}>&nbsp; // shuffle (only disk write)</div>
                         <div>&nbsp; .saveAsTextFile("/results/")</div>
-                        <div style={{ color: '#10b981' }}>&nbsp; // one pass through DAG</div>
-                        <div style={{ marginTop: '8px', padding: '6px 10px', background: 'rgba(16, 185, 129, 0.15)', borderRadius: '6px', color: '#6ee7b7', textAlign: 'center' }}>
+                        <div style={{ color: '#2A9D99' }}>&nbsp; // one pass through DAG</div>
+                        <div style={{ marginTop: '8px', padding: '6px 10px', background: 'rgba(42,157,153,0.1)', border: '1px solid rgba(42,157,153,0.25)', borderRadius: '6px', color: '#2A9D99', textAlign: 'center' }}>
                           ~2.3 seconds | in-memory | reusable JVMs
                         </div>
                       </div>
@@ -8295,24 +7858,24 @@ for message in consumer:
 
                 {/* Key Differences Table */}
                 <div style={{
-                  background: 'rgba(15, 23, 42, 0.6)',
-                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  background: 'var(--white)',
+                  border: '1px solid rgba(0,0,0,0.1)',
                   borderRadius: '16px', padding: '24px', marginBottom: '24px'
                 }}>
-                  <h3 style={{ color: '#e2e8f0', fontSize: '16px', fontWeight: '700', marginBottom: '20px', textAlign: 'center' }}>
+                  <h3 style={{ color: 'var(--near-black)', fontSize: '16px', fontWeight: '700', marginBottom: '20px', textAlign: 'center' }}>
                     Detailed Comparison
                   </h3>
 
-                  <div style={{ overflow: 'hidden', borderRadius: '12px', border: '1px solid rgba(71, 85, 105, 0.3)' }}>
+                  <div style={{ overflow: 'hidden', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.1)' }}>
                     {/* Table Header */}
                     <div style={{
                       display: 'grid', gridTemplateColumns: '1.5fr 2fr 2fr',
-                      background: 'rgba(30, 41, 59, 0.8)', padding: '12px 16px',
-                      borderBottom: '1px solid rgba(71, 85, 105, 0.3)'
+                      background: 'var(--warm-white)', padding: '12px 16px',
+                      borderBottom: '1px solid rgba(0,0,0,0.08)'
                     }}>
-                      <div style={{ color: '#94a3b8', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>Aspect</div>
-                      <div style={{ color: '#ec4899', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>MapReduce</div>
-                      <div style={{ color: '#f59e0b', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>Spark</div>
+                      <div style={{ color: 'var(--gray-300)', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>Aspect</div>
+                      <div style={{ color: '#E8654A', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>MapReduce</div>
+                      <div style={{ color: '#2A9D99', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>Spark</div>
                     </div>
 
                     {/* Table Rows */}
@@ -8334,14 +7897,14 @@ for message in consumer:
                       <div key={i} style={{
                         display: 'grid', gridTemplateColumns: '1.5fr 2fr 2fr',
                         padding: '10px 16px',
-                        background: i % 2 === 0 ? 'rgba(15, 23, 42, 0.4)' : 'rgba(30, 41, 59, 0.4)',
-                        borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
+                        background: i % 2 === 0 ? 'var(--white)' : 'var(--warm-white)',
+                        borderBottom: '1px solid rgba(0,0,0,0.06)',
                         opacity: !comparisonHighlight || comparisonHighlight === row.cat || !row.cat ? 1 : 0.3,
                         transition: 'opacity 0.3s'
                       }}>
-                        <div style={{ color: '#e2e8f0', fontSize: '12px', fontWeight: '600' }}>{row.aspect}</div>
-                        <div style={{ color: '#cbd5e1', fontSize: '12px', textAlign: 'center' }}>{row.mr}</div>
-                        <div style={{ color: '#cbd5e1', fontSize: '12px', textAlign: 'center' }}>{row.spark}</div>
+                        <div style={{ color: 'var(--near-black)', fontSize: '12px', fontWeight: '600' }}>{row.aspect}</div>
+                        <div style={{ color: 'var(--gray-500)', fontSize: '12px', textAlign: 'center' }}>{row.mr}</div>
+                        <div style={{ color: 'var(--gray-500)', fontSize: '12px', textAlign: 'center' }}>{row.spark}</div>
                       </div>
                     ))}
                   </div>
@@ -8350,13 +7913,13 @@ for message in consumer:
                 {/* When to Use Which */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div style={{
-                    background: 'rgba(236, 72, 153, 0.08)', border: '1px solid rgba(236, 72, 153, 0.25)',
+                    background: 'var(--white)', border: '1px solid rgba(232,101,74,0.3)',
                     borderRadius: '12px', padding: '20px'
                   }}>
-                    <div style={{ color: '#ec4899', fontSize: '14px', fontWeight: '700', marginBottom: '12px' }}>
+                    <div style={{ color: '#E8654A', fontSize: '14px', fontWeight: '700', marginBottom: '12px' }}>
                       When to Choose MapReduce
                     </div>
-                    <ul style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '2', paddingLeft: '20px' }}>
+                    <ul style={{ color: 'var(--text-body)', fontSize: '12px', lineHeight: '2', paddingLeft: '20px' }}>
                       <li>Budget constraints — runs on minimal memory</li>
                       <li>Simple one-pass ETL jobs (no iteration)</li>
                       <li>Extremely large datasets where disk I/O is acceptable</li>
@@ -8365,13 +7928,13 @@ for message in consumer:
                     </ul>
                   </div>
                   <div style={{
-                    background: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.25)',
+                    background: 'var(--white)', border: '1px solid rgba(42,157,153,0.3)',
                     borderRadius: '12px', padding: '20px'
                   }}>
-                    <div style={{ color: '#f59e0b', fontSize: '14px', fontWeight: '700', marginBottom: '12px' }}>
+                    <div style={{ color: '#2A9D99', fontSize: '14px', fontWeight: '700', marginBottom: '12px' }}>
                       When to Choose Spark
                     </div>
-                    <ul style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '2', paddingLeft: '20px' }}>
+                    <ul style={{ color: 'var(--text-body)', fontSize: '12px', lineHeight: '2', paddingLeft: '20px' }}>
                       <li>Iterative algorithms (ML training, PageRank)</li>
                       <li>Interactive SQL queries on large datasets</li>
                       <li>Mixed workloads (batch + stream + ML)</li>
@@ -8384,19 +7947,17 @@ for message in consumer:
                 {/* Bottom Summary */}
                 <div style={{
                   marginTop: '24px', padding: '16px 20px', textAlign: 'center',
-                  background: 'rgba(6, 182, 212, 0.08)',
-                  border: '1px solid rgba(6, 182, 212, 0.25)',
+                  background: '#f3f0ff',
+                  border: '1px solid rgba(122,90,158,0.25)',
                   borderRadius: '12px'
                 }}>
-                  <div style={{ color: '#22d3ee', fontSize: '13px', lineHeight: '1.8' }}>
+                  <div style={{ color: 'var(--near-black)', fontSize: '13px', lineHeight: '1.8' }}>
                     <strong>The Evolution:</strong> Both MapReduce and Spark are <em>clustered</em> technologies under the <em>distributed computing</em> umbrella — but they treat the cluster differently. MapReduce (2004) pioneered the "distributed workhorse" pattern: break a job into tiny pieces, file results to disk, repeat. Spark (2009) reimagined the cluster as a unified "supercomputer" — one massive pool of RAM where data stays alive between operations. Today Spark has largely replaced MapReduce for most workloads, but understanding MapReduce is essential — it established the fundamental map → shuffle → reduce pattern that all modern distributed systems build upon.
                   </div>
                 </div>
               </div>
             </div>
           )}
-        </div>
-      </div>
 
       {selectedComponent && (
         <div
@@ -8408,7 +7969,7 @@ for message in consumer:
             right: 0,
             bottom: 0,
             background: 'rgba(0, 0, 0, 0.85)',
-            backdropFilter: 'blur(10px)',
+            
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -8419,8 +7980,8 @@ for message in consumer:
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              background: 'rgba(15, 23, 42, 0.95)',
-              backdropFilter: 'blur(20px)',
+              background: 'rgba(245,243,239,0.95)',
+              
               border: '1px solid rgba(71, 85, 105, 0.5)',
               borderRadius: '16px',
               padding: '32px',
@@ -8451,17 +8012,17 @@ for message in consumer:
                 <h2 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '4px' }}>
                   {selectedComponent.name}
                 </h2>
-                <p style={{ color: '#94a3b8', fontSize: '14px' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
                   {selectedComponent.description}
                 </p>
               </div>
             </div>
 
             <div style={{ marginBottom: '24px' }}>
-              <h3 style={{ color: '#60a5fa', fontSize: '16px', fontWeight: '600', marginBottom: '8px' }}>
+              <h3 style={{ color: '#4A7A9B', fontSize: '16px', fontWeight: '600', marginBottom: '8px' }}>
                 Details
               </h3>
-              <p style={{ color: '#cbd5e1', fontSize: '14px', lineHeight: '1.6' }}>
+              <p style={{ color: 'var(--text-body)', fontSize: '14px', lineHeight: '1.6' }}>
                 {selectedComponent.details}
               </p>
             </div>
@@ -8476,12 +8037,12 @@ for message in consumer:
                   const isClickable = !!url;
 
                   const pillStyle = {
-                    background: 'rgba(30, 41, 59, 0.8)',
-                    border: '1px solid rgba(139, 92, 246, 0.3)',
+                    background: 'rgba(235,232,228,0.8)',
+                    border: '1px solid rgba(122, 90, 158, 0.3)',
                     borderRadius: '6px',
                     padding: '6px 12px',
                     fontSize: '13px',
-                    color: '#e2e8f0',
+                    color: 'var(--text-body)',
                     fontWeight: '500',
                     textDecoration: 'none',
                     display: 'inline-block',
@@ -8498,13 +8059,13 @@ for message in consumer:
                         rel="noopener noreferrer"
                         style={pillStyle}
                         onMouseEnter={(e) => {
-                          e.target.style.background = 'rgba(139, 92, 246, 0.2)';
-                          e.target.style.borderColor = 'rgba(139, 92, 246, 0.6)';
+                          e.target.style.background = 'rgba(122, 90, 158, 0.2)';
+                          e.target.style.borderColor = 'rgba(122, 90, 158, 0.6)';
                           e.target.style.transform = 'translateY(-2px)';
                         }}
                         onMouseLeave={(e) => {
-                          e.target.style.background = 'rgba(30, 41, 59, 0.8)';
-                          e.target.style.borderColor = 'rgba(139, 92, 246, 0.3)';
+                          e.target.style.background = 'rgba(235,232,228,0.8)';
+                          e.target.style.borderColor = 'rgba(122, 90, 158, 0.3)';
                           e.target.style.transform = 'translateY(0)';
                         }}
                       >
@@ -8524,7 +8085,7 @@ for message in consumer:
 
             {/* Code Examples Section */}
             <div style={{ marginBottom: '24px' }}>
-              <h3 style={{ color: '#fbbf24', fontSize: '16px', fontWeight: '600', marginBottom: '12px' }}>
+              <h3 style={{ color: '#C8A84E', fontSize: '16px', fontWeight: '600', marginBottom: '12px' }}>
                 Code Examples
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -8741,16 +8302,16 @@ extract >> transform >> load`
 
                   return examples.map((example, idx) => (
                     <div key={idx} style={{
-                      background: 'rgba(30, 41, 59, 0.6)',
-                      border: '1px solid rgba(71, 85, 105, 0.3)',
+                      background: 'rgba(235,232,228,0.6)',
+                      border: '1px solid rgba(235,231,225,1)',
                       borderRadius: '8px',
                       overflow: 'hidden'
                     }}>
                       <div style={{
                         padding: '10px 14px',
-                        background: 'rgba(15, 23, 42, 0.8)',
-                        borderBottom: '1px solid rgba(71, 85, 105, 0.3)',
-                        color: '#fbbf24',
+                        background: 'rgba(245,243,239,0.8)',
+                        borderBottom: '1px solid rgba(235,231,225,1)',
+                        color: '#C8A84E',
                         fontSize: '13px',
                         fontWeight: '600'
                       }}>
@@ -8761,7 +8322,7 @@ extract >> transform >> load`
                         padding: '14px',
                         fontSize: '12px',
                         lineHeight: '1.6',
-                        color: '#e2e8f0',
+                        color: 'var(--text-body)',
                         fontFamily: 'Monaco, Consolas, "Courier New", monospace',
                         overflowX: 'auto',
                         whiteSpace: 'pre-wrap',
@@ -8780,10 +8341,10 @@ extract >> transform >> load`
               style={{
                 width: '100%',
                 padding: '12px',
-                background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                background: 'linear-gradient(135deg, #4A7A9B 0%, #2563eb 100%)',
                 border: 'none',
                 borderRadius: '8px',
-                color: '#ffffff',
+                color: 'var(--text-primary)',
                 fontSize: '14px',
                 fontWeight: '600',
                 cursor: 'pointer',
@@ -8797,6 +8358,7 @@ extract >> transform >> load`
           </div>
         </div>
       )}
+      </main>
     </div>
   );
 };

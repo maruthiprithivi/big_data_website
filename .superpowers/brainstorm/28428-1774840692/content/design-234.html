@@ -1,0 +1,215 @@
+<h2>Design — Sections 2, 3 & 4: Shell, Diagrams, Kafka</h2>
+<p class="subtitle">The remaining design decisions. Reply to approve and move to the spec doc.</p>
+
+<!-- SECTION 2: Page Shell & Learning Format -->
+<div style="border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+  <span class="label">Section 2 — Page Shell & Learning Format</span>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px;">
+    <!-- Page shell mockup -->
+    <div class="mockup">
+      <div class="mockup-header">Page layout (720px centered)</div>
+      <div class="mockup-body" style="padding: 16px; font-size: 11px;">
+        <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px; margin-bottom: 12px;">
+          <div style="font-size: 9px; color: #888; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px;">BIG DATA ARCHITECTURE</div>
+          <div style="font-size: 18px; color: #e2e8f0; font-weight: 300; margin-bottom: 4px;">Understanding Modern Data Systems</div>
+          <div style="font-size: 11px; color: #94a3b8; font-weight: 300;">From batch pipelines to real-time streams — a visual guide to the patterns, tools, and decisions that shape data engineering.</div>
+        </div>
+        <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 12px;">
+          <div style="font-size: 9px; color: #555; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;">CONTENTS</div>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <span style="font-size: 10px; color: #e2e8f0; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 2px;">01 Architecture Patterns</span>
+            <span style="font-size: 10px; color: #555;">02 Distributed Processing</span>
+            <span style="font-size: 10px; color: #555;">03 Data Modeling</span>
+            <span style="font-size: 10px; color: #555;">04 Stream Ingestion</span>
+            <span style="font-size: 10px; color: #555;">05 Applied Engineering</span>
+          </div>
+        </div>
+        <!-- Open section -->
+        <div>
+          <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px;">
+            <span style="font-size: 10px; color: #444; font-family: monospace; width: 22px; flex-shrink: 0;">01</span>
+            <div>
+              <div style="font-size: 14px; color: #e2e8f0; font-weight: 400; margin-bottom: 2px;">Architecture Patterns</div>
+              <div style="font-size: 10px; color: #64748b;">How modern systems move, store, and serve data at scale.</div>
+            </div>
+            <span style="font-size: 14px; color: #444; margin-left: auto;">⌄</span>
+          </div>
+          <!-- Item rows -->
+          <div style="padding-left: 32px; display: flex; flex-direction: column; gap: 2px;">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 6px; background: rgba(255,255,255,0.04);">
+              <span style="font-size: 11px; color: #555;">◎</span>
+              <div style="flex: 1;">
+                <div style="font-size: 11px; color: #e2e8f0; font-weight: 500;">Lambda Architecture</div>
+                <div style="font-size: 10px; color: #64748b;">Hybrid batch + stream — accuracy meets real-time</div>
+              </div>
+              <span style="font-size: 9px; color: #475569; background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 3px;">Interactive</span>
+              <span style="font-size: 10px; color: #475569; font-family: monospace;">20m</span>
+              <span style="font-size: 12px; color: #4ade80;">→</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 6px;">
+              <span style="font-size: 11px; color: #555;">◎</span>
+              <div style="flex: 1;">
+                <div style="font-size: 11px; color: #e2e8f0; font-weight: 500;">Kappa Architecture</div>
+                <div style="font-size: 10px; color: #64748b;">Stream-first simplicity</div>
+              </div>
+              <span style="font-size: 9px; color: #475569; background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 3px;">Interactive</span>
+              <span style="font-size: 10px; color: #475569; font-family: monospace;">15m</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Within-item learning format -->
+    <div class="mockup">
+      <div class="mockup-header">Within each item — learning format</div>
+      <div class="mockup-body" style="padding: 16px; font-size: 11px;">
+        <div style="margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+          <div style="font-size: 9px; color: #888; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;">BACKGROUND</div>
+          <div style="font-size: 11px; color: #cbd5e1; line-height: 1.6;">Lambda Architecture solves the challenge of building systems that need both real-time responsiveness <em>and</em> accurate historical analysis…</div>
+        </div>
+        <div style="margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+          <div style="font-size: 9px; color: #888; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;">DIAGRAM</div>
+          <div style="background: rgba(255,255,255,0.04); border-radius: 6px; height: 60px; display: flex; align-items: center; justify-content: center; color: #555; font-size: 10px;">[ interactive flexbox flow diagram ]</div>
+        </div>
+        <div style="margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+          <div style="font-size: 9px; color: #888; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;">SCENARIO</div>
+          <div style="font-size: 11px; color: #cbd5e1; line-height: 1.6;">A ride-hailing app needs surge pricing updated every second, but also accurate weekly driver performance reports…</div>
+        </div>
+        <div>
+          <div style="font-size: 9px; color: #888; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;">FURTHER READING</div>
+          <div style="font-size: 10px; color: #4ade80;">→ Nathan Marz: How to beat the CAP theorem</div>
+          <div style="font-size: 10px; color: #4ade80; margin-top: 3px;">→ AWS: Build a Lambda Architecture on Redshift</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3: Diagram System -->
+<div style="border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+  <span class="label">Section 3 — Flexbox Diagram System</span>
+  <p style="font-size: 12px; color: #94a3b8; margin-top: 8px; margin-bottom: 14px;">All architecture flow diagrams use a shared <code>FlowDiagram</code> component. Nodes are flex items; arrows are CSS <code>border</code> + <code>::after</code> arrowheads. Complex fan-out (MapReduce, Kafka) uses a flex column of parallel branches.</p>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+    <div class="mockup">
+      <div class="mockup-header">MapReduce — fan-out layout (fixed)</div>
+      <div class="mockup-body" style="padding: 14px;">
+        <!-- Simplified MapReduce flex diagram mockup -->
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 10px;">
+          <!-- Input splits -->
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <div style="background: rgba(99,102,241,0.2); border: 1px solid rgba(99,102,241,0.4); border-radius: 4px; padding: 4px 8px; text-align: center; color: #a5b4fc;">Split 1</div>
+            <div style="background: rgba(99,102,241,0.2); border: 1px solid rgba(99,102,241,0.4); border-radius: 4px; padding: 4px 8px; text-align: center; color: #a5b4fc;">Split 2</div>
+            <div style="background: rgba(99,102,241,0.2); border: 1px solid rgba(99,102,241,0.4); border-radius: 4px; padding: 4px 8px; text-align: center; color: #a5b4fc;">Split 3</div>
+          </div>
+          <!-- Arrow -->
+          <div style="color: #555; font-size: 14px;">→</div>
+          <!-- Map workers -->
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <div style="background: rgba(236,72,153,0.2); border: 1px solid rgba(236,72,153,0.4); border-radius: 4px; padding: 4px 8px; text-align: center; color: #f9a8d4;">Map</div>
+            <div style="background: rgba(236,72,153,0.2); border: 1px solid rgba(236,72,153,0.4); border-radius: 4px; padding: 4px 8px; text-align: center; color: #f9a8d4;">Map</div>
+            <div style="background: rgba(236,72,153,0.2); border: 1px solid rgba(236,72,153,0.4); border-radius: 4px; padding: 4px 8px; text-align: center; color: #f9a8d4;">Map</div>
+          </div>
+          <!-- Arrow -->
+          <div style="color: #555; font-size: 14px;">→</div>
+          <!-- Shuffle -->
+          <div style="background: rgba(245,158,11,0.2); border: 1px solid rgba(245,158,11,0.4); border-radius: 4px; padding: 8px; text-align: center; color: #fbbf24; writing-mode: vertical-rl; font-size: 9px;">Shuffle &amp; Sort</div>
+          <!-- Arrow -->
+          <div style="color: #555; font-size: 14px;">→</div>
+          <!-- Reducers -->
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <div style="background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.4); border-radius: 4px; padding: 4px 8px; text-align: center; color: #6ee7b7;">Reduce</div>
+            <div style="background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.4); border-radius: 4px; padding: 4px 8px; text-align: center; color: #6ee7b7;">Reduce</div>
+          </div>
+          <!-- Arrow -->
+          <div style="color: #555; font-size: 14px;">→</div>
+          <!-- Output -->
+          <div style="background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.4); border-radius: 4px; padding: 8px; text-align: center; color: #93c5fd; font-size: 9px;">Output</div>
+        </div>
+        <div style="font-size: 9px; color: #555; margin-top: 8px; text-align: center;">No absolute positioning. Arrows always align. Scales to any width.</div>
+      </div>
+    </div>
+
+    <div class="mockup">
+      <div class="mockup-header">Kafka Partitions diagram (new)</div>
+      <div class="mockup-body" style="padding: 14px; font-size: 10px;">
+        <div style="display: flex; align-items: flex-start; gap: 8px;">
+          <!-- Producers -->
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <div style="background: rgba(99,102,241,0.2); border: 1px solid rgba(99,102,241,0.3); border-radius: 4px; padding: 4px 7px; color: #a5b4fc;">Producer A</div>
+            <div style="background: rgba(99,102,241,0.2); border: 1px solid rgba(99,102,241,0.3); border-radius: 4px; padding: 4px 7px; color: #a5b4fc;">Producer B</div>
+          </div>
+          <div style="color: #555; font-size: 12px; margin-top: 10px;">→</div>
+          <!-- Topic with partitions -->
+          <div style="flex: 1; border: 1px solid rgba(245,158,11,0.3); border-radius: 6px; padding: 6px;">
+            <div style="font-size: 9px; color: #fbbf24; text-align: center; margin-bottom: 4px; letter-spacing: 1px;">TOPIC: velocity.solana</div>
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <div style="background: rgba(245,158,11,0.1); border-radius: 3px; padding: 3px 6px; display: flex; gap: 4px;">
+                <span style="color: #888; font-size: 9px;">P0</span>
+                <div style="display: flex; gap: 1px; flex: 1;">
+                  <div style="background: rgba(245,158,11,0.4); border-radius: 1px; width: 14px; height: 12px; font-size: 8px; color: #fbbf24; display: flex; align-items: center; justify-content: center;">0</div>
+                  <div style="background: rgba(245,158,11,0.4); border-radius: 1px; width: 14px; height: 12px; font-size: 8px; color: #fbbf24; display: flex; align-items: center; justify-content: center;">1</div>
+                  <div style="background: rgba(245,158,11,0.4); border-radius: 1px; width: 14px; height: 12px; font-size: 8px; color: #fbbf24; display: flex; align-items: center; justify-content: center;">2</div>
+                  <div style="background: rgba(245,158,11,0.6); border-radius: 1px; width: 14px; height: 12px; font-size: 8px; color: #fbbf24; display: flex; align-items: center; justify-content: center;">3</div>
+                  <div style="color: #555; font-size: 9px; display: flex; align-items: center; padding-left: 2px;">offset→</div>
+                </div>
+              </div>
+              <div style="background: rgba(245,158,11,0.1); border-radius: 3px; padding: 3px 6px; display: flex; gap: 4px;">
+                <span style="color: #888; font-size: 9px;">P1</span>
+                <div style="display: flex; gap: 1px; flex: 1;">
+                  <div style="background: rgba(245,158,11,0.4); border-radius: 1px; width: 14px; height: 12px; font-size: 8px; color: #fbbf24; display: flex; align-items: center; justify-content: center;">0</div>
+                  <div style="background: rgba(245,158,11,0.4); border-radius: 1px; width: 14px; height: 12px; font-size: 8px; color: #fbbf24; display: flex; align-items: center; justify-content: center;">1</div>
+                  <div style="color: #555; font-size: 9px; display: flex; align-items: center; padding-left: 2px;">offset→</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="color: #555; font-size: 12px; margin-top: 10px;">→</div>
+          <!-- Consumer groups -->
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <div style="border: 1px solid rgba(16,185,129,0.3); border-radius: 4px; padding: 4px 7px; color: #6ee7b7; font-size: 9px;">Group A<br/><span style="color: #555;">Consumer 1</span></div>
+            <div style="border: 1px solid rgba(236,72,153,0.3); border-radius: 4px; padding: 4px 7px; color: #f9a8d4; font-size: 9px;">Group B<br/><span style="color: #555;">Consumer 2</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4: Kafka Content & No-SMU Policy -->
+<div style="border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 20px;">
+  <span class="label">Section 4 — Kafka / Stream Ingestion content + policies</span>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px;">
+    <div>
+      <h4 style="font-size: 12px; color: #e2e8f0; margin-bottom: 8px;">Items in the Stream Ingestion section</h4>
+      <div style="display: flex; flex-direction: column; gap: 6px; font-size: 11px;">
+        <div style="display: flex; gap: 8px; align-items: center;"><span style="color: #888; font-family: monospace; font-size: 10px; width: 16px;">◯</span><span style="color: #cbd5e1;">Why velocity matters</span><span style="color: #555; font-size: 10px;">Reading · 5m</span></div>
+        <div style="display: flex; gap: 8px; align-items: center;"><span style="color: #888; font-family: monospace; font-size: 10px; width: 16px;">◯</span><span style="color: #cbd5e1;">Sync vs Async + Message Queues</span><span style="color: #555; font-size: 10px;">Reading · 8m</span></div>
+        <div style="display: flex; gap: 8px; align-items: center;"><span style="color: #888; font-family: monospace; font-size: 10px; width: 16px;">◎</span><span style="color: #cbd5e1;">Point-to-Point vs Pub/Sub</span><span style="color: #555; font-size: 10px;">Interactive · 10m</span></div>
+        <div style="display: flex; gap: 8px; align-items: center;"><span style="color: #888; font-family: monospace; font-size: 10px; width: 16px;">◎</span><span style="color: #cbd5e1;">Append-Only Log &amp; Offsets</span><span style="color: #555; font-size: 10px;">Interactive · 10m</span></div>
+        <div style="display: flex; gap: 8px; align-items: center;"><span style="color: #888; font-family: monospace; font-size: 10px; width: 16px;">◎</span><span style="color: #cbd5e1;">Apache Kafka Architecture</span><span style="color: #555; font-size: 10px;">Interactive · 15m</span></div>
+        <div style="display: flex; gap: 8px; align-items: center;"><span style="color: #888; font-family: monospace; font-size: 10px; width: 16px;">◎</span><span style="color: #cbd5e1;">Topics, Partitions &amp; Offsets</span><span style="color: #555; font-size: 10px;">Interactive · 12m</span></div>
+        <div style="display: flex; gap: 8px; align-items: center;"><span style="color: #888; font-family: monospace; font-size: 10px; width: 16px;">◯</span><span style="color: #cbd5e1;">Stream Pitfalls (errors, late arrivals, TTL)</span><span style="color: #555; font-size: 10px;">Reading · 8m</span></div>
+        <div style="display: flex; gap: 8px; align-items: center;"><span style="color: #888; font-family: monospace; font-size: 10px; width: 16px;">▲</span><span style="color: #cbd5e1;">Velocity Lab — live Kafka + ClickHouse</span><span style="color: #555; font-size: 10px;">Lab · 45m</span></div>
+      </div>
+    </div>
+    <div>
+      <h4 style="font-size: 12px; color: #e2e8f0; margin-bottom: 8px;">Content policies enforced</h4>
+      <div style="display: flex; flex-direction: column; gap: 8px; font-size: 11px;">
+        <div style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 6px; padding: 10px;">
+          <div style="color: #f87171; font-size: 10px; font-weight: 600; margin-bottom: 4px;">REMOVED everywhere</div>
+          <div style="color: #cbd5e1; line-height: 1.7;">All "IS459", "IS459 · Big Data Architecture · Week 7", "SMU", "Singapore Management University", "SUTD" mentions stripped from Kafka content and anywhere else in the site</div>
+        </div>
+        <div style="background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.2); border-radius: 6px; padding: 10px;">
+          <div style="color: #4ade80; font-size: 10px; font-weight: 600; margin-bottom: 4px;">REPLACED WITH</div>
+          <div style="color: #cbd5e1; line-height: 1.7;">Generic "Big Data Architecture" label in header. Lab content from git repo preserved as-is (repo URL contains no course references).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p style="font-size: 12px; color: #666; margin-top: 20px; text-align: center;">Does all of this look right? Reply "looks good" and I'll write the spec doc.</p>

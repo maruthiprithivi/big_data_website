@@ -1,0 +1,9 @@
+{"type":"server-started","port":53687,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:53687","screen_dir":"/Users/maruthi/oasis/projects/big_data_website/.superpowers/brainstorm/28428-1774840692/content","state_dir":"/Users/maruthi/oasis/projects/big_data_website/.superpowers/brainstorm/28428-1774840692/state"}
+{"type":"screen-added","file":"/Users/maruthi/oasis/projects/big_data_website/.superpowers/brainstorm/28428-1774840692/content/approach.html"}
+{"source":"user-event","type":"click","text":"B\n    \n      Split + redesign — extract components\n      Break the file into logical components (DiagramSection, CurriculumSection, KafkaSection, etc.) while applying the Warm Notebook shell. Each component is its own file.\n      \n        ProsMaintainable going forwardEach component QA-able independentlyClean slate for the new aesthetic\n        ConsMore upfront work to split correctlyRisk of breaking state shared across the single component","choice":"b","id":null,"timestamp":1774841270592}
+{"type":"screen-added","file":"/Users/maruthi/oasis/projects/big_data_website/.superpowers/brainstorm/28428-1774840692/content/waiting-1.html"}
+{"type":"screen-added","file":"/Users/maruthi/oasis/projects/big_data_website/.superpowers/brainstorm/28428-1774840692/content/page-structure.html"}
+{"type":"screen-added","file":"/Users/maruthi/oasis/projects/big_data_website/.superpowers/brainstorm/28428-1774840692/content/diagram-approach.html"}
+{"type":"screen-added","file":"/Users/maruthi/oasis/projects/big_data_website/.superpowers/brainstorm/28428-1774840692/content/design-overview.html"}
+{"type":"screen-added","file":"/Users/maruthi/oasis/projects/big_data_website/.superpowers/brainstorm/28428-1774840692/content/design-234.html"}
+{"type":"server-stopped","reason":"idle timeout"}

@@ -1,0 +1,67 @@
+<h2>Full Design — Section 1 of 4: Architecture & File Structure</h2>
+<p class="subtitle">How the 8804-line monolith splits into components, and what the new shell looks like.</p>
+
+<div class="section">
+  <span class="label">File structure</span>
+  <div style="background: #1a1a1a; border-radius: 8px; padding: 16px 20px; font-family: monospace; font-size: 12px; line-height: 2; margin-top: 10px; color: #ccc;">
+    <div style="color: #888;">src/</div>
+    <div style="color: #fbbf24; padding-left: 20px;">App.jsx</div>
+    <div style="color: #888; padding-left: 40px;">← shell only: PageShell, Header, TOC, accordion state</div>
+    <div style="color: #888; padding-left: 20px;">components/</div>
+    <div style="color: #4ade80; padding-left: 40px;">sections/</div>
+    <div style="color: #60a5fa; padding-left: 60px;">ArchitecturePatterns.jsx</div>
+    <div style="color: #888; padding-left: 80px;">← Lambda, Kappa, Streaming, Batch diagrams + comparison</div>
+    <div style="color: #60a5fa; padding-left: 60px;">DistributedProcessing.jsx</div>
+    <div style="color: #888; padding-left: 80px;">← MapReduce, Spark, MR vs Spark</div>
+    <div style="color: #60a5fa; padding-left: 60px;">DataModeling.jsx</div>
+    <div style="color: #888; padding-left: 80px;">← Star Schema, Snowflake Schema, ER diagrams</div>
+    <div style="color: #60a5fa; padding-left: 60px;">StreamIngestion.jsx</div>
+    <div style="color: #888; padding-left: 80px;">← NEW: velocity, queues, Kafka, topics/partitions/offsets, lab</div>
+    <div style="color: #60a5fa; padding-left: 60px;">AppliedEngineering.jsx</div>
+    <div style="color: #888; padding-left: 80px;">← Case studies, blockchain lab, decision tree, learning path</div>
+    <div style="color: #4ade80; padding-left: 40px;">diagrams/</div>
+    <div style="color: #a78bfa; padding-left: 60px;">FlowDiagram.jsx</div>
+    <div style="color: #888; padding-left: 80px;">← reusable flexbox flow layout (nodes + CSS connectors)</div>
+    <div style="color: #a78bfa; padding-left: 60px;">Schemadiagram.jsx</div>
+    <div style="color: #888; padding-left: 80px;">← reusable ER/schema grid layout</div>
+    <div style="color: #4ade80; padding-left: 40px;">ui/</div>
+    <div style="color: #f9a8d4; padding-left: 60px;">Section.jsx, ItemRow.jsx, ItemList.jsx, TOC.jsx, Header.jsx</div>
+    <div style="color: #888; padding-left: 80px;">← exact components from Warm Notebook spec</div>
+    <div style="color: #fbbf24; padding-left: 20px;">index.css</div>
+    <div style="color: #888; padding-left: 40px;">← CSS variables from spec + diagram-specific styles</div>
+  </div>
+</div>
+
+<div class="section">
+  <span class="label">What stays, what changes</span>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px;">
+    <div style="background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.2); border-radius: 8px; padding: 14px;">
+      <h4 style="color: #4ade80; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Preserved exactly</h4>
+      <ul style="font-size: 12px; line-height: 1.9; color: #bbb; padding-left: 16px;">
+        <li>All section text & descriptions</li>
+        <li>All technology links & references</li>
+        <li>Kafka lab instructions & git URLs</li>
+        <li>Decision flowchart (ReactFlow stays)</li>
+        <li>Schema FK/PK hover interactions</li>
+        <li>MapReduce step-by-step animation logic</li>
+        <li>Spark step animation logic</li>
+        <li>All existing interactive state</li>
+      </ul>
+    </div>
+    <div style="background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2); border-radius: 8px; padding: 14px;">
+      <h4 style="color: #fbbf24; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Redesigned</h4>
+      <ul style="font-size: 12px; line-height: 1.9; color: #bbb; padding-left: 16px;">
+        <li>All colors → Warm Notebook palette</li>
+        <li>Dark bg → cream #FAFAF7</li>
+        <li>Neon text → warm neutrals</li>
+        <li>Nav tabs → horizontal TOC + accordion</li>
+        <li>Diagram layouts → flexbox flow (no pixel offsets)</li>
+        <li>Diagram arrows → CSS borders/pseudo-elements</li>
+        <li>No SMU/IS459 references anywhere</li>
+        <li>Kafka content added as new section 04</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<p style="font-size: 12px; color: #666; margin-top: 16px; text-align: center;">Does this split look right? Reply in terminal to continue to Section 2 of the design.</p>
