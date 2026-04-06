@@ -6470,7 +6470,7 @@ for message in consumer:
 
                     return (
                       <div style={{ padding: '0 20px 20px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px', flexWrap: 'nowrap', maxWidth: '100%', transform: 'scale(0.88)', transformOrigin: 'top center' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px', flexWrap: 'nowrap', maxWidth: '100%', transform: 'scale(0.78)', transformOrigin: 'top center' }}>
                         {/* Column 1: External APIs stacked */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '100px' }}>
                           <ComponentCard component={bitcoinApi} onClick={(comp) => setSelectedComponent(comp)} />
@@ -6810,7 +6810,7 @@ for message in consumer:
                     System Architecture
                   </h4>
                   <div style={{ padding: '0 20px 20px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px', flexWrap: 'nowrap', maxWidth: '100%', transform: 'scale(0.78)', transformOrigin: 'top center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0px', flexWrap: 'nowrap', maxWidth: '100%', transform: 'scale(0.68)', transformOrigin: 'top center' }}>
                       {/* Column 1: Three sources stacked */}
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                         {['solana-src', 'bluesky-src', 'wikipedia-src'].map(id => {
